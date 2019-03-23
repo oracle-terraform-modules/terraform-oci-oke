@@ -1,14 +1,14 @@
 [cidrsubnet]:http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 [calico]: https://www.projectcalico.org/
 [configure oci]: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/terraformgetstarted.htm?tocpath=Developer%20Tools%20%7CTerraform%20Provider%7C_____1
-[example network resource configuration]:https://docs.us-phoenix-1.oraclecloud.com/Content/ContEng/Concepts/contengnetworkconfigexample.htm
+[example network resource configuration]:https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm/contengnetworkconfigexample.htm
 [helm]:https://www.helm.sh/
 [instructions]: ./docs/instructions.md
 [ksonnet]: https://ksonnet.io/
 [kubernetes]: https://kubernetes.io/
 [networks]:https://erikberg.com/notes/networks.html
 [oci]: https://cloud.oracle.com/cloud-infrastructure
-[oke]: https://docs.us-phoenix-1.oraclecloud.com/Content/ContEng/Concepts/contengoverview.htm
+[oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 [terraform]: https://www.terraform.io
 [terraform example]: ./terraform.tfvars.example
 [terraform options]: ./docs/terraformoptions.md
