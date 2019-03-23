@@ -59,7 +59,7 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
 - kubeconfig:
     - automatic generation of kubeconfig on the bastion instances and set to default location (/home/opc/.kube/config) so there's no need to explicitly set KUBECONFIG variable
     - automatic generation of kubeconfig locally under the generated folder
-- Automatic OCIR configuration:
+- Automatic OCI Registry configuration:
     - Auth token created and saved. It can also be retrieved for later use
     - Kubernetes Secret automatically created in default namespace to allow pulling images from OCIR 
 - [helm][helm]:

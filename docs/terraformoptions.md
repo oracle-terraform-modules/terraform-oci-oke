@@ -65,7 +65,8 @@
 | calico_version                        | Version of calico as network policy                           |                      |  3.6                   | 
 
 ## OCIR
-| Option                                | Description                                   | Values                    | Default               |     | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
+| Option                                | Description                                   | Values                    | Default               |     
+| -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | create_auth_token                    | Whether to create an auth token. Set to 'true' so OCIR can be used  | true/false        |       true    |
 | tenancy_name                          | OCI tenancy name (required). Note this is different from tenancy ocid     | string                       |  None    |
 | username                              | OCI username (required). Note this is different from user_ocid. It's a username that can login to the selected tenancy                      |                           |  None                 |
