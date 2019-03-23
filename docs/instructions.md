@@ -347,9 +347,9 @@ $ kubectl get nodes
 
 Run terraform destroy:
 
-    ```
-    $ terraform destroy
-    ```
+```
+$ terraform destroy
+```
 
 ## Known Issues
 
