@@ -83,15 +83,15 @@ Detailed instructions can be found [here][instructions].
 Ensure you set proxy environment variables if you're running behind a proxy
 
 ```
-$ export http_proxy=http://<address_of_your_office_proxy>.com:80/
-$ export https_proxy=http://<address_of_your_office_proxy>:80/
+$ export http_proxy=http://<address_of_your_proxy>.com:80/
+$ export https_proxy=http://<address_of_your_proxy>:80/
 ```
 Detailed instructions, including proxy locations can be found [here][instructions].
 
 ## Quickstart
 
 ```
-$ git clone <thisrepo>.git tfoke
+$ git clone https://github.com/oracle/sample-oke-for-terraform.git tfoke
 $ cd tfoke 
 $ cp terraform.tfvars.example terraform.tfvars
 ```
@@ -120,7 +120,10 @@ Create oke resources, cluster:
 $ terraform apply
 ```
 
-See [Terraform Configuration Options][terraform options] and [Detailed Instructions][instructions]
+## Documentation
+
+- [Detailed Instructions][instructions]
+- [Terraform Configuration Options][terraform options] 
 
 ## Related Docs
 
