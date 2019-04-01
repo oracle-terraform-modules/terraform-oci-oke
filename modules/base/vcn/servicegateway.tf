@@ -7,38 +7,33 @@ data "oci_core_services" "oci_services_object_storage" {
     values = [".*Object.*Storage"]
     regex  = true
   }
-    count = "${(var.create_service_gateway == "true") ? 1 : 0}"
+
+  count = "${(var.create_service_gateway == true) ? 1 : 0}"
 }
 
 data "oci_core_service_gateways" "service_gateways" {
-  #Required
   compartment_id = "${var.compartment_ocid}"
-
-  #Optional
-  state  = "${var.service_gateway_state}"
-  vcn_id = "${oci_core_vcn.vcn.id}"
-    count = "${(var.create_service_gateway == "true") ? 1 : 0}"
+  state          = "AVAILABLE"
+  vcn_id         = "${oci_core_vcn.vcn.id}"
+  count          = "${(var.create_service_gateway == true) ? 1 : 0}"
 }
 
-resource "oci_core_service_gateway" "service_gateway" { 
-  depends_on = ["oci_core_nat_gateway.nat_gateway"]
+resource "oci_core_service_gateway" "service_gateway" {
   compartment_id = "${var.compartment_ocid}"
+  display_name   = "${var.label_prefix}-${var.service_gateway_name}"
+  depends_on     = ["oci_core_nat_gateway.nat_gateway"]
 
   services {
     service_id = "${lookup(data.oci_core_services.oci_services_object_storage.services[0], "id")}"
   }
 
   vcn_id = "${oci_core_vcn.vcn.id}"
-
-  display_name = "${var.label_prefix}-${var.service_gateway_name}"
-
-  count = "${(var.create_service_gateway == "true") ? 1 : 0}"
+  count  = "${(var.create_service_gateway == true) ? 1 : 0}"
 }
 
 resource "oci_core_route_table" "service_gateway_route" {
-  depends_on = ["oci_core_route_table.nat_route"]
   compartment_id = "${var.compartment_ocid}"
-  vcn_id         = "${oci_core_vcn.vcn.id}"
+  depends_on     = ["oci_core_route_table.nat_route"]
   display_name   = "${var.label_prefix}-service_gateway_route"
 
   route_rules {
@@ -47,5 +42,7 @@ resource "oci_core_route_table" "service_gateway_route" {
     network_entity_id = "${oci_core_service_gateway.service_gateway.id}"
   }
 
-  count = "${(var.create_service_gateway == "true") ? 1 : 0}"
+  vcn_id = "${oci_core_vcn.vcn.id}"
+
+  count = "${(var.create_service_gateway == true) ? 1 : 0}"
 }

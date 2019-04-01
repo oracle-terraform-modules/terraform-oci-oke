@@ -6,13 +6,13 @@
 [example network resource configuration]:https://docs.us-phoenix-1.oraclecloud.com/Content/ContEng/Concepts/contengnetworkconfigexample.htm
 [helm]:https://www.helm.sh/
 [image ocids]:https://docs.cloud.oracle.com/iaas/images/oraclelinux-7x/
+[instance_principal]:https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
 [kubernetes]: https://kubernetes.io/
 [kubernetes dashboard]: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 [networks]:https://erikberg.com/notes/networks.html
 [oci]: https://cloud.oracle.com/cloud-infrastructure
-[oci console]: https://console.us-ashburn-1.oraclecloud.com/
+[oci console]: https://console.us-phoenix-1.oraclecloud.com/
 [oke]: https://docs.us-phoenix-1.oraclecloud.com/Content/ContEng/Concepts/contengoverview.htm
-[run on oci]:./run-on-oci.md
 [terraform]: https://www.terraform.io
 [terraform download]: https://www.terraform.io/downloads.html
 [terraform options]: ./terraformoptions.md
@@ -189,34 +189,51 @@ imageocids = {
 }
 ```
 
-> N.B. In a future release of this project, we will add ability to use Debian or Ubuntu for the bastion host.
-
 #### oci-cli
-oci-cli is preconfigured and upgraded for the opc user on the bastion instances. To use, enable 1 of the bastion instances in terraform.tfvars in the 'availability_domains' variable e.g.
+oci-cli is preconfigured and upgraded for the opc user on the bastion instances. To use, set the create_bastion to true and pick an availability domain (1,2,3)
+
+Enable 1 of the bastion instances in terraform.tfvars in the 'availability_domains' variable e.g.
 
 ```
+create_bastion = "true"
+
 availability_domains = {
-    "bastion_ad1"     = "true"
+    "bastion" = "1"
 }
 ```
 
 You can do this any time i.e. either at the beginning or after the cluster has been created. After the instance is provisioned, terraform will output the ip address of the bastion instance(s):
 
+You can do this any time i.e. either at the beginning or after the cluster has been created. After the instance is provisioned, terraform will output the ip address of the bastion instance(s):
+
 ```
-ssh_to_bastion = [
-    AD1: ssh opc@XXX.XXX.XXX.XXX,
-    AD2: ssh opc@,
-    AD3: ssh opc@
-]
+ssh_to_bastion = ssh -i /home/oracle/test/oci_rsa.pem opc@XXX.XXX.XXX.XXX,
+
 ```
 
-Copy the ssh command to the bastion instance to login and verify:
+Copy the ssh command to the bastion instance to login. 
+
+You can turn off the bastion instance anytime by setting the above value to false and run terraform apply again.
+
+#### instance_principal
+
+[Instance_principal][instance_principal] is an IAM service feature that enables instances to be authorized actors (or principals) to perform actions on service resources. Each compute instance has its own identity, and it authenticates using the certificates that are added to it. These certificates are automatically created, assigned to instances and rotated, preventing the need for you to distribute credentials to your hosts and rotate them.
+
+Any user who has access to the instance (who can SSH to the instance), automatically inherits the privileges granted to the instance. Before you enable this feature, ensure that you know who can access it, and that they should be authorized with the permissions you are granting to the instance.
+
+If you enable this feature, by default the bastion has privileges to all resources in the compartment. You can also turn on and off the feature at any time without impact on the bastion.
+
+To enable, set enable_instance_principal to true:
+
+```
+enable_instance_principal = "true"
+```
+
+and verify:
 
 ```
 $ oci network vcn list --compartment-id <compartment-ocid>
 ```
-
-You can turn off the bastion instance(s) anytime by setting the above value to false and run terraform apply again.
 
 #### kubectl
 
@@ -225,13 +242,6 @@ kubectl is pre-installed on the bastion instances:
 ```
 $ kubectl get nodes
 ```
-#### ksonnet
-
-ksonnet can be optionally installed on the bastion instances:
-
-```
-$ ks version
-```
 
 ### OKE Networking
 All subnets are programmable and can be controlled using the vcn_cidr, newbits and subnets variables. This can help you control the size and number of subnets that can be created within the VCNs e.g.
@@ -239,18 +249,21 @@ All subnets are programmable and can be controlled using the vcn_cidr, newbits a
 ```
 vcn_cidr = "10.0.0.0/16"
 
-newbits = "8"
+newbits = {
+  "bastion" = "8"
+  "lb"      = "8"
+  "workers" = "8"
+}
+
 
 subnets = {
-    "bastion_ad1"     = "11"        
-    "bastion_ad2"     = "21"        
-    "bastion_ad3"     = "31"        
-    "lb_ad1"      = "12"        
-    "lb_ad2"      = "22"        
-    "lb_ad3"      = "32"        
-    "workers_ad1" = "13"        
-    "workers_ad2" = "23"        
-    "workers_ad3" = "33"
+  "bastion"     = "11"
+  "lb_ad1"      = "12"
+  "lb_ad2"      = "22"
+  "lb_ad3"      = "32"
+  "workers_ad1" = "13"
+  "workers_ad2" = "23"
+  "workers_ad3" = "33"
 }
 ```
 
@@ -266,16 +279,14 @@ In private mode, worker nodes will not have public IP addresses and can only be 
 Ensure all 3 worker subnets for the worker nodes and 3 public subnets for the load balancers are created:
 
 ```
-availability_domains = {        
-    "bastion_ad1"     = "true"
-    "bastion_ad2"     = "false"        
-    "bastion_ad3"     = "false"        
-    "lb_ad1"      = "true"        
-    "lb_ad2"      = "true"        
-    "lb_ad3"      = "false"        
-    "workers_ad1" = "true"        
-    "workers_ad2" = "true"        
-    "workers_ad3" = "true"
+availability_domains = {
+  "bastion"     = "1"
+  "lb_ad1"      = "1"
+  "lb_ad2"      = "2"
+  "lb_ad3"      = "3"
+  "workers_ad1" = "1"
+  "workers_ad2" = "2"
+  "workers_ad3" = "3"
 }
 ```
 
@@ -297,7 +308,7 @@ Network policy can be configured by using [calico][calico]. Calico installation 
 
 ```
 install_calico = "true"
-calico_version = "3.3"
+calico_version = "3.6"
 ```
 
 ### OKE Node Pools and Nodes
@@ -361,8 +372,8 @@ $ terraform destroy
 
 - By default, the cluster is provisioned for 3-AD regions. For single AD regions, open the file modules/oke/cluster.tf and swap the service_lb_subnet_ids as follows:
 
-    1. Uncomment line 12 by removing the # at the beginning of the line
-    2. Comment line 15 by adding a # at the beginning of the line
+    1. Uncomment line 24 by removing the # at the beginning of the line
+    2. Comment line 27 by adding a # at the beginning of the line
     3. The code should look like this:
 
 ``` 

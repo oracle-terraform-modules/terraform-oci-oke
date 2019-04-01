@@ -2,45 +2,40 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
+
+api_fingerprint = ""
+
+api_private_key_path = ""
+
+compartment_name = ""
+
+compartment_ocid = ""
+
 tenancy_ocid = ""
 
 user_ocid = ""
 
-compartment_ocid = ""
+# ssh keys
 
-compartment_name = ""
+ssh_private_key_path = ""
 
-api_fingerprint = ""
+ssh_public_key_path = ""
 
-api_private_key_path= ""
+# general oci parameters
+label_prefix = "dev"
 
-ssh_private_key_path= ""
-
-ssh_public_key_path= ""
-
-region = "us-ashburn-1"
-
-label_prefix = "oke"
+region = "us-phoenix-1"
 
 # networking
 
-vcn_dns_name = "ocioke"
-
-vcn_cidr = "10.0.0.0/16"
-
-vcn_name = "oke vcn"
-
-# new mask for the subnet within the virtual network. use as newbits parameter for cidrsubnet function
 newbits = {
   "bastion" = "8"
-  "workers" = "8"
   "lb"      = "8"
+  "workers" = "8"
 }
 
 subnets = {
-  "bastion_ad1"     = "11"
-  "bastion_ad2"     = "21"
-  "bastion_ad3"     = "31"
+  "bastion"     = "11"
   "lb_ad1"      = "12"
   "lb_ad2"      = "22"
   "lb_ad3"      = "32"
@@ -49,59 +44,53 @@ subnets = {
   "workers_ad3" = "33"
 }
 
-# compute
+vcn_cidr = "10.0.0.0/16"
 
-imageocids = {
-    "us-phoenix-1"   = "ocid1.image.oc1.phx.aaaaaaaagtiusgjvzurghktkgphjuuky2q6qjwvsstzbhyn4czroszbjimvq"
-    "us-ashburn-1"   = "ocid1.image.oc1.iad.aaaaaaaagqwnrno6c35vplndep6hu5gevyiqqag37muue3ich7g6tbs5aq4q"
-    "eu-frankfurt-1" = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaat7npzgm7lquxd3k53krh7ffiwc6jv3ug5geu2pnq64djaxvpnh6q"
-    "uk-london-1"    = "ocid1.image.oc1.uk-london-1.aaaaaaaasvgkftekukdo6325eu3tgvu2q54tct2zgezlzu2q6d26bemvf5fq"
-}
+vcn_dns_name = "oke"
+
+vcn_name = "vitokeess"
+
+create_nat_gateway = "true"
+
+nat_gateway_name = "nat"
+
+create_service_gateway = "true"
+
+service_gateway_name = "sg"
+
+# bastion
 
 bastion_shape = "VM.Standard2.1"
 
-#storage
+create_bastion = "true"
+
+preferred_bastion_image = "ol"
+
+enable_instance_principal = "true"
 
 # availability_domains
 
 availability_domains = {
-  "bastion_ad1"     = "false"
-  "bastion_ad2"     = "false"
-  "bastion_ad3"     = "false"
-  "lb_ad1"      = "true"
-  "lb_ad2"      = "true"
-  "lb_ad3"      = "false"
-  "workers_ad1" = "true"
-  "workers_ad2" = "true"
-  "workers_ad3" = "true"
+  "bastion"     = "1"
+  "lb_ad1"      = "1"
+  "lb_ad2"      = "2"
+  "lb_ad3"      = "3"
+  "workers_ad1" = "1"
+  "workers_ad2" = "2"
+  "workers_ad3" = "3"
 }
-
-# nat
-create_nat_gateway = "true"
-
-nat_gateway_name = "okenat"
-
-# service gateway 
-
-create_service_gateway = "false"
-
-service_gateway_name = "sg"
 
 # oke
 
-worker_mode = "public"
+cluster_name = "oke"
 
-kubernetes_version = "v1.12.6"
-
-cluster_name = "testoke"
+worker_mode = "private"
 
 dashboard_enabled = "true"
 
-tiller_enabled = "true"
+kubernetes_version = "v1.12.6"
 
-pods_cidr = "10.244.0.0/16"
-
-services_cidr = "10.96.0.0/16"
+node_pools = "1"
 
 node_pool_name_prefix = "np"
 
@@ -111,36 +100,31 @@ node_pool_node_shape = "VM.Standard2.1"
 
 node_pool_quantity_per_subnet = "1"
 
-# maximum of node_pools = 3
-node_pools = "1" 
-
 nodepool_topology = "3"
 
+pods_cidr = "10.244.0.0/16"
+
+services_cidr = "10.96.0.0/16"
+
+tiller_enabled = "true"
+
 # ocir
+create_auth_token = "true"
 
-create_auth_token = "false"
+email_address = ""
 
-tenancy_name = "tenancy name"
+tenancy_name = ""
 
-username = "username"
-
-email_address = "email address"
+username = ""
 
 # helm
 
+helm_version = "2.12.3"
+
 install_helm = "true"
 
-helm_version= "2.13.0"
-
-# ksonnet
-
-install_ksonnet = "false"
-
-ksonnet_version = "0.13.1"
-
 # calico
-# Use calico for controlling pod network policy
-
-install_calico = "false"
 
 calico_version = "3.6"
+
+install_calico = "false"

@@ -2,16 +2,16 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 locals {
-  icmp_protocol = "1"
-  tcp_protocol  = "6"
+  icmp_protocol = 1
+  tcp_protocol  = 6
   all_protocols = "all"
 
   anywhere = "0.0.0.0/0"
 
-  ssh_port = "22"
+  ssh_port = 22
 
-  node_port_min = "30000"
-  node_port_max = "32767"
+  node_port_min = 30000
+  node_port_max = 32767
 }
 
 # worker security checklist
@@ -25,13 +25,13 @@ resource "oci_core_security_list" "workers_seclist" {
       # intra-vcn
       protocol    = "${local.all_protocols}"
       destination = "${var.vcn_cidr}"
-      stateless   = "true"
+      stateless   = true
     },
     {
       # outbound
       protocol    = "${local.all_protocols}"
       destination = "${local.anywhere}"
-      stateless   = "false"
+      stateless   = false
     },
   ]
 
@@ -40,19 +40,19 @@ resource "oci_core_security_list" "workers_seclist" {
       # intra-vcn
       protocol  = "all"
       source    = "${var.vcn_cidr}"
-      stateless = "true"
+      stateless = true
     },
     {
       # icmp
       protocol  = "${local.icmp_protocol}"
       source    = "${local.anywhere}"
-      stateless = "false"
+      stateless = false
     },
     {
       # rule 5
       protocol  = "${local.tcp_protocol}"
       source    = "130.35.0.0/16"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -63,7 +63,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 6
       protocol  = "${local.tcp_protocol}"
       source    = "134.70.0.0/17"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -74,7 +74,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 7
       protocol  = "${local.tcp_protocol}"
       source    = "138.1.0.0/17"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -85,7 +85,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 8
       protocol = "${local.tcp_protocol}"
       source    = "140.91.0.0/17"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -96,7 +96,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 9
       protocol  = "${local.tcp_protocol}"
       source    = "147.154.0.0/16"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -107,7 +107,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 10
       protocol  = "${local.tcp_protocol}"
       source    = "192.29.0.0/16"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -118,7 +118,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 11
       protocol  = "${local.tcp_protocol}"
       source    = "${local.anywhere}"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.ssh_port}"
@@ -129,7 +129,7 @@ resource "oci_core_security_list" "workers_seclist" {
       # rule 10
       protocol  = "${local.tcp_protocol}"
       source    = "${local.anywhere}"
-      stateless = "false"
+      stateless = false
 
       tcp_options {
         "max" = "${local.node_port_max}"
@@ -148,14 +148,14 @@ resource "oci_core_security_list" "lb_seclist" {
   egress_security_rules = [{
     protocol    = "${local.all_protocols}"
     destination = "${local.anywhere}"
-    stateless   = "true"
+    stateless   = true
   }]
 
   ingress_security_rules = [
     {
       protocol  = "${local.tcp_protocol}"
       source    = "${local.anywhere}"
-      stateless = "true"
+      stateless = true
     },
   ]
 }
