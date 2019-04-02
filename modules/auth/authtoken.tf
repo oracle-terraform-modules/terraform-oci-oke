@@ -3,7 +3,7 @@
 
 resource "oci_identity_auth_token" "ocirtoken" {
   provider    = "oci.home"
-  user_id     = "${var.user_ocid}"
   description = "ocir auth token"
-  count       = "${(var.create_auth_token == "true") ? 1 : 0}"
+  user_id     = "${var.user_ocid}"
+  count       = "${(var.create_auth_token == true) ? 1 : 0}"
 }

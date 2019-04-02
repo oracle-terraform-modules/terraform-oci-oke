@@ -1,9 +1,11 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+
 #cloud-config
 package_update: true
 package_upgrade: true
-packages: 
+packages:
+  - ntp 
   - python-pip
 timezone: Australia/Sydney
 
@@ -16,7 +18,7 @@ write_files:
       ${bastion_sh_content}
 runcmd:
  - echo "Configuring bastion..." | tee /root/bastion/bastion.txt
- - systemctl stop postfix.service
- - systemctl disable postfix.service
+ - bash /root/bastion/bastion.sh
  - pip install oci-cli --upgrade pip
+ - echo "export OCI_CLI_AUTH=instance_principal" >>  /home/${user}/.bashrc
  - touch /home/${user}/bastion.finish

@@ -6,14 +6,20 @@ import os
 import oci
 from oci.container_engine import ContainerEngineClient
 
-config = oci.config.from_file()
+compartment_id = '${compartment_id}'
+cluster_id = '${cluster_id}'
+region = '${region}'
 
-oce = oci.container_engine.ContainerEngineClient(config)
+signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
+
+identity_client = oci.identity.IdentityClient(config={}, signer=signer)
+
+oce = oci.container_engine.ContainerEngineClient(config={'region': region}, signer=signer)
 
 # Get list of node pools
 list_pools = []
 
-list_pools = oce.list_node_pools("${compartment_id}")
+list_pools = oce.list_node_pools(compartment_id,cluster_id=cluster_id)
 
 # Count number of node pools
 number_of_node_pools = len(list_pools.data)

@@ -16,38 +16,38 @@ data "oci_identity_regions" "home_region" {
 # create a home region provider for identity operations
 provider "oci" {
   alias            = "home"
+  fingerprint      = "${var.api_fingerprint}"
+  private_key_path = "${var.api_private_key_path}"
   region           = "${lookup(data.oci_identity_regions.home_region.regions[0], "name")}"
   tenancy_ocid     = "${var.tenancy_ocid}"
   user_ocid        = "${var.user_ocid}"
-  fingerprint      = "${var.api_fingerprint}"
-  private_key_path = "${var.api_private_key_path}"
 }
 
-# data "oci_identity_compartments" "compartments_name" {
-#   compartment_id = "${var.tenancy_ocid}"
-#   compartment_id_in_subtree  = "true"
-#   access_level = "ANY"
+data "oci_identity_compartments" "compartments_name" {
+  access_level              = "ACCESSIBLE"
+  compartment_id            = "${var.tenancy_ocid}"
+  compartment_id_in_subtree = "true"
 
-#   filter {
-#     name   = "name"
-#     values = ["${var.compartment_name}"]
-#   }
-# }
+  filter {
+    name   = "name"
+    values = ["${var.compartment_name}"]
+  }
+}
 
-# resource "oci_identity_dynamic_group" "instance_principal" {
-#   provider       = "oci.home"
-#   compartment_id = "${var.tenancy_ocid}"
-#   name           = "${var.label_prefix}-instance_principal"
-#   description    = "dynamic group to allow instances to call services"
-#   matching_rule  = "ALL {instance.compartment.id = '${var.compartment_ocid}'}"
-#   count          = "${(var.enable_instance_principal == "true") ? "1" : "0"}"
-# }
+resource "oci_identity_dynamic_group" "instance_principal" {
+  provider       = "oci.home"
+  compartment_id = "${var.tenancy_ocid}"
+  description    = "dynamic group to allow instances to call services for 1 bastion"
+  matching_rule  = "ALL {instance.id = '${module.bastion.bastion_id}'}"
+  name           = "${var.label_prefix}-instance_principal"
+  count          = "${(var.enable_instance_principal == true)  ? 1 : 0}"
+}
 
-# resource "oci_identity_policy" "instance_principal" {
-#   provider       = "oci.home"
-#   name           = "${var.label_prefix}-instance_principal"
-#   description    = "dynamic group to allow instances to call services"
-#   compartment_id = "${var.compartment_ocid}"
-#   statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.instance_principal.name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
-#   count          = "${(var.enable_instance_principal == "true") ? "1" : "0"}"
-# }
+resource "oci_identity_policy" "instance_principal" {
+  provider       = "oci.home"
+  compartment_id = "${var.compartment_ocid}"
+  description    = "dynamic group to allow instances to call services"
+  name           = "${var.label_prefix}-instance_principal"
+  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.instance_principal.name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
+  count          = "${(var.enable_instance_principal == true) ? 1 : 0}"
+}

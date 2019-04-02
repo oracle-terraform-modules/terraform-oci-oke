@@ -5,19 +5,19 @@
 # http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
 
 locals {
-  tcp_protocol  = "6"
+  tcp_protocol  = 6
   all_protocols = "all"
 
   anywhere = "0.0.0.0/0"
 
-  ssh_port = "22"
+  ssh_port = 22
 }
 
 resource "oci_core_security_list" "bastion" {
   compartment_id = "${var.compartment_ocid}"
   display_name   = "${var.label_prefix}-bastion"
-  vcn_id         = "${oci_core_vcn.vcn.id}"
-  count          = "${((var.availability_domains["bastion_ad1"] == "true")||(var.availability_domains["bastion_ad2"] == "true")||(var.availability_domains["bastion_ad3"] == "true")) ? "1" : "0"}"
+  vcn_id         = "${var.vcn_id}"
+  count          = "${(var.create_bastion == true) ? 1 : 0}"
 
   egress_security_rules = [
     {

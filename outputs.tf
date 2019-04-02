@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 output "bastion_public_ips" {
-  value = "${module.base.bastion_public_ips}"
+  value = "${module.base.bastion_public_ip}"
 }
 
 output "ssh_to_bastion" {
