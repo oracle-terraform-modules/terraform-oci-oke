@@ -4,7 +4,6 @@
 [example network resource configuration]:https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengnetworkconfigexample.htm/contengnetworkconfigexample.htm
 [helm]:https://www.helm.sh/
 [instructions]: ./docs/instructions.md
-[ksonnet]: https://ksonnet.io/
 [kubernetes]: https://kubernetes.io/
 [networks]:https://erikberg.com/notes/networks.html
 [oci]: https://cloud.oracle.com/cloud-infrastructure
@@ -66,9 +65,6 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
     - optional installation and configuration of helm on the bastion instances
     - choice of helm version
     - upgrade of the running tiller on the cluster
-- [ksonnet][ksonnet]:
-    - optional installation and configuration of ksonnet on the bastion instances
-    - choice of ksonnet version
 
 ## Pre-reqs
 
