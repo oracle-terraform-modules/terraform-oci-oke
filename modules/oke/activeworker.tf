@@ -22,10 +22,10 @@ resource null_resource "write_check_worker_script" {
 
   provisioner "file" {
     content     = "${data.template_file.check_worker_node_status.rendered}"
-    destination = "/home/opc/is_worker_active.py"
+    destination = "~/is_worker_active.py"
   }
 
-  count = "${var.availability_domains["bastion"] == 1   ? 1 : 0}"
+  count = "${var.create_bastion == true    ? 1 : 0}"
 }
 
 resource null_resource "is_worker_active" {
@@ -41,10 +41,10 @@ resource null_resource "is_worker_active" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x /home/opc/is_worker_active.py",
-      "while [ ! -f /home/opc/node.active ]; do /home/opc/is_worker_active.py; sleep 10; done",
+      "chmod +x $HOME/is_worker_active.py",
+      "while [ ! -f $HOME/node.active ]; do $HOME/is_worker_active.py; sleep 10; done",
     ]
   }
 
-  count = "${var.availability_domains["bastion"] == 1  ? 1 : 0}"
+  count = "${var.create_bastion == true   ? 1 : 0}"
 }
