@@ -23,7 +23,7 @@ resource null_resource "write_install_helm_bastion" {
     destination = "~/install_helm.sh"
   }
 
-  count = "${(var.availability_domains["bastion"] == 1 && var.install_helm == true)   ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.install_helm == true)   ? 1 : 0}"
 }
 
 resource null_resource "install_helm_bastion" {
@@ -45,5 +45,5 @@ resource null_resource "install_helm_bastion" {
     ]
   }
 
-  count = "${(var.availability_domains["bastion"] == 1 && var.install_helm == true)   ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.install_helm == true)   ? 1 : 0}"
 }

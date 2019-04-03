@@ -160,7 +160,7 @@ sed -i -e "s/#HostbasedAuthentication\sno/HostbasedAuthentication no/g" /etc/ssh
 sed -i -e "s/#PermitEmptyPasswords\sno/PermitEmptyPasswords no/g" /etc/ssh/sshd_config
 sed -i -e "s/#PermitUserEnvironment\sno/PermitUserEnvironment no/g" /etc/ssh/sshd_config
 echo "ClientAliveInterval 300" >> /etc/ssh/sshd_config
-echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config
+echo "ClientAliveCountMax 3" >> /etc/ssh/sshd_config
 echo "LoginGraceTime 60" >> /etc/ssh/sshd_config
 systemctl reload sshd
 

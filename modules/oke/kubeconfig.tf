@@ -35,7 +35,7 @@ data "template_file" "install_kubectl" {
   }
 }
 
-resource "null_resource" "write_install_kubectl_bastion" {
+resource "null_resource" "install_kubectl_bastion" {
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"
@@ -49,20 +49,6 @@ resource "null_resource" "write_install_kubectl_bastion" {
     destination = "~/install_kubectl.sh"
   }
 
-  count = "${var.availability_domains["bastion"] == 1   ? 1 : 0}"
-}
-
-resource "null_resource" "install_kubectl_bastion" {
-  depends_on = ["null_resource.write_install_kubectl_bastion"]
-
-  connection {
-    host        = "${var.bastion_public_ip}"
-    private_key = "${file(var.ssh_private_key_path)}"
-    timeout     = "40m"
-    type        = "ssh"
-    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
-  }
-
   provisioner "remote-exec" {
     inline = [
       "chmod +x ~/install_kubectl.sh",
@@ -70,7 +56,7 @@ resource "null_resource" "install_kubectl_bastion" {
     ]
   }
 
-  count = "${var.availability_domains["bastion"] == 1   ? 1 : 0}"
+  count = "${var.create_bastion == true   ? 1 : 0}"
 }
 
 resource "null_resource" "write_kubeconfig_bastion" {
@@ -84,10 +70,16 @@ resource "null_resource" "write_kubeconfig_bastion" {
 
   depends_on = ["local_file.kube_config_file"]
 
-  provisioner "file" {
-    source      = "generated/kubeconfig"
-    destination = "~/.kube/config"
+  provisioner "remote-exec" {
+    inline = [
+      "mkdir -p $HOME/.kube",
+    ]
   }
 
-  count = "${var.availability_domains["bastion"] == 1   ? 1 : 0}"
+  provisioner "file" {
+    source      = "generated/kubeconfig"
+    destination = "${var.preferred_bastion_image == "ubuntu"   ? "/home/ubuntu/.kube/config" : "/home/opc/.kube/config"}"
+  }
+
+  count = "${var.create_bastion == true   ? 1 : 0}"
 }
