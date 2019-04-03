@@ -32,6 +32,8 @@ variable "availability_domains" {
 # bastion
 variable "bastion_public_ip" {}
 
+variable "create_bastion" {}
+
 variable "preferred_bastion_image" {}
 
 # networking

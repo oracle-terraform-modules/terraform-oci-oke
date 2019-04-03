@@ -160,15 +160,15 @@ sed -i -e "s/#HostbasedAuthentication\sno/HostbasedAuthentication no/g" /etc/ssh
 sed -i -e "s/#PermitEmptyPasswords\sno/PermitEmptyPasswords no/g" /etc/ssh/sshd_config
 sed -i -e "s/#PermitUserEnvironment\sno/PermitUserEnvironment no/g" /etc/ssh/sshd_config
 echo "ClientAliveInterval 300" >> /etc/ssh/sshd_config
-echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config
+echo "ClientAliveCountMax 100" >> /etc/ssh/sshd_config
 echo "LoginGraceTime 60" >> /etc/ssh/sshd_config
 systemctl reload sshd
 
 sed -i -e "s/minlen\s=\s8/minlen = 14/g" /etc/security/pwquality.conf
 sed -i -e "s/password\s\s\s\ssufficient\s\s\s\spam_unix.so\ssha512\sshadow\snullok\stry_first_pass\suse_authtok/password    sufficient    pam_unix.so sha512 shadow nullok try_first_pass use_authtok remember=4/g" /etc/pam.d/password-auth
 
-echo "TMOUT=600" >> /etc/bashrc
-echo "TMOUT=600" >> /etc/profile
+echo "TMOUT=900" >> /etc/bashrc
+echo "TMOUT=900" >> /etc/profile
 
 chown root:root /etc/passwd- 
 chmod u-x,go-wx /etc/passwd-

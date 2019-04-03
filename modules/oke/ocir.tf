@@ -33,7 +33,7 @@ resource null_resource "write_ocir_script" {
     destination = "~/create_ocir_secret.sh"
   }
 
-  count = "${(var.availability_domains["bastion"] == 1 && var.create_auth_token == true ) ? 1 : 0}"
+  count = "${(var.create_bastion == true  && var.create_auth_token == true ) ? 1 : 0}"
 }
 
 resource null_resource "create_ocir_secret" {
@@ -53,10 +53,30 @@ resource null_resource "create_ocir_secret" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x ~/create_ocir_secret.sh",
-      "~/create_ocir_secret.sh",
+      "chmod +x $HOME/create_ocir_secret.sh",
+      "$HOME/create_ocir_secret.sh",
     ]
   }
 
-  count = "${(var.availability_domains["bastion"] == 1 && var.create_auth_token == true ) ? 1 : 0}"
+  count = "${(var.create_bastion == true  && var.create_auth_token == true ) ? 1 : 0}"
+}
+
+resource null_resource "delete_ocir_script" {
+  depends_on = ["null_resource.create_ocir_secret"]
+
+  connection {
+    host        = "${var.bastion_public_ip}"
+    private_key = "${file(var.ssh_private_key_path)}"
+    timeout     = "40m"
+    type        = "ssh"
+    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "rm -f $HOME/create_ocir_secret.sh",
+    ]
+  }
+
+  count = "${(var.create_bastion == true && var.create_auth_token == true ) ? 1 : 0}"
 }

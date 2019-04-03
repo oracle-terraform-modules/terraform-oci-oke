@@ -92,19 +92,20 @@ module "oke" {
   ssh_public_key_path  = "${var.ssh_public_key_path}"
 
   # oci
-  ad_names                = "${module.base.ad_names}"
-  label_prefix            = "${var.label_prefix}"
-  region                  = "${var.region}"
+  ad_names     = "${module.base.ad_names}"
+  label_prefix = "${var.label_prefix}"
+  region       = "${var.region}"
 
   # availability domains
-  availability_domains    = "${var.availability_domains}"
+  availability_domains = "${var.availability_domains}"
 
   # bastion
   bastion_public_ip       = "${module.base.bastion_public_ip}"
+  create_bastion          = "${var.create_bastion}"
   preferred_bastion_image = "${var.preferred_bastion_image}"
 
   # networking
-  vcn_id                  = "${module.base.vcn_id}"
+  vcn_id = "${module.base.vcn_id}"
 
   # oke
   cluster_kubernetes_version                              = "${var.kubernetes_version}"
@@ -114,10 +115,10 @@ module "oke" {
   cluster_options_kubernetes_network_config_pods_cidr     = "${var.pods_cidr}"
   cluster_options_kubernetes_network_config_services_cidr = "${var.services_cidr}"
 
-  cluster_subnets                                         = "${module.network.subnet_ids}"
+  cluster_subnets = "${module.network.subnet_ids}"
 
   # node pools
-  node_pools                    = "${var.node_pools}"
+  node_pools = "${var.node_pools}"
 
   node_pool_name_prefix         = "${var.node_pool_name_prefix}"
   node_pool_node_image_name     = "${var.node_pool_node_image_name}"
