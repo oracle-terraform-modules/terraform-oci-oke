@@ -101,6 +101,7 @@ module "oke" {
 
   # bastion
   bastion_public_ip       = "${module.base.bastion_public_ip}"
+  create_bastion          = "${var.create_bastion}"
   preferred_bastion_image = "${var.preferred_bastion_image}"
 
   # networking

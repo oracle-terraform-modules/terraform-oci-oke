@@ -25,7 +25,7 @@ resource null_resource "write_check_worker_script" {
     destination = "/home/opc/is_worker_active.py"
   }
 
-  count = "${var.availability_domains["bastion"] == 1   ? 1 : 0}"
+  count = "${var.create_bastion == true   ? 1 : 0}"
 }
 
 resource null_resource "is_worker_active" {
@@ -46,5 +46,5 @@ resource null_resource "is_worker_active" {
     ]
   }
 
-  count = "${var.availability_domains["bastion"] == 1  ? 1 : 0}"
+  count = "${var.create_bastion == true  ? 1 : 0}"
 }

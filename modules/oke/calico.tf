@@ -27,7 +27,7 @@ resource null_resource "write_install_calico" {
     destination = "~/install_calico.sh"
   }
 
-  count = "${(var.availability_domains["bastion"] == 1 && var.install_calico == true)   ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.install_calico == true)   ? 1 : 0}"
 }
 
 resource null_resource "install_calico" {
@@ -48,5 +48,5 @@ resource null_resource "install_calico" {
     ]
   }
 
-  count = "${(var.availability_domains["bastion"] == 1 && var.install_calico == true)   ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.install_calico == true)   ? 1 : 0}"
 }
