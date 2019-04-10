@@ -207,7 +207,7 @@ variable "dashboard_enabled" {
 
 variable "kubernetes_version" {
   description = "version of kubernetes to use"
-  default     = "1.12.6"
+  default     = "v1.12.7"
 }
 
 variable "node_pools" {
