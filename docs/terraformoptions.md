@@ -58,7 +58,7 @@
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | cluster_name                          | The name of the OKE cluster as it will appear in the OCI Console.                        |        |  okecluster     |
 | dashboard_enabled                     | Whether to create the default Kubernetes dashboard.                                      | true/false |   true      |
-| kubernetes_version                    | The version of Kubernetes to provision. This is based on the available versions in OKE.  |   1.10.11, 1.11.8, 1.12.6     |       1.12.6    |
+| kubernetes_version                    | The version of Kubernetes to provision. This is based on the available versions in OKE.  |   1.10.11, 1.11.9, 1.12.7     |       1.12.7    |
 | node_pools                            | Number of node pools to create. Terraform will use this number in conjunction with the node_pool_name_prefix to create the name of the node pools.                                              |               |    1       |
 | node_pool_name_prefix                 | The prefix of the node pool.                                           |                 |   np                     |
 | node_pool_node_image_name             | The image name for the worker nodes.                                   |  Oracle-Linux-7.5 |       Oracle-Linux-7.5 |

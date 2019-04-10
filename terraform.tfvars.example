@@ -88,7 +88,7 @@ worker_mode = "private"
 
 dashboard_enabled = "true"
 
-kubernetes_version = "v1.12.6"
+kubernetes_version = "v1.12.7"
 
 node_pools = "1"
 
