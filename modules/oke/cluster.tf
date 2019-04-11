@@ -12,7 +12,7 @@ data "oci_containerengine_cluster_option" "k8s_cluster_option" {
 
 resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = "${var.compartment_ocid}"
-  kubernetes_version = "${var.cluster_kubernetes_version == "LATEST" ? element(data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions, local.kubernetes_versions - 1): var.cluster_kubernetes_version}"
+  kubernetes_version = "${var.cluster_kubernetes_version == "LATEST" ? element(sort(data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions), local.kubernetes_versions - 1): var.cluster_kubernetes_version}"
   name               = "${var.label_prefix}-${var.cluster_name}"
 
   options {
