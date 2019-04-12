@@ -166,11 +166,11 @@ SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx oracle@redwood
 7. Set the following environment variables:
 
     ```
-    export http_proxy=http://proxy.server.com:port/
-    export https_proxy=http://proxy.server.com:port/
+    export http_proxy=http://proxy.server:port/
+    export https_proxy=http://proxy.server:port/
     ```
 
-> N.B. Replace the proxy.server.com:port with your proxy server address and port.
+> N.B. Replace the proxy.server:port with your proxy server address and port.
 
 ## Detailed Instructions for OKE
 
@@ -178,19 +178,14 @@ Review the [Terraform Configuration Parameters for OKE][terraform options]
 
 ### Bastion
 
-The images and scripts used have been tested on Oracle Linux 7.x (latest: Oracle-Linux-7.5-2018.07.20-0). You can change the imageocids parameter if you wish to use an alternative version. You may also use this parameter to use your own custom image. Ensure you use either Oracle Linux or CentOS.
+The images and scripts used have been tested on Oracle Linux 7.x (latest: Oracle-Linux-7.5-2018.07.20-0). You can change the image_ocid parameter if you wish to use an alternative version. You may also use this parameter to use your own custom image. Ensure you use either Oracle Linux or CentOS.
 
 ```
-imageocids = {
-    "us-phoenix-1"   = "ocid1.image.oc1.phx.aaaaaaaagtiusgjvzurghktkgphjuuky2q6qjwvsstzbhyn4czroszbjimvq"
-    "us-ashburn-1"   = "ocid1.image.oc1.iad.aaaaaaaagqwnrno6c35vplndep6hu5gevyiqqag37muue3ich7g6tbs5aq4q"
-    "eu-frankfurt-1" = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaat7npzgm7lquxd3k53krh7ffiwc6jv3ug5geu2pnq64djaxvpnh6q"
-    "uk-london-1"    = "ocid1.image.oc1.uk-london-1.aaaaaaaasvgkftekukdo6325eu3tgvu2q54tct2zgezlzu2q6d26bemvf5fq"
-}
+image_ocid = "ocid1.image.oc1.phx.aaaaaaaagtiusgjvzurghktkgphjuuky2q6qjwvsstzbhyn4czroszbjimvq"
 ```
 
 #### oci-cli
-oci-cli is preconfigured and upgraded for the opc user on the bastion instances. To use, set the create_bastion to true and pick an availability domain (1,2,3)
+oci-cli is pre-configured for the opc user on the bastion instances. To use, set the create_bastion to true and pick an availability domain (1,2,3)
 
 Enable 1 of the bastion instances in terraform.tfvars in the 'availability_domains' variable e.g.
 
@@ -201,8 +196,6 @@ availability_domains = {
     "bastion" = "1"
 }
 ```
-
-You can do this any time i.e. either at the beginning or after the cluster has been created. After the instance is provisioned, terraform will output the ip address of the bastion instance(s):
 
 You can do this any time i.e. either at the beginning or after the cluster has been created. After the instance is provisioned, terraform will output the ip address of the bastion instance(s):
 
@@ -237,7 +230,7 @@ $ oci network vcn list --compartment-id <compartment-ocid>
 
 #### kubectl
 
-kubectl is pre-installed on the bastion instances:
+kubectl is pre-installed on the bastion instance:
 
 ```
 $ kubectl get nodes
@@ -343,7 +336,7 @@ $ kubectl get nodes
 2. Access the dashboard service:
 
     ```
-    $ demo/dashboard.sh
+    $ scripts/dashboard.sh
     ```
 
 3. Open the [Kubernetes Dashboard][kubernetes dashboard] in the browser and login with the kubeconfig file in the generated folder
@@ -365,8 +358,6 @@ $ terraform destroy
 ## Known Issues
 
 - The subnet allocation algorithm must be tested more thoroughly for the 2-subnet node pool topology. At the moment, ensure all 3 worker subnets are enabled to avoid unknown problems.
-
-- The imageocids for the bastion instances have been hardcoded to avoid an extra lookup. If you during a terraform run, the image cannot be found, check the available [image ocids][image ocids] and update the values accordingly in terraform.tfvars. Alternatively, you may supply your own image ocids. At the moment, all scripts are meant for Oracle Linux only, although they should work for CentOS too.
 
 - You need to be part of Administrators' group in order to use instance_principals
 

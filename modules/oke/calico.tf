@@ -19,7 +19,7 @@ resource null_resource "write_install_calico" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   provisioner "file" {
@@ -36,7 +36,7 @@ resource null_resource "install_calico" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]

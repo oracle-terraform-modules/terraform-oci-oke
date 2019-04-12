@@ -25,7 +25,7 @@ resource null_resource "write_ocir_script" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   provisioner "file" {
@@ -48,7 +48,7 @@ resource null_resource "create_ocir_secret" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   provisioner "remote-exec" {
@@ -69,7 +69,7 @@ resource null_resource "delete_ocir_script" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.preferred_bastion_image == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   provisioner "remote-exec" {

@@ -34,7 +34,7 @@ variable "bastion_public_ip" {}
 
 variable "create_bastion" {}
 
-variable "preferred_bastion_image" {}
+variable "image_operating_system" {}
 
 # networking
 variable "vcn_id" {}

@@ -64,9 +64,11 @@ bastion_shape = "VM.Standard2.1"
 
 create_bastion = "true"
 
-preferred_bastion_image = "ol"
-
 enable_instance_principal = "true"
+
+image_operating_system = "Oracle Linux"
+
+image_operating_system_version = "7.6"
 
 # availability_domains
 
@@ -109,7 +111,7 @@ services_cidr = "10.96.0.0/16"
 tiller_enabled = "true"
 
 # ocir
-create_auth_token = "true"
+create_auth_token = "false"
 
 email_address = ""
 

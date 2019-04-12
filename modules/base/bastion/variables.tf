@@ -26,7 +26,9 @@ variable "create_bastion" {}
 
 variable "image_ocid" {}
 
-variable "preferred_bastion_image" {}
+variable "image_operating_system" {}
+
+variable "image_operating_system_version" {}
 
 # networking
 
