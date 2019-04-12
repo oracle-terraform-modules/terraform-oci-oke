@@ -135,38 +135,18 @@ variable "enable_instance_principal" {
 }
 
 
-variable "preferred_bastion_image" {
-  # values = ol (OracleLinux), centos, ubuntu
-  default = "ol"
+variable "image_ocid" {
+  default = "NONE"
+}
+variable "image_operating_system" {
+  # values = Oracle Linux, CentOS, Canonical Ubuntu
+  default = "Oracle Linux"
+  description = "operating system to use for the bastion"
 }
 
-variable "imageocids" {
-  type = "map"
-
-  default = {
-    # https://docs.us-phoenix-1.oraclecloud.com/images/
-
-    # Oracle-Linux-7.6-2018.12
-    ol-us-phoenix-1   = "ocid1.image.oc1.phx.aaaaaaaaklifrcpkhjgszalaoitdshyxbxog3wm5ccol55m2apw3fg3mjndq"
-    ol-us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaawiur3bi46qsb6egmfqnfhsn66kj74bnvnfxrr7o72wiyuhzy2fba"
-    ol-eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaamrvusixu33rzvgvjpfjflwkjeyfwnnoyoefoqxnmttds5vukj4vq"
-    ol-uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaaannfmrswpgevhcp3de4ngip4vcxi7culiimgm7mi4npiuxwweqrq"
-    ol-ca-toronto-1   = "ocid1.image.oc1.ca-toronto-1.aaaaaaaasbx5hzms4eyrs6e3woez6zxxnfd7yuqtc6bg53jiqevoe52ob4qq"
-
-    # CentOS-7-2018.12.18-0
-    centos-us-phoenix-1   = "ocid1.image.oc1.phx.aaaaaaaa77atxnaou5ykurakjrjybn4efaa7w3tmg47oo3b4v6e4jldkzzlq"
-    centos-us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaarsu56scul4muz3sqbptvykipy2rn6re3wzdjvncgcpgqt5cp3wja"
-    centos-eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaajscyriqmukax7k5tgayq6g26lolscurrcphc4bofty6i6gmq2x2q"
-    centos-uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaaw2jelcbmlkzu2vde7t6wyanqzrn5xl7likly5xbputixs3gdj6pa"
-    centos-ca-toronto-1   = "ocid1.image.oc1.ca-toronto-1.aaaaaaaa5lcszaeld2nl2zo7g3plaxwufz43sftcmuxeimql7kgcczupvn7a"
-
-    # Ubuntu-18.04-2018.12.10-0
-    ubuntu-us-phoenix-1   = "ocid1.image.oc1.phx.aaaaaaaahuvwlhrckaqyjgntvbjhlunzbv4zwsy6zvczknkstwa4tj3pzmuq"
-    ubuntu-us-ashburn-1   = "ocid1.image.oc1.iad.aaaaaaaahh6wjs5qp2sieliieujdnih7eyxt32ets3nuiifzjjfkqnbelcra"
-    ubuntu-eu-frankfurt-1 = "ocid1.image.oc1.eu-frankfurt-1.aaaaaaaaqmvdglh5hmonugj5i6w754r3hxbrsxk4luwe6u5ulyyyn4aha2gq"
-    ubuntu-uk-london-1    = "ocid1.image.oc1.uk-london-1.aaaaaaaasmb4dxiv4p6mpfohuiijs3gxkgtafbng7octzvj7aaebiayx5fca"
-    ubuntu-ca-toronto-1   = "ocid1.image.oc1.ca-toronto-1.aaaaaaaaw6wely3ji4rikswrhiv6r4pgbdl4yms5xwcr4orheivpso6t6fvq"
-  }
+variable "image_operating_system_version" {
+  # Versions of available operating systems can be found here: https://docs.cloud.oracle.com/iaas/images/
+  description = "version of selected operating system"
 }
 
 

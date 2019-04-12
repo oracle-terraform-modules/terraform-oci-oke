@@ -30,11 +30,12 @@ module "base" {
   service_gateway_name   = "${var.service_gateway_name}"
 
   # bastion
-  bastion_shape             = "${var.bastion_shape}"
-  create_bastion            = "${var.create_bastion}"
-  enable_instance_principal = "${var.enable_instance_principal}"
-  preferred_bastion_image   = "${var.preferred_bastion_image}"
-  imageocids                = "${var.imageocids}"
+  bastion_shape                  = "${var.bastion_shape}"
+  create_bastion                 = "${var.create_bastion}"
+  enable_instance_principal      = "${var.enable_instance_principal}"
+  image_ocid                     = "${var.image_ocid}"
+  image_operating_system         = "${var.image_operating_system}"
+  image_operating_system_version = "${var.image_operating_system_version}"
 
   # availability_domains
   availability_domains = "${var.availability_domains}"
@@ -100,9 +101,9 @@ module "oke" {
   availability_domains = "${var.availability_domains}"
 
   # bastion
-  bastion_public_ip       = "${module.base.bastion_public_ip}"
-  create_bastion          = "${var.create_bastion}"
-  preferred_bastion_image = "${var.preferred_bastion_image}"
+  bastion_public_ip              = "${module.base.bastion_public_ip}"
+  create_bastion                 = "${var.create_bastion}"
+  image_operating_system         = "${var.image_operating_system}"
 
   # networking
   vcn_id = "${module.base.vcn_id}"

@@ -31,12 +31,12 @@
 ## Networking
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
-| newbits                               | The difference between the VCN's netmask and the desired subnets mask. This translates into the newbits parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   |   |   8   |
+| newbits                               | The difference between the VCN's netmask and the desired subnets mask. This translates into the newbits parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   |   |   See [terraform.tfvars.example][terraform example]   |
 | subnets                               | Defines the boundaries of the subnets. This translates into the netnum parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   | See [terraform.tfvars.example][terraform example]   | See [terraform.tfvars.example][terraform example]   |
 | vcn_cidr                              | VCN's CIDR                                    |                           | 10.0.0.0/16           |
 | vcn_dns_name                          | VCN's DNS name                                |                           |  ocioke               |
 | vcn_name                              | VCN's name in the OCI Console                 |                           |  oke vcn              |
-| create_nat_gateway                    | Whether to create a NAT gateway. Required for private worker nodes        |     true/false        |  false   |
+| create_nat_gateway                    | Whether to create a NAT gateway. Required for private worker mode        |     true/false        |  false   |
 | nat_gateway_name                      | NAT gateway name                              |                           |  nat                  | 
 | create_service_gateway                | Whether to create a Service Gateway for object storage. | true/false      |  false                |
 | service_gateway_name                  | Service Gateway name                          |                           |  sg                   |
@@ -46,10 +46,11 @@
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | bastion_shape                         | The shape of the bastion instance that will be provisioned.  |            | VM.Standard2.1        |
 | create_bastion                        | Whether to create the bastion                 |   true/false              | true                  |
-| preferred_bastion_image               | Linux distribution to use for bastion         |   ol (OracleLinux), centos, ubuntu | ol           |
 | enable_instance_principal             | whether to enable instance_principal on bastion. Ensure the user_ocid is part of administrators group in order to use this. |   true/false            |  false                 |
-| imageocids                            | The ocids of the images to use for the bastion instances. Tested with Oracle Linux 7.x. Should work with Oracle Linux 6.x and CentOS 6.x and 7.x too       |               |  See [terraform.tfvars.example][terraform example]              |
-| availability_domains                  | Where to provision bastion instances, worker and load balancer subnets.  |    | See [terraform.tfvars.example][terraform example]    |
+| image_ocid                            | The ocid of the image to use for the bastion instance. Tested with Oracle Linux 7.x and Ubuntu 18.04. Should work with Oracle Linux 6.x and CentOS 6.x and 7.x too. (Optional)       |               |  NONE              |
+| image_operating_system                         | The Operating System image to be used to provision the bastion  |            | Oracle Linux      |
+| image_operating_system_version                        | The version of the Operating System to be used to provision the bastion. Matching versions of available operating systems can be found here: https://docs.cloud.oracle.com/iaas/images/  |            | 7.6      |
+| availability_domains                  | Where to provision bastion instance, worker and load balancer subnets.  |    | See [terraform.tfvars.example][terraform example]    |
 
 
 
@@ -73,10 +74,10 @@
 ## OCIR
 | Option                                | Description                                   | Values                    | Default               |     
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
-| create_auth_token                     | Whether to create an auth token. Set to 'true' so OCIR can be used   | true/false   | true        |
-| email_address                         | Email address (required)  of the above username                      | string       |  None       |
-| tenancy_name                          | OCI tenancy name (required). Note this is different from tenancy ocid     | string  |  None       |
-| username                              | OCI username (required). Note this is different from user_ocid. It's a username that can login to the selected tenancy                      |                           |  None                 |
+| create_auth_token                     | Whether to create an auth token. Set to 'true' so OCIR can be used   | true/false   | false        |
+| email_address                         | Email address of the username. Required if create_auth_token is set to true  | string       |  None       |
+| tenancy_name                          | OCI tenancy name. Note this is different from tenancy ocid. Required if create_auth_token is set to true     | string  |  None       |
+| username                              | OCI username. Note this is different from user_ocid. It's a username that can login to the selected tenancy. Required if create_auth_token is set to true  |   string                        |  None                 |
 
 ## Helm
 | Option                                | Description                                   | Values                    | Default               | 

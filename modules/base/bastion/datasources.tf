@@ -4,7 +4,7 @@ data "template_file" "bastion_template" {
   template = "${file("${path.module}/scripts/bastion.template.sh")}"
 
   vars = {
-    user = "${var.preferred_bastion_image == "ubuntu" ? "ubuntu" : "opc" }"
+    user = "${var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc" }"
   }
 
   count = "${var.create_bastion == true  ? 1 : 0}"
@@ -15,7 +15,7 @@ data "template_file" "bastion_cloud_init_file" {
 
   vars = {
     bastion_sh_content = "${base64gzip(data.template_file.bastion_template.rendered)}"
-    user               = "${var.preferred_bastion_image == "ubuntu" ? "ubuntu" : "opc" }"
+    user = "${var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc" }"
   }
 
   count = "${var.create_bastion == true  ? 1 : 0}"
