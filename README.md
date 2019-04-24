@@ -27,7 +27,7 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
     - limit your blast radius
     - avoid the overlapping subnet problem, especially if you need to make a hybrid deployment
     - plan your scalability, HA and failover capabilities
-- Optional co-located and pre-configured public bastion instances across all 3 ADs. This helps execute kubectl commands faster. The bastion instance has the following configurable features:
+- Optional co-located and pre-configured public bastion instance. This helps execute kubectl commands faster and limit local dependencies. The bastion instance has the following configurable features:
     - oci-cli installed, upgraded and pre-configured
     - kubectl installed and pre-configured
     - kubeconfig generation
@@ -43,7 +43,7 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
     - Choice of specifying whether worker nodes can be public or private
 - Automatic creation of an OKE cluster with the following configurable options:
     - cluster name
-    - [Kubernetes][kubernetes] version
+    - Latest or choice of available [Kubernetes][kubernetes] version in OKE
     - Kubernetes addons such as dashboard and helm (tiller)
     - pods and services cidr
 - Automatic node pool creation with the following configurable options:
@@ -56,7 +56,7 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
 - Optional K8s Network Policy:
     - Installation of [calico][calico] for network policy  
 - kubeconfig:
-    - automatic generation of kubeconfig on the bastion instances and set to default location (/home/opc/.kube/config) so there's no need to explicitly set KUBECONFIG variable
+    - automatic generation of kubeconfig on the bastion instance and set to default location (/home/opc/.kube/config) so there's no need to explicitly set KUBECONFIG variable
     - automatic generation of kubeconfig locally under the generated folder
 - Automatic OCI Registry configuration:
     - Auth token created and saved. It can also be retrieved for later use
@@ -69,8 +69,7 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
 ## Pre-reqs
 
 1. Download and install [Terraform][terraform] (v0.11+).
-2. Download and install the [OCI Terraform Provider][oci provider]. You need at least v3.8.0 to provision OKE, NAT Gateway.
-3. [Configure your OCI account to use Terraform][configure oci]
+2. [Configure your OCI account to use Terraform][configure oci]
 
 Detailed instructions can be found [here][instructions].
 
@@ -87,7 +86,7 @@ Detailed instructions, including proxy locations can be found [here][instruction
 ## Quickstart
 
 ```
-$ git clone https://github.com/oracle/sample-oke-for-terraform.git tfoke
+$ git clone https://github.com/oracle/terraform-oci-oke.git tfoke
 $ cd tfoke 
 $ cp terraform.tfvars.example terraform.tfvars
 ```
