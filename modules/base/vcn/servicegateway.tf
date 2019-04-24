@@ -4,7 +4,7 @@
 data "oci_core_services" "oci_services_object_storage" {
   filter {
     name   = "name"
-    values = [".*Object.*Storage"]
+    values = ["All .* Services In Oracle Services Network"]
     regex  = true
   }
 
