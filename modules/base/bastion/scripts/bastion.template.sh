@@ -3,13 +3,7 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-yum install yum-plugin-security
-
 yum update --security
-
-/usr/bin/ol_yum_configure.sh
-
-yum-config-manager --enable ol7_ociyum_config
 
 sed -i -e "s/autoinstall\s=\sno/# autoinstall = yes/g" /etc/uptrack/uptrack.conf
 

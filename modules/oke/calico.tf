@@ -5,9 +5,11 @@ data "template_file" "install_calico" {
   template = "${file("${path.module}/scripts/install_calico.template.sh")}"
 
   vars = {
-    calico_version  = "${var.calico_version}"
-    number_of_nodes = "(${var.nodepool_topology} * ${var.node_pools} * ${var.node_pool_quantity_per_subnet})"
-    user_ocid       = "${var.user_ocid}"
+    calico_version     = "${var.calico_version}"
+    number_of_nodes    = "${var.nodepool_topology * var.node_pools * var.node_pool_quantity_per_subnet}"
+    pod_cidr           = "${var.cluster_options_kubernetes_network_config_pods_cidr}"
+    number_of_replicas = "${min(20,max((var.nodepool_topology * var.node_pools * var.node_pool_quantity_per_subnet)/200,3))}"
+    user_ocid          = "${var.user_ocid}"
   }
 
   count = "${var.install_calico == true   ? 1 : 0}"
