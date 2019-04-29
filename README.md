@@ -21,51 +21,6 @@
 The Terraform OKE Installer for [Oracle Cloud Infrastructure][oci] provides a Terraform module that provisions the necessary resources for [Oracle Container Engine][oke]. This is based on the [Example Network Resource Configuration][example network resource configuration].
 It leverages the baseoci project to create the basic infrastructure (VCNs, subnets, security lists etc), cluster and node pools. 
 
-## Features
-
-- Configurable subnet masks and sizes. This helps you:
-    - limit your blast radius
-    - avoid the overlapping subnet problem, especially if you need to make a hybrid deployment
-    - plan your scalability, HA and failover capabilities
-- Optional co-located and pre-configured public bastion instance. This helps execute kubectl commands faster and limit local dependencies. The bastion instance has the following configurable features:
-    - oci-cli installed and upgraded
-    - kubectl installed and pre-configured
-    - kubeconfig generation
-    - [helm][helm] installed and pre-configured (see [helm][instructions])
-    - convenient output of how to access the bastion instances
-    - choice of AD location for the bastion instance(s) to avoid problems with service limits/shapes, particularly when using trial accounts
-- Automatic creation of [OKE pre-requisites][example network resource configuration]:
-    - 3 worker subnets with their corresponding security lists, ingress and egress rules
-    - 3 load balancer subnets with their corresponding security lists, ingress and egress rules
-    - Possiblity to expand by adding more subnets
-- NAT and public/private worker nodes
-    - Possiblity of creating NAT gateway
-    - Choice of specifying whether worker nodes can be public or private
-- Automatic creation of an OKE cluster with the following configurable options:
-    - cluster name
-    - Latest or choice of available [Kubernetes][kubernetes] version in OKE
-    - Kubernetes addons such as dashboard and helm (tiller)
-    - pods and services cidr
-- Automatic node pool creation with the following configurable options:
-    - number of node pools to be created
-    - choice of node pool [topology][topology] i.e. whether to make a node pool span 2 or 3 subnets (effectively make a nodepool span 2 or 3 ADs within a region)
-    - number of worker nodes per subnets
-    - fair distribution of node pools across the ADs in the region when choosing [2 subnets topology][topology] so that node pools are not concentrated in some ADs only
-    - programmable node pool prefix
-    - configurable worker node shape
-- Optional K8s Network Policy:
-    - Installation of [calico][calico] for network policy  
-- kubeconfig:
-    - automatic generation of kubeconfig on the bastion instance and set to default location (/home/opc/.kube/config) so there's no need to explicitly set KUBECONFIG variable
-    - automatic generation of kubeconfig locally under the generated folder
-- Automatic OCI Registry configuration:
-    - Auth token created and saved. It can also be retrieved for later use
-    - Kubernetes Secret automatically created in default namespace to allow pulling images from OCIR 
-- [helm][helm]:
-    - optional installation and configuration of helm on the bastion instances
-    - choice of helm version
-    - upgrade of the running tiller on the cluster
-
 ## Pre-reqs
 
 1. Download and install [Terraform][terraform] (v0.11+).
@@ -114,6 +69,53 @@ Create oke resources, cluster:
 ```
 $ terraform apply
 ```
+
+## Features
+
+- Configurable subnet masks and sizes. This helps you:
+    - limit your blast radius
+    - avoid the overlapping subnet problem, especially if you need to make a hybrid deployment
+    - plan your scalability, HA and failover capabilities
+- Optional co-located and pre-configured public bastion instance. This helps execute kubectl commands faster and limit local dependencies. The bastion instance has the following configurable features:
+    - oci-cli installed and upgraded
+    - kubectl installed and pre-configured
+    - kubeconfig generation
+    - [helm][helm] installed and pre-configured (see [helm][instructions])
+    - convenient output of how to access the bastion instances
+    - choice of AD location for the bastion instance(s) to avoid problems with service limits/shapes, particularly when using trial accounts
+- Automatic creation of [OKE pre-requisites][example network resource configuration]:
+    - 3 worker subnets with their corresponding security lists, ingress and egress rules
+    - 3 load balancer subnets with their corresponding security lists, ingress and egress rules
+    - Possiblity to expand by adding more subnets
+- NAT and public/private worker nodes
+    - Possiblity of creating NAT gateway
+    - Choice of specifying whether worker nodes can be public or private
+- Automatic creation of an OKE cluster with the following configurable options:
+    - cluster name
+    - Latest or choice of available [Kubernetes][kubernetes] version in OKE
+    - Kubernetes addons such as dashboard and helm (tiller)
+    - pods and services cidr
+- Automatic node pool creation with the following configurable options:
+    - number of node pools to be created
+    - choice of node pool [topology][topology] i.e. whether to make a node pool span 2 or 3 subnets (effectively make a nodepool span 2 or 3 ADs within a region)
+    - number of worker nodes per subnets
+    - fair distribution of node pools across the ADs in the region when choosing [2 subnets topology][topology] so that node pools are not concentrated in some ADs only
+    - programmable node pool prefix
+    - configurable worker node shape
+- Optional K8s Network Policy:
+    - Installation of [calico][calico] for network policy  
+- kubeconfig:
+    - automatic generation of kubeconfig on the bastion instance and set to default location (/home/opc/.kube/config) so there's no need to explicitly set KUBECONFIG variable
+    - automatic generation of kubeconfig locally under the generated folder
+- Automatic OCI Registry configuration:
+    - Auth token created and saved. It can also be retrieved for later use
+    - Kubernetes Secret automatically created in default namespace to allow pulling images from OCIR 
+- [helm][helm]:
+    - optional installation and configuration of helm on the bastion instances
+    - choice of helm version
+    - upgrade of the running tiller on the cluster
+
+
 
 ## Documentation
 
