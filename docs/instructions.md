@@ -62,7 +62,7 @@ SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx oracle@redwood
 2. Generate the API private key
 
     ```
-    $ openssl genrsa -out ~/.oci/oci_api_key.pem -aes128 2048
+    $ openssl genrsa -out ~/.oci/oci_api_key.pem 2048
     ```
 
 3. Ensure that only you can read the private key file:
@@ -178,7 +178,7 @@ Review the [Terraform Configuration Parameters for OKE][terraform options]
 
 ### Bastion
 
-The images and scripts used have been tested on Oracle Linux 7.x (latest: Oracle-Linux-7.5-2018.07.20-0). You can change the image_ocid parameter if you wish to use an alternative version. You may also use this parameter to use your own custom image. Ensure you use either Oracle Linux or CentOS.
+The images and scripts used have been tested on Oracle Linux 7.x. By default, it will use the latest Oracle Linux 7.x image. You can change the image_ocid parameter if you wish to use an alternative version. You may also use this parameter to use your own custom image. Ensure you use either Oracle Linux or CentOS.
 
 ```
 image_ocid = "ocid1.image.oc1.phx.aaaaaaaagtiusgjvzurghktkgphjuuky2q6qjwvsstzbhyn4czroszbjimvq"
@@ -214,7 +214,7 @@ You can turn off the bastion instance anytime by setting the above value to fals
 
 Any user who has access to the instance (who can SSH to the instance), automatically inherits the privileges granted to the instance. Before you enable this feature, ensure that you know who can access it, and that they should be authorized with the permissions you are granting to the instance.
 
-If you enable this feature, by default the bastion has privileges to all resources in the compartment. You can also turn on and off the feature at any time without impact on the bastion.
+If you enable this feature, by default, the bastion has privileges to all resources in the compartment. You can also turn on and off the feature at any time without impact on the bastion itself.
 
 To enable, set enable_instance_principal to true:
 
