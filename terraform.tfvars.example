@@ -64,7 +64,7 @@ bastion_shape = "VM.Standard2.1"
 
 create_bastion = "true"
 
-enable_instance_principal = "true"
+enable_instance_principal = "false"
 
 image_operating_system = "Oracle Linux"
 

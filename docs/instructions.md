@@ -62,7 +62,7 @@ SHA256:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx oracle@redwood
 2. Generate the API private key
 
     ```
-    $ openssl genrsa -out ~/.oci/oci_api_key.pem -aes128 2048
+    $ openssl genrsa -out ~/.oci/oci_api_key.pem 2048
     ```
 
 3. Ensure that only you can read the private key file:

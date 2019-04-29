@@ -14,11 +14,11 @@
 [terraform oke sample]: https://github.com/oracle/terraform-provider-oci/tree/master/docs/examples/container_engine
 [topology]: ./docs/topology.md
 
-# Terraform Module for [Oracle Container Engine][oke]
+# Terraform for [Oracle Container Engine][oke]
 
 ## About
 
-The Terraform OKE Module Installer for [Oracle Cloud Infrastructure][oci] provides a Terraform module that provisions the necessary resources for [Oracle Container Engine][oke]. This is based on the [Example Network Resource Configuration][example network resource configuration].
+The Terraform OKE Installer for [Oracle Cloud Infrastructure][oci] provides a Terraform module that provisions the necessary resources for [Oracle Container Engine][oke]. This is based on the [Example Network Resource Configuration][example network resource configuration].
 It leverages the baseoci project to create the basic infrastructure (VCNs, subnets, security lists etc), cluster and node pools. 
 
 ## Features
@@ -28,7 +28,7 @@ It leverages the baseoci project to create the basic infrastructure (VCNs, subne
     - avoid the overlapping subnet problem, especially if you need to make a hybrid deployment
     - plan your scalability, HA and failover capabilities
 - Optional co-located and pre-configured public bastion instance. This helps execute kubectl commands faster and limit local dependencies. The bastion instance has the following configurable features:
-    - oci-cli installed, upgraded and pre-configured
+    - oci-cli installed and upgraded
     - kubectl installed and pre-configured
     - kubeconfig generation
     - [helm][helm] installed and pre-configured (see [helm][instructions])
