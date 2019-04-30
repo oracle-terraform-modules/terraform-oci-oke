@@ -9,6 +9,8 @@ data "template_file" "check_worker_node_status" {
     compartment_id = "${var.compartment_ocid}"
     region         = "${var.region}"
   }
+
+  count = "${(var.create_bastion == true && var.enable_instance_principal == true)   ? 1 : 0}"
 }
 
 resource null_resource "write_check_worker_script" {
@@ -25,7 +27,7 @@ resource null_resource "write_check_worker_script" {
     destination = "~/is_worker_active.py"
   }
 
-  count = "${var.create_bastion == true    ? 1 : 0}"
+  count = "${(var.create_bastion == true && var.enable_instance_principal == true)   ? 1 : 0}"
 }
 
 resource null_resource "is_worker_active" {
@@ -46,5 +48,5 @@ resource null_resource "is_worker_active" {
     ]
   }
 
-  count = "${var.create_bastion == true   ? 1 : 0}"
+  count = "${(var.create_bastion == true  && var.enable_instance_principal == true) ? 1 : 0}"
 }
