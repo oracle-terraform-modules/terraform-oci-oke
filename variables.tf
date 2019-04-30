@@ -152,6 +152,7 @@ variable "image_operating_system" {
 
 variable "image_operating_system_version" {
   # Versions of available operating systems can be found here: https://docs.cloud.oracle.com/iaas/images/
+  default = "7.6"
   description = "version of selected operating system"
 }
 
