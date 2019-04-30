@@ -103,6 +103,7 @@ module "oke" {
   # bastion
   bastion_public_ip              = "${module.base.bastion_public_ip}"
   create_bastion                 = "${var.create_bastion}"
+  enable_instance_principal      = "${var.enable_instance_principal}"
   image_operating_system         = "${var.image_operating_system}"
 
   # networking

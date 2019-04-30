@@ -115,12 +115,10 @@ $ terraform apply
     - choice of helm version
     - upgrade of the running tiller on the cluster
 
-
-
 ## Documentation
 
 - [Detailed Instructions][instructions]
-- [Terraform Configuration Options][terraform options] 
+- [Terraform Configuration Options][terraform options]
 
 ## Related Docs
 

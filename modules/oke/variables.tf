@@ -34,6 +34,8 @@ variable "bastion_public_ip" {}
 
 variable "create_bastion" {}
 
+variable "enable_instance_principal" {}
+
 variable "image_operating_system" {}
 
 # networking
