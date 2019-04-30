@@ -85,6 +85,7 @@ variable "vcn_dns_name" {
 variable "vcn_name" {
   type        = "string"
   description = "name of vcn"
+  default     = "oke vcn"
 }
 
 # nat
@@ -249,7 +250,8 @@ variable "create_auth_token" {
 }
 
 variable "email_address" {
-  description = "email address used for ocir "
+  description = "email address used for OICR"
+  default = ""
 }
 
 variable "ocir_urls" {
@@ -267,10 +269,12 @@ variable "ocir_urls" {
 
 variable "tenancy_name" {
   description = "tenancy name"
+  default = ""
 }
 
 variable "username" {
-  description = "username to access ocir"
+  description = "username to access OICR"
+  default = ""
 }
 
 # helm
