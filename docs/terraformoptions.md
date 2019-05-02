@@ -26,7 +26,7 @@
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | label_prefix                          | a prefix to be prepended to the name of resources   |   e.g. dev, test, prod   |   oke            |
-| region                                | OCI region where to provision (required)      | eu-frankfurt-1, us-ashburn-1, uk-london-1, us-phoenix-1, ca-toronto-1 | us-ashburn-1 |
+| region                                | OCI region where to provision (required)      | ap-tokyo-1, eu-frankfurt-1, us-ashburn-1, uk-london-1, us-phoenix-1, ca-toronto-1 |      |
 
 ## Networking
 | Option                                | Description                                   | Values                    | Default               | 

@@ -126,7 +126,7 @@ resource "oci_core_security_list" "workers_seclist" {
       }
     },
     {
-      # rule 10
+      # rule 12
       protocol  = "${local.tcp_protocol}"
       source    = "${local.anywhere}"
       stateless = false
