@@ -53,9 +53,9 @@ variable "label_prefix" {
 }
 
 variable "region" {
-  # List of regions: https://docs.us-phoenix-1.oraclecloud.com/Content/General/Concepts/regions.htm
+  # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "region"
-  default     = "us-ashburn-1"
+  default     = ""
 }
 
 # networking parameters
@@ -255,10 +255,12 @@ variable "email_address" {
 }
 
 variable "ocir_urls" {
+  # Region and region codes: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "urls of ocir"
   type        = "map"
 
   default = {
+    ap-tokyo-1     = "nrt.ocir.io"
     us-phoenix-1   = "phx.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
@@ -273,7 +275,7 @@ variable "tenancy_name" {
 }
 
 variable "username" {
-  description = "username to access OICR"
+  description = "username to access OCIR"
   default = ""
 }
 
