@@ -5,6 +5,10 @@ output "bastion_public_ip" {
   value = "${module.base.bastion_public_ip}"
 }
 
+output "cluster_endpoint" {
+  value = "${module.oke.cluster_endpoint}"
+}
+
 output "ssh_to_bastion" {
   value = "${module.base.ssh_to_bastion}"
 }
