@@ -9,7 +9,7 @@ data "oci_containerengine_cluster_kube_config" "kube_config" {
 
 resource "local_file" "kube_config_file" {
   content    = "${data.oci_containerengine_cluster_kube_config.kube_config.content}"
-  depends_on = ["null_resource.create_local_kubeconfig", "oci_containerengine_cluster.k8s_cluster"]
+  depends_on = ["oci_containerengine_cluster.k8s_cluster"]
   filename   = "${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
 }
 
