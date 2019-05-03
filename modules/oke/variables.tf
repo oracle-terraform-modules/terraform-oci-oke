@@ -78,6 +78,10 @@ variable "cluster_kube_config_expiration" {
 variable "cluster_kube_config_token_version" {
   default = "1.0.0"
 }
+variable "config_output_path" {
+  type        = "string"
+  description = "output path for configuration files"
+}
 
 # ocir
 variable "auth_token" {}

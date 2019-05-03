@@ -4,7 +4,7 @@
 module "base" {
   source = "./modules/base"
 
-  # identity 
+  # identity
   api_fingerprint      = "${var.api_fingerprint}"
   api_private_key_path = "${var.api_private_key_path}"
   compartment_name     = "${var.compartment_name}"
@@ -106,6 +106,9 @@ module "oke" {
   enable_instance_principal = "${var.enable_instance_principal}"
   image_operating_system    = "${var.image_operating_system}"
 
+  # kubeconfig
+  config_output_path        = "${var.config_output_path}"
+
   # networking
   vcn_id = "${module.base.vcn_id}"
 
@@ -143,5 +146,5 @@ module "oke" {
 
   # calico
   calico_version = "${var.calico_version}"
-  install_calico = "${var.install_calico}" 
+  install_calico = "${var.install_calico}"
 }

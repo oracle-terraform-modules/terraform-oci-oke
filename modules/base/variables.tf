@@ -149,6 +149,10 @@ variable "image_operating_system_version" {
   description = "version of selected operating system"
 }
 
+# kubeconfig
+variable "config_output_path" {
+  type        = "string"
+  description = "output path for configuration files"
 
 # availability domains
 

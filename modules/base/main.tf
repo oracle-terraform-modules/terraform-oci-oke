@@ -35,4 +35,5 @@ module "bastion" {
   vcn_id                         = "${module.vcn.vcn_id}"
   ad_names                       = "${data.template_file.ad_names.*.rendered}"
   availability_domains           = "${var.availability_domains}"
+  config_output_path             = "${var.config_output_path}"
 }
