@@ -101,10 +101,10 @@ module "oke" {
   availability_domains = "${var.availability_domains}"
 
   # bastion
-  bastion_public_ip              = "${module.base.bastion_public_ip}"
-  create_bastion                 = "${var.create_bastion}"
-  enable_instance_principal      = "${var.enable_instance_principal}"
-  image_operating_system         = "${var.image_operating_system}"
+  bastion_public_ip         = "${module.base.bastion_public_ip}"
+  create_bastion            = "${var.create_bastion}"
+  enable_instance_principal = "${var.enable_instance_principal}"
+  image_operating_system    = "${var.image_operating_system}"
 
   # networking
   vcn_id = "${module.base.vcn_id}"
@@ -143,5 +143,5 @@ module "oke" {
 
   # calico
   calico_version = "${var.calico_version}"
-  install_calico = "${var.install_calico}"
+  install_calico = "${var.install_calico}" 
 }

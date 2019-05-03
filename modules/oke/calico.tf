@@ -15,33 +15,21 @@ data "template_file" "install_calico" {
   count = "${var.install_calico == true   ? 1 : 0}"
 }
 
-resource null_resource "write_install_calico" {
-  connection {
-    host        = "${var.bastion_public_ip}"
-    private_key = "${file(var.ssh_private_key_path)}"
-    timeout     = "40m"
-    type        = "ssh"
-    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
-  }
-
-  provisioner "file" {
-    content     = "${data.template_file.install_calico.rendered}"
-    destination = "~/install_calico.sh"
-  }
-
-  count = "${(var.create_bastion == true  && var.install_calico == true)   ? 1 : 0}"
-}
-
 resource null_resource "install_calico" {
   connection {
     host        = "${var.bastion_public_ip}"
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
+
+  provisioner "file" {
+    content     = "${data.template_file.install_calico.rendered}"
+    destination = "~/install_calico.sh"
+  }
 
   provisioner "remote-exec" {
     inline = [

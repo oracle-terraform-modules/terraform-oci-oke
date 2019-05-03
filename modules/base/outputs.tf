@@ -4,7 +4,7 @@
 # for reuse
 
 output "ad_names" {
-  value = "${data.template_file.ad_names.*.rendered}"
+  value = "${sort(data.template_file.ad_names.*.rendered)}"
 }
 
 output "bastion_public_ip" {
