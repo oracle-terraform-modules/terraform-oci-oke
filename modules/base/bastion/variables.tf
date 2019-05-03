@@ -36,7 +36,6 @@ variable "image_operating_system_version" {}
 variable "config_output_path" {
   type        = "string"
   description = "output path for configuration files"
-  default     = "./generated/"
 }
 
 # networking

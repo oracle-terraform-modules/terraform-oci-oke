@@ -37,6 +37,9 @@ module "base" {
   image_operating_system         = "${var.image_operating_system}"
   image_operating_system_version = "${var.image_operating_system_version}"
 
+  # kubeconfig
+  config_output_path   = "${var.config_output_path}"
+
   # availability_domains
   availability_domains = "${var.availability_domains}"
 }
