@@ -3,7 +3,7 @@
 
 provider "helm" {
   kubernetes {
-    config_path = "${path.root}/generated/kubeconfig"
+    config_path = "${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
   }
 }
 
