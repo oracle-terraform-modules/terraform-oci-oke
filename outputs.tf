@@ -9,8 +9,12 @@ output "ssh_to_bastion" {
   value = "${module.base.ssh_to_bastion}"
 }
 
-output "kubeconfig" {
-  value = "export KUBECONFIG=generated/kubeconfig"
+output "kubeconfig_env" {
+  value = "export KUBECONFIG=${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
+}
+
+output "kubeconfig_file" {
+  value = "${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
 }
 
 output "ocirtoken" {
