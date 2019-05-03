@@ -41,7 +41,7 @@ resource "null_resource" "install_kubectl_bastion" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   provisioner "file" {
@@ -65,7 +65,7 @@ resource "null_resource" "write_kubeconfig_bastion" {
     private_key = "${file(var.ssh_private_key_path)}"
     timeout     = "40m"
     type        = "ssh"
-    user        = "${var.image_operating_system == "ubuntu"   ? "ubuntu" : "opc"}"
+    user        = "${var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"}"
   }
 
   depends_on = ["local_file.kube_config_file"]
@@ -78,7 +78,7 @@ resource "null_resource" "write_kubeconfig_bastion" {
 
   provisioner "file" {
     source      = "generated/kubeconfig"
-    destination = "${var.image_operating_system == "ubuntu"   ? "/home/ubuntu/.kube/config" : "/home/opc/.kube/config"}"
+    destination = "~/.kube/config"
   }
 
   count = "${var.create_bastion == true    ? 1 : 0}"

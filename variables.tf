@@ -2,7 +2,6 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
-
 variable "api_fingerprint" {
   description = "fingerprint of oci api private key"
 }
@@ -32,7 +31,6 @@ variable "user_ocid" {
 }
 
 # ssh keys
-
 variable "ssh_private_key_path" {
   description = "path to ssh private key"
 }
@@ -42,7 +40,6 @@ variable "ssh_public_key_path" {
 }
 
 # general oci parameters
-
 variable "disable_auto_retries" {
   default = true
 }
@@ -59,7 +56,6 @@ variable "region" {
 }
 
 # networking parameters
-
 variable "newbits" {
   type        = "map"
   description = "new mask for the subnet within the virtual network. use as newbits parameter for cidrsubnet function"
@@ -100,7 +96,6 @@ variable "nat_gateway_name" {
 }
 
 # service gateway
-
 variable "create_service_gateway" {
   description = "whether to create a service gateway"
   default     = false
@@ -127,7 +122,6 @@ variable "subnets" {
 }
 
 # bastion
-
 variable "bastion_shape" {
   description = "shape of bastion instance"
   default     = "VM.Standard2.1"
@@ -145,20 +139,20 @@ variable "enable_instance_principal" {
 variable "image_ocid" {
   default = "NONE"
 }
+
 variable "image_operating_system" {
   # values = Oracle Linux, CentOS, Canonical Ubuntu
-  default = "Oracle Linux"
+  default     = "Oracle Linux"
   description = "operating system to use for the bastion"
 }
 
 variable "image_operating_system_version" {
   # Versions of available operating systems can be found here: https://docs.cloud.oracle.com/iaas/images/
-  default = "7.6"
+  default     = "7.6"
   description = "version of selected operating system"
 }
 
 # availability domains
-
 variable "availability_domains" {
   description = "ADs where to provision resources"
   type        = "map"
@@ -176,7 +170,6 @@ variable "availability_domains" {
 }
 
 # oke
-
 variable "cluster_name" {
   description = "name of oke cluster"
   default     = "okecluster"
@@ -251,7 +244,7 @@ variable "create_auth_token" {
 
 variable "email_address" {
   description = "email address used for OICR"
-  default = ""
+  default     = ""
 }
 
 variable "ocir_urls" {
@@ -271,31 +264,32 @@ variable "ocir_urls" {
 
 variable "tenancy_name" {
   description = "tenancy name"
-  default = ""
+  default     = ""
 }
 
 variable "username" {
   description = "username to access OCIR"
-  default = ""
+  default     = ""
 }
 
 # helm
-
 variable "helm_version" {
   description = "version of helm to install"
   default     = "2.13.0"
 }
 
 variable "install_helm" {
-  description = "whether to install helm on the bastion"
+  description = "whether to install helm client on the bastion"
   default     = false
 }
 
 # calico
 variable "calico_version" {
-  default = "3.6"
+  description = "version of calico to install"
+  default     = "3.6"
 }
 
 variable "install_calico" {
-  default = false
+  description = "whether to install calico for network pod security policy"
+  default     = false
 }

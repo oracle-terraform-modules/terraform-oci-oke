@@ -10,6 +10,4 @@ sudo mv linux-amd64/helm /usr/local/bin
 
 rm -rf linux-amd64
 
-helm init --force-upgrade
-
 helm init --upgrade

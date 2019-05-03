@@ -101,11 +101,9 @@ variable "helm_version" {}
 
 variable "install_helm" {}
 
-
 # calico
 variable "calico_version" {}
 
 variable "install_calico" {
-  default = "false"
+  default = false
 }
-
