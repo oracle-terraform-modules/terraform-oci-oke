@@ -4,10 +4,12 @@
 # Identity and access parameters
 variable "api_fingerprint" {
   description = "fingerprint of oci api private key"
+  default     = ""
 }
 
 variable "api_private_key_path" {
   description = "path to oci api private key"
+  default     = ""
 }
 
 variable "compartment_name" {
@@ -23,11 +25,13 @@ variable "compartment_ocid" {
 variable "tenancy_ocid" {
   type        = "string"
   description = "tenancy id"
+  default     = ""
 }
 
 variable "user_ocid" {
   type        = "string"
   description = "user ocid"
+  default     = ""
 }
 
 # ssh keys
