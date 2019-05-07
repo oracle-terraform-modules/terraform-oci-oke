@@ -10,7 +10,7 @@ data "oci_containerengine_cluster_kube_config" "kube_config" {
 resource "local_file" "kube_config_file" {
   content    = "${data.oci_containerengine_cluster_kube_config.kube_config.content}"
   depends_on = ["oci_containerengine_cluster.k8s_cluster"]
-  filename   = "${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
+  filename   = "${var.config_output_path}/kubeconfig_${var.cluster_name}"
 }
 
 data "template_file" "install_kubectl" {
@@ -63,7 +63,7 @@ resource "null_resource" "write_kubeconfig_bastion" {
   }
 
   provisioner "file" {
-    source      = "${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
+    source      = "${var.config_output_path}/kubeconfig_${var.cluster_name}"
     destination = "~/.kube/config"
   }
 

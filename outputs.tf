@@ -14,11 +14,11 @@ output "ssh_to_bastion" {
 }
 
 output "kubeconfig_env" {
-  value = "export KUBECONFIG=${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
+  value = "export KUBECONFIG=${var.config_output_path}/kubeconfig_${var.cluster_name}"
 }
 
 output "kubeconfig_file" {
-  value = "${var.config_output_path}/kubeconfig_oke_${var.cluster_name}"
+  value = "${var.config_output_path}/kubeconfig_${var.cluster_name}"
 }
 
 output "ocirtoken" {
