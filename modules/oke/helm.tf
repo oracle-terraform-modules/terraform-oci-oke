@@ -10,6 +10,8 @@ provider "helm" {
 data "helm_repository" "stable" {
   name = "stable"
   url  = "https://kubernetes-charts.storage.googleapis.com"
+
+  count = "${(var.create_bastion == true && var.install_helm == true)   ? 1 : 0}"
 }
 
 data "template_file" "install_helm" {
