@@ -13,7 +13,6 @@ variable "api_private_key_path" {
 variable "compartment_name" {
   type        = "string"
   description = "compartment name"
-
 }
 
 variable "compartment_ocid" {
@@ -29,13 +28,6 @@ variable "tenancy_ocid" {
 variable "user_ocid" {
   type        = "string"
   description = "user ocid"
-}
-
-# config
-variable "config_output_path" {
-  type        = "string"
-  description = "output path for configuration files"
-  default     = "generated/"
 }
 
 # ssh keys
