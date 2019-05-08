@@ -46,7 +46,7 @@ variable "disable_auto_retries" {
 
 variable "label_prefix" {
   type    = "string"
-  default = "dev"
+  default = "oke"
 }
 
 variable "region" {
@@ -81,7 +81,7 @@ variable "vcn_dns_name" {
 variable "vcn_name" {
   type        = "string"
   description = "name of vcn"
-  default     = "vitokeess"
+  default     = "oke vcn"
 }
 
 # nat

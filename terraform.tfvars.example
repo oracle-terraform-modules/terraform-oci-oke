@@ -22,7 +22,7 @@ ssh_private_key_path = ""
 ssh_public_key_path = ""
 
 # general oci parameters
-label_prefix = "dev"
+label_prefix = "oke"
 
 region = "us-phoenix-1"
 
@@ -48,7 +48,7 @@ vcn_cidr = "10.0.0.0/16"
 
 vcn_dns_name = "oke"
 
-vcn_name = "vitokeess"
+vcn_name = "oke vcn"
 
 create_nat_gateway = "true"
 
