@@ -26,7 +26,7 @@
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | label_prefix                          | a prefix to be prepended to the name of resources   |   e.g. dev, test, prod   |   oke            |
-| region                                | OCI region where to provision (required)      | ap-tokyo-1, eu-frankfurt-1, us-ashburn-1, uk-london-1, us-phoenix-1, ca-toronto-1 |      |
+| region                                | OCI region where to provision (required)      | ap-tokyo-1, eu-frankfurt-1, us-ashburn-1, uk-london-1, us-phoenix-1, ca-toronto-1 |   us-phoenix-1   |
 
 ## Networking
 | Option                                | Description                                   | Values                    | Default               | 
@@ -34,11 +34,11 @@
 | newbits                               | The difference between the VCN's netmask and the desired subnets mask. This translates into the newbits parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   |   |   See [terraform.tfvars.example][terraform example]   |
 | subnets                               | Defines the boundaries of the subnets. This translates into the netnum parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   | See [terraform.tfvars.example][terraform example]   | See [terraform.tfvars.example][terraform example]   |
 | vcn_cidr                              | VCN's CIDR                                    |                           | 10.0.0.0/16           |
-| vcn_dns_name                          | VCN's DNS name                                |                           |  ocioke               |
+| vcn_dns_name                          | VCN's DNS name                                |                           |  oke               |
 | vcn_name                              | VCN's name in the OCI Console                 |                           |  oke vcn              |
-| create_nat_gateway                    | Whether to create a NAT gateway. Required for private worker mode        |     true/false        |  false   |
+| create_nat_gateway                    | Whether to create a NAT gateway. Required for private worker mode        |     true/false        |  true   |
 | nat_gateway_name                      | NAT gateway name                              |                           |  nat                  | 
-| create_service_gateway                | Whether to create a Service Gateway for object storage. | true/false      |  false                |
+| create_service_gateway                | Whether to create a Service Gateway for object storage. | true/false      |  true                |
 | service_gateway_name                  | Service Gateway name                          |                           |  sg                   |
 
 ## Bastion
@@ -57,7 +57,7 @@
 ## OKE Configuration
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
-| cluster_name                          | The name of the OKE cluster as it will appear in the OCI Console.                        |        |  okecluster     |
+| cluster_name                          | The name of the OKE cluster as it will appear in the OCI Console.                        |        |  oke     |
 | dashboard_enabled                     | Whether to create the default Kubernetes dashboard.                                      | true/false |   true      |
 | kubernetes_version                    | The version of Kubernetes to provision. This is based on the available versions in OKE. To provision a specific version, choose from available versions and override the 'LATEST' value. |   LATEST, v1.10.11, v1.11.9, v1.12.7     |       LATEST    |
 | node_pools                            | Number of node pools to create. Terraform will use this number in conjunction with the node_pool_name_prefix to create the name of the node pools.                                              |               |    1       |

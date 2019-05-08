@@ -46,13 +46,13 @@ variable "disable_auto_retries" {
 
 variable "label_prefix" {
   type    = "string"
-  default = ""
+  default = "oke"
 }
 
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "region"
-  default     = ""
+  default     = "us-phoenix-1"
 }
 
 # networking parameters
@@ -75,7 +75,7 @@ variable "vcn_cidr" {
 
 variable "vcn_dns_name" {
   type    = "string"
-  default = "baseoci"
+  default = "oke"
 }
 
 variable "vcn_name" {
@@ -87,7 +87,7 @@ variable "vcn_name" {
 # nat
 variable "create_nat_gateway" {
   description = "whether to create a nat gateway"
-  default     = false
+  default     = true
 }
 
 variable "nat_gateway_name" {
@@ -98,12 +98,12 @@ variable "nat_gateway_name" {
 # service gateway
 variable "create_service_gateway" {
   description = "whether to create a service gateway"
-  default     = false
+  default     = true
 }
 
 variable "service_gateway_name" {
   description = "name of service gateway"
-  default     = "object_storage_gateway"
+  default     = "sg"
 }
 
 variable "subnets" {
@@ -172,7 +172,7 @@ variable "availability_domains" {
 # oke
 variable "cluster_name" {
   description = "name of oke cluster"
-  default     = "okecluster"
+  default     = "oke"
 }
 
 variable "dashboard_enabled" {
