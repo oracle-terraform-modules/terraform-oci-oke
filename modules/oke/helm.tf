@@ -1,17 +1,6 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-provider "helm" {
-  kubernetes {
-    config_path = "${path.root}/generated/kubeconfig"
-  }
-}
-
-data "helm_repository" "stable" {
-  name = "stable"
-  url  = "https://kubernetes-charts.storage.googleapis.com"
-}
-
 data "template_file" "install_helm" {
   template = "${file("${path.module}/scripts/install_helm.template.sh")}"
 
