@@ -253,12 +253,13 @@ variable "ocir_urls" {
   type        = "map"
 
   default = {
+    ap-seoul-1     = "icn.ocir.io"
     ap-tokyo-1     = "nrt.ocir.io"
-    us-phoenix-1   = "phx.ocir.io"
-    us-ashburn-1   = "iad.ocir.io"
+    ca-toronto-1   = "yyz.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
     uk-london-1    = "lhr.ocir.io"
-    ca-toronto-1   = "yyz.ocir.io"
+    us-phoenix-1   = "phx.ocir.io"
+    us-ashburn-1   = "iad.ocir.io"
   }
 }
 
