@@ -54,7 +54,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "130.35.0.0/16"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -65,7 +65,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "134.70.0.0/17"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -76,7 +76,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "138.1.0.0/17"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -87,7 +87,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "140.91.0.0/17"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -98,7 +98,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "147.154.0.0/16"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -109,7 +109,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "192.29.0.0/16"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -120,7 +120,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "${local.anywhere}"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.ssh_port}"
         "min" = "${local.ssh_port}"
       }
@@ -131,7 +131,7 @@ resource "oci_core_security_list" "workers_seclist" {
       source    = "${local.anywhere}"
       stateless = false
 
-      tcp_options {
+      tcp_options = {
         "max" = "${local.node_port_max}"
         "min" = "${local.node_port_min}"
       }

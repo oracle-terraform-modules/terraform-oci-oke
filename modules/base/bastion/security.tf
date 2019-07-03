@@ -14,32 +14,25 @@ locals {
 }
 
 resource "oci_core_security_list" "bastion" {
-  compartment_id = "${var.compartment_ocid}"
+  compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}-bastion"
-  vcn_id         = "${var.vcn_id}"
-  count          = "${(var.create_bastion == true) ? 1 : 0}"
+  vcn_id         = var.vcn_id
+  count          = var.create_bastion == true ? 1 : 0
 
-  egress_security_rules = [
-    {
-      protocol    = "${local.all_protocols}"
-      destination = "${local.anywhere}"
-    },
-  ]
+  egress_security_rules {
+      protocol    = local.all_protocols
+      destination = local.anywhere
+  }
 
-  ingress_security_rules = [
-    {
-      protocol = "${local.all_protocols}"
-      source   = "${var.vcn_cidr}"
-    },
-    {
+  ingress_security_rules {
       # allow ssh
-      protocol = "${local.tcp_protocol}"
-      source   = "${local.anywhere}"
+      protocol = local.tcp_protocol
+      source   = local.anywhere
 
       tcp_options {
-        "min" = "${local.ssh_port}"
-        "max" = "${local.ssh_port}"
+        min = local.ssh_port
+        max = local.ssh_port
       }
-    },
-  ]
+    }
+  count = var.create_bastion == true ? 1 :0  
 }
