@@ -80,68 +80,68 @@ module "network" {
 }
 
 # # cluster creation for oke
-# module "oke" {
-#   source = "./modules/oke"
+module "oke" {
+  source = "./modules/oke"
 
-#   # identity
-#   compartment_ocid = var.compartment_ocid
-#   tenancy_ocid     = var.tenancy_ocid
-#   user_ocid        = var.user_ocid
+  # identity
+  compartment_ocid = var.compartment_ocid
+  tenancy_ocid     = var.tenancy_ocid
+  user_ocid        = var.user_ocid
 
-#   # ssh keys
-#   ssh_private_key_path = var.ssh_private_key_path
-#   ssh_public_key_path  = var.ssh_public_key_path
+  # ssh keys
+  ssh_private_key_path = var.ssh_private_key_path
+  ssh_public_key_path  = var.ssh_public_key_path
 
-#   # oci
-#   ad_names     = module.base.ad_names
-#   label_prefix = var.label_prefix
-#   region       = var.region
+  # oci
+  ad_names     = module.base.ad_names
+  label_prefix = var.label_prefix
+  region       = var.region
 
-#   # availability domains
-#   availability_domains = var.availability_domains
+  # availability domains
+  availability_domains = var.availability_domains
 
-#   # bastion
-#   bastion_public_ip         = module.base.bastion_public_ip
-#   create_bastion            = var.create_bastion
-#   enable_instance_principal = var.enable_instance_principal
-#   image_operating_system    = var.image_operating_system
+  # bastion
+  bastion_public_ip         = module.base.bastion_public_ip
+  create_bastion            = var.create_bastion
+  enable_instance_principal = var.enable_instance_principal
+  image_operating_system    = var.image_operating_system
 
-#   # networking
-#   vcn_id = module.base.vcn_id
+  # networking
+  vcn_id = module.base.vcn_id
 
-#   # oke
-#   cluster_kubernetes_version                              = var.kubernetes_version
-#   cluster_name                                            = var.cluster_name
-#   cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
-#   cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
-#   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
-#   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
+  # oke
+  cluster_kubernetes_version                              = var.kubernetes_version
+  cluster_name                                            = var.cluster_name
+  cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
+  cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
+  cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
+  cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
 
-#   cluster_subnets = module.network.subnet_ids
+  cluster_subnets = module.network.subnet_ids
 
-#   # node pools
-#   node_pools = var.node_pools
+  # node pools
+  node_pools = var.node_pools
 
-#   node_pool_name_prefix         = var.node_pool_name_prefix
-#   node_pool_node_image_name     = var.node_pool_node_image_name
-#   node_pool_node_shape          = var.node_pool_node_shape
-#   node_pool_quantity_per_subnet = var.node_pool_quantity_per_subnet
-#   nodepool_topology             = var.nodepool_topology
+  node_pool_name_prefix         = var.node_pool_name_prefix
+  node_pool_node_image_name     = var.node_pool_node_image_name
+  node_pool_node_shape          = var.node_pool_node_shape
+  node_pool_quantity_per_subnet = var.node_pool_quantity_per_subnet
+  nodepool_topology             = var.nodepool_topology
 
-#   # ocir
-#   auth_token        = var.create_auth_token == true ? module.auth.ocirtoken : "none"
-#   create_auth_token = var.create_auth_token
-#   email_address     = var.email_address
-#   ocirtoken_id      = module.auth.ocirtoken_id
-#   ocir_urls         = var.ocir_urls
-#   tenancy_name      = var.tenancy_name
-#   username          = var.username
+  # ocir
+  auth_token        = var.create_auth_token == true ? module.auth.ocirtoken : "none"
+  create_auth_token = var.create_auth_token
+  email_address     = var.email_address
+  ocirtoken_id      = module.auth.ocirtoken_id
+  ocir_urls         = var.ocir_urls
+  tenancy_name      = var.tenancy_name
+  username          = var.username
 
-#   # helm
-#   helm_version = var.helm_version
-#   install_helm = var.install_helm
+  # helm
+  helm_version = var.helm_version
+  install_helm = var.install_helm
 
-#   # calico
-#   calico_version = var.calico_version
-#   install_calico = var.install_calico 
-# }
+  # calico
+  calico_version = var.calico_version
+  install_calico = var.install_calico 
+}

@@ -17,7 +17,6 @@ resource "oci_core_security_list" "bastion" {
   compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}-bastion"
   vcn_id         = var.vcn_id
-  count          = var.create_bastion == true ? 1 : 0
 
   egress_security_rules {
       protocol    = local.all_protocols

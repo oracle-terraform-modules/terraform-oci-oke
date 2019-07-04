@@ -12,3 +12,4 @@ fi
 mkdir ~/.kube
 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
+echo "alias k='kubectl'" >> ~/.bashrc

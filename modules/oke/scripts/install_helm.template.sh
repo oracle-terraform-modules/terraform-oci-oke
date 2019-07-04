@@ -8,6 +8,13 @@ tar zxvf helm-v${helm_version}-linux-amd64.tar.gz
 
 sudo mv linux-amd64/helm /usr/local/bin
 
+rm -f helm-v${helm_version}-linux-amd64.tar.gz
+
 rm -rf linux-amd64
 
 helm init --upgrade
+
+helm repo update
+
+echo "source <(helm completion bash)" >> ~/.bashrc
+echo "alias h='helm'" >> ~/.bashrc
