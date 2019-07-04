@@ -41,16 +41,16 @@ module "base" {
   availability_domains = var.availability_domains
 }
 
-# module "auth" {
-#   source               = "./modules/auth"
-#   api_fingerprint      = var.api_fingerprint
-#   api_private_key_path = var.api_private_key_path
-#   compartment_ocid     = var.compartment_ocid
-#   create_auth_token    = var.create_auth_token
-#   home_region          = module.base.home_region
-#   tenancy_ocid         = var.tenancy_ocid
-#   user_ocid            = var.user_ocid
-# }
+module "auth" {
+  source               = "./modules/auth"
+  api_fingerprint      = var.api_fingerprint
+  api_private_key_path = var.api_private_key_path
+  compartment_ocid     = var.compartment_ocid
+  create_auth_token    = var.create_auth_token
+  home_region          = module.base.home_region
+  tenancy_ocid         = var.tenancy_ocid
+  user_ocid            = var.user_ocid
+}
 
 # # additional networking for oke
 # module "network" {

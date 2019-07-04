@@ -13,7 +13,7 @@ output "kubeconfig" {
   value = "export KUBECONFIG=generated/kubeconfig"
 }
 
-# output "ocirtoken" {
-#   value = module.auth.ocirtoken
-#   sensitive = true
-# }
+output "ocirtoken" {
+  value = module.auth.ocirtoken
+  sensitive = true
+}
