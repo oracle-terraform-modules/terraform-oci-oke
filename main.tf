@@ -53,31 +53,31 @@ module "auth" {
 }
 
 # # additional networking for oke
-# module "network" {
-#   source = "./modules/okenetwork"
+module "network" {
+  source = "./modules/okenetwork"
 
-#   # identity
-#   compartment_ocid = var.compartment_ocid
-#   tenancy_ocid     = var.tenancy_ocid
+  # identity
+  compartment_ocid = var.compartment_ocid
+  tenancy_ocid     = var.tenancy_ocid
 
-#   # general
-#   ad_names     = module.base.ad_names
-#   label_prefix = var.label_prefix
+  # general
+  ad_names     = module.base.ad_names
+  label_prefix = var.label_prefix
 
-#   # networking
-#   ig_route_id  = module.base.ig_route_id
-#   nat_route_id = module.base.nat_route_id
-#   newbits      = var.newbits
-#   subnets      = var.subnets
-#   vcn_cidr     = var.vcn_cidr
-#   vcn_id       = module.base.vcn_id
+  # networking
+  ig_route_id  = module.base.ig_route_id
+  nat_route_id = module.base.nat_route_id
+  newbits      = var.newbits
+  subnets      = var.subnets
+  vcn_cidr     = var.vcn_cidr
+  vcn_id       = module.base.vcn_id
 
-#   # availability domains
-#   availability_domains = var.availability_domains
+  # availability domains
+  availability_domains = var.availability_domains
 
-#   # oke
-#   worker_mode = var.worker_mode
-# }
+  # oke
+  worker_mode = var.worker_mode
+}
 
 # # cluster creation for oke
 # module "oke" {
