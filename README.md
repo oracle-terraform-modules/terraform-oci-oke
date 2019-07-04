@@ -148,3 +148,4 @@ $ terraform apply
     - Mika Rinne
     - Kristen Jacobs
     - Tim Sheppard
+    - @AmedeeBulle
