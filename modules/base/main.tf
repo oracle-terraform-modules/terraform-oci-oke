@@ -25,6 +25,7 @@ module "bastion" {
   ssh_private_key_path           = var.ssh_private_key_path
   bastion_shape                  = var.bastion_shape
   create_bastion                 = var.create_bastion
+  bastion_access                 = var.bastion_access
   image_ocid                     = var.image_ocid
   image_operating_system         = var.image_operating_system
   image_operating_system_version = var.image_operating_system_version

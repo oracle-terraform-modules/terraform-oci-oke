@@ -32,6 +32,7 @@ module "base" {
   # bastion
   bastion_shape                  = var.bastion_shape
   create_bastion                 = var.create_bastion
+  bastion_access                 = var.bastion_access
   enable_instance_principal      = var.enable_instance_principal
   image_ocid                     = var.image_ocid
   image_operating_system         = var.image_operating_system

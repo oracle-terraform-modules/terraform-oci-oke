@@ -46,6 +46,7 @@
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | bastion_shape                         | The shape of the bastion instance that will be provisioned.  |            | VM.Standard2.1        |
 | create_bastion                        | Whether to create the bastion                 |   true/false              | true                  |
+| bastion_access                        | CIDR block from where the bastion can be sshed into. Default is "ANYWHERE" and equivalent to "0.0.0.0/0"   | CIDR Block in the form of "XXX.XXX.XXX.XXX/X" for which ssh access would be allowed and everywhere else restricted   | "ANYWHERE" |
 | enable_instance_principal             | whether to enable instance_principal on bastion. Ensure the user_ocid is part of administrators group in order to use this. |   true/false            |  false                 |
 | image_ocid                            | The ocid of the image to use for the bastion instance. Tested with Oracle Linux 7.x and Ubuntu 18.04. Should work with Oracle Linux 6.x and CentOS 6.x and 7.x too. (Optional)       |               |  NONE              |
 | image_operating_system                         | The Operating System image to be used to provision the bastion  |            | Oracle Linux      |
@@ -83,7 +84,7 @@
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
 | install_helm                          | Whether to install helm on the bastion instance. You need to enable at least 1 of the bastion instances under the 'availability_domains' parameter.                                            |                true/false | false           |
-| helm_version                          | The version of helm to install.                                              |               |          2.13.0 |
+| helm_version                          | The version of helm to install.                                              |               |          2.14.1 |
 
 
 ## Network Policy (Calico)

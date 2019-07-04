@@ -26,7 +26,7 @@ resource "oci_core_security_list" "bastion" {
   ingress_security_rules {
       # allow ssh
       protocol = local.tcp_protocol
-      source   = local.anywhere
+      source   = var.bastion_access == "ANYWHERE" ? local.anywhere : var.bastion_access
 
       tcp_options {
         min = local.ssh_port

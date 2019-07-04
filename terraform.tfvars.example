@@ -29,19 +29,19 @@ region = "us-phoenix-1"
 # networking
 
 newbits = {
-  "bastion" = "8"
-  "lb"      = "8"
-  "workers" = "8"
+  "bastion" = 8
+  "lb"      = 8
+  "workers" = 8
 }
 
 subnets = {
-  "bastion"     = "11"
-  "lb_ad1"      = "12"
-  "lb_ad2"      = "22"
-  "lb_ad3"      = "32"
-  "workers_ad1" = "13"
-  "workers_ad2" = "23"
-  "workers_ad3" = "33"
+  "bastion"     = 11
+  "lb_ad1"      = 12
+  "lb_ad2"      = 22
+  "lb_ad3"      = 32
+  "workers_ad1" = 13
+  "workers_ad2" = 23
+  "workers_ad3" = 33
 }
 
 vcn_cidr = "10.0.0.0/16"
@@ -50,11 +50,11 @@ vcn_dns_name = "oke"
 
 vcn_name = "oke vcn"
 
-create_nat_gateway = "true"
+create_nat_gateway = true
 
 nat_gateway_name = "nat"
 
-create_service_gateway = "true"
+create_service_gateway = true
 
 service_gateway_name = "sg"
 
@@ -62,9 +62,11 @@ service_gateway_name = "sg"
 
 bastion_shape = "VM.Standard2.1"
 
-create_bastion = "true"
+create_bastion = true
 
-enable_instance_principal = "false"
+bastion_access = "ANYWHERE"
+
+enable_instance_principal = false
 
 image_operating_system = "Oracle Linux"
 
@@ -73,13 +75,13 @@ image_operating_system_version = "7.6"
 # availability_domains
 
 availability_domains = {
-  "bastion"     = "1"
-  "lb_ad1"      = "1"
-  "lb_ad2"      = "2"
-  "lb_ad3"      = "3"
-  "workers_ad1" = "1"
-  "workers_ad2" = "2"
-  "workers_ad3" = "3"
+  "bastion"     = 1
+  "lb_ad1"      = 1
+  "lb_ad2"      = 2
+  "lb_ad3"      = 3
+  "workers_ad1" = 1
+  "workers_ad2" = 2
+  "workers_ad3" = 3
 }
 
 # oke
@@ -88,11 +90,11 @@ cluster_name = "oke"
 
 worker_mode = "private"
 
-dashboard_enabled = "true"
+dashboard_enabled = true
 
 kubernetes_version = "LATEST"
 
-node_pools = "1"
+node_pools = 1
 
 node_pool_name_prefix = "np"
 
@@ -100,18 +102,18 @@ node_pool_node_image_name = "Oracle-Linux-7.5"
 
 node_pool_node_shape = "VM.Standard2.1"
 
-node_pool_quantity_per_subnet = "1"
+node_pool_quantity_per_subnet = 1
 
-nodepool_topology = "3"
+nodepool_topology = 3
 
 pods_cidr = "10.244.0.0/16"
 
 services_cidr = "10.96.0.0/16"
 
-tiller_enabled = "true"
+tiller_enabled = true
 
 # ocir
-create_auth_token = "false"
+create_auth_token = false
 
 email_address = ""
 
@@ -121,12 +123,12 @@ username = ""
 
 # helm
 
-helm_version = "2.12.3"
+helm_version = "2.14.1"
 
-install_helm = "true"
+install_helm = true
 
 # calico
 
 calico_version = "3.6"
 
-install_calico = "false"
+install_calico = false
