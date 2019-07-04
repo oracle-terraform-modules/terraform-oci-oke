@@ -4,34 +4,34 @@
 # for reuse
 
 output "ad_names" {
-  value = "${sort(data.template_file.ad_names.*.rendered)}"
+  value = sort(data.template_file.ad_names.*.rendered)
 }
 
 output "bastion_public_ip" {
-  value = "${module.bastion.bastion_public_ip}"
+  value = module.bastion.bastion_public_ip
 }
 output "ig_route_id" {
-  value = "${module.vcn.ig_route_id}"
+  value = module.vcn.ig_route_id
 }
 
 output "nat_gateway_id" {
-  value = "${module.vcn.nat_gateway_id}"
+  value = module.vcn.nat_gateway_id
 }
 
 output "nat_route_id" {
-  value = "${module.vcn.nat_route_id}"
+  value = module.vcn.nat_route_id
 }
 
 output "sg_route_id" {
-  value = "${module.vcn.sg_route_id}"
+  value = module.vcn.sg_route_id
 }
 
 output "vcn_id" {
-  value = "${module.vcn.vcn_id}"
+  value = module.vcn.vcn_id
 }
 
 output "home_region" {
-  value = "${lookup(data.oci_identity_regions.home_region.regions[0], "name")}"
+  value = lookup(data.oci_identity_regions.home_region.regions[0], "name")
 }
 # convenient output
 

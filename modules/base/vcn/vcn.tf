@@ -6,26 +6,26 @@ locals {
 }
 
 resource "oci_core_vcn" "vcn" {
-  cidr_block     = "${var.vcn_cidr}"
-  compartment_id = "${var.compartment_ocid}"
+  cidr_block     = var.vcn_cidr
+  compartment_id = var.compartment_ocid
   display_name   = "${var.label_prefix}-${var.vcn_name}"
-  dns_label      = "${var.vcn_dns_name}"
+  dns_label      = var.vcn_dns_name
 }
 
 resource "oci_core_internet_gateway" "ig" {
-  compartment_id = "${var.compartment_ocid}"
-  display_name   = "${var.label_prefix}-ig"
-  vcn_id         = "${oci_core_vcn.vcn.id}"
+  compartment_id = var.compartment_ocid
+  display_name   = "${var.label_prefix}-ig-gw"
+  vcn_id         = oci_core_vcn.vcn.id
 }
 
 resource "oci_core_route_table" "ig_route" {
-  compartment_id = "${var.compartment_ocid}"
-  display_name   = "${var.label_prefix}-ig_route"
+  compartment_id = var.compartment_ocid
+  display_name   = "${var.label_prefix}-ig-route"
 
   route_rules {
-    destination       = "${local.anywhere}"
-    network_entity_id = "${oci_core_internet_gateway.ig.id}"
+    destination       = local.anywhere
+    network_entity_id = oci_core_internet_gateway.ig.id
   }
 
-  vcn_id = "${oci_core_vcn.vcn.id}"
+  vcn_id = oci_core_vcn.vcn.id
 }

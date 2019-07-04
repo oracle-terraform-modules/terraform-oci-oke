@@ -129,6 +129,11 @@ variable "create_bastion" {
   default = false
 }
 
+variable "bastion_access" {
+  description = "cidr from where the bastion can be sshed into. Default is ANYWHERE and equivalent to 0.0.0.0/0"
+  default     = "ANYWHERE"
+}
+
 variable "enable_instance_principal" {
   description = "enable the bastion hosts to call OCI API services without requiring api key"
   default     = false

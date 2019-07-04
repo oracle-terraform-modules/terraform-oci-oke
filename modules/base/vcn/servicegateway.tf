@@ -7,42 +7,40 @@ data "oci_core_services" "oci_services_object_storage" {
     values = ["All .* Services In Oracle Services Network"]
     regex  = true
   }
-
-  count = "${(var.create_service_gateway == true) ? 1 : 0}"
 }
 
 data "oci_core_service_gateways" "service_gateways" {
-  compartment_id = "${var.compartment_ocid}"
+  compartment_id = var.compartment_ocid
   state          = "AVAILABLE"
-  vcn_id         = "${oci_core_vcn.vcn.id}"
-  count          = "${(var.create_service_gateway == true) ? 1 : 0}"
+  vcn_id         = oci_core_vcn.vcn.id
+  count          = var.create_service_gateway == true ? 1 : 0
 }
 
 resource "oci_core_service_gateway" "service_gateway" {
-  compartment_id = "${var.compartment_ocid}"
-  display_name   = "${var.label_prefix}-${var.service_gateway_name}"
-  depends_on     = ["oci_core_nat_gateway.nat_gateway"]
+  compartment_id = var.compartment_ocid
+  display_name   = "${var.label_prefix}-${var.service_gateway_name}-gw"
+  depends_on     = oci_core_nat_gateway.nat_gateway
 
   services {
-    service_id = "${lookup(data.oci_core_services.oci_services_object_storage.services[0], "id")}"
+    service_id = lookup(data.oci_core_services.oci_services_object_storage.services[0], "id")
   }
 
-  vcn_id = "${oci_core_vcn.vcn.id}"
-  count  = "${(var.create_service_gateway == true) ? 1 : 0}"
+  vcn_id = oci_core_vcn.vcn.id
+  count  = var.create_service_gateway == true ? 1 : 0
 }
 
 resource "oci_core_route_table" "service_gateway_route" {
-  compartment_id = "${var.compartment_ocid}"
-  depends_on     = ["oci_core_route_table.nat_route"]
-  display_name   = "${var.label_prefix}-service_gateway_route"
+  compartment_id = var.compartment_ocid
+  depends_on     = oci_core_route_table.nat_route
+  display_name   = "${var.label_prefix}-sg-route"
 
   route_rules {
-    destination       = "${lookup(data.oci_core_services.oci_services_object_storage.services[0], "cidr_block")}"
+    destination       = lookup(data.oci_core_services.oci_services_object_storage.services[0], "cidr_block")
     destination_type  = "SERVICE_CIDR_BLOCK"
-    network_entity_id = "${oci_core_service_gateway.service_gateway.id}"
+    network_entity_id = oci_core_service_gateway.service_gateway[count.index].id
   }
 
-  vcn_id = "${oci_core_vcn.vcn.id}"
+  vcn_id = oci_core_vcn.vcn.id
 
-  count = "${(var.create_service_gateway == true) ? 1 : 0}"
+  count = var.create_service_gateway == true ? 1 : 0
 }

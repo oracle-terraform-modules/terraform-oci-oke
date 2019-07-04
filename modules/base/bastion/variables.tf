@@ -24,6 +24,8 @@ variable "bastion_shape" {}
 
 variable "create_bastion" {}
 
+variable "bastion_access" {}
+
 variable "image_ocid" {}
 
 variable "image_operating_system" {}
