@@ -42,7 +42,7 @@ resource "oci_core_subnet" "workers_ad3" {
 
   count                      = var.availability_domains["workers_ad3"] == 3 ? 1 : 0
 }
-2,
+
 resource "oci_core_subnet" "lb_ad1" {
   availability_domain        = element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["lb"],var.subnets["lb_ad1"])
