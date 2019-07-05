@@ -39,4 +39,3 @@ variable "availability_domains" {
 
 # oke
 variable "worker_mode" {}
-

@@ -118,7 +118,8 @@ module "oke" {
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
 
-  cluster_subnets = module.network.subnet_ids
+  cluster_subnets  = module.network.subnet_ids
+  preferred_lb_ads = var.preferred_lb_ads
 
   # node pools
   node_pools = var.node_pools
@@ -144,5 +145,5 @@ module "oke" {
 
   # calico
   calico_version = var.calico_version
-  install_calico = var.install_calico 
+  install_calico = var.install_calico
 }

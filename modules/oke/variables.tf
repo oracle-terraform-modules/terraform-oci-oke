@@ -59,6 +59,10 @@ variable "cluster_subnets" {
   type = "map"
 }
 
+variable "preferred_lb_ads" {
+  type = list
+}
+
 variable "node_pools" {}
 
 variable "node_pool_name_prefix" {}

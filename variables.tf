@@ -240,6 +240,12 @@ variable "worker_mode" {
   default     = "private"
 }
 
+variable "preferred_lb_ads" {
+  description = "preferred Availability Domains for Load Balancers"
+  type = list
+  default = ["lb_ad1", "lb_ad2"]
+}
+
 # ocir
 
 variable "create_auth_token" {

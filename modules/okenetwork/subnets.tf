@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource "oci_core_subnet" "workers_ad1" {
-  availability_domain        = length(var.ad_names) > 1 ? element(var.ad_names, 0): element(var.ad_names, 0)
+  availability_domain        = element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["workers"],var.subnets["workers_ad1"])
   compartment_id             = var.compartment_ocid
   display_name               = "${var.label_prefix}-workers-ad1"
@@ -16,7 +16,7 @@ resource "oci_core_subnet" "workers_ad1" {
 }
 
 resource "oci_core_subnet" "workers_ad2" {
-  availability_domain        = length(var.ad_names) > 1 ? element(var.ad_names, 1): element(var.ad_names, 0)
+  availability_domain        = length(var.ad_names) == 3 ? element(var.ad_names, (length(var.ad_names)-2)) : element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["workers"],var.subnets["workers_ad2"])
   compartment_id             = var.compartment_ocid
   display_name               = "${var.label_prefix}-workers-ad2"
@@ -30,7 +30,7 @@ resource "oci_core_subnet" "workers_ad2" {
 }
 
 resource "oci_core_subnet" "workers_ad3" {
-  availability_domain        = length(var.ad_names) > 1 ? element(var.ad_names, 2): element(var.ad_names, 0)
+  availability_domain        = length(var.ad_names) == 3 ? element(var.ad_names, (length(var.ad_names)-1)) : element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["workers"],var.subnets["workers_ad3"])
   compartment_id             = var.compartment_ocid
   display_name               = "${var.label_prefix}-workers-ad3"
@@ -42,9 +42,9 @@ resource "oci_core_subnet" "workers_ad3" {
 
   count                      = var.availability_domains["workers_ad3"] == 3 ? 1 : 0
 }
-
+2,
 resource "oci_core_subnet" "lb_ad1" {
-  availability_domain        = length(var.ad_names) > 1 ? element(var.ad_names, 0): element(var.ad_names, 0)
+  availability_domain        = element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["lb"],var.subnets["lb_ad1"])
   compartment_id             = var.compartment_ocid
   display_name               = "${var.label_prefix}-lb_ad1"
@@ -58,7 +58,7 @@ resource "oci_core_subnet" "lb_ad1" {
 }
 
 resource "oci_core_subnet" "lb_ad2" {
-  availability_domain        = length(var.ad_names) > 1 ? element(var.ad_names, 1): element(var.ad_names, 0)
+  availability_domain        = length(var.ad_names) == 3 ? element(var.ad_names, (length(var.ad_names)-2)) : element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["lb"],var.subnets["lb_ad2"])
   compartment_id             = var.compartment_ocid
   display_name               = "${var.label_prefix}-lb-ad2"
@@ -72,7 +72,7 @@ resource "oci_core_subnet" "lb_ad2" {
 }
 
 resource "oci_core_subnet" "lb_ad3" {
-  availability_domain        = length(var.ad_names) > 1 ? element(var.ad_names, 2): element(var.ad_names, 0)
+  availability_domain        = length(var.ad_names) == 3 ? element(var.ad_names, (length(var.ad_names)-1)) : element(var.ad_names, 0)
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["lb"],var.subnets["lb_ad3"])
   compartment_id             = var.compartment_ocid
   display_name               = "${var.label_prefix}-lb-ad3"
