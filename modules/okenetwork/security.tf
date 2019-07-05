@@ -2,16 +2,20 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 locals {
-  icmp_protocol = 1
-  tcp_protocol  = 6
   all_protocols = "all"
 
   anywhere = "0.0.0.0/0"
 
-  ssh_port = 22
+  icmp_protocol = 1
 
   node_port_min = 30000
+  
   node_port_max = 32767
+
+  ssh_port = 22
+
+  tcp_protocol  = 6
+
 }
 
 # worker security checklist
@@ -33,6 +37,18 @@ resource "oci_core_security_list" "workers_seclist" {
     destination = local.anywhere
     stateless   = false
   }
+
+  dynamic "egress_security_rules" {
+    # for oracle services
+    for_each = var.is_service_gateway_enabled == true ? list(1) : []
+
+    content {   
+      destination      = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
+      destination_type = "SERVICE_CIDR_BLOCK"
+      protocol    = local.all_protocols
+      stateless   = false
+    }
+  }  
 
   ingress_security_rules {
     # intra-vcn

@@ -27,5 +27,16 @@ resource "oci_core_route_table" "ig_route" {
     network_entity_id = oci_core_internet_gateway.ig.id
   }
 
+  dynamic "route_rules" {
+    for_each = (var.create_service_gateway == true && var.create_nat_gateway == false)  ? list(1) : []
+
+    content {
+      destination       = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
+      destination_type  = "SERVICE_CIDR_BLOCK"
+      network_entity_id = oci_core_service_gateway.service_gateway[0].id
+    }
+  }
+
+
   vcn_id = oci_core_vcn.vcn.id
 }

@@ -13,7 +13,7 @@ data "template_file" "bastion_cloud_init_file" {
   template = file("${path.module}/cloudinit/bastion.template.yaml")
 
   vars = {
-    bastion_sh_content = base64gzip(data.template_file.bastion_template[count.index].rendered)
+    bastion_sh_content = base64gzip(data.template_file.bastion_template[0].rendered)
     user               = var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
   count = var.create_bastion == true ? 1 : 0
@@ -27,7 +27,7 @@ data "template_cloudinit_config" "bastion" {
   part {
     filename     = "bastion.yaml"
     content_type = "text/cloud-config"
-    content      = data.template_file.bastion_cloud_init_file[count.index].rendered
+    content      = data.template_file.bastion_cloud_init_file[0].rendered
   }
   count = var.create_bastion == true ? 1 : 0
 }
@@ -36,18 +36,18 @@ data "template_cloudinit_config" "bastion" {
 data "oci_core_vnic_attachments" "bastion_vnics_attachments" {
   availability_domain = element(var.ad_names, (var.availability_domains["bastion"] - 1))
   compartment_id      = var.compartment_ocid
-  instance_id         = oci_core_instance.bastion[count.index].id
+  instance_id         = oci_core_instance.bastion[0].id
   count               = var.create_bastion == true ? 1 : 0
 }
 
 # Gets the OCID of the first (default) VNIC on the bastion instance
 data "oci_core_vnic" "bastion_vnic" {
-  vnic_id = lookup(data.oci_core_vnic_attachments.bastion_vnics_attachments[count.index].vnic_attachments[0], "vnic_id")
+  vnic_id = lookup(data.oci_core_vnic_attachments.bastion_vnics_attachments[0].vnic_attachments[0], "vnic_id")
   count   = var.create_bastion == true ? 1 : 0
 }
 
 data "oci_core_instance" "bastion" {
   #Required
-  instance_id = oci_core_instance.bastion[count.index].id
+  instance_id = oci_core_instance.bastion[0].id
   count       = var.create_bastion == true ? 1 : 0
 }

@@ -66,12 +66,14 @@ module "network" {
   label_prefix = var.label_prefix
 
   # networking
-  ig_route_id  = module.base.ig_route_id
-  nat_route_id = module.base.nat_route_id
-  newbits      = var.newbits
-  subnets      = var.subnets
-  vcn_cidr     = var.vcn_cidr
-  vcn_id       = module.base.vcn_id
+  ig_route_id                = module.base.ig_route_id
+  is_service_gateway_enabled = var.create_service_gateway
+  nat_route_id               = module.base.nat_route_id
+  newbits                    = var.newbits
+  region                     = var.region
+  subnets                    = var.subnets
+  vcn_cidr                   = var.vcn_cidr
+  vcn_id                     = module.base.vcn_id
 
   # availability domains
   availability_domains = var.availability_domains

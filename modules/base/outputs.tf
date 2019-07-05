@@ -22,10 +22,6 @@ output "nat_route_id" {
   value = module.vcn.nat_route_id
 }
 
-output "sg_route_id" {
-  value = module.vcn.sg_route_id
-}
-
 output "vcn_id" {
   value = module.vcn.vcn_id
 }

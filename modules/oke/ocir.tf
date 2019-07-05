@@ -30,7 +30,7 @@ resource null_resource "create_ocir_secret" {
 
   depends_on = ["null_resource.write_kubeconfig_bastion"]
   provisioner "file" {
-    content     = data.template_file.create_ocir_script[count.index].rendered
+    content     = data.template_file.create_ocir_script[0].rendered
     destination = "~/create_ocir_secret.sh"
   }
 

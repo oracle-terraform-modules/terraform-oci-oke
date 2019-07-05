@@ -14,9 +14,13 @@ variable "ad_names" {
 }
 variable "label_prefix" {}
 
+variable "region" {}
+
 # networking parameters
 
 variable "ig_route_id" {}
+
+variable "is_service_gateway_enabled" {}
 
 variable "nat_route_id" {}
 
