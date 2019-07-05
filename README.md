@@ -115,15 +115,17 @@ $ terraform apply
     - choice of helm version
     - upgrade of the running tiller on the cluster
 
-## V12 New Features
+## V12 New Features/Improvement
 - Bastion:
   - Added ability to restrict bastion host access to a particular CIDR Block  
   - Upgrade of helm client to 2.14.1
   - bash aliases for kubectl (k) and helm (h)
-- Infrastructure
-  - There's no need to toggle the code in single AD-regions anymore
+- Infrastructure:
+  - There's no need to toggle the load balancer code for single AD-regions anymore
   - Ability to specify preferred ADs pair for load balancers in 3-AD regions
   - Conditional addition of service gateway routing and security list for worker subnets
+- Kubernetes:
+  - ocirsecret created in kube-system and added to tiller serviceaccount
 
 ## Documentation
 

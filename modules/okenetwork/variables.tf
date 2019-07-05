@@ -37,9 +37,11 @@ variable "vcn_cidr" {}
 variable "vcn_id" {}
 
 # availability domains
+
 variable "availability_domains" {
   type = "map"
 }
 
 # oke
+
 variable "worker_mode" {}

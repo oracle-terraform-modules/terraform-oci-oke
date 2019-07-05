@@ -96,6 +96,7 @@ variable "vcn_name" {
 }
 
 # nat
+
 variable "create_nat_gateway" {
   description = "whether to create a nat gateway"
   default     = false

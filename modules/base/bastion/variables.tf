@@ -10,16 +10,19 @@ variable "api_private_key_path" {}
 variable "compartment_ocid" {}
 
 # general
+
 variable "label_prefix" {}
 
 variable "region" {}
 
 # ssh
+
 variable "ssh_private_key_path" {}
 
 variable "ssh_public_key_path" {}
 
 # bastion
+
 variable "bastion_shape" {}
 
 variable "create_bastion" {}

@@ -8,6 +8,7 @@ variable "api_private_key_path" {}
 variable "compartment_ocid" {}
 
 variable "create_auth_token" {}
+
 variable "home_region" {}
 
 variable "tenancy_ocid" {}
