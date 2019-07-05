@@ -48,6 +48,6 @@ resource "oci_identity_policy" "instance_principal" {
   compartment_id = var.compartment_ocid
   description    = "dynamic group to allow instances to call services"
   name           = "${var.label_prefix}-instance_principal"
-  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.instance_principal[count.index].name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
+  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.instance_principal[0].name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
   count          = var.enable_instance_principal == true ? 1 : 0
 }

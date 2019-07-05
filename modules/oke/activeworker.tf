@@ -25,7 +25,7 @@ resource null_resource "is_worker_active" {
   depends_on = ["oci_containerengine_cluster.k8s_cluster"]
 
   provisioner "file" {
-    content     = data.template_file.check_worker_node_status[count.index].rendered
+    content     = data.template_file.check_worker_node_status[0].rendered
     destination = "~/is_worker_active.py"
   }
 

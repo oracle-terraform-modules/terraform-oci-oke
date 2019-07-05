@@ -16,7 +16,3 @@ output "ig_route_id" {
 output "nat_route_id" {
   value = join(",", oci_core_route_table.nat_route.*.id)
 }
-
-output "sg_route_id" {
-  value = join(",",oci_core_route_table.service_gateway_route.*.id)
-}

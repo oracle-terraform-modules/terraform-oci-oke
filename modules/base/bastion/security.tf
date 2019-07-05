@@ -5,12 +5,10 @@
 # http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
 
 locals {
-  tcp_protocol  = 6
   all_protocols = "all"
-
-  anywhere = "0.0.0.0/0"
-
-  ssh_port = 22
+  anywhere      = "0.0.0.0/0"
+  ssh_port      = 22
+  tcp_protocol  = 6
 }
 
 resource "oci_core_security_list" "bastion" {
@@ -19,19 +17,19 @@ resource "oci_core_security_list" "bastion" {
   vcn_id         = var.vcn_id
 
   egress_security_rules {
-      protocol    = local.all_protocols
-      destination = local.anywhere
+    protocol    = local.all_protocols
+    destination = local.anywhere
   }
 
   ingress_security_rules {
-      # allow ssh
-      protocol = local.tcp_protocol
-      source   = var.bastion_access == "ANYWHERE" ? local.anywhere : var.bastion_access
+    # allow ssh
+    protocol = local.tcp_protocol
+    source   = var.bastion_access == "ANYWHERE" ? local.anywhere : var.bastion_access
 
-      tcp_options {
-        min = local.ssh_port
-        max = local.ssh_port
-      }
+    tcp_options {
+      min = local.ssh_port
+      max = local.ssh_port
     }
-  count = var.create_bastion == true ? 1 :0  
+  }
+  count = var.create_bastion == true ? 1 : 0
 }

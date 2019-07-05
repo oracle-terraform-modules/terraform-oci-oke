@@ -26,15 +26,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       services_cidr = var.cluster_options_kubernetes_network_config_services_cidr
     }
 
-    # Toggle between the 2 according to whether your region has 1 or 3 availability domains.
-    # Verify here: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm how many domains your region has.
-
-
-    # single ad regions
-    #service_lb_subnet_ids = [var.cluster_subnets["lb_ad1"]]
-
-    # multi ad regions
-    service_lb_subnet_ids = [var.cluster_subnets["lb_ad1"], var.cluster_subnets["lb_ad2"]]
+    service_lb_subnet_ids  = length(var.ad_names) == 1 ? [var.cluster_subnets[element(var.preferred_lb_ads,0)]] : [var.cluster_subnets[element(var.preferred_lb_ads,0)], var.cluster_subnets[element(var.preferred_lb_ads,1)]]
   }
 
   vcn_id = var.vcn_id

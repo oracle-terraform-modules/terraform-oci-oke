@@ -66,12 +66,14 @@ module "network" {
   label_prefix = var.label_prefix
 
   # networking
-  ig_route_id  = module.base.ig_route_id
-  nat_route_id = module.base.nat_route_id
-  newbits      = var.newbits
-  subnets      = var.subnets
-  vcn_cidr     = var.vcn_cidr
-  vcn_id       = module.base.vcn_id
+  ig_route_id                = module.base.ig_route_id
+  is_service_gateway_enabled = var.create_service_gateway
+  nat_route_id               = module.base.nat_route_id
+  newbits                    = var.newbits
+  region                     = var.region
+  subnets                    = var.subnets
+  vcn_cidr                   = var.vcn_cidr
+  vcn_id                     = module.base.vcn_id
 
   # availability domains
   availability_domains = var.availability_domains
@@ -118,7 +120,8 @@ module "oke" {
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
 
-  cluster_subnets = module.network.subnet_ids
+  cluster_subnets  = module.network.subnet_ids
+  preferred_lb_ads = var.preferred_lb_ads
 
   # node pools
   node_pools = var.node_pools
@@ -144,5 +147,5 @@ module "oke" {
 
   # calico
   calico_version = var.calico_version
-  install_calico = var.install_calico 
+  install_calico = var.install_calico
 }

@@ -13,7 +13,7 @@ resource "oci_core_instance" "bastion" {
   compartment_id      = var.compartment_ocid
 
   create_vnic_details {
-    subnet_id      = oci_core_subnet.bastion[count.index].id
+    subnet_id      = oci_core_subnet.bastion[0].id
     display_name   = "${var.label_prefix}-bastion-vnic"
     hostname_label = "bastion"
   }
@@ -22,8 +22,8 @@ resource "oci_core_instance" "bastion" {
 
   extended_metadata = {
     ssh_authorized_keys = file(var.ssh_public_key_path)
-    user_data           = data.template_cloudinit_config.bastion[count.index].rendered
-    subnet_id           = oci_core_subnet.bastion[count.index].id
+    user_data           = data.template_cloudinit_config.bastion[0].rendered
+    subnet_id           = oci_core_subnet.bastion[0].id
   }
 
   shape = var.bastion_shape

@@ -23,7 +23,7 @@ resource null_resource "install_helm_bastion" {
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
 
   provisioner "file" {
-    content     = data.template_file.install_helm[count.index].rendered
+    content     = data.template_file.install_helm[0].rendered
     destination = "~/install_helm.sh"
   }
 

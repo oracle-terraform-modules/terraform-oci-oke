@@ -27,7 +27,7 @@ resource null_resource "install_calico" {
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
 
   provisioner "file" {
-    content     = data.template_file.install_calico[count.index].rendered
+    content     = data.template_file.install_calico[0].rendered
     destination = "~/install_calico.sh"
   }
 

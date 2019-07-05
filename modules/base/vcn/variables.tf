@@ -6,16 +6,19 @@ variable "compartment_ocid" {}
 variable "label_prefix" {}
 
 # nat
+
 variable "create_nat_gateway" {}
 
 variable "nat_gateway_name" {}
 
 # service gateway
+
 variable "create_service_gateway" {}
 
 variable "service_gateway_name" {}
 
 # vcn
+
 variable "vcn_cidr" {}
 
 variable "vcn_dns_name" {}
