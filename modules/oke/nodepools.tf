@@ -1,6 +1,17 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
+#Added to get the latest images for node pool configuration.
+data "oci_core_images" "latest_images" {
+  #Required
+  compartment_id = var.compartment_ocid
+
+  #Optional
+  operating_system = var.image_operating_system
+  shape            = var.node_pool_node_shape
+  sort_by          = "TIMECREATED"
+}
+
 resource "oci_containerengine_node_pool" "nodepools_topology2" {
   cluster_id         = oci_containerengine_cluster.k8s_cluster.id
   compartment_id     = var.compartment_ocid
@@ -13,7 +24,9 @@ resource "oci_containerengine_node_pool" "nodepools_topology2" {
 
   kubernetes_version = var.cluster_kubernetes_version == "LATEST" ? element(sort(data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions), local.kubernetes_versions - 1): var.cluster_kubernetes_version
   name               = "${var.label_prefix}-${var.node_pool_name_prefix}-${count.index+1}"
-  node_image_name    = var.node_pool_node_image_name
+  #node_image_name    = var.node_pool_node_image_name
+  #Replaced node_image_name with node_image_id as the image release keep changing and to avoid hard coding the image name.
+  node_image_id       = data.oci_core_images.latest_images.images[0].id
   node_shape         = var.node_pool_node_shape
   quantity_per_subnet = var.node_pool_quantity_per_subnet
   ssh_public_key      = file(var.ssh_public_key_path)
@@ -31,7 +44,9 @@ resource "oci_containerengine_node_pool" "nodepools_topology3" {
 
   kubernetes_version = var.cluster_kubernetes_version == "LATEST" ? element(sort(data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions), local.kubernetes_versions - 1): var.cluster_kubernetes_version
   name               = "${var.label_prefix}-${var.node_pool_name_prefix}-${count.index+1}"
-  node_image_name    = var.node_pool_node_image_name
+  #node_image_name    = var.node_pool_node_image_name
+  #Replaced node_image_name with node_image_id as the image release keep changing and to avoid hard coding the image name.
+  node_image_id       = data.oci_core_images.latest_images.images[0].id
   node_shape         = var.node_pool_node_shape
   quantity_per_subnet = var.node_pool_quantity_per_subnet
   subnet_ids         = [var.cluster_subnets["workers_ad1"], var.cluster_subnets["workers_ad2"], var.cluster_subnets["workers_ad3"]]
