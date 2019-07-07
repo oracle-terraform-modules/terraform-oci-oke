@@ -202,7 +202,7 @@ variable "node_pool_name_prefix" {
 
 variable "node_pool_node_image_name" {
   description = "name of image to use"
-  default     = "Oracle-Linux-7.5"
+  default     = "Oracle-Linux-7.6"
 }
 
 variable "node_pool_node_shape" {
