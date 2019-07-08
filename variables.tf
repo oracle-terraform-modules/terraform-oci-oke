@@ -200,11 +200,20 @@ variable "node_pool_name_prefix" {
   default     = "np"
 }
 
-variable "node_pool_node_image_name" {
-  description = "name of image to use"
-  default     = "Oracle-Linux-7.6"
+variable "node_pool_image_id" {
+  description = "OCID of custom image to use for worker node"
+  default     = "NONE"
 }
 
+variable "node_pool_image_operating_system" {
+  description = "name of image to use"
+  default     = "Oracle Linux"
+}
+
+variable "node_pool_image_operating_system_version" {
+  description = "version of image Operating System to use"
+  default     = "7.6"
+}
 variable "node_pool_node_shape" {
   description = "shape of worker nodes"
   default     = "VM.Standard2.1"
@@ -242,8 +251,8 @@ variable "worker_mode" {
 
 variable "preferred_lb_ads" {
   description = "preferred Availability Domains for Load Balancers"
-  type = list
-  default = ["lb_ad1", "lb_ad2"]
+  type        = list
+  default     = ["lb_ad1", "lb_ad2"]
 }
 
 # ocir

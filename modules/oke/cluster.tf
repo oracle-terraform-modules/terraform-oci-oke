@@ -1,18 +1,9 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-locals {
-  kubernetes_versions = length(data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions)
-}
-
-data "oci_containerengine_cluster_option" "k8s_cluster_option" {
-  #Required
-  cluster_option_id = "all"
-}
-
 resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = var.compartment_ocid
-  kubernetes_version = var.cluster_kubernetes_version == "LATEST" ? element(sort(data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions), local.kubernetes_versions - 1): var.cluster_kubernetes_version
+  kubernetes_version = local.kubernetes_version
   name               = "${var.label_prefix}-${var.cluster_name}"
 
   options {

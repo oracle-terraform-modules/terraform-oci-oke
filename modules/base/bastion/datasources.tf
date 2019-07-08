@@ -1,5 +1,14 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+
+data "oci_core_images" "bastion_images" {
+  compartment_id           = var.compartment_ocid
+  operating_system         = var.image_operating_system
+  operating_system_version = var.image_operating_system_version
+  shape                    = var.bastion_shape
+  sort_by                  = "TIMECREATED"
+}
+
 data "template_file" "bastion_template" {
   template = file("${path.module}/scripts/bastion.template.sh")
 
