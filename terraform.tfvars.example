@@ -98,7 +98,11 @@ node_pools = 1
 
 node_pool_name_prefix = "np"
 
-node_pool_node_image_name = "Oracle-Linux-7.5"
+node_pool_image_id = "NONE"
+
+node_pool_image_operating_system = "Oracle Linux"
+
+node_pool_image_operating_system_version = "7.6"
 
 node_pool_node_shape = "VM.Standard2.1"
 

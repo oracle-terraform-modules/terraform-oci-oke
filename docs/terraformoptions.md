@@ -63,7 +63,9 @@
 | kubernetes_version                    | The version of Kubernetes to provision. This is based on the available versions in OKE. To provision a specific version, choose from available versions and override the 'LATEST' value. |   LATEST, v1.10.11, v1.11.9, v1.12.7     |       LATEST    |
 | node_pools                            | Number of node pools to create. Terraform will use this number in conjunction with the node_pool_name_prefix to create the name of the node pools.                                              |               |    1       |
 | node_pool_name_prefix                 | The prefix of the node pool.                                           |                 |   np                     |
-| node_pool_node_image_name             | The image name for the worker nodes.                                   |  Oracle-Linux-7.5 |       Oracle-Linux-7.5 |
+| node_pool_image_id                    | OCID of custom image to use for worker node. Use either node_pool_image_id __or__ node_pool_image_operating_system   |       |   NONE           |
+| node_pool_image_operating_system      | The image Operating System for the worker nodes.                       |  Oracle Linux   |   Oracle Linux           |
+| node_pool_image_operating_system_version      | The version of image Operating System to use for the worker nodes. |  7.6        |   7.6                    |
 | node_pool_node_shape                  | The shape for the worker nodes.                                        |                 |           VM.Standard2.1 |
 | node_pool_quantity_per_subnet         | Number of worker nodes by worker subnets.                                              |               |         1  |
 | nodepool_topology                     | Whether to make the node pool span 2 or 3 subnets (ergo AD). Acceptable and tested values are 2 or 3 only. The total number of worker nodes created is effectively obtained by this formula: nodepool_topology x  node_pools x  node_pool_quantity_per_subnet.                                            |    2 or 3           |     3      |

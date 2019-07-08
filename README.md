@@ -124,6 +124,7 @@ $ terraform apply
   - There's no need to toggle the load balancer code for single AD-regions anymore
   - Ability to specify preferred ADs pair for load balancers in 3-AD regions
   - Conditional addition of service gateway routing and security list for worker subnets
+  - Ability to specify image ocid or choose OS version for worker nodes
 - Kubernetes:
   - ocirsecret created in kube-system and added to tiller serviceaccount
 

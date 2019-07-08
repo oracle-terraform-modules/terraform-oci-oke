@@ -126,11 +126,13 @@ module "oke" {
   # node pools
   node_pools = var.node_pools
 
-  node_pool_name_prefix         = var.node_pool_name_prefix
-  node_pool_node_image_name     = var.node_pool_node_image_name
-  node_pool_node_shape          = var.node_pool_node_shape
-  node_pool_quantity_per_subnet = var.node_pool_quantity_per_subnet
-  nodepool_topology             = var.nodepool_topology
+  node_pool_name_prefix                    = var.node_pool_name_prefix
+  node_pool_image_id                       = var.node_pool_image_id
+  node_pool_image_operating_system         = var.node_pool_image_operating_system
+  node_pool_image_operating_system_version = var.node_pool_image_operating_system_version
+  node_pool_node_shape                     = var.node_pool_node_shape
+  node_pool_quantity_per_subnet            = var.node_pool_quantity_per_subnet
+  nodepool_topology                        = var.nodepool_topology
 
   # ocir
   auth_token        = var.create_auth_token == true ? module.auth.ocirtoken : "none"
