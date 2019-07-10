@@ -36,9 +36,9 @@ newbits = {
 
 subnets = {
   "bastion"     = 11
-  "lb_ad1"      = 12
-  "lb_ad2"      = 22
-  "lb_ad3"      = 32
+  "pub_lb_ad1"      = 12
+  "pub_lb_ad2"      = 22
+  "pub_lb_ad3"      = 32
   "workers_ad1" = 13
   "workers_ad2" = 23
   "workers_ad3" = 33
@@ -74,11 +74,15 @@ image_operating_system_version = "7.6"
 
 # availability_domains
 
+# set value to 0 to disable
 availability_domains = {
   "bastion"     = 1
-  "lb_ad1"      = 1
-  "lb_ad2"      = 2
-  "lb_ad3"      = 3
+  "int_lb_ad1"  = 0
+  "int_lb_ad2"  = 0
+  "int_lb_ad3"  = 0
+  "pub_lb_ad1"  = 1
+  "pub_lb_ad2"  = 2
+  "pub_lb_ad3"  = 3
   "workers_ad1" = 1
   "workers_ad2" = 2
   "workers_ad3" = 3
@@ -89,6 +93,10 @@ availability_domains = {
 cluster_name = "oke"
 
 worker_mode = "private"
+
+allow_node_port_access = false
+
+allow_worker_ssh_access = false
 
 dashboard_enabled = true
 
@@ -115,6 +123,14 @@ pods_cidr = "10.244.0.0/16"
 services_cidr = "10.96.0.0/16"
 
 tiller_enabled = true
+
+# oke load balancers
+
+load_balancers = "public"
+
+preferred_lb_ads = ["ad1", "ad2"]
+
+preferred_lb_type = "public"
 
 # ocir
 create_auth_token = false

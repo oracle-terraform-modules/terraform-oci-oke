@@ -73,7 +73,7 @@
 | services_cidr                         | The CIDR for the Kubernetes services network.                          |                 | 10.96.0.0/16             |
 | tiller_enabled                        | Whether to install the server side of [Helm][helm] in the OKE cluster. |  true/false                  |   true      |
 | worker_mode                           | Whether worker nodes should be public or private. Private requires NAT gateway.  | public/private |       public    |
-| preferred_lb_ads                      | Preferred Availability Domains for Load Balancers. Maps to the created Load Balancer subnets in the availability_domain parameter. In single AD-regions, only the first value will be selected. Ensure that the selected lb_adX values are in the availability_domain parameter are __not__ equal to 0 | ["lb_ad1", "lb_ad2"]   |   ["lb_ad1", "lb_ad2"]   |
+| preferred_lb_ads                      | Preferred Availability Domains for Load Balancers. Maps to the created Load Balancer subnets in the availability_domain parameter. In single AD-regions, only the first value will be selected. Ensure that the selected lb_adX values are in the availability_domain parameter are __not__ equal to 0 | ["pub_lb_ad1", "pub_lb_ad2"]   |   ["pub_lb_ad1", "pub_lb_ad2"]   |
 
 ## OCIR
 | Option                                | Description                                   | Values                    | Default               |     

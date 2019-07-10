@@ -251,9 +251,9 @@ newbits = {
 
 subnets = {
   "bastion"     = "11"
-  "lb_ad1"      = "12"
-  "lb_ad2"      = "22"
-  "lb_ad3"      = "32"
+  "pub_lb_ad1"      = "12"
+  "pub_lb_ad2"      = "22"
+  "pub_lb_ad3"      = "32"
   "workers_ad1" = "13"
   "workers_ad2" = "23"
   "workers_ad3" = "33"
@@ -274,9 +274,9 @@ Ensure all 3 worker subnets for the worker nodes and 3 public subnets for the lo
 ```
 availability_domains = {
   "bastion"     = "1"
-  "lb_ad1"      = "1"
-  "lb_ad2"      = "2"
-  "lb_ad3"      = "3"
+  "pub_lb_ad1"      = "1"
+  "pub_lb_ad2"      = "2"
+  "pub_lb_ad3"      = "3"
   "workers_ad1" = "1"
   "workers_ad2" = "2"
   "workers_ad3" = "3"
@@ -369,9 +369,9 @@ $ terraform destroy
 
 ``` 
     # single ad regions
-    service_lb_subnet_ids = ["${var.cluster_subnets["lb_ad1"]}"]
+    service_lb_subnet_ids = ["${var.cluster_subnets["pub_lb_ad1"]}"]
 
     # multi ad regions
-    # service_lb_subnet_ids= ["${var.cluster_subnets["lb_ad1"]}", "${var.cluster_subnets["lb_ad2"]}"]
+    # service_lb_subnet_ids= ["${var.cluster_subnets["pub_lb_ad1"]}", "${var.cluster_subnets["pub_lb_ad2"]}"]
 
 ```
