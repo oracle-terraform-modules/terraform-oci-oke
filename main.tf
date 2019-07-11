@@ -53,7 +53,7 @@ module "auth" {
   user_ocid            = var.user_ocid
 }
 
-# # additional networking for oke
+# additional networking for oke
 module "network" {
   source = "./modules/okenetwork"
 
@@ -84,8 +84,8 @@ module "network" {
   worker_mode             = var.worker_mode
 
   # load balancers
-  load_balancers    = var.load_balancers
-  preferred_lb_type = var.preferred_lb_type
+  load_balancer_subnet_type    = var.load_balancer_subnet_type
+  preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
 }
 
 # # cluster creation for oke
@@ -140,7 +140,7 @@ module "oke" {
 
   # load balancers
   preferred_lb_ads = var.preferred_lb_ads
-  preferred_lb_type = var.preferred_lb_type
+  preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
 
   # ocir
   auth_token        = var.create_auth_token == true ? module.auth.ocirtoken : "none"

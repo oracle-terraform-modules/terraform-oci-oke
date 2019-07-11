@@ -126,11 +126,11 @@ tiller_enabled = true
 
 # oke load balancers
 
-load_balancers = "public"
+load_balancer_subnet_type = "public"
 
 preferred_lb_ads = ["ad1", "ad2"]
 
-preferred_lb_type = "public"
+preferred_load_balancer_subnets = "public"
 
 # ocir
 create_auth_token = false

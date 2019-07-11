@@ -258,19 +258,23 @@ variable "worker_mode" {
 
 # oke load balancers
 
-variable "load_balancers" {
-  description = "type of load balancers to create. Valid values are public, internal, both"
+variable "load_balancer_subnet_type" {
+  description = "type of load balancer subnets to create."
+  # values: both, internal, public
   default     = "public"
 }
 
 variable "preferred_lb_ads" {
-  description = "preferred Availability Domains for Load Balancers. Must be be a list of 2 elements. Valid values are ad1, ad2, ad3"
+  description = "preferred Availability Domains for Load Balancers"
   type        = list
+  # list elements: choose 2 from ad1, ad2, ad3 (regarless of the number of domains your region has)
   default     = ["ad1", "ad2"]
 }
 
-variable "preferred_lb_type" {
-  description = "preferred load balancer type that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'"
+variable "preferred_load_balancer_subnets" {
+  description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'"
+  # values: public, internal. 
+  # When creating an internal load balancer, the internal annotation must still be specified regardless 
   default     = "public"
 }
 
@@ -297,8 +301,8 @@ variable "ocir_urls" {
     ca-toronto-1   = "yyz.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
     uk-london-1    = "lhr.ocir.io"
-    us-phoenix-1   = "phx.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
+    us-phoenix-1   = "phx.ocir.io"
   }
 }
 

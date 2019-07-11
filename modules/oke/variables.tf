@@ -82,7 +82,7 @@ variable "preferred_lb_ads" {
   type = list
 }
 
-variable "preferred_lb_type" {}
+variable "preferred_load_balancer_subnets" {}
 
 # kubeconfig
 
