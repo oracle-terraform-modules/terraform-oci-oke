@@ -111,10 +111,13 @@ variable "subnets" {
   type        = "map"
 
   default = {
-    bastion     = 11
-    lb_ad1      = 12
-    lb_ad2      = 22
-    lb_ad3      = 32
+    bastion     = 1
+    int_lb_ad1  = 11
+    int_lb_ad2  = 21
+    int_lb_ad3  = 31
+    pub_lb_ad1  = 12
+    pub_lb_ad2  = 22
+    pub_lb_ad3  = 32
     workers_ad1 = 13
     workers_ad2 = 23
     workers_ad3 = 33
@@ -159,22 +162,26 @@ variable "image_operating_system_version" {
 
 # availability domains
 variable "availability_domains" {
-  description = "ADs where to provision resources"
+  description = "ADs where to provision non-OKE resources"
   type        = "map"
 
-  # set to 0 to disable
   default = {
     bastion     = 1
-    lb_ad1      = 1
-    lb_ad2      = 2
-    lb_ad3      = 3
-    workers_ad1 = 1
-    workers_ad2 = 2
-    workers_ad3 = 3
   }
 }
 
 # oke
+
+variable "allow_node_port_access" {
+  description = "whether to allow access to NodePorts when worker nodes are deployed in public mode"
+  default     = false
+}
+
+variable "allow_worker_ssh_access" {
+  description = "whether to allow ssh access to worker nodes when worker nodes are deployed in public mode"
+  default     = false
+}
+
 variable "cluster_name" {
   description = "name of oke cluster"
   default     = "oke"
@@ -249,10 +256,26 @@ variable "worker_mode" {
   default     = "private"
 }
 
+# oke load balancers
+
+variable "load_balancer_subnet_type" {
+  description = "type of load balancer subnets to create."
+  # values: both, internal, public
+  default     = "public"
+}
+
 variable "preferred_lb_ads" {
   description = "preferred Availability Domains for Load Balancers"
   type        = list
-  default     = ["lb_ad1", "lb_ad2"]
+  # list elements: choose 2 from ad1, ad2, ad3 (regarless of the number of domains your region has)
+  default     = ["ad1", "ad2"]
+}
+
+variable "preferred_load_balancer_subnets" {
+  description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'"
+  # values: public, internal. 
+  # When creating an internal load balancer, the internal annotation must still be specified regardless 
+  default     = "public"
 }
 
 # ocir
@@ -278,8 +301,8 @@ variable "ocir_urls" {
     ca-toronto-1   = "yyz.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
     uk-london-1    = "lhr.ocir.io"
-    us-phoenix-1   = "phx.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
+    us-phoenix-1   = "phx.ocir.io"
   }
 }
 

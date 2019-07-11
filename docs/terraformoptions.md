@@ -3,6 +3,7 @@
 [cidrsubnet]:http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 [helm]:https://www.helm.sh/
 [networks]:https://erikberg.com/notes/networks.html
+[ocilb]: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 [terraform example]: ../terraform.tfvars.example
 [topology]: ./topology.md
 
@@ -34,9 +35,9 @@
 | newbits                               | The difference between the VCN's netmask and the desired subnets mask. This translates into the newbits parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   |   |   See [terraform.tfvars.example][terraform example]   |
 | subnets                               | Defines the boundaries of the subnets. This translates into the netnum parameter in the cidrsubnet Terraform function. [In-depth explanation][cidrsubnet]. Related [networks, subnets and cidr][networks] documentation.   | See [terraform.tfvars.example][terraform example]   | See [terraform.tfvars.example][terraform example]   |
 | vcn_cidr                              | VCN's CIDR                                    |                           | 10.0.0.0/16           |
-| vcn_dns_name                          | VCN's DNS name                                |                           |  oke               |
+| vcn_dns_name                          | VCN's DNS name                                |                           |  oke                  |
 | vcn_name                              | VCN's name in the OCI Console                 |                           |  oke vcn              |
-| create_nat_gateway                    | Whether to create a NAT gateway. Required for private worker mode        |     true/false        |  true   |
+| create_nat_gateway                    | Whether to create a NAT gateway. Required for private worker mode         |  true/false        |  true   |
 | nat_gateway_name                      | NAT gateway name                              |                           |  nat                  | 
 | create_service_gateway                | Whether to create a Service Gateway for object storage. | true/false      |  true                |
 | service_gateway_name                  | Service Gateway name                          |                           |  sg                   |
@@ -58,6 +59,8 @@
 ## OKE Configuration
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
+| allow_node_port_access  | When workers are deployed in public mode, whether to allow NodePort access | true/false   | false |
+| allow_worker_ssh_access | When to allow ssh access to worker nodes. All ssh access will be through the bastion host | true/false   | false |
 | cluster_name                          | The name of the OKE cluster as it will appear in the OCI Console.                        |        |  oke     |
 | dashboard_enabled                     | Whether to create the default Kubernetes dashboard.                                      | true/false |   true      |
 | kubernetes_version                    | The version of Kubernetes to provision. This is based on the available versions in OKE. To provision a specific version, choose from available versions and override the 'LATEST' value. |   LATEST, v1.10.11, v1.11.9, v1.12.7     |       LATEST    |
@@ -73,7 +76,13 @@
 | services_cidr                         | The CIDR for the Kubernetes services network.                          |                 | 10.96.0.0/16             |
 | tiller_enabled                        | Whether to install the server side of [Helm][helm] in the OKE cluster. |  true/false                  |   true      |
 | worker_mode                           | Whether worker nodes should be public or private. Private requires NAT gateway.  | public/private |       public    |
-| preferred_lb_ads                      | Preferred Availability Domains for Load Balancers. Maps to the created Load Balancer subnets in the availability_domain parameter. In single AD-regions, only the first value will be selected. Ensure that the selected lb_adX values are in the availability_domain parameter are __not__ equal to 0 | ["lb_ad1", "lb_ad2"]   |   ["lb_ad1", "lb_ad2"]   |
+
+## OKE Load Balancers
+| Option                                | Description                                   | Values                    | Default               |     
+| -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
+| load_balancer_subnet_type    | Type of load balancer subnets to create   |   both, internal, public   |  public |
+| preferred_lb_ads   | Preferred Availability Domains for Load Balancers in list format. Maps to the created Load Balancer subnets in the availability_domain parameter. Choose 2 from ad1, ad2, ad3  | ["ad1", "ad2"[]  |   ["ad1", "ad2"]   | 
+| preferred_load_balancer_subnets    | Preferred load balancer subnets that OKE will automatically choose when creating a load balancer. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'. Use service annotations (oci-load-balancer-internal) and set the value to true to create internal load balancers. Refer to [OCI Load Balancer annotations][ocilb]   |   internal, public   |  public |
 
 ## OCIR
 | Option                                | Description                                   | Values                    | Default               |     

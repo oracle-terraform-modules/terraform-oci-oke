@@ -44,4 +44,14 @@ variable "availability_domains" {
 
 # oke
 
+variable "allow_node_port_access" {}
+
+variable "allow_worker_ssh_access" {}
+
 variable "worker_mode" {}
+
+# load balancers
+
+variable "load_balancer_subnet_type" {}
+
+variable "preferred_load_balancer_subnets" {}

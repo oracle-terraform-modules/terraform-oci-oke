@@ -62,10 +62,6 @@ variable "cluster_subnets" {
   type = "map"
 }
 
-variable "preferred_lb_ads" {
-  type = list
-}
-
 variable "node_pools" {}
 
 variable "node_pool_name_prefix" {}
@@ -81,6 +77,12 @@ variable "node_pool_node_shape" {}
 variable "node_pool_quantity_per_subnet" {}
 
 variable "nodepool_topology" {}
+
+variable "preferred_lb_ads" {
+  type = list
+}
+
+variable "preferred_load_balancer_subnets" {}
 
 # kubeconfig
 

@@ -118,13 +118,16 @@ $ terraform apply
 ## V12 New Features/Improvement
 - Bastion:
   - Added ability to restrict bastion host access to a particular CIDR Block  
-  - Upgrade of helm client to 2.14.1
+  - Upgrade of helm to 2.14.1
   - bash aliases for kubectl (k) and helm (h)
 - Infrastructure:
   - There's no need to toggle the load balancer code for single AD-regions anymore
-  - Ability to specify preferred ADs pair for load balancers in 3-AD regions
+  - Added ability to specify preferred ADs pair for load balancers in 3-AD regions
   - Conditional addition of service gateway routing and security list for worker subnets
-  - Ability to specify image ocid or choose OS version for worker nodes
+  - Added ability to specify image ocid or choose OS version for worker nodes
+  - Added conditional private subnets for load balancers. Users can now choose between public, internal or both for load balancers.
+  - Added ability to choose preferred load balancer type: public or internal
+  - Different and simplified security lists for public and private workers
 - Kubernetes:
   - ocirsecret created in kube-system and added to tiller serviceaccount
 

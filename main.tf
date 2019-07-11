@@ -53,7 +53,7 @@ module "auth" {
   user_ocid            = var.user_ocid
 }
 
-# # additional networking for oke
+# additional networking for oke
 module "network" {
   source = "./modules/okenetwork"
 
@@ -79,7 +79,13 @@ module "network" {
   availability_domains = var.availability_domains
 
   # oke
-  worker_mode = var.worker_mode
+  allow_node_port_access  = var.allow_node_port_access
+  allow_worker_ssh_access = var.allow_worker_ssh_access
+  worker_mode             = var.worker_mode
+
+  # load balancers
+  load_balancer_subnet_type    = var.load_balancer_subnet_type
+  preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
 }
 
 # # cluster creation for oke
@@ -119,9 +125,7 @@ module "oke" {
   cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
-
-  cluster_subnets  = module.network.subnet_ids
-  preferred_lb_ads = var.preferred_lb_ads
+  cluster_subnets                                         = module.network.subnet_ids
 
   # node pools
   node_pools = var.node_pools
@@ -133,6 +137,10 @@ module "oke" {
   node_pool_node_shape                     = var.node_pool_node_shape
   node_pool_quantity_per_subnet            = var.node_pool_quantity_per_subnet
   nodepool_topology                        = var.nodepool_topology
+
+  # load balancers
+  preferred_lb_ads = var.preferred_lb_ads
+  preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
 
   # ocir
   auth_token        = var.create_auth_token == true ? module.auth.ocirtoken : "none"
