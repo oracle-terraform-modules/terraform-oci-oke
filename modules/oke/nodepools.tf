@@ -1,11 +1,6 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-resource "random_shuffle" "az" {
-  input        = ["workers_ad1", "workers_ad2", "workers_ad3"]
-  result_count = 1
-}
-
 resource "oci_containerengine_node_pool" "nodepools_topology1" {
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
   compartment_id = var.compartment_ocid
@@ -24,7 +19,7 @@ resource "oci_containerengine_node_pool" "nodepools_topology1" {
   quantity_per_subnet = max(2, var.node_pool_quantity_per_subnet)
   ssh_public_key      = file(var.ssh_public_key_path)
 
-  subnet_ids = ["${var.cluster_subnets["${random_shuffle.az.result[0]}"]}"]
+  subnet_ids = [var.cluster_subnets["workers_ad1"]]
   # count to check single AD region
   count      = length(var.ad_names) == 1 ? var.node_pools : 0
 }
