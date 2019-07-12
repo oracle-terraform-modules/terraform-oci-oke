@@ -35,10 +35,13 @@ newbits = {
 }
 
 subnets = {
-  "bastion"     = 11
-  "pub_lb_ad1"      = 12
-  "pub_lb_ad2"      = 22
-  "pub_lb_ad3"      = 32
+  "bastion"     = 1
+  "int_lb_ad1"  = 11
+  "int_lb_ad2"  = 21
+  "int_lb_ad3"  = 31
+  "pub_lb_ad1"  = 12
+  "pub_lb_ad2"  = 22
+  "pub_lb_ad3"  = 32
   "workers_ad1" = 13
   "workers_ad2" = 23
   "workers_ad3" = 33
@@ -77,15 +80,6 @@ image_operating_system_version = "7.6"
 # set value to 0 to disable
 availability_domains = {
   "bastion"     = 1
-  "int_lb_ad1"  = 0
-  "int_lb_ad2"  = 0
-  "int_lb_ad3"  = 0
-  "pub_lb_ad1"  = 1
-  "pub_lb_ad2"  = 2
-  "pub_lb_ad3"  = 3
-  "workers_ad1" = 1
-  "workers_ad2" = 2
-  "workers_ad3" = 3
 }
 
 # oke
