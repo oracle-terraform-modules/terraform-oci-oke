@@ -1,18 +1,6 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-locals {
-  int_subnet_ad1    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["int_lb_ad1"])
-  int_subnet_ad2    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["int_lb_ad2"])
-  int_subnet_ad3    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["int_lb_ad3"])
-  pub_subnet_ad1    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["pub_lb_ad1"])
-  pub_subnet_ad2    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["pub_lb_ad2"])
-  pub_subnet_ad3    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["pub_lb_ad3"])
-  worker_subnet_ad1 = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.subnets["workers_ad1"])
-  worker_subnet_ad2 = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.subnets["workers_ad2"])
-  worker_subnet_ad3 = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.subnets["workers_ad3"])
-
-}
 resource "oci_core_subnet" "workers_ad1" {
   availability_domain        = element(var.ad_names, 0)
   cidr_block                 = local.worker_subnet_ad1
