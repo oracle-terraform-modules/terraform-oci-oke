@@ -71,7 +71,7 @@
 | node_pool_image_operating_system_version      | The version of image Operating System to use for the worker nodes. |  7.6        |   7.6                    |
 | node_pool_node_shape                  | The shape for the worker nodes.                                        |                 |           VM.Standard2.1 |
 | node_pool_quantity_per_subnet         | Number of worker nodes by worker subnets.                                              |               |         1  |
-| nodepool_topology                     | Whether to make the node pool span 2 or 3 subnets (ergo AD). Acceptable and tested values are 2 or 3 only. The total number of worker nodes created is effectively obtained by this formula: nodepool_topology x  node_pools x  node_pool_quantity_per_subnet.                                            |    2 or 3           |     3      |
+| nodepool_topology                     | Whether to make the node pool span 2 or 3 subnets (maps to AD). This parameter is only taken into consideration **only** in 3-AD regions. Acceptable and tested values are 2 or 3 only. The total number of worker nodes created is effectively obtained by this formula: nodepool_topology x  node_pools x  node_pool_quantity_per_subnet. In single AD, the number of worker nodes created = node_pools x the greater of (2,node_pool_quantity_per_subnet)   |    2 or 3           |     3      |
 | pods_cidr                             | The CIDR for the Kubernetes POD network.                               |                 |    10.244.0.0/16         |
 | services_cidr                         | The CIDR for the Kubernetes services network.                          |                 | 10.96.0.0/16             |
 | tiller_enabled                        | Whether to install the server side of [Helm][helm] in the OKE cluster. |  true/false                  |   true      |
@@ -95,6 +95,8 @@
 ## Helm
 | Option                                | Description                                   | Values                    | Default               | 
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
+| add_incubator_repo  |   Whether to add the incubtator repo to the bastion's local helm repo   |  true/false |  false |
+| add_jetstack_repo   |   Whether to add the jetstack repo to the bastion's local helm repo. Required for cert-manager   |  true/false |  false |
 | install_helm                          | Whether to install helm on the bastion instance. You need to enable at least 1 of the bastion instances under the 'availability_domains' parameter.                                            |                true/false | false           |
 | helm_version                          | The version of helm to install.                                              |               |          2.14.1 |
 

@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource "oci_core_instance" "bastion" {
-  availability_domain = element(var.ad_names, (var.availability_domains["bastion"]-1))
+  availability_domain = element(var.ad_names, (var.availability_domains["bastion"] - 1))
   compartment_id      = var.compartment_ocid
 
   create_vnic_details {
@@ -31,4 +31,10 @@ resource "oci_core_instance" "bastion" {
   }
 
   count = var.create_bastion == true ? 1 : 0
+}
+
+resource "local_file" "tesseract" {
+  content  = data.template_file.tesseract_template[0].rendered
+  filename = "${path.root}/scripts/tesseract.sh"
+  count    = var.create_bastion == true ? 1 : 0
 }

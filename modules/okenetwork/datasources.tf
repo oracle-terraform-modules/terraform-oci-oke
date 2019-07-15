@@ -9,3 +9,19 @@ data "oci_core_services" "all_oci_services" {
   }
   count = var.is_service_gateway_enabled == true ? 1 : 0
 }
+
+data "oci_core_subnets" "oke_subnets" {
+    compartment_id = var.compartment_ocid
+    vcn_id = var.vcn_id
+    
+    filter {
+      name = "display_name"
+      values = ["\\w*workers*|\\w*lb*"]
+      regex = true
+    }
+
+    filter {
+      name = "state"
+      values = ["AVAILABLE"]
+    }
+}

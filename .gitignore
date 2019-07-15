@@ -9,6 +9,7 @@
 *.tfvars
 
 generated/**
+scripts/tesseract.sh
 
 # visual code
  **/.vscode/*

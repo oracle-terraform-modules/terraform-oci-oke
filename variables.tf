@@ -61,9 +61,9 @@ variable "newbits" {
   description = "new mask for the subnet within the virtual network. use as newbits parameter for cidrsubnet function"
 
   default = {
-    bastion   = "8"
-    "lb"      = "8"
-    "workers" = "8"
+    bastion = 13
+    lb      = 11
+    workers = 2
   }
 }
 
@@ -111,16 +111,16 @@ variable "subnets" {
   type        = "map"
 
   default = {
-    bastion     = 1
-    int_lb_ad1  = 11
-    int_lb_ad2  = 21
-    int_lb_ad3  = 31
-    pub_lb_ad1  = 12
-    pub_lb_ad2  = 22
-    pub_lb_ad3  = 32
-    workers_ad1 = 13
-    workers_ad2 = 23
-    workers_ad3 = 33
+    bastion     = 32
+    int_lb_ad1  = 16
+    int_lb_ad2  = 17
+    int_lb_ad3  = 18
+    pub_lb_ad1  = 19
+    pub_lb_ad2  = 20
+    pub_lb_ad3  = 21
+    workers_ad1 = 1
+    workers_ad2 = 2
+    workers_ad3 = 3
   }
 }
 
@@ -166,7 +166,7 @@ variable "availability_domains" {
   type        = "map"
 
   default = {
-    bastion     = 1
+    bastion = 1
   }
 }
 
@@ -261,21 +261,21 @@ variable "worker_mode" {
 variable "load_balancer_subnet_type" {
   description = "type of load balancer subnets to create."
   # values: both, internal, public
-  default     = "public"
+  default = "public"
 }
 
 variable "preferred_lb_ads" {
   description = "preferred Availability Domains for Load Balancers"
   type        = list
   # list elements: choose 2 from ad1, ad2, ad3 (regarless of the number of domains your region has)
-  default     = ["ad1", "ad2"]
+  default = ["ad1", "ad2"]
 }
 
 variable "preferred_load_balancer_subnets" {
   description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'"
   # values: public, internal. 
   # When creating an internal load balancer, the internal annotation must still be specified regardless 
-  default     = "public"
+  default = "public"
 }
 
 # ocir
@@ -286,7 +286,7 @@ variable "create_auth_token" {
 }
 
 variable "email_address" {
-  description = "email address used for OICR"
+  description = "email address used for OCIR"
   default     = ""
 }
 
@@ -317,6 +317,16 @@ variable "username" {
 }
 
 # helm
+variable "add_incubator_repo" {
+  description = "whether to add incubator repo"
+  default     = false
+}
+
+variable "add_jetstack_repo" {
+  description = "whether to add jetstack repo. Required for cert-manager"
+  default     = false
+}
+
 variable "helm_version" {
   description = "version of helm to install"
   default     = "2.14.1"

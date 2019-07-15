@@ -66,7 +66,7 @@ variable "newbits" {
   description = "new mask for the subnet within the virtual network. use as newbits parameter for cidrsubnet function"
 
   default = {
-    bastion = "8"
+    bastion = 13
   }
 }
 
@@ -75,7 +75,7 @@ variable "subnets" {
   description = "zero-based index of the subnet when the network is masked with the newbit."
 
   default = {
-    bastion = "11"
+    bastion = 32
   }
 }
 
@@ -163,6 +163,6 @@ variable "availability_domains" {
   type        = "map"
 
   default = {
-    bastion = "1"
+    bastion = 1
   }
 }

@@ -120,16 +120,24 @@ $ terraform apply
   - Added ability to restrict bastion host access to a particular CIDR Block  
   - Upgrade of helm to 2.14.1
   - bash aliases for kubectl (k) and helm (h)
+  - generated script to ssh to bastion
 - Infrastructure:
-  - There's no need to toggle the load balancer code for single AD-regions anymore
-  - Added ability to specify preferred ADs pair for load balancers in 3-AD regions
-  - Conditional addition of service gateway routing and security list for worker subnets
-  - Added ability to specify image ocid or choose OS version for worker nodes
+  - Conditional addition of service gateway routing and security list for worker subnets. Worker nodes can now use Service Gateway to access OCIR, Object Storage, Streaming etc without manual configuration of routing and security lists
   - Added conditional private subnets for load balancers. Users can now choose between public, internal or both for load balancers.
   - Added ability to choose preferred load balancer type: public or internal
-  - Different and simplified security lists for public and private workers
+  - Separate and simplified security lists for public and private workers
+  - Minimum of 2 worker nodes per subnet to ensure adequate number of fault domains in single AD regions
+  - Improvement in load balancer subnet selection algorithm. There's no need to toggle the load balancer code for single AD-regions anymore
+  - Added ability to specify preferred AD pair for load balancers in 3-AD regions
+  - Added ability to specify image ocid or choose OS version for worker nodes
+  - Improved subnet defaults:
+    - Default values now avoid potential overlapping subnet when creating or scaling to large clusters to maximum cluster size
+    - Bastion - Maximum size of 5
+    - Load Balancers: maximum of 29 per subnets
+    - Worker subnet IPs: 16380 per subnet. Cluster can therefore now scale to Kubernetes supported maximum (5000) in both single and multi-AD regions
 - Kubernetes:
   - ocirsecret created in kube-system and added to tiller serviceaccount
+  - Optional addition and initialization of the incubator, jetstack repos
 
 ## Documentation
 
@@ -164,4 +172,5 @@ $ terraform apply
     - Mika Rinne
     - Kristen Jacobs
     - Tim Sheppard
-    - @AmedeeBulle
+    - Philippe Vanhaesendonck
+    - Karthic Ravindran

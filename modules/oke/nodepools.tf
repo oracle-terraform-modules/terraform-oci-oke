@@ -15,12 +15,13 @@ resource "oci_containerengine_node_pool" "nodepools_topology1" {
   name                = "${var.label_prefix}-${var.node_pool_name_prefix}-${count.index + 1}"
   node_image_id       = data.oci_core_images.latest_images.images[0].id
   node_shape          = var.node_pool_node_shape
-  #quanity per subnet will be minimum 2 for single AD region
+
+  # set quanity to a minimum of 2 per subnet for single AD region to ensure adequate number of fault domains
   quantity_per_subnet = max(2, var.node_pool_quantity_per_subnet)
   ssh_public_key      = file(var.ssh_public_key_path)
 
   subnet_ids = [var.cluster_subnets["workers_ad1"]]
-  # count to check single AD region
+
   count      = length(var.ad_names) == 1 ? var.node_pools : 0
 }
 
@@ -44,7 +45,7 @@ resource "oci_containerengine_node_pool" "nodepools_topology2" {
   # credit: Stephen Cross
   subnet_ids = ["${var.cluster_subnets["workers_ad${count.index + 1}"]}", "${var.cluster_subnets["workers_ad${((count.index + 1) % 3) + 1}"]}"]
 
-  count = var.nodepool_topology == 2 ? var.node_pools : 0
+  count = length(var.ad_names) == 3 && var.nodepool_topology == 2 ? var.node_pools : 0
 }
 
 resource "oci_containerengine_node_pool" "nodepools_topology3" {
@@ -64,6 +65,6 @@ resource "oci_containerengine_node_pool" "nodepools_topology3" {
   #   key   = "key"
   #   value = "value"
   # }
-  #count to check three AD region
-  count = length(var.ad_names) == 3 ? var.node_pools : 0
+
+  count = length(var.ad_names) == 3 && var.nodepool_topology == 3 ? var.node_pools : 0
 }

@@ -41,6 +41,17 @@ data "template_cloudinit_config" "bastion" {
   count = var.create_bastion == true ? 1 : 0
 }
 
+data "template_file" "tesseract_template" {
+  template = file("${path.module}/scripts/tesseract.template.sh")
+
+  vars = {
+    bastion_ip       = join(",", data.oci_core_vnic.bastion_vnic.*.public_ip_address)
+    user             = var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    private_key_path = var.ssh_private_key_path
+  }
+  count = var.create_bastion == true ? 1 : 0
+}
+
 # Gets a list of VNIC attachments on the bastion instance
 data "oci_core_vnic_attachments" "bastion_vnics_attachments" {
   availability_domain = element(var.ad_names, (var.availability_domains["bastion"] - 1))
