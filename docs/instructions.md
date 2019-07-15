@@ -22,15 +22,15 @@
 
 ## Install Terraform
 
-1. [Download Terraform][terraform download]. You need version 0.11.11
+1. [Download Terraform][terraform download]. You need version 0.12.4
 
 2. Extract the terraform binary to a location in your path
 
     ```
-    $ unzip terraform_0.11.11_linux_amd64.zip
+    $ unzip terraform_0.12.4_linux_amd64.zip
     $ sudo cp terraform /usr/local/bin
     $ terraform -v
-    Terraform v0.11.11
+    Terraform v0.12.4
     ```
 
 ## Generate ssh keys
@@ -193,7 +193,7 @@ Enable 1 of the bastion instances in terraform.tfvars in the 'availability_domai
 create_bastion = "true"
 
 availability_domains = {
-    "bastion" = "1"
+    "bastion" = 1
 }
 ```
 
@@ -243,20 +243,23 @@ All subnets are programmable and can be controlled using the vcn_cidr, newbits a
 vcn_cidr = "10.0.0.0/16"
 
 newbits = {
-  "bastion" = "8"
-  "lb"      = "8"
-  "workers" = "8"
+  "bastion" = 13
+  "lb"      = 11
+  "workers" = 2
 }
 
 
 subnets = {
-  "bastion"     = "11"
-  "pub_lb_ad1"      = "12"
-  "pub_lb_ad2"      = "22"
-  "pub_lb_ad3"      = "32"
-  "workers_ad1" = "13"
-  "workers_ad2" = "23"
-  "workers_ad3" = "33"
+  "bastion"     = 32
+  "int_lb_ad1"  = 16
+  "int_lb_ad2"  = 17
+  "int_lb_ad3"  = 18
+  "pub_lb_ad1"  = 19
+  "pub_lb_ad2"  = 20
+  "pub_lb_ad3"  = 21
+  "workers_ad1" = 1
+  "workers_ad2" = 2
+  "workers_ad3" = 3
 }
 ```
 
@@ -265,23 +268,20 @@ OKE worker nodes can be configured in 2 modes:
 - public
 - private
 
-In public mode, worker nodes will be created with public IP addresses and can accessed directly. NodePort Services can therefore be accessed directly.
+In public mode, worker nodes will be created with public IP addresses and can accessed directly. NodePort Services can be optionally enabled to allow direct access.
+
+```
+allow_node_port_access = true
+```
+
+ssh access to worker nodes need to go through the bastion so enable:
+
+```
+allow_worker_ssh_access = true
+create_bastion = true
+```
 
 In private mode, worker nodes will not have public IP addresses and can only be accessed through a bastion host. NodePort services can only be accessed through the bastion host or through a load balancer.
-
-Ensure all 3 worker subnets for the worker nodes and 3 public subnets for the load balancers are created:
-
-```
-availability_domains = {
-  "bastion"     = "1"
-  "pub_lb_ad1"      = "1"
-  "pub_lb_ad2"      = "2"
-  "pub_lb_ad3"      = "3"
-  "workers_ad1" = "1"
-  "workers_ad2" = "2"
-  "workers_ad3" = "3"
-}
-```
 
 In private mode, you also need to ensure that the NAT gateway is created and set a name for the gateway:
 
@@ -315,6 +315,8 @@ OKE Parameters - see terraform.tfvars.example. Most of them are self-explanatory
    - Setting node_pools = "2" and node_pool_quantity_per_subnet = "2" and nodepool_topology = "2" will create a cluster of 8 worker nodes. Similarly, corresponding values of 3, 2, 2 will create a cluster of 12 worker nodes.
    
    - Review [Node pool topology][topology] to understand how these 3 parameters impact your deployment.
+
+   - node_topology parameter applies only to 3-AD regions.
 
 ### Kubeconfig
 kubeconfig is downloaded locally and stored in generated/kubeconfig. To interact with your cluster:
@@ -360,18 +362,3 @@ $ terraform destroy
 - The subnet allocation algorithm must be tested more thoroughly for the 2-subnet node pool topology. At the moment, ensure all 3 worker subnets are enabled to avoid unknown problems.
 
 - You need to be part of Administrators' group in order to use instance_principals
-
-- By default, the cluster is provisioned for 3-AD regions. For single AD regions, open the file modules/oke/cluster.tf and swap the service_lb_subnet_ids as follows:
-
-    1. Uncomment line 24 by removing the # at the beginning of the line
-    2. Comment line 27 by adding a # at the beginning of the line
-    3. The code should look like this:
-
-``` 
-    # single ad regions
-    service_lb_subnet_ids = ["${var.cluster_subnets["pub_lb_ad1"]}"]
-
-    # multi ad regions
-    # service_lb_subnet_ids= ["${var.cluster_subnets["pub_lb_ad1"]}", "${var.cluster_subnets["pub_lb_ad2"]}"]
-
-```

@@ -14,6 +14,14 @@ rm -rf linux-amd64
 
 helm init --upgrade
 
+if [ ${add_incubator_repo} ]; then
+  helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+fi  
+
+if [ ${add_jetstack_repo} ]; then
+  helm repo add jetstack https://charts.jetstack.io
+fi
+
 helm repo update
 
 echo "source <(helm completion bash)" >> ~/.bashrc

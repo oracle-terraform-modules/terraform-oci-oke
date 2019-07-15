@@ -1,8 +1,6 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-# bastion
-
 resource "oci_core_subnet" "bastion" {
   compartment_id             = var.compartment_ocid
   cidr_block                 = cidrsubnet(var.vcn_cidr,var.newbits["bastion"],var.subnets["bastion"])

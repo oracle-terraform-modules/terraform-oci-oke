@@ -5,10 +5,12 @@ data "template_file" "install_helm" {
   template = file("${path.module}/scripts/install_helm.template.sh")
 
   vars = {
-    helm_version = var.helm_version
+    add_incubator_repo = var.add_incubator_repo
+    add_jetstack_repo  = var.add_jetstack_repo
+    helm_version       = var.helm_version
   }
 
-  count = var.create_bastion == true && var.install_helm == true   ? 1 : 0
+  count = var.create_bastion == true && var.install_helm == true ? 1 : 0
 }
 
 resource null_resource "install_helm_bastion" {
@@ -17,7 +19,7 @@ resource null_resource "install_helm_bastion" {
     private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
+    user        = var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
 
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
@@ -35,5 +37,5 @@ resource null_resource "install_helm_bastion" {
     ]
   }
 
-  count = var.create_bastion == true  && var.install_helm == true   ? 1 : 0
+  count = var.create_bastion == true && var.install_helm == true ? 1 : 0
 }

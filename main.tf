@@ -84,11 +84,11 @@ module "network" {
   worker_mode             = var.worker_mode
 
   # load balancers
-  load_balancer_subnet_type    = var.load_balancer_subnet_type
+  load_balancer_subnet_type       = var.load_balancer_subnet_type
   preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
 }
 
-# # cluster creation for oke
+# cluster creation for oke
 module "oke" {
   source = "./modules/oke"
 
@@ -139,11 +139,11 @@ module "oke" {
   nodepool_topology                        = var.nodepool_topology
 
   # load balancers
-  preferred_lb_ads = var.preferred_lb_ads
+  preferred_lb_ads                = var.preferred_lb_ads
   preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
 
   # ocir
-  auth_token        = var.create_auth_token == true ? module.auth.ocirtoken : "none"
+  auth_token        = module.auth.ocirtoken
   create_auth_token = var.create_auth_token
   email_address     = var.email_address
   ocirtoken_id      = module.auth.ocirtoken_id
@@ -152,8 +152,10 @@ module "oke" {
   username          = var.username
 
   # helm
-  helm_version = var.helm_version
-  install_helm = var.install_helm
+  add_incubator_repo = var.add_incubator_repo
+  add_jetstack_repo  = var.add_incubator_repo
+  helm_version       = var.helm_version
+  install_helm       = var.install_helm
 
   # calico
   calico_version = var.calico_version

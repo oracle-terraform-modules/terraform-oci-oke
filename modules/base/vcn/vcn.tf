@@ -37,6 +37,5 @@ resource "oci_core_route_table" "ig_route" {
     }
   }
 
-
   vcn_id = oci_core_vcn.vcn.id
 }

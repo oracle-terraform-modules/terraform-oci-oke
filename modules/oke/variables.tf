@@ -113,6 +113,10 @@ variable "username" {}
 
 # helm
 
+variable "add_incubator_repo" {}
+
+variable "add_jetstack_repo" {}
+
 variable "helm_version" {}
 
 variable "install_helm" {}

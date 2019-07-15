@@ -14,3 +14,4 @@ CONTRIBUTORS
 - @orajhan
 - @cameronsenese
 - @AmedeeBulle
+- @karthicgit
