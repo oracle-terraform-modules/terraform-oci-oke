@@ -128,3 +128,11 @@ variable "calico_version" {}
 variable "install_calico" {
   default = false
 }
+
+#metricserver
+
+variable "kubernetes_version_metricserver" {}
+
+variable "install_metricserver" {
+  default = false
+}
