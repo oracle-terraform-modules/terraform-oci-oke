@@ -1,62 +1,58 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-# identity
-
-variable "api_fingerprint" {}
-
-variable "api_private_key_path" {}
-
-variable "compartment_ocid" {}
-
 # general
 
-variable "label_prefix" {}
+variable "oci_base_identity" {
+  type = object({
+    api_fingerprint      = string
+    api_private_key_path = string
+    compartment_ocid     = string
+    compartment_name     = string
+    tenancy_ocid         = string
+    user_ocid            = string
+  })
+}
 
-variable "region" {}
+variable "oci_bastion_general" {
+  type = object({
+    label_prefix     = string
+    home_region      = string
+    region           = string
+  })
+}
 
 # ssh
 
-variable "ssh_private_key_path" {}
-
-variable "ssh_public_key_path" {}
+variable "oci_base_ssh_keys" {
+  type = object({
+    ssh_private_key_path = string
+    ssh_public_key_path  = string
+  })
+}
 
 # bastion
 
-variable "bastion_shape" {}
-
-variable "create_bastion" {}
-
-variable "bastion_access" {}
-
-variable "image_ocid" {}
-
-variable "image_operating_system" {}
-
-variable "image_operating_system_version" {}
-
-# networking
-
-variable "ig_route_id" {}
-
-variable "newbits" {
-  type = "map"
+variable "oci_bastion" {
+  type = object({
+    bastion_shape                  = string
+    create_bastion                 = bool
+    bastion_access                 = string
+    enable_instance_principal      = bool
+    image_ocid                     = string
+    image_operating_system         = string
+    image_operating_system_version = string
+  })
 }
 
-variable "subnets" {
-  type = "map"
-}
-
-variable "vcn_cidr" {}
-
-variable "vcn_id" {}
-
-# ad
-
-variable "ad_names" {
-  type = "list"
-}
-
-variable "availability_domains" {
-  type = "map"
+variable "oci_bastion_infra" {
+  type = object({
+    ig_route_id          = string
+    vcn_cidr             = string
+    vcn_id               = string
+    ad_names             = list
+    newbits              = number
+    subnets              = number
+    availability_domains = number
+  })
 }

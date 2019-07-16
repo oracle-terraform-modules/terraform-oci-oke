@@ -2,10 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 data "oci_core_images" "bastion_images" {
-  compartment_id           = var.compartment_ocid
-  operating_system         = var.image_operating_system
-  operating_system_version = var.image_operating_system_version
-  shape                    = var.bastion_shape
+  compartment_id           = var.oci_base_identity.compartment_ocid
+  operating_system         = var.oci_bastion.image_operating_system
+  operating_system_version = var.oci_bastion.image_operating_system_version
+  shape                    = var.oci_bastion.bastion_shape
   sort_by                  = "TIMECREATED"
 }
 
@@ -13,9 +13,9 @@ data "template_file" "bastion_template" {
   template = file("${path.module}/scripts/bastion.template.sh")
 
   vars = {
-    user = var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
-  count = var.create_bastion == true ? 1 : 0
+  count = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
 data "template_file" "bastion_cloud_init_file" {
@@ -23,9 +23,9 @@ data "template_file" "bastion_cloud_init_file" {
 
   vars = {
     bastion_sh_content = base64gzip(data.template_file.bastion_template[0].rendered)
-    user               = var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user               = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
-  count = var.create_bastion == true ? 1 : 0
+  count = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
 # cloud init for bastion
@@ -38,7 +38,7 @@ data "template_cloudinit_config" "bastion" {
     content_type = "text/cloud-config"
     content      = data.template_file.bastion_cloud_init_file[0].rendered
   }
-  count = var.create_bastion == true ? 1 : 0
+  count = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
 data "template_file" "tesseract_template" {
@@ -46,28 +46,28 @@ data "template_file" "tesseract_template" {
 
   vars = {
     bastion_ip       = join(",", data.oci_core_vnic.bastion_vnic.*.public_ip_address)
-    user             = var.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
-    private_key_path = var.ssh_private_key_path
+    user             = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    private_key_path = var.oci_base_ssh_keys.ssh_private_key_path
   }
-  count = var.create_bastion == true ? 1 : 0
+  count = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
 # Gets a list of VNIC attachments on the bastion instance
 data "oci_core_vnic_attachments" "bastion_vnics_attachments" {
-  availability_domain = element(var.ad_names, (var.availability_domains["bastion"] - 1))
-  compartment_id      = var.compartment_ocid
+  availability_domain = element(var.oci_bastion_infra.ad_names, (var.oci_bastion_infra.availability_domains - 1))
+  compartment_id      = var.oci_base_identity.compartment_ocid
   instance_id         = oci_core_instance.bastion[0].id
-  count               = var.create_bastion == true ? 1 : 0
+  count               = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
 # Gets the OCID of the first (default) VNIC on the bastion instance
 data "oci_core_vnic" "bastion_vnic" {
   vnic_id = lookup(data.oci_core_vnic_attachments.bastion_vnics_attachments[0].vnic_attachments[0], "vnic_id")
-  count   = var.create_bastion == true ? 1 : 0
+  count   = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
 data "oci_core_instance" "bastion" {
   #Required
   instance_id = oci_core_instance.bastion[0].id
-  count       = var.create_bastion == true ? 1 : 0
+  count       = var.oci_bastion.create_bastion == true ? 1 : 0
 }
