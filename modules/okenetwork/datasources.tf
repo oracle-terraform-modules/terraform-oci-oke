@@ -15,12 +15,6 @@ data "oci_core_subnets" "oke_subnets" {
     vcn_id = var.vcn_id
     
     filter {
-      name = "display_name"
-      values = ["\\w*workers*|\\w*lb*"]
-      regex = true
-    }
-
-    filter {
       name = "state"
       values = ["AVAILABLE"]
     }

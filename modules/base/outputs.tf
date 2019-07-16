@@ -34,5 +34,5 @@ output "home_region" {
 # convenient output
 
 output "ssh_to_bastion" {
-  value = "ssh -i ${var.ssh_private_key_path} opc@${module.bastion.bastion_public_ip}"
+  value = "ssh -i ${var.oci_base_ssh_keys.ssh_private_key_path} opc@${module.bastion.bastion_public_ip}"
 }

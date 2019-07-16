@@ -2,21 +2,21 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource "oci_core_vcn" "vcn" {
-  cidr_block     = var.vcn_cidr
-  compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-${var.vcn_name}"
-  dns_label      = var.vcn_dns_name
+  cidr_block     = var.oci_base_vcn.vcn_cidr
+  compartment_id = var.oci_base_vcn.compartment_ocid
+  display_name   = "${var.oci_base_vcn.label_prefix}-${var.oci_base_vcn.vcn_name}"
+  dns_label      = var.oci_base_vcn.vcn_dns_name
 }
 
 resource "oci_core_internet_gateway" "ig" {
-  compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-ig-gw"
+  compartment_id = var.oci_base_vcn.compartment_ocid
+  display_name   = "${var.oci_base_vcn.label_prefix}-ig-gw"
   vcn_id         = oci_core_vcn.vcn.id
 }
 
 resource "oci_core_route_table" "ig_route" {
-  compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-ig-route"
+  compartment_id = var.oci_base_vcn.compartment_ocid
+  display_name   = "${var.oci_base_vcn.label_prefix}-ig-route"
 
   route_rules {
     destination       = local.anywhere
@@ -24,7 +24,7 @@ resource "oci_core_route_table" "ig_route" {
   }
 
   dynamic "route_rules" {
-    for_each = (var.create_service_gateway == true && var.create_nat_gateway == false)  ? list(1) : []
+    for_each = (var.oci_base_vcn.create_service_gateway == true && var.oci_base_vcn.create_nat_gateway == false)  ? list(1) : []
 
     content {
       destination       = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")

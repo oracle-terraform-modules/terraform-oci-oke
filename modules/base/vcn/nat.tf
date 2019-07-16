@@ -2,15 +2,15 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource "oci_core_nat_gateway" "nat_gateway" {
-  compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-${var.nat_gateway_name}-gw"
+  compartment_id = var.oci_base_vcn.compartment_ocid
+  display_name   = "${var.oci_base_vcn.label_prefix}-${var.oci_base_vcn.nat_gateway_name}-gw"
   vcn_id         = oci_core_vcn.vcn.id
-  count          = var.create_nat_gateway == true ? 1 : 0
+  count          = var.oci_base_vcn.create_nat_gateway == true ? 1 : 0
 }
 
 resource "oci_core_route_table" "nat_route" {
-  compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-nat-route"
+  compartment_id = var.oci_base_vcn.compartment_ocid
+  display_name   = "${var.oci_base_vcn.label_prefix}-nat-route"
 
   route_rules {
     destination       = local.anywhere
@@ -19,7 +19,7 @@ resource "oci_core_route_table" "nat_route" {
   }
 
   dynamic "route_rules" {
-    for_each = var.create_service_gateway == true ? list(1) : []
+    for_each = var.oci_base_vcn.create_service_gateway == true ? list(1) : []
 
     content {
       destination       = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
@@ -29,5 +29,5 @@ resource "oci_core_route_table" "nat_route" {
   }
 
   vcn_id = oci_core_vcn.vcn.id
-  count  = var.create_nat_gateway == true ? 1 : 0
+  count  = var.oci_base_vcn.create_nat_gateway == true ? 1 : 0
 }
