@@ -1,0 +1,27 @@
+= Terraform for Oracle Container Engine
+
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+//variables:
+//URIs:
+:uri-kubernetes: https://kubernetes.io/
+:uri-oci: https://cloud.oracle.com/cloud-infrastructure
+:uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+:uri-oracle: https://www.oracle.com
+:uri-terraform: https://www.terraform.io
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-oci-oke: https://github.com/oracle-terraform-modules/terraform-oci-oke
+
+{uri-oke}[Oracle Container Engine] (OKE) is {uri-oracle}[Oracle]'s managed {uri-kubernetes}[Kubernetes] service on {uri-oci}[Oracle Cloud Infrastructure].
+
+This {uri-terraform-oci-oke}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructure] provides a reusable Terraform module that provisions a {uri-oke}[Oracle Container Engine] cluster.
