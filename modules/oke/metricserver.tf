@@ -4,10 +4,6 @@
 data "template_file" "install_metricserver" {
   template = file("${path.module}/scripts/install_metricserver.template.sh")
 
-  vars = {
-    kubernetes_version_metricserver = var.kubernetes_version_metricserver
-  }
-
   count = var.install_metricserver == true   ? 1 : 0
 }
 
