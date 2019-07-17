@@ -12,15 +12,20 @@ ifdef::env-github[]
 :tip-caption: :bulb:
 :warning-caption: :warning:
 endif::[]
-ifdef::env-site,env-yard[]
-:uri-rel-file-base: {uri-repo}/blob/v12docs
-:uri-rel-tree-base: {uri-repo}/tree/v12docs
-endif::[]
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+:uri-rel-file-base: link:
+:uri-rel-tree-base: link:
+
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+
+:uri-docs: {uri-rel-file-base}/docs
+
 :uri-architecture: {uri-docs}/architecture.adoc
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
-:uri-docs: {uri-rel-file-base}/docs
+
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
@@ -30,7 +35,7 @@ endif::[]
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
 :uri-quickstart: {uri-docs}/quickstart.adoc
-:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+
 :uri-terraform: https://www.terraform.io
 :uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
