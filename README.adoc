@@ -19,7 +19,7 @@ endif::[]
 
 :uri-docs: {uri-rel-file-base}/docs
 
-:uri-architecture: {uri-docs}/architecture.adoc
+:uri-topology: {uri-docs}/topology.adoc
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
@@ -51,7 +51,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 {uri-instructions}[Instructions]
 
-{uri-architecture}[Architecture]
+{uri-topology}[topology]
 
 {uri-terraform-options}[Terraform Options]
 
@@ -77,3 +77,5 @@ Code derived and adapted from {uri-terraform-oke-sample}[Terraform OKE Sample]
 == Contributors
 
 {uri-contributors}[Folks who contributed with explanations, code, feedback, ideas, testing etc.]
+
+Learn how to {uri-contribute}[contribute].
