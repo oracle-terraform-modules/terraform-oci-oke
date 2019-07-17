@@ -1,0 +1,33 @@
+== GitHub userids of contributors
+
+OWNERS # have admin access and can merge code to master:
+
+- @hyder
+- @markxnelson
+
+CONTRIBUTORS
+
+- @scross01
+- @craigcarl-oracle
+- @j0nr33v3
+- @mikeraab
+- @jeevanjoseph
+- @rajesh-chawla
+- @cameronsenese
+- @AmedeeBulle
+- @karthicgit
+- @cawilliamson
+- @orajhan
+- @kristenjacobs
+- @CaptTofu
+- @mikarinneoracle
+- @kapmani
+- @briangustafson
+
+Others:
+
+- Arjav Desai
+- Jeet Jagasia
+- Karsten Terp-Nielsen
+- Erno Venalainen
+- Tim Sheppard
