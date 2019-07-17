@@ -137,6 +137,10 @@ username = ""
 
 # helm
 
+add_incubator_repo = false
+
+add_jetstack_repo = false
+
 helm_version = "2.14.1"
 
 install_helm = true
