@@ -13,9 +13,10 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 ifdef::env-site,env-yard[]
-:uri-rel-file-base: {uri-repo}/blob/master/
-:uri-rel-tree-base: {uri-repo}/tree/master/
+:uri-rel-file-base: {uri-repo}/blob/v12docs
+:uri-rel-tree-base: {uri-repo}/tree/v12docs
 endif::[]
+:uri-docs: {uri-rel-file-base}/docs
 :uri-instructions: {uri-docs/instructions.adoc}
 :uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
 :uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
@@ -42,11 +43,11 @@ endif::[]
 1. Clone the repo:
 
 [source,bash]
----
+----
 git clone https://github.com/oracle/terraform-oci-oke.git tfoke
 cd tfoke
 cp terraform.tfvars.example terraform.tfvars
----
+----
 
 2. Set mandatory parameters:
 

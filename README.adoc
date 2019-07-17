@@ -13,16 +13,16 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 ifdef::env-site,env-yard[]
-:uri-rel-file-base: {uri-repo}/blob/master/
-:uri-rel-tree-base: {uri-repo}/tree/master/
+:uri-rel-file-base: {uri-repo}/blob/v12docs
+:uri-rel-tree-base: {uri-repo}/tree/v12docs
 endif::[]
 :uri-architecture: {uri-docs/architecture.adoc}
-:uri-changelog: {uri-rel-tree-base}CHANGELOG.adoc
-:uri-contribute: {uri-rel-tree-base}CONTRIBUTING.adoc
-:uri-contributors: {uri-rel-tree-base}CONTRIBUTORS.adoc
-:uri-docs: {uri-rel-tree-base}/docs
+:uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
+:uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
+:uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
+:uri-docs: {uri-rel-file-base}/docs
 :uri-instructions: {uri-docs/instructions.adoc}
-:uri-license: {uri-rel-tree-base}LICENSE.txt
+:uri-license: {uri-rel-file-base}LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
