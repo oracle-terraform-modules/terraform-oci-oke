@@ -4,7 +4,7 @@
 
 git clone https://github.com/kubernetes-incubator/metrics-server.git /tmp/metricserver
 cd /tmp/metricserver
-kubectl create -f deploy/${kubernetes_version_metricserver}+/
+kubectl create -f deploy/1.8+/
 
 sleep 5
 rm -rf /tmp/metricserver/
