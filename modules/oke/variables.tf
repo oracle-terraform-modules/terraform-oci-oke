@@ -131,8 +131,6 @@ variable "install_calico" {
 
 #metricserver
 
-variable "kubernetes_version_metricserver" {}
-
 variable "install_metricserver" {
   default = false
 }
