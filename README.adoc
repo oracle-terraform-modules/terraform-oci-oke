@@ -25,7 +25,7 @@ endif::[]
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 
 :uri-instructions: {uri-docs}/instructions.adoc
-:uri-license: {uri-rel-file-base}LICENSE.txt
+:uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
