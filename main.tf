@@ -140,6 +140,5 @@ module "oke" {
   install_calico = var.install_calico
 
   # metricserver
-  kubernetes_version_metricserver = var.kubernetes_version_metricserver
   install_metricserver = var.install_metricserver
 }
