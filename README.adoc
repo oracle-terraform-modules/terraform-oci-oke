@@ -13,8 +13,6 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 :uri-repo: https://github.com/hyder/terraform-oci-oke
-:uri-rel-file-base: link:
-:uri-rel-tree-base: link:
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
 :uri-rel-tree-base: link:{uri-repo}/tree/v12docs
@@ -47,7 +45,7 @@ endif::[]
 
 This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructure] provides a reusable Terraform module that provisions a {uri-oke}[Oracle Container Engine] cluster.
 
-== link:{uri-docs}[Documentation]
+== {uri-docs}[Documentation]
 
 {uri-quickstart}[Quick Start]
 
@@ -66,7 +64,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 == License
 
-link:{uri-license}[LICENSE.txt]
+{uri-license}[LICENSE.txt]
 
 == Changelog
 
