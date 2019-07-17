@@ -24,7 +24,7 @@ endif::[]
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 
-:uri-configuration: {uri-docs}/configuration.adoc
+:uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
@@ -41,25 +41,28 @@ endif::[]
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 
-== Assumptions
+=== Assumptions
 
-This section assumes you have completed the following:
+This section assumes you have completed all the {uri-prereqs}[pre-requisites]. 
 
-. all the {uri-prereqs}[pre-requisites]
-. all the required {uri-configuration}[configuration]
+=== Configure the variable file
 
-=== Creating the OKE Cluster
+=== Configure identity parameters
 
-=== Adding the bastion host
+=== Configure ssh keys
 
-=== Creating an auth token for OCIR
+=== Configure OCI parameters
 
-=== Installing helm
+=== Configure networking parameters
 
-=== Installing calico
+=== Configure bastion host parameters
 
-=== Scaling the number of worker nodes
+=== Configure OKE parameters
 
-=== Scaling the number of node pools
+=== Configure OKE Load Balancer parameters
 
-=== Destroying the cluster
+=== Configure OCIR parameters
+
+=== Configure helm parameters
+
+=== Configure calico parameters

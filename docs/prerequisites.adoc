@@ -24,7 +24,7 @@ endif::[]
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 
-:uri-configuration: {uri-docs}/configuration.adoc
+:uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
@@ -32,7 +32,6 @@ endif::[]
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
-:uri-prereqs: {uri-docs}/prerequisites.adoc
 :uri-quickstart: {uri-docs}/quickstart.adoc
 
 :uri-terraform: https://www.terraform.io
@@ -41,25 +40,18 @@ endif::[]
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 
-== Assumptions
+== Pre-requisites
 
-This section assumes you have completed the following:
+This section will guide you through the pre-requisites before you can use this project. 
 
-. all the {uri-prereqs}[pre-requisites]
-. all the required {uri-configuration}[configuration]
+=== Install Terraform
 
-=== Creating the OKE Cluster
+=== Generate api keys
 
-=== Adding the bastion host
+=== Configure your OCI account to use Terraform
 
-=== Creating an auth token for OCIR
+=== Create an OCI compartment
 
-=== Installing helm
+=== Configure OCI Policy for OKE
 
-=== Installing calico
-
-=== Scaling the number of worker nodes
-
-=== Scaling the number of node pools
-
-=== Destroying the cluster
+=== Obtain the necessary OCIDs

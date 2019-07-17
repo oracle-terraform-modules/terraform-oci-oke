@@ -19,8 +19,9 @@ endif::[]
 
 :uri-docs: {uri-rel-file-base}/docs
 
-:uri-topology: {uri-docs}/topology.adoc
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
+:uri-configuration: {uri-docs}/configuration.adoc
+
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 
@@ -32,6 +33,7 @@ endif::[]
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
+:uri-prereqs: {uri-docs}/prerequisites.adoc
 :uri-quickstart: {uri-docs}/quickstart.adoc
 
 :uri-terraform: https://www.terraform.io
@@ -39,6 +41,8 @@ endif::[]
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-terraform-hashircorp-examples: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
+:uri-topology: {uri-docs}/topology.adoc
 
 
 {uri-oke}[Oracle Container Engine] (OKE) is {uri-oracle}[Oracle]'s managed {uri-kubernetes}[Kubernetes] service on {uri-oci}[Oracle Cloud Infrastructure (OCI)].
@@ -47,13 +51,17 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 == {uri-docs}[Documentation]
 
-{uri-quickstart}[Quick Start]
+* {uri-prereqs}/prerequisites.adoc[Pre-requisites]
 
-{uri-instructions}[Instructions]
+* {uri-quickstart}[Quick Start]
 
-{uri-topology}[Topology]
+* {uri-configuration}[Configuration]
 
-{uri-terraform-options}[Terraform Options]
+* {uri-instructions}[Instructions]
+
+* {uri-topology}[Topology]
+
+* {uri-terraform-options}[Terraform Options]
 
 == Related Documentation, Blog
 * {uri-oci-documentation}[Oracle Cloud Infrastructure Documentation]
@@ -72,7 +80,7 @@ View the {uri-changelog}[CHANGELOG].
 
 == Acknowledgement
 
-Code derived and adapted from {uri-terraform-oke-sample}[Terraform OKE Sample]
+Code derived and adapted from {uri-terraform-oke-sample}[Terraform OKE Sample] and Hashicorp's {uri-terraform-hashircorp-examples}[Terraform 0.12 examples]
 
 == Contributors
 

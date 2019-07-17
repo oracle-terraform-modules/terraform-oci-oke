@@ -32,9 +32,9 @@ endif::[]
 
 == Pre-requisites
 
-1. git
-2. ssh client
-3. Terraform 0.12.3+
+1. git is installed
+2. ssh client is installed
+3. Terraform 0.12.3+ is installed
 
 == Instructions
 
@@ -49,28 +49,28 @@ cp terraform.tfvars.example terraform.tfvars
 
 2. Set mandatory parameters:
 
-- api_fingerprint
-- api_private_key_path
-- compartment_ocid
-- compartment_name
-- tenancy_ocid
-- user_ocid
+* api_fingerprint
+* api_private_key_path
+* compartment_ocid
+* compartment_name
+* tenancy_ocid
+* user_ocid
 
 3. Override other parameters:
 
-- region
+* region
 
 4. Optional parameters to override:
-- ssh_private_key_path
-- ssh_public_key_path
-- vcn_dns_name
-- vcn_name
-- create_bastion
-- cluster_name
-- worker_mode
+* ssh_private_key_path
+* ssh_public_key_path
+* vcn_dns_name
+* vcn_name
+* create_bastion
+* cluster_name
+* worker_mode
 
 Related documentation:
 
-- {uri-instructions}[Detailed Instructions]
+* {uri-instructions}[Detailed Instructions]
 
-- {uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]
+* {uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]

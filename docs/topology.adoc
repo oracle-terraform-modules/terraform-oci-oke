@@ -1,0 +1,13 @@
+= Topology
+
+== Default
+
+== Networking, Gateways, Bastion
+
+== Public vs Private worker nodes
+
+== Worker Nodes per subnet
+
+== Node pools
+
+== Public vs Internal Load Balancers
