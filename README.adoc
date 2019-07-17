@@ -16,12 +16,12 @@ ifdef::env-site,env-yard[]
 :uri-rel-file-base: {uri-repo}/blob/v12docs
 :uri-rel-tree-base: {uri-repo}/tree/v12docs
 endif::[]
-:uri-architecture: {uri-docs/architecture.adoc}
+:uri-architecture: {uri-docs}/architecture.adoc
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 :uri-docs: {uri-rel-file-base}/docs
-:uri-instructions: {uri-docs/instructions.adoc}
+:uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
@@ -29,13 +29,13 @@ endif::[]
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
-:uri-quickstart: {uri-docs/quickstart.adoc}
+:uri-quickstart: {uri-docs}/quickstart.adoc
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 :uri-terraform: https://www.terraform.io
 :uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
-:uri-terraform-options: {uri-docs/terraformoptions.adoc}
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
 
 
 {uri-oke}[Oracle Container Engine] (OKE) is {uri-oracle}[Oracle]'s managed {uri-kubernetes}[Kubernetes] service on {uri-oci}[Oracle Cloud Infrastructure (OCI)].
