@@ -12,7 +12,7 @@ ifdef::env-github[]
 :tip-caption: :bulb:
 :warning-caption: :warning:
 endif::[]
-:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+:uri-repo: https://github.com/hyder/terraform-oci-oke
 :uri-rel-file-base: link:
 :uri-rel-tree-base: link:
 
@@ -49,13 +49,13 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 == link:{uri-docs}[Documentation]
 
-link:{uri-quickstart}[Quick Start]
+{uri-quickstart}[Quick Start]
 
-link:{uri-instructions}[Instructions]
+{uri-instructions}[Instructions]
 
-link:{uri-architecture}[Architecture]
+{uri-architecture}[Architecture]
 
-link:{uri-terraformoptions}[Terraform Options]
+{uri-terraformoptions}[Terraform Options]
 
 == Related Documentation, Blog
 * {uri-oci-documentation}[Oracle Cloud Infrastructure Documentation]
