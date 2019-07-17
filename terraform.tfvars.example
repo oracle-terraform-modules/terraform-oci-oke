@@ -148,7 +148,4 @@ calico_version = "3.6"
 install_calico = false
 
 #metricserver
-
-kubernetes_version_metricserver = 1.8
-
 install_metricserver = false
