@@ -347,3 +347,8 @@ variable "install_calico" {
   description = "whether to install calico for network pod security policy"
   default     = false
 }
+
+variable "install_metricserver" {
+  description = "whether to install metricserver for collecting metrics and for HPA"
+  default     = false
+}

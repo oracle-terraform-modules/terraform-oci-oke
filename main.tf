@@ -4,7 +4,7 @@
 module "base" {
   source = "./modules/base"
 
-  # identity  
+  # identity
   oci_base_identity = local.oci_base_identity
 
   # ssh
@@ -138,4 +138,7 @@ module "oke" {
   # calico
   calico_version = var.calico_version
   install_calico = var.install_calico
+
+  # metricserver
+  install_metricserver = var.install_metricserver
 }
