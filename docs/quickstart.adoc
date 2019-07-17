@@ -71,6 +71,6 @@ cp terraform.tfvars.example terraform.tfvars
 
 Related documentation:
 
-- link:{uri-instructions}[Detailed Instructions]
+- {uri-instructions}[Detailed Instructions]
 
-- link:{uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]
+- {uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]

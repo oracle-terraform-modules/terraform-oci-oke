@@ -53,7 +53,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 {uri-architecture}[Architecture]
 
-{uri-terraformoptions}[Terraform Options]
+{uri-terraform-options}[Terraform Options]
 
 == Related Documentation, Blog
 * {uri-oci-documentation}[Oracle Cloud Infrastructure Documentation]
@@ -68,7 +68,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 == Changelog
 
-View the link:{uri-changelog}[CHANGELOG].
+View the {uri-changelog}[CHANGELOG].
 
 == Acknowledgement
 
@@ -76,4 +76,4 @@ Code derived and adapted from {uri-terraform-oke-sample}[Terraform OKE Sample]
 
 == Contributors
 
-link:{uri-contributors}[Folks who contributed with explanations, code, feedback, ideas, testing etc.]
+{uri-contributors}[Folks who contributed with explanations, code, feedback, ideas, testing etc.]
