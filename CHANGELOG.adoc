@@ -1,0 +1,8 @@
+= CHANGELOG
+:idprefix:
+:idseparator: -
+
+:uri-changelog: http://keepachangelog.com/
+All notable changes to this project are documented in this file.
+
+The format is based on {uri-changelog}[Keep a Changelog].

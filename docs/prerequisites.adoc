@@ -1,0 +1,115 @@
+= Pre-requisites
+
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:uri-repo: https://github.com/hyder/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+
+:uri-docs: {uri-rel-file-base}/docs
+
+:uri-instructions: {uri-docs}/instructions.adoc
+
+:uri-oci: https://cloud.oracle.com/cloud-infrastructure
+:uri-oci-compartment: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingcompartments.htm#two
+:uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
+:uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
+:uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#two
+:uri-oci-keys-upload: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#two
+:uri-oci-oke-policy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
+
+:uri-terraform: https://www.terraform.io
+:uri-terraform-download: https://www.terraform.io/downloads.html
+== Pre-requisites
+
+This section will guide you through the pre-requisites before you can use this project.
+
+You can proceed to {uri-instructions}[creating the cluster] if you have already done these.
+
+=== Install Terraform
+
+Start by installing Terraform and configuring your path.
+
+==== Download Terraform
+
+1. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 0.12.4+.
+
+2. Download the appropriate version for your operating system
+
+3. Extract the the contents of compressed file and copy the terraform binary to a location that is in your path (see next section below)
+
+==== Configure path on Linux/macOS
+
+1. Open a terminal and type the following:
+
++
+[source,bash]
+----
+$ sudo mv /path/to/terraform /usr/local/bin
+----
+
+==== Configure path on Windows
+Follow the steps below to configure your path on Windows:
+
+. Click on 'Start', type 'Control Panel' and open it
+. Select System > Advanced System Settings > Environment Variables
+. Select System variables > PATH and click 'Edit'
+. Click New and paste the location of the directory where you have extracted the terraform.exe
+. Close all open windows by clicking OK
+. Open a new terminal and verify terraform has been properly installed
+
+==== Testing Terraform installation
+
+1. Open a terminal and test:
+
++
+[source,bash]
+----
+terraform -v
+Terraform v0.12.4
+----
+
+=== Generate api keys
+
+Follow the documentation for generating keys on {uri-oci-keys}[OCI Documentation].
+
+=== Upload your api keys
+
+Follow the documentation for uploading your keys on {uri-oci-keys-upload}[OCI Documentation].
+
+Note the fingerprint.
+
+=== Create an OCI compartment
+
+Follow the documentation for {uri-oci-compartment}[creating a compartment].
+
+=== Obtain the necessary OCIDs
+
+The following OCIDs are required:
+
+. Compartment OCID
+. Tenancy OCID
+. User OCID
+
+Follow the documentation for obtaining the tenancy and user ocids on {uri-oci-ocids}[OCI Documentation].
+
+To obtain the compartment OCID:
+
+1. Navigate to Identity > Compartments
+2. Click on your Compartment
+3. Locate OCID on the page and click on 'Copy'
+
+=== Configure OCI Policy for OKE
+
+Follow the documentation for {uri-oci-oke-policy}[to create the necessary OKE policy].
