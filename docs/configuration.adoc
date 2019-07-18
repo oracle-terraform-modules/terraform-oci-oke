@@ -1,4 +1,4 @@
-= Instructions
+= Configuration
 
 :idprefix:
 :idseparator: -
@@ -31,6 +31,7 @@ endif::[]
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
+:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
@@ -42,6 +43,7 @@ endif::[]
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-topology: {uri-docs}/topology.adoc
 
 === Assumptions
 
@@ -117,7 +119,25 @@ Read more about {uri-oci-instance-principal}[instance_principal].
 
 === Configure OKE parameters
 
+The OKE parameters concern mainly the following:
+
+. whether you want to deploy public or private worker nodes
+. whether you want to allow NodePort or ssh access to the worker nodes
+. Kubernetes options such as dashboard, networking and helm
+. size and topology of your cluster
+
+Refer to {uri-topology}[topology] for more thorough examples.
+
 === Configure OKE Load Balancer parameters
+
+The OKE Load Balancer parameters concern mainly the following:
+
+. the preferred Availability Domain you want to place the load balancers
+. the type of load balancer (public/internal)
+
+CAUTION: Even if you set the load balancer to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+
+Refer to {uri-topology}[topology] for more thorough examples.
 
 === Configure OCIR parameters
 
