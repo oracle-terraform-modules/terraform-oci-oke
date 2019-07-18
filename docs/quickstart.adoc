@@ -34,7 +34,7 @@ endif::[]
 
 1. git is installed
 2. ssh client is installed
-3. Terraform 0.12.3+ is installed
+3. Terraform 0.12.4+ is installed
 
 == Instructions
 

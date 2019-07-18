@@ -1,4 +1,4 @@
-= Instructions
+= Pre-requisites
 
 :idprefix:
 :idseparator: -
@@ -38,6 +38,8 @@ This section will guide you through the pre-requisites before you can use this p
 You can proceed to {uri-instructions}[creating the cluster] if you have already done these.
 
 === Install Terraform
+
+Start by installing Terraform and configuring your path.
 
 ==== Download Terraform
 
