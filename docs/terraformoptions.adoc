@@ -1,21 +1,438 @@
 = Terraform Options
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:uri-repo: https://github.com/hyder/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-docs: {uri-rel-file-base}/docs
+
+:uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 
 == Identity and access
 
+[cols="4*"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|api_fingerprint
+|ssl fingerprint of api public key (required)
+|
+|None
+
+|api_private_key_path
+|path to api private key (required)
+|
+|None
+
+|compartment_name
+|Compartment name where the OKE Cluster will be provisioned (required)
+|
+|None
+
+|compartment_ocid
+|Compartment ocid where the OKE Cluster will be provisioned (required)
+|
+|None
+
+|tenancy_ocid
+|Tenancy ocid of the user
+|
+|None
+
+|user_ocid
+|User's ocid
+|
+|None
+
+|===
+
 == SSH Keys
+
+[cols="4*"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|ssh_private_key_path
+|path to ssh private key. Required if bastion is enabled.
+|
+|None
+
+|ssh_public_key_path
+|path to ssh public key. Required if bastion is enabled.
+|
+|None
+
+|===
 
 == General OCI
 
+[cols="4*"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|label_prefix
+|a string to be prepended to the name of resources
+|
+|oke
+
+|region
+|Region where to provision the OKE cluster (required)
+|{uri-oci-region}[List of regions]
+|us-phoenix-1
+
+|===
+
 == Networking
+
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|vcn_name
+|Name of the VCN that will be appended to the label_prefix
+|
+|oke vcn
+
+|vcn_cidr
+|VCN's CIDR block
+|
+|10.0.0.0/16
+
+|vcn_dns_name
+|Internal dns domain for resources created
+|
+|oke
+
+|create_nat_gateway
+|Whether to create a NAT gateway. Required for private worker mode
+|true/false
+|true
+
+|nat_gateway_name
+|NAT gateway name. Appended to the label_prefix
+| 
+|nat
+
+|create_service_gateway
+|Whether to create a Service Gateway to use Oracle Services
+|true/false
+|true
+
+|service_gateway_name
+|Service gateway name. Appended to the label_prefix
+| 
+|sg
+
+|newbits
+|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values are used as the newbits parameter in the cidrsubnet Terraform function to calculate the subnets' masks
+|
+| newbits = {
+
+    "bastion" = 13
+
+    "lb"      = 11
+
+    "workers" = 2
+
+}
+
+|subnets
+|0-based index of the subnet when the VCN's CIDR is masked with the newbit and specified in the form of a map. Used ti define the boundaries of the subnets. The values are used as the netnum parameter in the cidrsubnet Terraform function. 
+|
+|subnets = {
+
+  "bastion"     = 32
+
+  "int_lb_ad1"  = 16
+
+  "int_lb_ad2"  = 17
+  
+  "int_lb_ad3"  = 18
+  
+  "pub_lb_ad1"  = 19
+  
+  "pub_lb_ad2"  = 20
+  
+  "pub_lb_ad3"  = 21
+  
+  "workers_ad1" = 1
+  
+  "workers_ad2" = 2
+  
+  "workers_ad3" = 3
+
+}
+
+
+|===
 
 == Bastion
 
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_bastion
+|Whether to create the bastion host
+|true/false
+|true
+
+|bastion_shape
+|Shape of bastion instance
+|
+|VM.Standard2.1
+
+|bastion_access
+|CIDR block in the form of a string to which ssh access to the bastion must be restricted to 
+|
+|ANYWHERE which maps to 0.0.0.0/0
+
+|enable_instance_principal
+|
+|
+|
+
+|image_operating_system
+|
+|
+|
+
+|image_operating_system_version
+|
+|
+|
+
+|availability_domains
+|
+|
+|
+
+|===
+
 == OKE
+
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|cluster_name
+|
+|
+|
+
+|worker_mode
+|
+|
+|
+
+|allow_node_port_access
+|
+|
+|
+
+
+|allow_worker_ssh_access
+|
+|
+|
+
+|dashboard_enabled
+|
+|
+|
+
+|kubernetes_version
+|
+|
+|
+
+|node_pools
+|
+|
+|
+
+|node_pool_name_prefix
+|
+|
+|
+
+|node_pool_image_id
+|
+|
+|
+
+|node_pool_image_operating_system
+|
+|
+|
+
+|node_pool_image_operating_system_version
+|
+|
+|
+
+|node_pool_node_shape
+|
+|
+|
+
+|node_pool_quantity_per_subnet
+|
+|
+|
+
+|nodepool_topology
+|
+|
+|
+
+|pods_cidr
+|
+|
+|
+
+|services_cidr
+|
+|
+|
+
+|tiller_enabled
+|
+|
+|
+
+|===
 
 == OKE Load Balancers
 
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|load_balancer_subnet_type
+|
+|
+|
+
+|preferred_lb_ads
+|
+|
+|
+
+|preferred_load_balancer_subnets
+|
+|
+|
+
+|===
 == OCIR
+
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_auth_token
+|
+|
+|
+
+|email_address
+|
+|
+|
+
+|tenancy_name
+|
+|
+|
+
+|username
+|
+|
+|
+
+|===
 
 == Helm
 
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|add_incubator_repo
+|
+|
+|
+
+|add_jetstack_repo
+|
+|
+|
+
+|helm_version
+|
+|
+|
+
+|install_helm
+|
+|
+|
+
+|===
 == Calico
+
+[cols="d,d,d,v"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|calico_version
+|
+|
+|
+
+|install_calico
+|
+|
+|
