@@ -16,23 +16,27 @@ endif::[]
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
 :uri-rel-tree-base: link:{uri-repo}/tree/v12docs
-
 :uri-docs: {uri-rel-file-base}/docs
 
-:uri-topology: {uri-docs}/topology.adoc
+:uri-calico: https://www.projectcalico.org/
+:uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
-
+:uri-helm: https://helm.sh/
+:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
+:uri-helm-jetstack: https://charts.jetstack.io
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
+:uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+:uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
 :uri-prereqs: {uri-docs}/prerequisites.adoc
@@ -135,12 +139,27 @@ The OKE Load Balancer parameters concern mainly the following:
 . the preferred Availability Domain you want to place the load balancers
 . the type of load balancer (public/internal)
 
-CAUTION: Even if you set the load balancer to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+CAUTION: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 
 === Configure OCIR parameters
 
+The {uri-oci-ocir}[OCIR] parameters control the creation of an {uri-oci-authtoken}[Auth Token] for the user in OCI. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
+
+The secret is created in the kube-system namespace. To copy it to your namespace, use the following command:
+
+----
+kubectl --namespace=kube-system get secret ocirsecret --export -o yaml | kubectl apply --namespace=<newnamespace> -f -
+----
+
 === Configure helm parameters
 
-=== Configure calico parameters
+The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host. Additional helm repos include the following:
+
+. {uri-helm-incubator}[incubator]
+. {uri-helm-jetstack}[jetstack]
+
+=== Configure Calico parameters
+
+The calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
