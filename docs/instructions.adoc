@@ -52,6 +52,10 @@ This section assumes you have completed the following:
 
 === Adding the bastion host
 
+=== Using the bastion host
+
+=== Interacting with the OKE Cluster locally
+
 === Creating an auth token for OCIR
 
 === Installing helm
@@ -61,5 +65,7 @@ This section assumes you have completed the following:
 === Scaling the number of worker nodes
 
 === Scaling the number of node pools
+
+=== Accessing the Kubernetes dashboard
 
 === Destroying the cluster
