@@ -1,16 +1,16 @@
 = Terraform Options
 :idprefix:
 :idseparator: -
-// ifndef::env-github[:icons: font]
-// ifdef::env-github[]
-// :status:
-// :outfilesuffix: .adoc
-// :caution-caption: :fire:
-// :important-caption: :exclamation:
-// :note-caption: :paperclip:
-// :tip-caption: :bulb:
-// :warning-caption: :warning:
-// endif::[]
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
 :uri-repo: https://github.com/hyder/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
@@ -82,7 +82,7 @@
 |ssh_private_key_path
 a|path to ssh private key. *Required* if bastion is enabled.
 
-IMPORTANT: The same key will be used to access worker nodes using SSH
+WARNING: The same key will be used to access worker nodes using SSH
 
 |
 |None
@@ -90,7 +90,7 @@ IMPORTANT: The same key will be used to access worker nodes using SSH
 |ssh_public_key_path
 a|path to ssh public key. *Required* if bastion is enabled.
 
-IMPORTANT: The same key will be used to access worker nodes using SSH
+WARNING: The same key will be used to access worker nodes using SSH
 |
 |None
 
@@ -347,7 +347,7 @@ availability_domains = {
 |nodepool_topology
 a|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions.
 
-CAUTION: 2 is experimental and is only used in multiple-AD regions.
+WARNING: 2 is experimental and is only used in multiple-AD regions.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 |1,2,3
@@ -382,7 +382,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |load_balancer_subnet_type
 a|The type of load balancer subnets to create. 
 
-IMPORTANT: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+WARNING: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
@@ -402,9 +402,9 @@ preferred_lb_ads = ["ad1", "ad2"]
 ----
 
 |preferred_load_balancer_subnets
-a|The preferred load balancer subnets that OKE will automatically choose when creating load balancers.
+a|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'
 
-IMPORTANT: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'
+WARNING: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient. 
 
 Refer to {uri-topology}[topology] for more thorough examples.
 
@@ -434,14 +434,14 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |tenancy_name
 a|The *_name_* of the tenancy to be used when creating the Docker secret. *Required* if create_auth_token is set to true
-IMPORTANT: This is different from tenancy_ocid. 
+WARNING: This is different from tenancy_ocid. 
 |
 |None
 
 |username
 a|The username that can login to the selected tenancy. *Required* if create_auth_token is set to true
 
-IMPORTANT: This is different from tenancy_ocid. 
+WARNING: This is different from tenancy_ocid. 
 |
 |None
 
