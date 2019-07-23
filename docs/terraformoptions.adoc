@@ -393,7 +393,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |preferred_lb_ads
 |The preferred Availability Domains where to provision the Load Balancers, specified in the form of a list of 2 elements.
-|
+|:prewrap:
 [source]
 ----
 preferred_lb_ads = ["ad1", "ad2"]
