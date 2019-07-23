@@ -22,6 +22,8 @@
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
+:uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+:uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
@@ -176,3 +178,9 @@ The {uri-helm}[helm] parameters control the installation and the version of the 
 The calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
 
 {uri-terraform-options}#calico[Reference]
+
+=== Configure Kubernetes Metrics Server
+
+The Kubernetes Metrics Server parameter controls the installation of {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
+
+{uri-terraform-options}#kubernetes-metrics-server[Reference]

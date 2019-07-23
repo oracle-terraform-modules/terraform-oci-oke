@@ -151,5 +151,5 @@ calico_version = "3.6"
 
 install_calico = false
 
-#metricserver
+#metrics server
 install_metricserver = false
