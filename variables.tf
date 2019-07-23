@@ -212,12 +212,12 @@ variable "node_pool_image_id" {
   default     = "NONE"
 }
 
-variable "node_pool_image_operating_system" {
+variable "node_pool_os" {
   description = "name of image to use"
   default     = "Oracle Linux"
 }
 
-variable "node_pool_image_operating_system_version" {
+variable "node_pool_os_version" {
   description = "version of image Operating System to use"
   default     = "7.6"
 }
@@ -258,7 +258,7 @@ variable "worker_mode" {
 
 # oke load balancers
 
-variable "load_balancer_subnet_type" {
+variable "lb_subnet_type" {
   description = "type of load balancer subnets to create."
   # values: both, internal, public
   default = "public"
@@ -271,8 +271,8 @@ variable "preferred_lb_ads" {
   default = ["ad1", "ad2"]
 }
 
-variable "preferred_load_balancer_subnets" {
-  description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'"
+variable "preferred_lb_subnets" {
+  description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'"
   # values: public, internal. 
   # When creating an internal load balancer, the internal annotation must still be specified regardless 
   default = "public"

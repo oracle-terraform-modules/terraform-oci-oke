@@ -102,9 +102,9 @@ node_pool_name_prefix = "np"
 
 node_pool_image_id = "NONE"
 
-node_pool_image_operating_system = "Oracle Linux"
+node_pool_os = "Oracle Linux"
 
-node_pool_image_operating_system_version = "7.6"
+node_pool_os_version = "7.6"
 
 node_pool_node_shape = "VM.Standard2.1"
 
@@ -120,11 +120,11 @@ tiller_enabled = true
 
 # oke load balancers
 
-load_balancer_subnet_type = "public"
+lb_subnet_type = "public"
 
 preferred_lb_ads = ["ad1", "ad2"]
 
-preferred_load_balancer_subnets = "public"
+preferred_lb_subnets = "public"
 
 # ocir
 create_auth_token = false

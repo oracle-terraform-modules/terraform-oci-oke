@@ -48,7 +48,7 @@ resource "oci_core_subnet" "int_lb_ad1" {
   security_list_ids          = [oci_core_security_list.int_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.load_balancer_subnet_type == "internal" || var.load_balancer_subnet_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "int_lb_ad2" {
@@ -62,7 +62,7 @@ resource "oci_core_subnet" "int_lb_ad2" {
   security_list_ids          = [oci_core_security_list.int_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.load_balancer_subnet_type == "internal" || var.load_balancer_subnet_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "int_lb_ad3" {
@@ -76,7 +76,7 @@ resource "oci_core_subnet" "int_lb_ad3" {
   security_list_ids          = [oci_core_security_list.int_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.load_balancer_subnet_type == "internal" || var.load_balancer_subnet_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "pub_lb_ad1" {
@@ -90,7 +90,7 @@ resource "oci_core_subnet" "pub_lb_ad1" {
   security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.load_balancer_subnet_type == "public" || var.load_balancer_subnet_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "pub_lb_ad2" {
@@ -104,7 +104,7 @@ resource "oci_core_subnet" "pub_lb_ad2" {
   security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.load_balancer_subnet_type == "public" || var.load_balancer_subnet_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "pub_lb_ad3" {
@@ -118,5 +118,5 @@ resource "oci_core_subnet" "pub_lb_ad3" {
   security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.load_balancer_subnet_type == "public" || var.load_balancer_subnet_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
 }
