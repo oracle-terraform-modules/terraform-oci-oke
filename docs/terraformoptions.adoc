@@ -159,7 +159,6 @@ endif::[]
 |newbits
 |The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the cidrsubnet Terraform function to calculate each subnet's mask
 a| e.g.
-[source,json]
 ----
 newbits = {
     "bastion" = 13
