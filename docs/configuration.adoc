@@ -144,7 +144,7 @@ The OKE Load Balancer parameters concern mainly the following:
 . the preferred Availability Domain you want to place the load balancers
 . the type of load balancer (public/internal)
 
-CAUTION: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 
