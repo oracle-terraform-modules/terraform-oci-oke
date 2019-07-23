@@ -325,16 +325,16 @@ availability_domains = {
 |np
 
 |node_pool_image_id
-|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_image_operating_system and node_pool_image_operating_system_version to identify an image to provision the worker nodes.
+|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_os and node_pool_os_version to identify an image to provision the worker nodes.
 |
 |NONE
 
-|node_pool_image_operating_system
+|node_pool_os
 |The name of the Operating System image to use to provision the worker nodes.
 |
 |Oracle Linux
 
-|node_pool_image_operating_system_version
+|node_pool_os_version
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
 |7.6
@@ -405,7 +405,7 @@ preferred_lb_ads = ["ad1", "ad2"]
 ----
 
 |preferred_lb_subnets
-|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'.
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'.
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 

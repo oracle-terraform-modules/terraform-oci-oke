@@ -68,9 +68,9 @@ variable "node_pool_name_prefix" {}
 
 variable "node_pool_image_id" {}
 
-variable "node_pool_image_operating_system" {}
+variable "node_pool_os" {}
 
-variable "node_pool_image_operating_system_version" {}
+variable "node_pool_os_version" {}
 
 variable "node_pool_node_shape" {}
 
@@ -82,7 +82,7 @@ variable "preferred_lb_ads" {
   type = list
 }
 
-variable "preferred_load_balancer_subnets" {}
+variable "preferred_lb_subnets" {}
 
 # kubeconfig
 

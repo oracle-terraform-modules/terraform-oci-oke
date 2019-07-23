@@ -62,8 +62,8 @@ module "network" {
   worker_mode             = var.worker_mode
 
   # load balancers
-  load_balancer_subnet_type       = var.load_balancer_subnet_type
-  preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
+  lb_subnet_type       = var.lb_subnet_type
+  preferred_lb_subnets = var.preferred_lb_subnets
 }
 
 # cluster creation for oke
@@ -110,15 +110,15 @@ module "oke" {
 
   node_pool_name_prefix                    = var.node_pool_name_prefix
   node_pool_image_id                       = var.node_pool_image_id
-  node_pool_image_operating_system         = var.node_pool_image_operating_system
-  node_pool_image_operating_system_version = var.node_pool_image_operating_system_version
+  node_pool_os         = var.node_pool_os
+  node_pool_os_version = var.node_pool_os_version
   node_pool_node_shape                     = var.node_pool_node_shape
   node_pool_quantity_per_subnet            = var.node_pool_quantity_per_subnet
   nodepool_topology                        = var.nodepool_topology
 
   # load balancers
   preferred_lb_ads                = var.preferred_lb_ads
-  preferred_load_balancer_subnets = var.preferred_load_balancer_subnets
+  preferred_lb_subnets = var.preferred_lb_subnets
 
   # ocir
   auth_token        = module.auth.ocirtoken

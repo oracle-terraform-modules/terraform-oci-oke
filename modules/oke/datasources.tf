@@ -3,8 +3,8 @@
 
 data "oci_core_images" "latest_images" {
   compartment_id           = var.compartment_ocid
-  operating_system         = var.node_pool_image_operating_system
-  operating_system_version = var.node_pool_image_operating_system_version
+  operating_system         = var.node_pool_os
+  operating_system_version = var.node_pool_os_version
   shape                    = var.node_pool_node_shape
   sort_by                  = "TIMECREATED"
 }
