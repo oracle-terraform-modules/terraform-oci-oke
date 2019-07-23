@@ -30,7 +30,7 @@ endif::[]
 
 == Identity and access
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -71,7 +71,7 @@ endif::[]
 
 == SSH Keys
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -92,7 +92,7 @@ endif::[]
 
 == General OCI
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -113,7 +113,7 @@ endif::[]
 
 == Networking
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -164,9 +164,13 @@ newbits = {
     "lb"      = 11
     "workers" = 2
 }
-|"bastion" = 13
+|
+[source]
+----
+"bastion" = 13
 "lb"      = 11
 "workers" = 2
+----
 
 |subnets
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the cidrsubnet Terraform function. 
@@ -197,7 +201,7 @@ subnets = {
 
 == Bastion
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -247,7 +251,7 @@ availability_domains = {
 
 == OKE
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -346,7 +350,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OKE Load Balancers
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -383,7 +387,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OCIR
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -416,7 +420,7 @@ NOTE: This is different from tenancy_ocid.
 
 == Helm
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -447,7 +451,7 @@ NOTE: This is different from tenancy_ocid.
 
 == Calico
 
-[cols="1e,4d,3l,3l", options=header,width="100%"] 
+[cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
