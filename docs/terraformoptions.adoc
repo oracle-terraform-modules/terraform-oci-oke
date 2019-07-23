@@ -30,7 +30,7 @@ endif::[]
 
 == Identity and access
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -71,7 +71,7 @@ endif::[]
 
 == SSH Keys
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -92,7 +92,7 @@ endif::[]
 
 == General OCI
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -105,15 +105,15 @@ endif::[]
 |oke
 
 |region
-|Region where to provision the OKE cluster. *Required*
-|{uri-oci-region}[List of regions]
+|Region where to provision the OKE cluster. {uri-oci-region}[List of regions]. *Required*
+|
 |us-phoenix-1
 
 |===
 
 == Networking
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -158,27 +158,19 @@ endif::[]
 
 |newbits
 |The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the cidrsubnet Terraform function to calculate each subnet's mask
-a| e.g.
-----
+|e.g.
 newbits = {
     "bastion" = 13
     "lb"      = 11
     "workers" = 2
 }
-----
-a|
-[source,json]
-----
-    "bastion" = 13
-    "lb"      = 11
-    "workers" = 2
-----
+|"bastion" = 13
+"lb"      = 11
+"workers" = 2
 
 |subnets
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the cidrsubnet Terraform function. 
-a| e.g.
-[source,json]
-----
+| e.g.
 subnets = {
   "bastion"     = 32
   "int_lb_ad1"  = 16
@@ -191,26 +183,21 @@ subnets = {
   "workers_ad2" = 2
   "workers_ad3" = 3
 }
-----
-a|
-[source,json]
-----
-  "bastion"     = 32
-  "int_lb_ad1"  = 16
-  "int_lb_ad2"  = 17
-  "int_lb_ad3"  = 18
-  "pub_lb_ad1"  = 19
-  "pub_lb_ad2"  = 20
-  "pub_lb_ad3"  = 21
-  "workers_ad1" = 1
-  "workers_ad2" = 2
-  "workers_ad3" = 3
-----
+|"bastion"     = 32
+"int_lb_ad1"  = 16
+"int_lb_ad2"  = 17
+"int_lb_ad3"  = 18
+"pub_lb_ad1"  = 19
+"pub_lb_ad2"  = 20
+"pub_lb_ad3"  = 21
+"workers_ad1" = 1
+"workers_ad2" = 2
+"workers_ad3" = 3
 |===
 
 == Bastion
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -228,9 +215,9 @@ a|
 |VM.Standard2.1
 
 |bastion_access
-|CIDR block in the form of a string to which ssh access to the bastion must be restricted to 
+|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere
 |XXX.XXX.XXX.XXX/YY
-|ANYWHERE which is equivalent to 0.0.0.0/0 and allows ssh access from anywhere
+|ANYWHERE
 
 |enable_instance_principal
 |
@@ -249,25 +236,18 @@ a|
 
 |availability_domains
 |The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
-a| e.g.
-[source,json]
-----
+| e.g.
 availability_domains = {
   "bastion"     = 1
 }
-----
-a|
-[source,json]
-----
+|
   "bastion"     = 1
-----
-
 
 |===
 
 == OKE
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -366,7 +346,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OKE Load Balancers
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -384,16 +364,9 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |preferred_lb_ads
 |The preferred Availability Domains where to provision the Load Balancers, specified in the form of a list of 2 elements
-a| e.g.
-[source,json]
-----
+|e.g. 
 preferred_lb_ads = ["ad1", "ad2"]
-----
-a|
-[source,json]
-----
-["ad1", "ad2"]
-----
+|["ad1", "ad2"]
 
 
 |preferred_load_balancer_subnets
@@ -410,7 +383,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OCIR
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -443,7 +416,7 @@ NOTE: This is different from tenancy_ocid.
 
 == Helm
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -474,7 +447,7 @@ NOTE: This is different from tenancy_ocid.
 
 == Calico
 
-[cols="1e,4d,3d,3d", options=header,width="100%"] 
+[cols="1e,4d,3l,3l", options=header,width="100%"] 
 |===
 |Parameter
 |Description
