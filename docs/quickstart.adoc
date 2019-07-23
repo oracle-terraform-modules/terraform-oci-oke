@@ -24,7 +24,7 @@ endif::[]
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 
-== Quickstart Assumptions
+== Assumptions
 
 1. You have setup the {uri-oci-keys}[required keys]
 2. You know the {uri-oci-ocids}[required OCIDs]
