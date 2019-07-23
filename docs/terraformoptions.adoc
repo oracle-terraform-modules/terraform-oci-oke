@@ -169,7 +169,7 @@ newbits = {
 
 |subnets
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function.
-| e.g.
+|e.g.
 [source]
 ----
 subnets = {
@@ -184,9 +184,11 @@ subnets = {
   "workers_ad2" = 2
   "workers_ad3" = 3
 }
-|[source]
 ----
-|"bastion"     = 32
+|
+[source]
+----
+"bastion"     = 32
 "int_lb_ad1"  = 16
 "int_lb_ad2"  = 17
 "int_lb_ad3"  = 18
@@ -197,6 +199,8 @@ subnets = {
 "workers_ad2" = 2
 "workers_ad3" = 3
 ----
+
+
 |===
 
 == Bastion
