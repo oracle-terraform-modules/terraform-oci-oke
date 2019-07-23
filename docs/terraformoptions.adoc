@@ -1,16 +1,6 @@
 = Terraform Options
 :idprefix:
 :idseparator: -
-ifndef::env-github[:icons: font]
-ifdef::env-github[]
-:status:
-:outfilesuffix: .adoc
-:caution-caption: :fire:
-:important-caption: :exclamation:
-:note-caption: :paperclip:
-:tip-caption: :bulb:
-:warning-caption: :warning:
-endif::[]
 :uri-repo: https://github.com/hyder/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
@@ -80,17 +70,13 @@ endif::[]
 |Default
 
 |ssh_private_key_path
-a|path to ssh private key. *Required* if bastion is enabled.
-
-WARNING: The same key will be used to access worker nodes using SSH
+|path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled
 
 |
 |None
 
 |ssh_public_key_path
-a|path to ssh public key. *Required* if bastion is enabled.
-
-WARNING: The same key will be used to access worker nodes using SSH
+|path to ssh public key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled
 |
 |None
 
@@ -138,7 +124,7 @@ WARNING: The same key will be used to access worker nodes using SSH
 |10.0.0.0/16
 
 |vcn_dns_name
-|The internal DNS domain for resources created and prepended to oraclevcn.com
+|The internal DNS domain for resources created and prepended to "oraclevcn.com" which is the VCN-internal domain name
 |
 |oke
 
@@ -182,7 +168,7 @@ newbits = {
 ----
 
 |subnets
-|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the cidrsubnet Terraform function. 
+|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the cidrsubnet Terraform function
 | e.g.
 [source]
 ----
@@ -253,7 +239,7 @@ subnets = {
 |7.6
 
 |availability_domains
-|The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
+|The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map
 | e.g.
 [source]
 ----
@@ -284,7 +270,7 @@ availability_domains = {
 |oke
 
 |worker_mode
-|Whether the worker nodes should be public or private. Private requires NAT gateway.
+|Whether the worker nodes should be public or private. Private requires NAT gateway
 |private/public
 |private
 
@@ -300,7 +286,7 @@ availability_domains = {
 |false
 
 |dashboard_enabled
-|Whether to create the default Kubernetes dashboard.
+|Whether to create the default Kubernetes dashboard
 |true/false
 |true
 
@@ -310,7 +296,7 @@ availability_domains = {
 |LATEST
 
 |node_pools
-|The number of node pools to create. Refer to {uri-topology}[topology] for more thorough examples.
+|The number of node pools to create. Refer to {uri-topology}[topology] for more thorough examples
 |
 |1
 
@@ -340,16 +326,14 @@ availability_domains = {
 |VM.Standard2.1
 
 |node_pool_quantity_per_subnet
-|Number of worker nodes by worker subnets in a node pool. Refer to {uri-topology}[topology] for more thorough examples.
+|Number of worker nodes by worker subnets in a node pool. Refer to {uri-topology}[topology] for more thorough examples
 |
 |1
 
 |nodepool_topology
-a|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions.
+a|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions. _Topology 2 is experimental and is only used in multiple-AD regions_
 
-WARNING: 2 is experimental and is only used in multiple-AD regions.
-
-Refer to {uri-topology}[topology] for more thorough examples.
+Refer to {uri-topology}[topology] for more thorough examples
 |1,2,3
 |3
 
@@ -380,9 +364,9 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Default
 
 |load_balancer_subnet_type
-a|The type of load balancer subnets to create. 
+|The type of load balancer subnets to create. 
 
-WARNING: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
@@ -402,11 +386,11 @@ preferred_lb_ads = ["ad1", "ad2"]
 ----
 
 |preferred_load_balancer_subnets
-a|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'
 
-WARNING: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient. 
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
-Refer to {uri-topology}[topology] for more thorough examples.
+Refer to {uri-topology}[topology] for more thorough examples
 
 |internal/public
 |public
@@ -423,7 +407,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Default
 
 |create_auth_token
-|Whether to create an Auth Token. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
+|Whether to create an Auth Token. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment
 |true/false
 |false
 
@@ -433,15 +417,13 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |None
 
 |tenancy_name
-a|The *_name_* of the tenancy to be used when creating the Docker secret. *Required* if create_auth_token is set to true
-WARNING: This is different from tenancy_ocid. 
+|The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_ocid. *Required* if create_auth_token is set to true
 |
 |None
 
 |username
-a|The username that can login to the selected tenancy. *Required* if create_auth_token is set to true
+|The username that can login to the selected tenancy. This is different from tenancy_ocid. *Required* if create_auth_token is set to true
 
-WARNING: This is different from tenancy_ocid. 
 |
 |None
 
@@ -467,7 +449,7 @@ WARNING: This is different from tenancy_ocid.
 |false
 
 |helm_version
-|The version of the {uri-helm}[helm] client to install on the bastion. A subsequent upgrade of tiller (server-side helm) will then be automatically performed.
+|The version of the {uri-helm}[helm] client to install on the bastion. A subsequent upgrade of tiller (server-side helm) will then be automatically performed
 |
 |2.14.1
 
