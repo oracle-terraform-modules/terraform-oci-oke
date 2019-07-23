@@ -1,6 +1,8 @@
 = Terraform Options
 :idprefix:
 :idseparator: -
+:sectlinks:
+:sectnums:
 :uri-repo: https://github.com/hyder/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
@@ -18,6 +20,19 @@
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
 :uri-topology: {uri-docs}/topology.adoc
+
+Configuration Terraform Options:
+
+* link:#identity-and-access[Identity and Access]
+* SSH Keys
+* General OCI
+* OCI Networking
+* Bastion Host
+* OKE
+* OKE Load Balancers
+* OCIR
+* Helm
+* Calico
 
 == Identity and access
 
@@ -103,7 +118,7 @@
 
 |===
 
-== Networking
+== OCI Networking
 
 [stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
@@ -261,7 +276,7 @@ availability_domains = {
 
 == OKE
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1e,3d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -360,7 +375,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OKE Load Balancers
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1e,3d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -384,7 +399,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 preferred_lb_ads = ["ad1", "ad2"]
 ----
 |
-[source,json]
+[source]
 ----
 ["ad1", "ad2"]
 ----
