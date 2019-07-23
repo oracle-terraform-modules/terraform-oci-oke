@@ -23,16 +23,16 @@
 
 Configuration Terraform Options:
 
-* link:#identity-and-access[Identity and Access]
-* SSH Keys
-* General OCI
-* OCI Networking
-* Bastion Host
-* OKE
-* OKE Load Balancers
-* OCIR
-* Helm
-* Calico
+. link:#identity-and-access[Identity and Access]
+. link:#ssh-keys[SSH Keys]
+. link:#general-oci[General OCI]
+. link:#oci-networking[OCI Networking]
+. link:#bastion-host[Bastion Host]
+. link:#oke[OKE]
+. link:#oke-load-balancers[OKE Load Balancers]
+. link:#ocir[OCIR]
+. link:#helm[Helm]
+. link:#calico[Calico]
 
 == Identity and access
 
@@ -218,7 +218,7 @@ subnets = {
 
 |===
 
-== Bastion
+== Bastion Host
 
 [stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
 |===
@@ -276,7 +276,7 @@ availability_domains = {
 
 == OKE
 
-[stripes=odd,cols="1e,3d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,3d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -393,7 +393,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |preferred_lb_ads
 |The preferred Availability Domains where to provision the Load Balancers, specified in the form of a list of 2 elements.
-|e.g.
+|
 [source]
 ----
 preferred_lb_ads = ["ad1", "ad2"]
