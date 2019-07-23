@@ -1,0 +1,76 @@
+= Quickstart
+
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:uri-repo: https://github.com/hyder/terraform-oci-oke
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-docs: {uri-rel-file-base}/docs
+:uri-instructions: {uri-docs}/instructions.adoc
+:uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
+:uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
+:uri-oci-okepolicy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
+:uri-terraform: https://www.terraform.io
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+
+== Assumptions
+
+1. You have setup the {uri-oci-keys}[required keys]
+2. You know the {uri-oci-ocids}[required OCIDs]
+3. You have set the {uri-oci-okepolicy}[necessary OKE policy]
+
+== Pre-requisites
+
+1. git is installed
+2. ssh client is installed
+3. Terraform 0.12.4+ is installed
+
+== Instructions
+
+1. Clone the repo:
+
+[source,bash]
+----
+git clone https://github.com/oracle/terraform-oci-oke.git tfoke
+cd tfoke
+cp terraform.tfvars.example terraform.tfvars
+----
+
+2. Set mandatory parameters:
+
+* api_fingerprint
+* api_private_key_path
+* compartment_ocid
+* compartment_name
+* tenancy_ocid
+* user_ocid
+
+3. Override other parameters:
+
+* region
+
+4. Optional parameters to override:
+* ssh_private_key_path
+* ssh_public_key_path
+* vcn_dns_name
+* vcn_name
+* create_bastion
+* cluster_name
+* worker_mode
+
+Related documentation:
+
+* {uri-instructions}[Detailed Instructions]
+
+* {uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]

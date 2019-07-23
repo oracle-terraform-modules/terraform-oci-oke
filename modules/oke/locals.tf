@@ -3,7 +3,7 @@
 
 locals {
   # used by cluster
-  lb_ads = var.preferred_load_balancer_subnets == "public" ? list(format("pub_lb_%s", element(var.preferred_lb_ads, 0)), format("pub_lb_%s", element(var.preferred_lb_ads, 1))) : list(format("int_lb_%s", element(var.preferred_lb_ads, 0)), format("int_lb_%s", element(var.preferred_lb_ads, 1)))
+  lb_ads = var.preferred_lb_subnets == "public" ? list(format("pub_lb_%s", element(var.preferred_lb_ads, 0)), format("pub_lb_%s", element(var.preferred_lb_ads, 1))) : list(format("int_lb_%s", element(var.preferred_lb_ads, 0)), format("int_lb_%s", element(var.preferred_lb_ads, 1)))
    
   # used by datasources
   available_kubernetes_versions = data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions

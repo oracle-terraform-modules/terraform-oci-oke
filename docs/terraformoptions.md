@@ -66,9 +66,9 @@
 | kubernetes_version                    | The version of Kubernetes to provision. This is based on the available versions in OKE. To provision a specific version, choose from available versions and override the 'LATEST' value. |   LATEST, v1.10.11, v1.11.9, v1.12.7     |       LATEST    |
 | node_pools                            | Number of node pools to create. Terraform will use this number in conjunction with the node_pool_name_prefix to create the name of the node pools.                                              |               |    1       |
 | node_pool_name_prefix                 | The prefix of the node pool.                                           |                 |   np                     |
-| node_pool_image_id                    | OCID of custom image to use for worker node. Use either node_pool_image_id __or__ node_pool_image_operating_system   |       |   NONE           |
-| node_pool_image_operating_system      | The image Operating System for the worker nodes.                       |  Oracle Linux   |   Oracle Linux           |
-| node_pool_image_operating_system_version      | The version of image Operating System to use for the worker nodes. |  7.6        |   7.6                    |
+| node_pool_image_id                    | OCID of custom image to use for worker node. Use either node_pool_image_id __or__ node_pool_os   |       |   NONE           |
+| node_pool_os      | The image Operating System for the worker nodes.                       |  Oracle Linux   |   Oracle Linux           |
+| node_pool_os_version      | The version of image Operating System to use for the worker nodes. |  7.6        |   7.6                    |
 | node_pool_node_shape                  | The shape for the worker nodes.                                        |                 |           VM.Standard2.1 |
 | node_pool_quantity_per_subnet         | Number of worker nodes by worker subnets.                                              |               |         1  |
 | nodepool_topology                     | Whether to make the node pool span 2 or 3 subnets (maps to AD). This parameter is only taken into consideration **only** in 3-AD regions. Acceptable and tested values are 2 or 3 only. The total number of worker nodes created is effectively obtained by this formula: nodepool_topology x  node_pools x  node_pool_quantity_per_subnet. In single AD, the number of worker nodes created = node_pools x the greater of (2,node_pool_quantity_per_subnet)   |    2 or 3           |     3      |
@@ -80,9 +80,9 @@
 ## OKE Load Balancers
 | Option                                | Description                                   | Values                    | Default               |     
 | -----------------------------------   | -------------------------------------------   | ------------              | -------------------   |
-| load_balancer_subnet_type    | Type of load balancer subnets to create   |   both, internal, public   |  public |
+| lb_subnet_type    | Type of load balancer subnets to create   |   both, internal, public   |  public |
 | preferred_lb_ads   | Preferred Availability Domains for Load Balancers in list format. Maps to the created Load Balancer subnets in the availability_domain parameter. Choose 2 from ad1, ad2, ad3  | ["ad1", "ad2"[]  |   ["ad1", "ad2"]   | 
-| preferred_load_balancer_subnets    | Preferred load balancer subnets that OKE will automatically choose when creating a load balancer. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'. Use service annotations (oci-load-balancer-internal) and set the value to true to create internal load balancers. Refer to [OCI Load Balancer annotations][ocilb]   |   internal, public   |  public |
+| preferred_lb_subnets    | Preferred load balancer subnets that OKE will automatically choose when creating a load balancer. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'. Use service annotations (oci-load-balancer-internal) and set the value to true to create internal load balancers. Refer to [OCI Load Balancer annotations][ocilb]   |   internal, public   |  public |
 
 ## OCIR
 | Option                                | Description                                   | Values                    | Default               |     

@@ -52,6 +52,6 @@ variable "worker_mode" {}
 
 # load balancers
 
-variable "load_balancer_subnet_type" {}
+variable "lb_subnet_type" {}
 
-variable "preferred_load_balancer_subnets" {}
+variable "preferred_lb_subnets" {}

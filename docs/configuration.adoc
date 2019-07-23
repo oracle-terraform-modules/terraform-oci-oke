@@ -1,0 +1,186 @@
+= Configuration
+
+:idprefix:
+:idseparator: -
+:sectlinks:
+:sectnums:
+
+:uri-repo: https://github.com/hyder/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-docs: {uri-rel-file-base}/docs
+
+:uri-calico: https://www.projectcalico.org/
+:uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
+:uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
+:uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
+:uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
+:uri-helm: https://helm.sh/
+:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
+:uri-helm-jetstack: https://charts.jetstack.io
+:uri-instructions: {uri-docs}/instructions.adoc
+:uri-license: {uri-rel-file-base}/LICENSE.txt
+:uri-kubernetes: https://kubernetes.io/
+:uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+:uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
+:uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
+:uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
+:uri-oci: https://cloud.oracle.com/cloud-infrastructure
+:uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
+:uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
+:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
+:uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+:uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
+:uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+:uri-oracle: https://www.oracle.com
+:uri-prereqs: {uri-docs}/prerequisites.adoc
+:uri-quickstart: {uri-docs}/quickstart.adoc
+
+:uri-terraform: https://www.terraform.io
+:uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-topology: {uri-docs}/topology.adoc
+
+=== Assumptions
+
+This section assumes you have completed all the {uri-prereqs}[pre-requisites].
+
+=== Configure the variable file
+
+A sample variable file (terraform.tfvars.example) with all the configuration options is available. Create a terraform variable file by copying the terraform.tfvars.example:
+
+----
+cp terraform.tfvars.example terraform.tfvars
+----
+
+=== Configure identity parameters
+
+Enter the values for the following parameters in the terraform.tfvars file:
+
+- api_fingerprint
+- api_private_key_path
+- compartment_name
+- compartment_ocid
+- tenancy_ocid
+- user_ocid
+
+e.g.
+
+----
+api_fingerprint = "1a:bc:23:45:6d:78:e9:f0:gh:ij:kl:m1:23:no:4p:5q"
+----
+
+You would have obtained your values when doing the {uri-prereqs}[pre-requisites]. 
+
+{uri-terraform-options}#identity-and-access[Reference]
+
+=== Configure ssh keys
+
+If you intend to use the bastion host, you must supply the ssh keys:
+
+----
+ssh_private_key_path = "~/.ssh/id_rsa"
+
+ssh_public_key_path = "~/.ssh/id_rsa.pub"
+----
+
+{uri-terraform-options}#ssh-keys[Reference]
+
+=== Configure OCI parameters
+
+The 2 OCI parameters here mainly concern:
+
+1. the label_prefix: this will append a string to the name of every resource created
+2. the region: this allows you to select the region where you want the OKE cluster deployed
+
+e.g.
+
+----
+label_prefix="dev"
+region="us-phoenix-1"
+----
+
+The list of regions can be found {uri-oci-region}[here].
+
+{uri-terraform-options}#general-oci[Reference]
+
+=== Configure OCI Networking parameters
+
+The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT or the Service Gateways. 
+
+You can leave most of the default options. However, you may want to change the following 2 parameters:
+
+. vcn_dns_name: this is the internal dns domain for resources created
+. vcn_name: this is the name of the vcn that will be appended to the label prefix
+
+{uri-terraform-options}#oci-networking[Reference]
+
+=== Configure bastion host parameters
+
+The bastion host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the enable_instance_principal. Be aware that if this is enabled, it gives API access to the bastion host without authentication.
+
+Read more about {uri-oci-instance-principal}[instance_principal].
+
+{uri-terraform-options}#bastion-host[Reference]
+
+=== Configure OKE parameters
+
+The OKE parameters concern mainly the following:
+
+. whether you want to deploy public or private worker nodes
+. whether you want to allow NodePort or ssh access to the worker nodes
+. Kubernetes options such as dashboard, networking and helm
+. size and topology of your cluster
+
+Refer to {uri-topology}[topology] for more thorough examples.
+
+{uri-terraform-options}#oke[Reference]
+
+=== Configure OKE Load Balancer parameters
+
+The OKE Load Balancer parameters concern mainly the following:
+
+. the preferred Availability Domain you want to place the load balancers
+. the type of load balancer (public/internal)
+
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+
+Refer to {uri-topology}[topology] for more thorough examples.
+
+{uri-terraform-options}#oke-load-balancers[Reference]
+
+=== Configure OCIR parameters
+
+The {uri-oci-ocir}[OCIR] parameters control the creation of an {uri-oci-authtoken}[Auth Token] for the user in OCI. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
+
+The secret is created in the kube-system namespace. To copy it to your namespace, use the following command:
+
+----
+kubectl --namespace=kube-system get secret ocirsecret --export -o yaml | kubectl apply --namespace=<newnamespace> -f -
+----
+
+{uri-terraform-options}#ocir[Reference]
+
+=== Configure helm parameters
+
+The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host. Additional helm repos include the following:
+
+. {uri-helm-incubator}[incubator]
+. {uri-helm-jetstack}[jetstack]
+
+{uri-terraform-options}#helm[Reference]
+
+=== Configure Calico parameters
+
+The calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
+
+{uri-terraform-options}#calico[Reference]
+
+=== Configure Kubernetes Metrics Server
+
+The Kubernetes Metrics Server parameter controls the installation of {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
+
+{uri-terraform-options}#kubernetes-metrics-server[Reference]

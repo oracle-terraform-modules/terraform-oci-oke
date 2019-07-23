@@ -196,7 +196,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
     stateless = true
   }
 
-  count = var.load_balancer_subnet_type == "internal" || var.load_balancer_subnet_type== "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type== "both" ? 1 : 0
 }
 
 # public load balancer security checklist
@@ -217,5 +217,5 @@ resource "oci_core_security_list" "pub_lb_seclist" {
     stateless = true
   }
 
-  count = var.load_balancer_subnet_type == "public" || var.load_balancer_subnet_type== "both" ? 1 : 0
+  count = var.lb_subnet_type == "public" || var.lb_subnet_type== "both" ? 1 : 0
 }

@@ -1,0 +1,71 @@
+= Instructions
+
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:uri-repo: https://github.com/hyder/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+
+:uri-docs: {uri-rel-file-base}/docs
+
+:uri-topology: {uri-docs}/topology.adoc
+:uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
+:uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
+:uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
+
+:uri-configuration: {uri-docs}/configuration.adoc
+:uri-license: {uri-rel-file-base}/LICENSE.txt
+:uri-kubernetes: https://kubernetes.io/
+:uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
+:uri-oci: https://cloud.oracle.com/cloud-infrastructure
+:uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
+:uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+:uri-oracle: https://www.oracle.com
+:uri-prereqs: {uri-docs}/prerequisites.adoc
+:uri-quickstart: {uri-docs}/quickstart.adoc
+
+:uri-terraform: https://www.terraform.io
+:uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+
+== Assumptions
+
+This section assumes you have completed the following:
+
+. all the {uri-prereqs}[pre-requisites]
+. all the required {uri-configuration}[configuration]
+
+=== Creating the OKE Cluster
+
+=== Adding the bastion host
+
+=== Using the bastion host
+
+=== Interacting with the OKE Cluster locally
+
+=== Creating an auth token for OCIR
+
+=== Installing helm
+
+=== Installing calico
+
+=== Scaling the number of worker nodes
+
+=== Scaling the number of node pools
+
+=== Accessing the Kubernetes dashboard
+
+=== Destroying the cluster

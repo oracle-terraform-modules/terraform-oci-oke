@@ -1,0 +1,89 @@
+= Terraform for Oracle Container Engine
+
+:idprefix:
+:idseparator: -
+ifndef::env-github[:icons: font]
+ifdef::env-github[]
+:status:
+:outfilesuffix: .adoc
+:caution-caption: :fire:
+:important-caption: :exclamation:
+:note-caption: :paperclip:
+:tip-caption: :bulb:
+:warning-caption: :warning:
+endif::[]
+:uri-repo: https://github.com/hyder/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+
+:uri-docs: {uri-rel-file-base}/docs
+
+:uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
+:uri-configuration: {uri-docs}/configuration.adoc
+
+:uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
+:uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
+
+:uri-instructions: {uri-docs}/instructions.adoc
+:uri-license: {uri-rel-file-base}/LICENSE.txt
+:uri-kubernetes: https://kubernetes.io/
+:uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
+:uri-oci: https://cloud.oracle.com/cloud-infrastructure
+:uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
+:uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+:uri-oracle: https://www.oracle.com
+:uri-prereqs: {uri-docs}/prerequisites.adoc
+:uri-quickstart: {uri-docs}/quickstart.adoc
+
+:uri-terraform: https://www.terraform.io
+:uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-terraform-hashircorp-examples: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
+:uri-topology: {uri-docs}/topology.adoc
+
+
+{uri-oke}[Oracle Container Engine] (OKE) is {uri-oracle}[Oracle]'s managed {uri-kubernetes}[Kubernetes] service on {uri-oci}[Oracle Cloud Infrastructure (OCI)].
+
+This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructure] provides a reusable Terraform module that provisions a {uri-oke}[Oracle Container Engine] cluster.
+
+== {uri-docs}[Documentation]
+
+* {uri-prereqs}[Pre-requisites]
+
+* {uri-quickstart}[Quick Start]
+
+* {uri-configuration}[Configuration]
+
+* {uri-instructions}[Instructions]
+
+* {uri-topology}[Topology]
+
+* {uri-terraform-options}[Terraform Options]
+
+== Related Documentation, Blog
+* {uri-oci-documentation}[Oracle Cloud Infrastructure Documentation]
+* {uri-oke}[Oracle Container Engine Documentation]
+* {uri-terraform-oci}[Terraform OCI Provider Documentation]
+* {uri-networks-subnets-cidr}[Erik Berg on Networks, Subnets and CIDR]
+* {uri-terraform-cidrsubnet-desconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
+
+== License
+
+{uri-license}[LICENSE.txt]
+
+== Changelog
+
+View the {uri-changelog}[CHANGELOG].
+
+== Acknowledgement
+
+Code derived and adapted from {uri-terraform-oke-sample}[Terraform OKE Sample] and Hashicorp's {uri-terraform-hashircorp-examples}[Terraform 0.12 examples]
+
+== Contributors
+
+{uri-contributors}[Folks who contributed with explanations, code, feedback, ideas, testing etc.]
+
+Learn how to {uri-contribute}[contribute].
