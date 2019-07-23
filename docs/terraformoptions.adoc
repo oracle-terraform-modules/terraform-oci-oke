@@ -24,6 +24,7 @@ endif::[]
 :uri-helm-jetstack: https://charts.jetstack.io
 
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
+:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 
 :uri-topology: {uri-docs}/topology.adoc
@@ -79,12 +80,17 @@ endif::[]
 |Default
 
 |ssh_private_key_path
-|path to ssh private key. *Required* if bastion is enabled.
+a|path to ssh private key. *Required* if bastion is enabled.
+
+NOTE: The same key will be used to access worker nodes using SSH
+
 |
 |None
 
 |ssh_public_key_path
-|path to ssh public key. *Required* if bastion is enabled.
+a|path to ssh public key. *Required* if bastion is enabled.
+
+NOTE: The same key will be used to access worker nodes using SSH
 |
 |None
 
@@ -159,11 +165,14 @@ endif::[]
 |newbits
 |The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the cidrsubnet Terraform function to calculate each subnet's mask
 |e.g.
+[source]
+----
 newbits = {
     "bastion" = 13
     "lb"      = 11
     "workers" = 2
 }
+----
 |
 [source]
 ----
@@ -175,6 +184,8 @@ newbits = {
 |subnets
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the cidrsubnet Terraform function. 
 | e.g.
+[source]
+----
 subnets = {
   "bastion"     = 32
   "int_lb_ad1"  = 16
@@ -187,6 +198,8 @@ subnets = {
   "workers_ad2" = 2
   "workers_ad3" = 3
 }
+[source]
+----
 |"bastion"     = 32
 "int_lb_ad1"  = 16
 "int_lb_ad2"  = 17
@@ -197,6 +210,7 @@ subnets = {
 "workers_ad1" = 1
 "workers_ad2" = 2
 "workers_ad3" = 3
+----
 |===
 
 == Bastion
@@ -241,11 +255,17 @@ subnets = {
 |availability_domains
 |The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
 | e.g.
+[source]
+----
 availability_domains = {
   "bastion"     = 1
 }
+----
 |
+[source]
+----
   "bastion"     = 1
+----
 
 |===
 
@@ -325,8 +345,10 @@ availability_domains = {
 |1
 
 |nodepool_topology
-|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions. 
+a|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions.
+
 CAUTION: 2 is experimental and is only used in multiple-AD regions.
+
 Refer to {uri-topology}[topology] for more thorough examples.
 |1,2,3
 |3
@@ -358,7 +380,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Default
 
 |load_balancer_subnet_type
-|The type of load balancer subnets to create. 
+a|The type of load balancer subnets to create. 
 
 NOTE: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
@@ -368,13 +390,19 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |preferred_lb_ads
 |The preferred Availability Domains where to provision the Load Balancers, specified in the form of a list of 2 elements
-|e.g. 
+|e.g.
+[source]
+----
 preferred_lb_ads = ["ad1", "ad2"]
-|["ad1", "ad2"]
-
+----
+|
+[source]
+----
+["ad1", "ad2"]
+----
 
 |preferred_load_balancer_subnets
-|The preferred load balancer subnets that OKE will automatically choose when creating load balancers.
+a|The preferred load balancer subnets that OKE will automatically choose when creating load balancers.
 
 NOTE: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'
 
@@ -405,13 +433,14 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |None
 
 |tenancy_name
-|The *_name_* of the tenancy to be used when creating the Docker secret. *Required* if create_auth_token is set to true
+a|The *_name_* of the tenancy to be used when creating the Docker secret. *Required* if create_auth_token is set to true
 NOTE: This is different from tenancy_ocid. 
 |
 |None
 
 |username
-|The username that can login to the selected tenancy. *Required* if create_auth_token is set to true
+a|The username that can login to the selected tenancy. *Required* if create_auth_token is set to true
+
 NOTE: This is different from tenancy_ocid. 
 |
 |None
