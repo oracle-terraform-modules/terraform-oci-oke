@@ -15,13 +15,22 @@ endif::[]
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
 :uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-calico: https://www.projectcalico.org/
+:uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
+:uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
 :uri-docs: {uri-rel-file-base}/docs
+:uri-helm: https://helm.sh/
+:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
+:uri-helm-jetstack: https://charts.jetstack.io
 
+:uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+
+:uri-topology: {uri-docs}/topology.adoc
 
 == Identity and access
 
-[cols="4*"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -29,32 +38,32 @@ endif::[]
 |Default
 
 |api_fingerprint
-|ssl fingerprint of api public key (required)
+|ssl fingerprint of api public key. *Required*
 |
 |None
 
 |api_private_key_path
-|path to api private key (required)
+|path to api private key. *Required*
 |
 |None
 
 |compartment_name
-|Compartment name where the OKE Cluster will be provisioned (required)
+|Compartment name where the OKE Cluster will be provisioned. *Required*
 |
 |None
 
 |compartment_ocid
-|Compartment ocid where the OKE Cluster will be provisioned (required)
+|Compartment ocid where the OKE Cluster will be provisioned. *Required*
 |
 |None
 
 |tenancy_ocid
-|Tenancy ocid of the user
+|Tenancy ocid of the user. *Required*
 |
 |None
 
 |user_ocid
-|User's ocid
+|User's ocid. *Required*
 |
 |None
 
@@ -62,7 +71,7 @@ endif::[]
 
 == SSH Keys
 
-[cols="4*"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -70,12 +79,12 @@ endif::[]
 |Default
 
 |ssh_private_key_path
-|path to ssh private key. Required if bastion is enabled.
+|path to ssh private key. *Required* if bastion is enabled.
 |
 |None
 
 |ssh_public_key_path
-|path to ssh public key. Required if bastion is enabled.
+|path to ssh public key. *Required* if bastion is enabled.
 |
 |None
 
@@ -83,7 +92,7 @@ endif::[]
 
 == General OCI
 
-[cols="4*"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -96,7 +105,7 @@ endif::[]
 |oke
 
 |region
-|Region where to provision the OKE cluster (required)
+|Region where to provision the OKE cluster. *Required*
 |{uri-oci-region}[List of regions]
 |us-phoenix-1
 
@@ -104,35 +113,36 @@ endif::[]
 
 == Networking
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
+
 |vcn_name
-|Name of the VCN that will be appended to the label_prefix
+|The name of the VCN that will be appended to the label_prefix
 |
 |oke vcn
 
 |vcn_cidr
-|VCN's CIDR block
+|The VCN's CIDR block
 |
 |10.0.0.0/16
 
 |vcn_dns_name
-|Internal dns domain for resources created
+|The internal DNS domain for resources created and prepended to oraclevcn.com
 |
 |oke
 
 |create_nat_gateway
-|Whether to create a NAT gateway. Required for private worker mode
+|Whether to create a NAT gateway. *Required* for private worker mode
 |true/false
 |true
 
 |nat_gateway_name
-|NAT gateway name. Appended to the label_prefix
+|The NAT gateway name. Appended to the label_prefix
 | 
 |nat
 
@@ -142,56 +152,66 @@ endif::[]
 |true
 
 |service_gateway_name
-|Service gateway name. Appended to the label_prefix
+|The Service gateway name. Appended to the label_prefix
 | 
 |sg
 
 |newbits
-|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values are used as the newbits parameter in the cidrsubnet Terraform function to calculate the subnets' masks
-|
-| newbits = {
-
+|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the cidrsubnet Terraform function to calculate each subnet's mask
+a| e.g.
+[source,json]
+----
+newbits = {
     "bastion" = 13
-
     "lb"      = 11
-
     "workers" = 2
-
 }
+----
+a|
+[source,json]
+----
+    "bastion" = 13
+    "lb"      = 11
+    "workers" = 2
+----
 
 |subnets
-|0-based index of the subnet when the VCN's CIDR is masked with the newbit and specified in the form of a map. Used ti define the boundaries of the subnets. The values are used as the netnum parameter in the cidrsubnet Terraform function. 
-|
-|subnets = {
-
+|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the cidrsubnet Terraform function. 
+a| e.g.
+[source,json]
+----
+subnets = {
   "bastion"     = 32
-
   "int_lb_ad1"  = 16
-
   "int_lb_ad2"  = 17
-  
   "int_lb_ad3"  = 18
-  
   "pub_lb_ad1"  = 19
-  
   "pub_lb_ad2"  = 20
-  
   "pub_lb_ad3"  = 21
-  
   "workers_ad1" = 1
-  
   "workers_ad2" = 2
-  
   "workers_ad3" = 3
-
 }
-
-
+----
+a|
+[source,json]
+----
+  "bastion"     = 32
+  "int_lb_ad1"  = 16
+  "int_lb_ad2"  = 17
+  "int_lb_ad3"  = 18
+  "pub_lb_ad1"  = 19
+  "pub_lb_ad2"  = 20
+  "pub_lb_ad3"  = 21
+  "workers_ad1" = 1
+  "workers_ad2" = 2
+  "workers_ad3" = 3
+----
 |===
 
 == Bastion
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -204,14 +224,14 @@ endif::[]
 |true
 
 |bastion_shape
-|Shape of bastion instance
+|The shape of bastion instance
 |
 |VM.Standard2.1
 
 |bastion_access
 |CIDR block in the form of a string to which ssh access to the bastion must be restricted to 
-|
-|ANYWHERE which maps to 0.0.0.0/0
+|XXX.XXX.XXX.XXX/YY
+|ANYWHERE which is equivalent to 0.0.0.0/0 and allows ssh access from anywhere
 
 |enable_instance_principal
 |
@@ -219,25 +239,36 @@ endif::[]
 |
 
 |image_operating_system
-|
-|
-|
+|The Operating System image to be used to provision the bastion
+|Oracle Linux, CentOS, Canonical Ubuntu
+|Oracle Linux
 
 |image_operating_system_version
+|The version of the selected Operating System to be used to provision the bastion host. Matching versions of available operating systems can be found {uri-oci-images}[here]
 |
-|
-|
+|7.6
 
 |availability_domains
-|
-|
-|
+|The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
+a| e.g.
+[source,json]
+----
+availability_domains = {
+  "bastion"     = 1
+}
+----
+a|
+[source,json]
+----
+  "bastion"     = 1
+----
+
 
 |===
 
 == OKE
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -245,96 +276,98 @@ endif::[]
 |Default
 
 |cluster_name
+|The name of the OKE cluster. This will be appended to the label_prefix
 |
-|
-|
+|oke
 
 |worker_mode
-|
-|
-|
+|Whether the worker nodes should be public or private. Private requires NAT gateway.
+|private/public
+|private
 
 |allow_node_port_access
-|
-|
-|
+|Whether to allow access to NodePort services when worker nodes are deployed in public mode
+|true/false
+|false
 
 
 |allow_worker_ssh_access
-|
-|
-|
+|Whether to allow ssh access to worker nodes. Even if worker nodes are deployed in public mode, ssh access to worker nodes requires going through the bastion host
+|true/false
+|false
 
 |dashboard_enabled
-|
-|
-|
+|Whether to create the default Kubernetes dashboard.
+|true/false
+|true
 
 |kubernetes_version
-|
-|
-|
+|The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the available versions will be queries and the latest version selected. To provision a specific version, choose from available versions and override the 'LATEST' value
+|LATEST,v1.11.9, v1.12.7
+|LATEST
 
 |node_pools
+|The number of node pools to create. Refer to {uri-topology}[topology] for more thorough examples.
 |
-|
-|
+|1
 
 |node_pool_name_prefix
+|A string prefixed to the node pool name
 |
-|
-|
+|np
 
 |node_pool_image_id
+|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_image_operating_system and node_pool_image_operating_system_version to identify an image to provision the worker nodes
 |
-|
-|
+|NONE
 
 |node_pool_image_operating_system
+|The name of the Operating System image to use to provision the worker nodes
 |
-|
-|
+|Oracle Linux
 
 |node_pool_image_operating_system_version
+|The corresponding version of the Operating System image to use to provision the worker nodes
 |
-|
-|
+|7.6
 
 |node_pool_node_shape
+|The shape of worker nodes to provision
 |
-|
-|
+|VM.Standard2.1
 
 |node_pool_quantity_per_subnet
+|Number of worker nodes by worker subnets in a node pool. Refer to {uri-topology}[topology] for more thorough examples.
 |
-|
-|
+|1
 
 |nodepool_topology
-|
-|
-|
+|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions. 
+CAUTION: 2 is experimental and is only used in multiple-AD regions.
+Refer to {uri-topology}[topology] for more thorough examples.
+|1,2,3
+|3
 
 |pods_cidr
+|The CIDR for the Kubernetes POD network for flannel networking
 |
-|
-|
+|10.244.0.0/16
 
 |services_cidr
+|The CIDR for the Kubernetes services network
 |
-|
-|
+|10.96.0.0/16
 
 |tiller_enabled
-|
-|
-|
+|Whether to install the server side of Helm in the OKE cluster
+|true/false
+|true
 
 |===
 
 == OKE Load Balancers
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -342,24 +375,43 @@ endif::[]
 |Default
 
 |load_balancer_subnet_type
-|
-|
-|
+|The type of load balancer subnets to create. 
+
+NOTE: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+
+Refer to {uri-topology}[topology] for more thorough examples.
+|both, internal, public
+|public
 
 |preferred_lb_ads
-|
-|
-|
+|The preferred Availability Domains where to provision the Load Balancers, specified in the form of a list of 2 elements
+a| e.g.
+[source,json]
+----
+preferred_lb_ads = ["ad1", "ad2"]
+----
+a|
+[source,json]
+----
+["ad1", "ad2"]
+----
+
 
 |preferred_load_balancer_subnets
-|
-|
-|
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers.
+
+NOTE: Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient. If 'public' is chosen, the value for load_balancer_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancer_subnet_type must be either 'internal' or 'both'
+
+Refer to {uri-topology}[topology] for more thorough examples.
+
+|internal/public
+|public
 
 |===
+
 == OCIR
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -367,30 +419,32 @@ endif::[]
 |Default
 
 |create_auth_token
-|
-|
-|
+|Whether to create an Auth Token. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
+|true/false
+|false
 
 |email_address
+|The email address to be used when creating the Docker secret. *Required* if create_auth_token is set to true
 |
-|
-|
+|None
 
 |tenancy_name
+|The *_name_* of the tenancy to be used when creating the Docker secret. *Required* if create_auth_token is set to true
+NOTE: This is different from tenancy_ocid. 
 |
-|
-|
+|None
 
 |username
+|The username that can login to the selected tenancy. *Required* if create_auth_token is set to true
+NOTE: This is different from tenancy_ocid. 
 |
-|
-|
+|None
 
 |===
 
 == Helm
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -398,29 +452,30 @@ endif::[]
 |Default
 
 |add_incubator_repo
-|
-|
-|
+|Whether to add the {uri-helm-incubator}[incubator] repo to the bastion's local helm repo
+|true/false
+|false
 
 |add_jetstack_repo
-|
-|
-|
+|Whether to add the {uri-helm-jetstack}[jetstack] repo to the bastion's local helm repo. *Required* for {uri-cert-manager}[cert-manager]
+|true/false
+|false
 
 |helm_version
+|The version of the {uri-helm}[helm] client to install on the bastion. A subsequent upgrade of tiller (server-side helm) will then be automatically performed.
 |
-|
-|
+|2.14.1
 
 |install_helm
-|
-|
-|
+|Whether to install {uri-helm}[helm] on the bastion instance
+|true/false
+|false
 
 |===
+
 == Calico
 
-[cols="d,d,d,v"] 
+[cols="1e,4d,3d,3d", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -428,11 +483,11 @@ endif::[]
 |Default
 
 |calico_version
+|Version of {uri-calico}[Calico] to install
 |
-|
-|
+|3.6
 
 |install_calico
-|
-|
-|
+|Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy]
+|true/false
+|false
