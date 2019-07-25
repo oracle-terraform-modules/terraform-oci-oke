@@ -1,13 +1,36 @@
 = Topology
+:idprefix:
+:idseparator: -
+:sectlinks:
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-== Default
+:uri-rel-file-base: link:{uri-repo}/blob/v12docs
+:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-docs: {uri-rel-file-base}/docs
+:uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
+:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
+:uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+:uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
+:uri-topology: {uri-docs}/topology.adoc
 
-== Networking, Gateways, Bastion
+This section describes the various topologies you can deploy.
 
-== Public vs Private worker nodes
+=== Default
 
-== Worker Nodes per subnet
+image::images/defaultmad.png[]
 
-== Node pools
+=== Single vs Multiple AD regions deployment
 
-== Public vs Internal Load Balancers
+=== Networking and Gateways
+
+=== Bastion
+
+=== Public vs Private worker nodes
+
+=== Node Pools
+
+=== Worker Nodes per subnet
+
+=== Fault Domains
+
+=== Public and Internal Load Balancers
