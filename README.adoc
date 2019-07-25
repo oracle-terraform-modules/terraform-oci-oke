@@ -37,7 +37,7 @@ endif::[]
 :uri-quickstart: {uri-docs}/quickstart.adoc
 
 :uri-terraform: https://www.terraform.io
-:uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
+:uri-terraform-cidrsubnet-deconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
@@ -68,7 +68,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 * {uri-oke}[Oracle Container Engine Documentation]
 * {uri-terraform-oci}[Terraform OCI Provider Documentation]
 * {uri-networks-subnets-cidr}[Erik Berg on Networks, Subnets and CIDR]
-* {uri-terraform-cidrsubnet-desconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
+* {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
 
 == License
 
