@@ -7,23 +7,128 @@
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
 :uri-rel-tree-base: link:{uri-repo}/tree/v12docs
 :uri-docs: {uri-rel-file-base}/docs
+:uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+:uri-oci-service-gateway: https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/servicegateway.htm
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
+:uri-terraform-cidrsubnet-deconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
+
 :uri-topology: {uri-docs}/topology.adoc
 
 This section describes the various topologies you can deploy.
 
-=== Default
+link:#default-deployment[Default Deployment]
 
-image::images/defaultmad.png[]
+link:#single-vs-multiple-ad-regions-deployment[Single vs. Multiple AD regions deployment]
+
+link:#networking-and-gateways[Networking and Gateways]
+
+link:#bastion-host[Bastion Host]
+
+link:#public-vs-private-worker-nodes[Public vs Private worker nodes]
+
+link:#node-pools[Node Pools]
+
+link:#worker-nodes-per-subnet[Worker Nodes per subnet]
+
+link:#fault-domains[Fault Domains]
+
+link:#public-and-internal-load-balancers[Public and Internal Load Balancers]
+
+=== Default Deployment
+
+By default, the following resources are created:
+
+* 1 VCN with Internet, NAT and Service Gateways
+* Route tables for Internet, NAT and Service Gateways
+* 1 regional public subnet for the Bastion Host along with its security list
+* 3 private worker subnets along with security list
+* 3 public load balancer subnets along with security list
+* 1 Bastion Host
+* 1 Kubernetes Cluster with worker nodes
+
+[Note]
+The Kubernetes Master Nodes run in Oracle's tenancy and are not shown here.
+
+The Load Balancers are only created when services of type LoadBalancer are deployed.
+
+image::images/defaultmad.png[caption="Multi-AD Default Deployment"]
+
+image::images/defaultsad.png[caption="Single-AD Default Deployment"]
 
 === Single vs Multiple AD regions deployment
 
 === Networking and Gateways
 
-=== Bastion
+image::images/networking.png[caption="Networking and Gateways"]
+
+The following resources are created:
+
+* 3 worker subnets
+* 3 load balancer subnets
+* 1 regional bastion subnet
+
+The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of 10.0.2.96/27 giving a maximum possible of 5 IP addresses. This will allow room for future capabilities.
+
+The worker subnets have the following CIDRs assigned by default:
+
+* 10.0.64.0/18
+* 10.0.128.0/18
+* 10.0.192.0/18
+
+This gives each subnet a maximum possible of 16381 IP addresses and therefore number of hosts per subnet. This is enough to scale the cluster to the maximum number of worker nodes (5000) currently supported by Kubernetes.
+
+The load balancer subnets consist of 2 types:
+
+* public
+* private
+
+By default, only the the public load balancer subnets are created. See link:#public-and-internal-load-balancers[Public and Internal Load Balancers] for more details. The public load balancer subnets have the following CIDRs assigned by default:
+
+* 10.0.2.96/27
+* 10.0.2.128/27
+* 10.0.2.160/27
+
+This gives each subnet a maximum possible of 29 IP addresses and therefore number of load balancers per subnet.
+
+The OCI Networking parameters are controlled by the following 3 parameters:
+
+* vcn_cidr
+* newbits
+* subnets
+
+Refer to the link:terraformoptions.adoc#oci-networking[OCI Networking documentation] to see how you can change these. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
+
+* {uri-networks-subnets-cidr}[Erik Berg on Networks, Subnets and CIDR]
+* {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
+* {uri-terraform-cidrsubnet}[Terraform cidrsubnet documentation]
+
+Additionally, the following gateways are created:
+
+* Internet Gateway (required)
+* NAT Gateway if deployed in link:#public-vs-private-worker-nodes[private mode]
+* Service Gateway if using Oracle Services
+
+When deployed in public mode, all worker subnets will be deployed as public subnets and route to the Internet Gateway directly.
+
+However, NodePort and SSH access need to be explicitly enabled in order for the security rules to be properly configured.
+
+[source]
+----
+allow_node_port_access = true
+
+allow_worker_ssh_access = true
+----
+
+Additionally, ssh access to the worker nodes must be done through the bastion host regardless of whether the worker nodes are deployed in public or private mode.
+
+When deployed in private mode, all worker subnets will be deployed as private subnets and route to the NAT Gateway instead.
+
+The Service Gateway enables cloud resources without public IP addresses to privately access Oracle services. The Service Gateway allows access to Oracle Services without the traffic going over the public Internet. Refer to the {uri-oci-service-gateway}[OCI Service Gateway documentation] to understand whether you need to enable it.
+
+=== Bastion Hosts
 
 === Public vs Private worker nodes
 
