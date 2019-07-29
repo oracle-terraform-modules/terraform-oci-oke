@@ -310,6 +310,8 @@ If you intend to use internal load balancers, you must ensure the following:
 .Using Private Load Balancers (worker nodes removed for convenience)
 image::images/privatelbs.png[align="Private Load Balancers"]
 
+{bl}
+
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient e.g. :
 
 [source]
