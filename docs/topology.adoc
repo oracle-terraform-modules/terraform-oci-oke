@@ -71,6 +71,7 @@ image::images/defaultmad.png[align="center"]
 image::images/defaultsad.png[align="center"]
 
 === Single vs Multiple AD regions deployment
+TBC
 
 === Networking and Gateways
 
@@ -117,7 +118,7 @@ The OCI Networking parameters are controlled by the following 3 parameters:
 Refer to this project's link:terraformoptions.adoc#oci-networking[Networking Documentation] to see how you can change these. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
 
 * {uri-networks-subnets-cidr}[Erik Berg on Networks, Subnets and CIDR]
-* {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
+* {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet]
 * {uri-terraform-cidrsubnet}[Terraform cidrsubnet documentation]
 
 Additionally, the following gateways are created:
@@ -184,7 +185,7 @@ Additionally, ssh access to the worker nodes *_must_* be done through the bastio
 
 === Node Pools
 
-<explain what a node pool is>
+TBC: <explain what a node pool is>
 
 A node pool requires the following information:
 
@@ -221,11 +222,11 @@ There are 3 node pool topologies available for deployment: 1,2 and 3.
 
 Topology 1 applies only for single-AD regions whereas Topologies 2 and 3 apply to multi-AD regions. Additionally, note that Topology 2 is *still experimental*.
 
-<Topology 1. Show diagram with FD>
+TBC: <Topology 1. Show diagram with FD>
 
 When using Topology 3, this ensures that the node pool spans all 3 worker subnets. Since the worker subnets are created in different Availability Domains, this ensure that the Kubernetes cluster spans all 3 Availability Domains.
 
-<Topology 2>
+TBC: <Topology 2>
 
 ==== Number of Node Pools
 
@@ -257,23 +258,23 @@ image::images/np342.png[align="center"]
 
 === Fault Domains
 
-=== Public and Internal Load Balancers
+TBC
 
-==== Public and Internal Load Balancer combinations
+=== Public and Internal Load Balancers
 
 By default, public load balancers are created when you deploy services of type *LoadBalancer*. Public load balancers have public IP addresses.
 
 You can also use internal load balancers. Internal load balancers have only private IP addresses and are not accessible from the Internet. 
 
+==== Public and Internal Load Balancer combinations
+
 The following parameters govern how load balancers are created with:
 
-* lb_subnet_type: can be any of both, internal, public. Default is public. This will ensure that the necessary subnets are created. 
+* lb_subnet_type
 
-* preferred_lb_ads: in multi-AD regions, which Availability Domain you want to place your load balancers e.g. ["ad1, ad2"]
+* preferred_lb_subnets
 
-* preferred_lb_subnets: can be internal or public. Default is public This automatically set OKE's preferred load balancer subnets.
-
-The table below shows the possible combinations of preferred_lb_subnets and subnet_type values.
+The table below shows the valid combinations of preferred_lb_subnets and subnet_type values.
 
 .Public and Internal Load Balancer combinations
 [stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
@@ -295,6 +296,9 @@ The table below shows the possible combinations of preferred_lb_subnets and subn
 |X
 
 |===
+
+
+
 
 ==== Using Internal Load Balancers
 
