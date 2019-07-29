@@ -37,7 +37,7 @@ Configuration Terraform Options:
 
 == Identity and access
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -78,7 +78,7 @@ Configuration Terraform Options:
 
 == SSH Keys
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -100,7 +100,7 @@ Configuration Terraform Options:
 
 == General OCI
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -121,7 +121,7 @@ Configuration Terraform Options:
 
 == OCI Networking
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -221,7 +221,7 @@ subnets = {
 
 == Bastion Host
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -376,7 +376,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OKE Load Balancers
 
-[stripes=odd,cols="1e,3d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,3d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -419,7 +419,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OCIR
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -451,7 +451,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Helm
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -482,7 +482,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Calico
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description
@@ -502,7 +502,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Kubernetes Metrics Server
 
-[stripes=odd,cols="1e,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
 |Parameter
 |Description

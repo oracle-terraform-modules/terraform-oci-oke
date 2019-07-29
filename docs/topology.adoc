@@ -2,16 +2,22 @@
 :idprefix:
 :idseparator: -
 :sectlinks:
+:bl: pass:[ +]
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
 :uri-rel-tree-base: link:{uri-repo}/tree/v12docs
 :uri-docs: {uri-rel-file-base}/docs
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
+:uri-oci-configure-cli: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm#SettinguptheConfigFile
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
+:uri-oci-oke-internal-lb: https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengcreatingloadbalancer.htm#CreatingInternalLoadBalancersinPublicandPrivateSubnets
+:uri-oci-oke-ingresscontrollers-1: https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-1-5af51e6cdb85
+:uri-oci-oke-ingresscontrollers-2: https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-2-96063927d2e6
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-oci-service-gateway: https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/servicegateway.htm
+:uri-oci-shape: https://docs.cloud.oracle.com/iaas/Content/Compute/References/computeshapes.htm
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
 :uri-terraform-cidrsubnet-deconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 
@@ -37,6 +43,8 @@ link:#fault-domains[Fault Domains]
 
 link:#public-and-internal-load-balancers[Public and Internal Load Balancers]
 
+link:#creating-loadbalancers-using-ingresscontrollers[Creating LoadBalancers using IngressControllers]
+
 === Default Deployment
 
 By default, the following resources are created:
@@ -52,17 +60,25 @@ By default, the following resources are created:
 [Note]
 The Kubernetes Master Nodes run in Oracle's tenancy and are not shown here.
 
-The Load Balancers are only created when services of type LoadBalancer are deployed.
+The Load Balancers are only created when services of type *LoadBalancer* are deployed.
 
-image::images/defaultmad.png[caption="Multi-AD Default Deployment"]
+.Multi-AD Default Deployment
+image::images/defaultmad.png[align="center"]
 
-image::images/defaultsad.png[caption="Single-AD Default Deployment"]
+{bl}
+
+.Single-AD Default Deployment
+image::images/defaultsad.png[align="center"]
 
 === Single vs Multiple AD regions deployment
+TBC
 
 === Networking and Gateways
 
-image::images/networking.png[caption="Networking and Gateways"]
+.Networking and Gateways
+image::images/networking.png[align="Networking and Gateways"]
+
+{bl}
 
 The following resources are created:
 
@@ -99,10 +115,10 @@ The OCI Networking parameters are controlled by the following 3 parameters:
 * newbits
 * subnets
 
-Refer to the link:terraformoptions.adoc#oci-networking[OCI Networking documentation] to see how you can change these. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
+Refer to this project's link:terraformoptions.adoc#oci-networking[Networking Documentation] to see how you can change these. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
 
 * {uri-networks-subnets-cidr}[Erik Berg on Networks, Subnets and CIDR]
-* {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
+* {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet]
 * {uri-terraform-cidrsubnet}[Terraform cidrsubnet documentation]
 
 Additionally, the following gateways are created:
@@ -111,9 +127,50 @@ Additionally, the following gateways are created:
 * NAT Gateway if deployed in link:#public-vs-private-worker-nodes[private mode]
 * Service Gateway if using Oracle Services
 
-When deployed in public mode, all worker subnets will be deployed as public subnets and route to the Internet Gateway directly.
+The Service Gateway enables cloud resources without public IP addresses to privately access Oracle services. The Service Gateway allows access to Oracle Services without the traffic going over the public Internet. Refer to the {uri-oci-service-gateway}[OCI Service Gateway documentation] to understand whether you need to enable it.
 
-However, NodePort and SSH access need to be explicitly enabled in order for the security rules to be properly configured.
+=== Bastion Host
+
+.SSH to Bastion (load balancer subnets removed for convenience)
+image::images/bastion.png[align="center"]
+
+{bl}
+
+The bastion host is created in a public regional subnet. You can create or destroy it anytime with no effect on the Kubernetes cluster by setting the *create_bastion* = true in your variable file.
+
+By default, the bastion host can be accessed from anywhere. However, you can restrict its access to a particular CIDR block using the *bastion_access* parameter.
+
+You can use the bastion host for the following:
+
+. ssh to the worker nodes
+. manage your Kubernetes cluster
+
+To ssh to the bastion, a script (scripts/tesseract.sh) is generated which you can use to login to the bastion itself.
+
+To ssh to the worker nodes, you can do the following:
+
+----
+ssh -i /path/to/private_key -J <username>@bastion_ip opc@worker_node_private_ip
+----
+
+When the bastion host is created, the following are pre-installed and configured:
+
+* git, kubectl, helm, oci-cli
+* default KUBECONFIG location (~/.kube/config)
+* aliases kubectl (k), helm (h), oci-cli (oci)
+
+Although oci-cli is pre-installed, it is *_not_* configured. Read more about {uri-oci-configure-cli}[configuring the oci-cli].
+
+=== Public vs Private worker nodes
+
+.Public Worker Nodes
+image::images/public.png[align="center"]
+
+{bl}
+
+When deployed in public mode, all worker subnets will be deployed as public subnets and route to the Internet Gateway directly. Worker nodes will have both private and public IP addresses. The private IP address will be that of the worker subnet they are part of whereas the public IP address will be allocated from Oracle's pool of public IP addresses.
+
+NodePort and SSH access need to be explicitly enabled in order for the security rules to be properly configured and allow NodePort access.
 
 [source]
 ----
@@ -122,20 +179,149 @@ allow_node_port_access = true
 allow_worker_ssh_access = true
 ----
 
-Additionally, ssh access to the worker nodes must be done through the bastion host regardless of whether the worker nodes are deployed in public or private mode.
+When deployed in private mode, all worker subnets will be deployed as private subnets and route to the NAT Gateway instead. 
 
-When deployed in private mode, all worker subnets will be deployed as private subnets and route to the NAT Gateway instead.
-
-The Service Gateway enables cloud resources without public IP addresses to privately access Oracle services. The Service Gateway allows access to Oracle Services without the traffic going over the public Internet. Refer to the {uri-oci-service-gateway}[OCI Service Gateway documentation] to understand whether you need to enable it.
-
-=== Bastion Hosts
-
-=== Public vs Private worker nodes
+Additionally, ssh access to the worker nodes *_must_* be done through the bastion host regardless of whether the worker nodes are deployed in public or private mode. If you intend to ssh to your worker nodes, ensure you have also link:terraformoptions.adoc#bastion-host[enabled the creation of the bastion host].
 
 === Node Pools
 
-=== Worker Nodes per subnet
+TBC: <explain what a node pool is>
+
+A node pool requires the following information:
+
+* name
+* Kubernetes version
+* the image to use to provision the worker nodes
+* the shape of the worker nodes in the node pool
+* the subnets the node pool will span
+* the number of worker nodes per subnet
+* the public ssh key if you wish to ssh to your worker nodes (Optional)
+* the Kubernetes labels to apply to the nodes (Optional)
+
+When using this project to create the node pools, the following is done:
+
+* a number of node pools are created. This is controlled by the node_pools parameter. By default, this value is 1.
+
+* the node pool names are generated by combining a prefix and the node pool number. The prefix is set by the node_pool_name_prefix parameter and has a default value of "np". The node pool names will therefore have names like np-1, np-2 and so on.
+
+* the Kubernetes version is set automatically to the same version as the cluster.
+
+* the image used is an Oracle Linux image with the version specified. You can also specify your own image OCID. However, note that these 2 are mutually exclusive i.e. either use Operating System and version *_or_* specify the OCID of your custom image.
+
+* the {uri-oci-shape}[shape] of the worker node determines the compute capacity of the worker node. By default, this is VM.Standard2.1, giving you 1 OCPU, 15GB Memory, 1 Gbps in network bandwidth and 2 VNICs.
+
+* the subnets the node pool will span i.e. the subnets where the worker nodes will be created. See below for more explanation.
+
+* the number of worker nodes per subnet that will be created for this node pool. This is controlled by the node_pool_quantity_per_subnet parameter.
+
+* the public ssh key used is the same as that used for the bastion host.
+
+* Kubernetes labels are not currently configured. You can still add them to the node pools after they are created.
+
+There are 3 node pool topologies available for deployment: 1,2 and 3.
+
+Topology 1 applies only for single-AD regions whereas Topologies 2 and 3 apply to multi-AD regions. Additionally, note that Topology 2 is *still experimental*.
+
+TBC: <Topology 1. Show diagram with FD>
+
+When using Topology 3, this ensures that the node pool spans all 3 worker subnets. Since the worker subnets are created in different Availability Domains, this ensure that the Kubernetes cluster spans all 3 Availability Domains.
+
+TBC: <Topology 2>
+
+==== Number of Node Pools
+
+The number of node pools created is controlled by the node_pools parameter. The diagram below shows a cluster with 1 node pool and 1 worker node per subnet using topology 3 i.e. node_pools=1, node_pool_quantity_per_subnet=1 and nodepool_topology=3.
+
+.1 Node Pool with 1 worker node per subnet (other details removed for convenience)
+image::images/np311.png[align="center"]
+
+{bl}
+
+You can increase the number of node pools by setting node_pools=5, node_pool_quantity_per_subnet=1 and nodepool_topology=3.
+
+.5 Node Pools with 1 worker node per subnet
+image::images/np351.png[align="center"]
+
+==== Worker Nodes per subnet
+
+You can also change the number of worker nodes per subnet. For example, setting the node_pools=1 and node_pool_quantity_per_subnet=1 and nodepool_topology=3 will result in the following cluster:
+
+.1 Node Pool with 2 worker nodes per subnet
+image::images/np312.png[align="center"]
+
+{bl}
+
+Similarly, you can change both node pools and number of worker nodes per subnet:
+
+.4 Node Pools with 2 worker nodes per subnet
+image::images/np342.png[align="center"]
 
 === Fault Domains
 
+TBC
+
 === Public and Internal Load Balancers
+
+By default, public load balancers are created when you deploy services of type *LoadBalancer*. Public load balancers have public IP addresses.
+
+You can also use internal load balancers. Internal load balancers have only private IP addresses and are not accessible from the Internet. 
+
+==== Public and Internal Load Balancer combinations
+
+The following parameters govern how load balancers are created with:
+
+* lb_subnet_type
+
+* preferred_lb_subnets
+
+The table below shows the valid combinations of preferred_lb_subnets and subnet_type values.
+
+.Public and Internal Load Balancer combinations
+[stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
+|===
+|
+|preferred_lb_subnets=internal
+|preferred_lb_subnets=public
+
+|subnet_type=both
+|X
+|X
+
+|subnet_type=internal
+|X
+|
+
+|subnet_type=public
+|
+|X
+
+|===
+
+
+
+
+==== Using Internal Load Balancers
+
+If you intend to use internal load balancers, you must ensure the following:
+
+* preferred_lb_subnet is set to "internal"
+* subnet_type is set to either "both" or "internal"
+
+.Using Private Load Balancers (worker nodes removed for convenience)
+image::images/privatelbs.png[align="Private Load Balancers"]
+
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient e.g. :
+
+[source]
+----
+service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+----
+
+Refer to the {uri-oci-oke-internal-lb}[OCI Documentation] for how to create internal load balancers with OKE.
+
+==== Creating LoadBalancers using IngressControllers
+
+Review the following articles on creating public and private load balancers using Ingress Controllers:
+
+* {uri-oci-oke-ingresscontrollers-1}[Experimenting with Ingress Controllers on Oracle Container Engine (OKE) — Part 1]
+* {uri-oci-oke-ingresscontrollers-2}[Experimenting with Ingress Controllers on Oracle Container Engine (OKE) — Part 2]
