@@ -78,7 +78,9 @@ If you want to use bastion host set the parameter *create_bastion = true* in ter
 
 === Using the bastion host
 
-NOTE: Assumption that create_bastion parameter is set to true in terraform.tfvars
+****
+*Assumption that create_bastion parameter is set to true in terraform.tfvars*
+****
 
 Once the terraform apply is successful you will get the bastion_public_ip as output and also a ssh command .You can also run the below command to get the output
 ----
@@ -89,7 +91,9 @@ terraform output
 
 Kubectl installed in bastion host by default. If you would like to use kubectl locally in your windows or mac host .please refer {uri-install-kubectl}[Kubectl Install]. Set the KUBE_CONFIG to the config file path. kubeconfig file will get generated locally under the folder *generated* .
 
-NOTE: Please install kubectl version same as OKE version for compatibility.
+****
+*Please install kubectl version same as OKE version for compatibility.*
+****
 
 === Creating an auth token for OCIR
 
@@ -129,4 +133,7 @@ Run the below command to destroy the infrastructure created by terraform .
 ----
 terraform destroy
 ----
-WARNING: Only infrastructure created by terraform will get destroyed.
+
+****
+*Only infrastructure created by terraform will get destroyed.*
+****
