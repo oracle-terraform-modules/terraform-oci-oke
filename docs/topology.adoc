@@ -2,6 +2,7 @@
 :idprefix:
 :idseparator: -
 :sectlinks:
+:bl: pass:[ +]
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
@@ -59,7 +60,8 @@ The Load Balancers are only created when services of type *LoadBalancer* are dep
 .Multi-AD Default Deployment
 image::images/defaultmad.png[align="center"]
 
-[%hardbreaks]
+{bl}
+
 .Single-AD Default Deployment
 image::images/defaultsad.png[align="center"]
 
@@ -70,7 +72,8 @@ image::images/defaultsad.png[align="center"]
 .Networking and Gateways
 image::images/networking.png[align="Networking and Gateways"]
 
-[%hardbreaks]
+{bl}
+
 The following resources are created:
 
 * 3 worker subnets
@@ -125,7 +128,8 @@ The Service Gateway enables cloud resources without public IP addresses to priva
 .SSH to Bastion (load balancer subnets removed for convenience)
 image::images/bastion.png[align="center"]
 
-[%hardbreaks]
+{bl}
+
 The bastion host is created in a public regional subnet. You can create or destroy it anytime with no effect on the Kubernetes cluster by setting the *create_bastion* = true in your variable file.
 
 By default, the bastion host can be accessed from anywhere. However, you can restrict its access to a particular CIDR block using the *bastion_access* parameter.
@@ -156,7 +160,8 @@ Although oci-cli is pre-installed, it is *_not_* configured. Read more about {ur
 .Public Worker Nodes
 image::images/public.png[align="center"]
 
-[%hardbreaks]
+{bl}
+
 When deployed in public mode, all worker subnets will be deployed as public subnets and route to the Internet Gateway directly. Worker nodes will have both private and public IP addresses. The private IP address will be that of the worker subnet they are part of whereas the public IP address will be allocated from Oracle's pool of public IP addresses.
 
 NodePort and SSH access need to be explicitly enabled in order for the security rules to be properly configured and allow NodePort access.
@@ -224,7 +229,8 @@ The diagram below shows a cluster with 1 node pool and 1 worker node per subnet 
 .1 Node Pool with 1 worker node per subnet (other details removed for convenience)
 image::images/np311.png[align="center"]
 
-[%hardbreaks]
+{bl}
+
 You can increase the number of node pools by setting node_pools=5, node_pool_quantity_per_subnet=1 and nodepool_topology=3.
 
 .5 Node Pools with 1 worker node per subnet
@@ -237,7 +243,8 @@ You can also change the number of worker nodes per subnet. For example, setting 
 .1 Node Pool with 2 worker node per subnet
 image::images/np312.png[align="center"]
 
-[%hardbreaks]
+{bl}
+
 Similarly, you can change both node pools and number of worker nodes per subnet:
 
 .4 Node Pools with 2 worker node per subnet
