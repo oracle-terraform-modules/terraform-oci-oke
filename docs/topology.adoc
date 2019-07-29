@@ -12,6 +12,9 @@
 :uri-oci-configure-cli: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm#SettinguptheConfigFile
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
+:uri-oci-oke-internal-lb: https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengcreatingloadbalancer.htm#CreatingInternalLoadBalancersinPublicandPrivateSubnets
+:uri-oci-oke-ingresscontrollers-1: https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-1-5af51e6cdb85
+:uri-oci-oke-ingresscontrollers-2: https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-2-96063927d2e6
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-oci-service-gateway: https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/servicegateway.htm
 :uri-oci-shape: https://docs.cloud.oracle.com/iaas/Content/Compute/References/computeshapes.htm
@@ -39,6 +42,8 @@ link:#worker-nodes-per-subnet[Worker Nodes per subnet]
 link:#fault-domains[Fault Domains]
 
 link:#public-and-internal-load-balancers[Public and Internal Load Balancers]
+
+link:#creating-loadbalancers-using-ingresscontrollers[Creating LoadBalancers using IngressControllers]
 
 === Default Deployment
 
@@ -222,9 +227,9 @@ When using Topology 3, this ensures that the node pool spans all 3 worker subnet
 
 <Topology 2>
 
-==== Node Pools
+==== Number of Node Pools
 
-The diagram below shows a cluster with 1 node pool and 1 worker node per subnet using topology 3 i.e. node_pools=1, node_pool_quantity_per_subnet=1 and nodepool_topology=3.
+The number of node pools created is controlled by the node_pools parameter. The diagram below shows a cluster with 1 node pool and 1 worker node per subnet using topology 3 i.e. node_pools=1, node_pool_quantity_per_subnet=1 and nodepool_topology=3.
 
 .1 Node Pool with 1 worker node per subnet (other details removed for convenience)
 image::images/np311.png[align="center"]
@@ -240,16 +245,79 @@ image::images/np351.png[align="center"]
 
 You can also change the number of worker nodes per subnet. For example, setting the node_pools=1 and node_pool_quantity_per_subnet=1 and nodepool_topology=3 will result in the following cluster:
 
-.1 Node Pool with 2 worker node per subnet
+.1 Node Pool with 2 worker nodes per subnet
 image::images/np312.png[align="center"]
 
 {bl}
 
 Similarly, you can change both node pools and number of worker nodes per subnet:
 
-.4 Node Pools with 2 worker node per subnet
+.4 Node Pools with 2 worker nodes per subnet
 image::images/np342.png[align="center"]
 
 === Fault Domains
 
 === Public and Internal Load Balancers
+
+==== Public and Internal Load Balancer combinations
+
+By default, public load balancers are created when you deploy services of type *LoadBalancer*. Public load balancers have public IP addresses.
+
+You can also use internal load balancers. Internal load balancers have only private IP addresses and are not accessible from the Internet. 
+
+The following parameters govern how load balancers are created with:
+
+* lb_subnet_type: can be any of both, internal, public. Default is public. This will ensure that the necessary subnets are created. 
+
+* preferred_lb_ads: in multi-AD regions, which Availability Domain you want to place your load balancers e.g. ["ad1, ad2"]
+
+* preferred_lb_subnets: can be internal or public. Default is public This automatically set OKE's preferred load balancer subnets.
+
+The table below shows the possible combinations of preferred_lb_subnets and subnet_type values.
+
+.Public and Internal Load Balancer combinations
+[stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
+|===
+|
+|preferred_lb_subnets=internal
+|preferred_lb_subnets=public
+
+|subnet_type=both
+|X
+|X
+
+|subnet_type=internal
+|X
+|
+
+|subnet_type=public
+|
+|X
+
+|===
+
+==== Using Internal Load Balancers
+
+If you intend to use internal load balancers, you must ensure the following:
+
+* preferred_lb_subnet is set to "internal"
+* subnet_type is set to either "both" or "internal"
+
+.Using Private Load Balancers (worker nodes removed for convenience)
+image::images/privatelbs.png[align="Private Load Balancers"]
+
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient e.g. :
+
+[source]
+----
+service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+----
+
+Refer to the {uri-oci-oke-internal-lb}[OCI Documentation] for how to create internal load balancers with OKE.
+
+==== Creating LoadBalancers using IngressControllers
+
+Review the following articles on creating public and private load balancers using Ingress Controllers:
+
+* {uri-oci-oke-ingresscontrollers-1}[Experimenting with Ingress Controllers on Oracle Container Engine (OKE) — Part 1]
+* {uri-oci-oke-ingresscontrollers-2}[Experimenting with Ingress Controllers on Oracle Container Engine (OKE) — Part 2]
