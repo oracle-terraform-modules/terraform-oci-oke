@@ -244,7 +244,7 @@ image::images/np351.png[align="center"]
 
 ==== Worker Nodes per subnet
 
-You can also change the number of worker nodes per subnet. For example, setting the node_pools=1 and node_pool_quantity_per_subnet=1 and nodepool_topology=3 will result in the following cluster:
+You can also change the number of worker nodes per subnet. For example, setting the node_pools=1 and node_pool_quantity_per_subnet=2 and nodepool_topology=3 will result in the following cluster:
 
 .1 Node Pool with 2 worker nodes per subnet
 image::images/np312.png[align="center"]
