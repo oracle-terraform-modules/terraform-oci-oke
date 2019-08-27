@@ -16,8 +16,8 @@ resource "oci_containerengine_node_pool" "nodepools_topology1" {
   node_image_id       = data.oci_core_images.latest_images.images[0].id
   node_shape          = var.node_pools.node_pool_node_shape
 
-  # set quanity to a minimum of 2 per subnet for single AD region to ensure adequate number of fault domains
-  quantity_per_subnet = max(2, var.node_pools.node_pool_quantity_per_subnet)
+  # set quantity to a minimum of 3 per subnet for single AD region to ensure 3 fault domains
+  quantity_per_subnet = max(3, var.node_pools.node_pool_quantity_per_subnet)
   ssh_public_key      = file(var.oke_ssh_keys.ssh_public_key_path)
 
   subnet_ids = [var.oke_cluster.cluster_subnets["workers_ad1"]]
