@@ -27,8 +27,6 @@ This section describes the various topologies you can deploy.
 
 link:#default-deployment[Default Deployment]
 
-link:#single-vs-multiple-ad-regions-deployment[Single vs. Multiple AD regions deployment]
-
 link:#networking-and-gateways[Networking and Gateways]
 
 link:#bastion-host[Bastion Host]
@@ -69,9 +67,6 @@ image::images/defaultmad.png[align="center"]
 
 .Single-AD Default Deployment
 image::images/defaultsad.png[align="center"]
-
-=== Single vs Multiple AD regions deployment
-TBC
 
 === Networking and Gateways
 
@@ -227,11 +222,7 @@ There are 3 node pool topologies available for deployment: 1,2 and 3.
 
 Topology 1 applies only for single-AD regions whereas Topologies 2 and 3 apply to multi-AD regions. Additionally, note that Topology 2 is *still experimental*.
 
-TBC: <Topology 1. Show diagram with FD>
-
 When using Topology 3, this ensures that the node pool spans all 3 worker subnets. Since the worker subnets are created in different Availability Domains, this ensure that the Kubernetes cluster spans all 3 Availability Domains.
-
-TBC: <Topology 2>
 
 ==== Number of Node Pools
 
@@ -263,7 +254,11 @@ image::images/np342.png[align="center"]
 
 === Fault Domains
 
-TBC
+A fault domain is a grouping of hardware and infrastructure within an Availability Domain. Each availability domain contains three fault domains. Fault domains let you distribute your instances so that they are not on the same physical hardware within a single availability domain. A hardware failure or Compute hardware maintenance that affects one fault domain does not affect instances in other fault domains.
+
+When a node pool is created, the worker nodes are spread over all three fault domains.
+
+image::images/defaultsad.png[align="center"]
 
 === Public and Internal Load Balancers
 
@@ -301,8 +296,6 @@ The table below shows the valid combinations of preferred_lb_subnets and subnet_
 |X
 
 |===
-
-
 
 
 ==== Using Internal Load Balancers
