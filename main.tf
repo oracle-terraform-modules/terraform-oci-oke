@@ -21,14 +21,10 @@ module "base" {
 }
 
 module "auth" {
-  source               = "./modules/auth"
-  api_fingerprint      = var.api_fingerprint
-  api_private_key_path = var.api_private_key_path
-  compartment_ocid     = var.compartment_ocid
-  create_auth_token    = var.create_auth_token
-  home_region          = module.base.home_region
-  tenancy_ocid         = var.tenancy_ocid
-  user_ocid            = var.user_ocid
+  source = "./modules/auth"
+
+  # ocir parameters
+  ocir   = local.ocir
 }
 
 # additional networking for oke
@@ -77,7 +73,7 @@ module "oke" {
   lbs = local.lbs
 
   # ocir parameters
-  ocir = local.ocir
+  oke_ocir = local.oke_ocir
 
   # helm parameters
   helm = local.helm

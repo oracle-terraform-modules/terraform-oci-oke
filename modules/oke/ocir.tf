@@ -4,20 +4,20 @@ data "template_file" "create_ocir_script" {
   template = file("${path.module}/scripts/create_ocir_secret.template.sh")
 
   vars = {
-    authtoken       = var.ocir.auth_token
-    email_address   = var.ocir.email_address
-    region_registry = var.ocir.ocir_urls[var.oke_general.region]
-    tenancy_name    = var.ocir.tenancy_name
-    username        = var.ocir.username
+    authtoken       = var.oke_ocir.auth_token
+    email_address   = var.oke_ocir.email_address
+    region_registry = var.oke_ocir.ocir_urls[var.oke_general.region]
+    tenancy_name    = var.oke_ocir.tenancy_name
+    username        = var.oke_ocir.username
     tiller_enabled  = var.oke_cluster.cluster_options_add_ons_is_tiller_enabled
   }
 
-  count = var.ocir.create_auth_token == true   ? 1 : 0
+  count = var.oke_ocir.create_auth_token == true   ? 1 : 0
 }
 
 resource null_resource "create_ocir_secret" {
   triggers = {
-    ocirtoken = var.ocir.ocirtoken_id
+    ocirtoken = var.oke_ocir.ocirtoken_id
   }
 
   connection {
@@ -41,7 +41,7 @@ resource null_resource "create_ocir_secret" {
     ]
   }
 
-  count = var.oke_bastion.create_bastion == true  && var.ocir.create_auth_token == true ? 1 : 0
+  count = var.oke_bastion.create_bastion == true  && var.oke_ocir.create_auth_token == true ? 1 : 0
 }
 
 resource null_resource "delete_ocir_script" {
@@ -61,5 +61,5 @@ resource null_resource "delete_ocir_script" {
     ]
   }
 
-  count = var.oke_bastion.create_bastion == true && var.ocir.create_auth_token == true ? 1 : 0
+  count = var.oke_bastion.create_bastion == true && var.oke_ocir.create_auth_token == true ? 1 : 0
 }

@@ -46,6 +46,16 @@ locals {
     availability_domains           = var.availability_domains["bastion"]
   }
 
+  ocir = {
+    api_fingerprint      = var.api_fingerprint
+    api_private_key_path = var.api_private_key_path
+    compartment_ocid     = var.compartment_ocid
+    create_auth_token    = var.create_auth_token
+    home_region          = module.base.home_region
+    tenancy_ocid         = var.tenancy_ocid
+    user_ocid            = var.user_ocid
+  }
+
   oke_general = {
     ad_names     = module.base.ad_names
     label_prefix = var.label_prefix
@@ -107,7 +117,7 @@ locals {
     preferred_lb_subnets = var.preferred_lb_subnets
   }
 
-  ocir = {
+  oke_ocir = {
     auth_token        = module.auth.ocirtoken
     create_auth_token = var.create_auth_token
     email_address     = var.email_address

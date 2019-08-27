@@ -84,7 +84,7 @@ variable "cluster_kube_config_token_version" {
 }
 
 # ocir
-variable "ocir" {
+variable "oke_ocir" {
   type = object({
     auth_token        = string
     create_auth_token = bool
