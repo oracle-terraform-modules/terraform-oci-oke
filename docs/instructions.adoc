@@ -7,8 +7,8 @@
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-:uri-rel-file-base: link:{uri-repo}/blob/v12docs
-:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-rel-file-base: link:{uri-repo}/blob/v12
+:uri-rel-tree-base: link:{uri-repo}/tree/v12
 
 :uri-docs: {uri-rel-file-base}/docs
 
@@ -53,7 +53,7 @@
 . link:#accessing-the-kubernetes-dashboard[Accessing the Kubernetes dashboard]
 . link:#destroying-the-cluster[Destroying the cluster]
 
-== Assumptions
+=== Assumptions
 
 This section assumes you have completed the following:
 
