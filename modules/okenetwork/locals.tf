@@ -3,23 +3,23 @@
 
 locals {
   # subnet cidrs - used by subnets
-  int_subnet_ad1    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["int_lb_ad1"])
+  int_subnet_ad1    = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.subnets["int_lb_ad1"])
   
-  int_subnet_ad2    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["int_lb_ad2"])
+  int_subnet_ad2    = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.subnets["int_lb_ad2"])
   
-  int_subnet_ad3    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["int_lb_ad3"])
+  int_subnet_ad3    = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.subnets["int_lb_ad3"])
   
-  pub_subnet_ad1    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["pub_lb_ad1"])
+  pub_subnet_ad1    = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.subnets["pub_lb_ad1"])
   
-  pub_subnet_ad2    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["pub_lb_ad2"])
+  pub_subnet_ad2    = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.subnets["pub_lb_ad2"])
   
-  pub_subnet_ad3    = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.subnets["pub_lb_ad3"])
+  pub_subnet_ad3    = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.subnets["pub_lb_ad3"])
   
-  worker_subnet_ad1 = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.subnets["workers_ad1"])
+  worker_subnet_ad1 = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["workers"], var.oke_network_vcn.subnets["workers_ad1"])
   
-  worker_subnet_ad2 = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.subnets["workers_ad2"])
+  worker_subnet_ad2 = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["workers"], var.oke_network_vcn.subnets["workers_ad2"])
   
-  worker_subnet_ad3 = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.subnets["workers_ad3"])
+  worker_subnet_ad3 = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["workers"], var.oke_network_vcn.subnets["workers_ad3"])
 
 
   # security rules locals - used by security

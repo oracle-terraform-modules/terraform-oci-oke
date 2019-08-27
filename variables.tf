@@ -296,10 +296,13 @@ variable "ocir_urls" {
   type        = "map"
 
   default = {
+    ap-mumbai-1    = "bom.ocir.io"
     ap-seoul-1     = "icn.ocir.io"
     ap-tokyo-1     = "nrt.ocir.io"
     ca-toronto-1   = "yyz.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
+    eu-zurich-1    = "zrh.ocir.io"
+    sa-saopaulo-1  = "gru.ocir.io"
     uk-london-1    = "lhr.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
     us-phoenix-1   = "phx.ocir.io"
@@ -329,7 +332,7 @@ variable "add_jetstack_repo" {
 
 variable "helm_version" {
   description = "version of helm to install"
-  default     = "2.14.1"
+  default     = "2.14.3"
 }
 
 variable "install_helm" {

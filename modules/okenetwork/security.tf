@@ -4,8 +4,8 @@
 # public worker security checklist
 resource "oci_core_security_list" "public_workers_seclist" {
   compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-public-workers"
-  vcn_id         = var.vcn_id
+  display_name   = "${var.oke_general.label_prefix}-public-workers"
+  vcn_id         = var.oke_network_vcn.vcn_id
 
   dynamic "egress_security_rules" {
     # stateless egress for all traffic between worker subnets rules 1-3
@@ -28,7 +28,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
 
   dynamic "egress_security_rules" {
     # egress that allows traffic to oracle services through the service gateway
-    for_each = var.is_service_gateway_enabled == true ? list(1) : []
+    for_each = var.oke_network_vcn.is_service_gateway_enabled == true ? list(1) : []
 
     content {
       destination      = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
@@ -76,7 +76,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
 
   dynamic "ingress_security_rules" {
     # stateful ingress that allows NodePort access to the worker nodes rule 12
-    for_each = var.allow_node_port_access == true ? list(1) : []
+    for_each = var.oke_network_worker.allow_node_port_access == true ? list(1) : []
 
     content {
       protocol  = local.tcp_protocol
@@ -93,7 +93,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
   dynamic "ingress_security_rules" {
     # stateful ingress that allows ssh access to the worker nodes rule 13
     # when deployed in public mode, ssh access to the worker nodes is restricted through the bastion
-    for_each = var.allow_worker_ssh_access == true ? list(1) : []
+    for_each = var.oke_network_worker.allow_worker_ssh_access == true ? list(1) : []
 
     content {
       protocol  = local.tcp_protocol
@@ -107,14 +107,14 @@ resource "oci_core_security_list" "public_workers_seclist" {
     }
   }
 
-  count = var.worker_mode == "private" ? 0 : 1
+  count = var.oke_network_worker.worker_mode == "private" ? 0 : 1
 }
 
 # private worker security checklist
 resource "oci_core_security_list" "private_workers_seclist" {
   compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-private-workers"
-  vcn_id         = var.vcn_id
+  display_name   = "${var.oke_general.label_prefix}-private-workers"
+  vcn_id         = var.oke_network_vcn.vcn_id
 
   dynamic "egress_security_rules" {
     # stateless egress for all traffic between worker subnets rules 1-3
@@ -137,7 +137,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
 
   dynamic "egress_security_rules" {
     # egress that allows traffic to oracle services through the service gateway
-    for_each = var.is_service_gateway_enabled == true ? list(1) : []
+    for_each = var.oke_network_vcn.is_service_gateway_enabled == true ? list(1) : []
 
     content {
       destination      = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
@@ -161,7 +161,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
 
   dynamic "ingress_security_rules" {
     # stateful ingress that allows ssh access to the worker nodes from within the vcn e.g. bastion rule 4
-    for_each = var.allow_worker_ssh_access == true ? list(1) : []
+    for_each = var.oke_network_worker.allow_worker_ssh_access == true ? list(1) : []
 
     content {
       protocol  = local.tcp_protocol
@@ -175,14 +175,14 @@ resource "oci_core_security_list" "private_workers_seclist" {
     }
   }
 
-  count = var.worker_mode == "private" ? 1 : 0
+  count = var.oke_network_worker.worker_mode == "private" ? 1 : 0
 }
 
 # internal load balancer security checklist
 resource "oci_core_security_list" "int_lb_seclist" {
   compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-int-lb"
-  vcn_id         = var.vcn_id
+  display_name   = "${var.oke_general.label_prefix}-int-lb"
+  vcn_id         = var.oke_network_vcn.vcn_id
 
   egress_security_rules {
     protocol    = local.all_protocols
@@ -192,18 +192,18 @@ resource "oci_core_security_list" "int_lb_seclist" {
 
   ingress_security_rules {
     protocol  = local.tcp_protocol
-    source    = var.vcn_cidr
+    source    = var.oke_network_vcn.vcn_cidr
     stateless = true
   }
 
-  count = var.lb_subnet_type == "internal" || var.lb_subnet_type== "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 # public load balancer security checklist
 resource "oci_core_security_list" "pub_lb_seclist" {
   compartment_id = var.compartment_ocid
-  display_name   = "${var.label_prefix}-pub-lb"
-  vcn_id         = var.vcn_id
+  display_name   = "${var.oke_general.label_prefix}-pub-lb"
+  vcn_id         = var.oke_network_vcn.vcn_id
 
   egress_security_rules {
     protocol    = local.all_protocols
@@ -217,5 +217,5 @@ resource "oci_core_security_list" "pub_lb_seclist" {
     stateless = true
   }
 
-  count = var.lb_subnet_type == "public" || var.lb_subnet_type== "both" ? 1 : 0
+  count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
 }

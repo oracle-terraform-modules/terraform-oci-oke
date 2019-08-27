@@ -2,10 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 data "oci_core_images" "latest_images" {
-  compartment_id           = var.compartment_ocid
-  operating_system         = var.node_pool_os
-  operating_system_version = var.node_pool_os_version
-  shape                    = var.node_pool_node_shape
+  compartment_id           = var.oke_identity.compartment_ocid
+  operating_system         = var.node_pools.node_pool_os
+  operating_system_version = var.node_pools.node_pool_os_version
+  shape                    = var.node_pools.node_pool_node_shape
   sort_by                  = "TIMECREATED"
 }
 

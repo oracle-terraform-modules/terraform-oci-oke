@@ -5,53 +5,40 @@
 
 variable "compartment_ocid" {}
 
-variable "tenancy_ocid" {}
-
 # general oci parameters
 
-variable "ad_names" {
-  type = "list"
+variable "oke_general" {
+  type = object({
+    ad_names     = list(string)
+    label_prefix = string
+    region       = string
+  })
 }
-variable "label_prefix" {}
-
-variable "region" {}
 
 # networking parameters
 
-variable "ig_route_id" {}
-
-variable "is_service_gateway_enabled" {}
-
-variable "nat_route_id" {}
-
-variable "newbits" {
-  type = "map"
+variable "oke_network_vcn" {
+  type = object({
+    ig_route_id                = string
+    is_service_gateway_enabled = bool
+    nat_route_id               = string
+    newbits                    = map(number)
+    subnets                    = map(number)
+    vcn_cidr                   = string
+    vcn_id                     = string
+  })
 }
 
-variable "subnets" {
-  type = "map"
+# oke node
+
+variable "oke_network_worker" {
+  type = object({
+    allow_node_port_access  = bool
+    allow_worker_ssh_access = bool
+    worker_mode             = string
+  })
 }
-
-variable "vcn_cidr" {}
-
-variable "vcn_id" {}
-
-# availability domains
-
-variable "availability_domains" {
-  type = "map"
-}
-
-# oke
-
-variable "allow_node_port_access" {}
-
-variable "allow_worker_ssh_access" {}
-
-variable "worker_mode" {}
 
 # load balancers
 
 variable "lb_subnet_type" {}
-
-variable "preferred_lb_subnets" {}

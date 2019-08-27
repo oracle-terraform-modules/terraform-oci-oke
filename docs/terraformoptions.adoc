@@ -471,7 +471,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |helm_version
 |The version of the {uri-helm}[helm] client to install on the bastion. A subsequent upgrade of tiller (server-side helm) will then be automatically performed.
 |
-|2.14.1
+|2.14.3
 
 |install_helm
 |Whether to install {uri-helm}[helm] on the bastion instance.
