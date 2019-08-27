@@ -6,8 +6,8 @@
 :sectnums:
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-:uri-rel-file-base: link:{uri-repo}/blob/v12docs
-:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-rel-file-base: link:{uri-repo}/blob/v12
+:uri-rel-tree-base: link:{uri-repo}/tree/v12
 
 :uri-docs: {uri-rel-file-base}/docs
 
@@ -30,7 +30,7 @@ You can proceed to {uri-instructions}[creating the cluster] if you have already 
 
 . link:#install-terraform[Install Terraform]
 . link:#generate-api-keys[Generate API Keys]
-. link:#upload-api-keys[Upload API Keys]
+. link:#upload-your-api-keys[Upload API Keys]
 . link:#create-an-oci-compartment[Create an OCI Compartment]
 . link:#obtain-the-necessary-ocids[Obtain the necessary OCIDs]
 . link:#configure-oci-policy-for-oke[Configure OCI Policy for OKE]

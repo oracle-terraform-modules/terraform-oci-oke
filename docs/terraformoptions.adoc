@@ -5,8 +5,8 @@
 :sectnums:
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-:uri-rel-file-base: link:{uri-repo}/blob/v12docs
-:uri-rel-tree-base: link:{uri-repo}/tree/v12docs
+:uri-rel-file-base: link:{uri-repo}/blob/v12
+:uri-rel-tree-base: link:{uri-repo}/tree/v12
 :uri-calico: https://www.projectcalico.org/
 :uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
 :uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
