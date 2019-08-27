@@ -2,16 +2,9 @@
 
 :idprefix:
 :idseparator: -
-ifndef::env-github[:icons: font]
-ifdef::env-github[]
-:status:
-:outfilesuffix: .adoc
-:caution-caption: :fire:
-:important-caption: :exclamation:
-:note-caption: :paperclip:
-:tip-caption: :bulb:
-:warning-caption: :warning:
-endif::[]
+:sectlinks:
+:sectnums:
+
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
@@ -45,6 +38,20 @@ endif::[]
 :uri-helm: https://helm.sh/
 :uri-metricserver: https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/#metrics-server
 :uri-k8s-dashboard: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+
+. link:#assumptions[Assumptions]
+. link:#creating-the-oke-cluster[Creating the OKE Cluster]
+. link:#adding-the-bastion-host[Adding the bastion host]
+. link:#using-the-bastion-host[Using the bastion host]
+. link:#interacting-with-the-oke-cluster-locally[Interacting with the OKE Cluster locally]
+. link:#creating-an-auth-token-for-ocir[Creating an auth token for OCIR]
+. link:#installing-helm[Installing helm]
+. link:#installing-calico[Installing Calico]
+. link:#installing-kubernetes-metrics-server[Installing Kubernetes Metrics Server]
+. link:#scaling-the-number-of-worker-nodes[Scaling the number of worker nodes]
+. link:#scaling-the-number-of-node-pools[Scaling the number of node pools]
+. link:#accessing-the-kubernetes-dashboard[Accessing the Kubernetes dashboard]
+. link:#destroying-the-cluster[Destroying the cluster]
 
 == Assumptions
 
@@ -120,7 +127,7 @@ export KUBECONFIG=generated/kubeconfig
 
 Calico enables network policy in Kubernetes clusters across the cloud. To install calico set the parameter *install_calico = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
 
-=== Installing Metrics Server
+=== Installing Kubernetes Metrics Server
 
 {uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *install_metricserver = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
 

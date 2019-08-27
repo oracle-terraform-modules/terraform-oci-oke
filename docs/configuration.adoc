@@ -44,6 +44,20 @@
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 :uri-topology: {uri-docs}/topology.adoc
 
+. link:#assumptions[Assumptions]
+. link:#configure-the-variable-file[Configure the variable file]
+. link:#configure-identity-parameters[Configure identity parameters]
+. link:#configure-ssh-keys[Configure ssh keys]
+. link:#configure-oci-parameters[Configure OCI parameters]
+. link:#configure-oci-networking-parameters[Configure OCI Networking parameters]
+. link:#configure-bastion-host-parameters[Configure Bastion Host parameters]
+. link:#configure-oke-parameters[Configure OKE parameters]
+. link:#configure-oke-load-balancer-parameters[Configure OKE Load Balancer parameters]
+. link:#configure-ocir-parameters[Configure OCIR parameters]
+. link:#configure-helm-parameters[Configure helm parameters]
+. link:#configure-calico-parameters[Configure Calico parameters]
+. link:#configure-kubernetes-metrics-server-parameters[Configure Kubernetes Metrics Server parameters]
+
 === Assumptions
 
 This section assumes you have completed all the {uri-prereqs}[pre-requisites].
@@ -179,7 +193,7 @@ The calico parameters control the installation of {uri-calico}[Calico] for {uri-
 
 {uri-terraform-options}#calico[Reference]
 
-=== Configure Kubernetes Metrics Server
+=== Configure Kubernetes Metrics Server parameters
 
 The Kubernetes Metrics Server parameter controls the installation of {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 

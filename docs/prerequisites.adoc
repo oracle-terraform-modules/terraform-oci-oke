@@ -28,12 +28,12 @@ This section will guide you through the pre-requisites before you can use this p
 
 You can proceed to {uri-instructions}[creating the cluster] if you have already done these.
 
-* link:#install-terraform[Install Terraform]
-* link:#generate-api-keys[Generate API Keys]
-* link:#upload-api-keys[Upload API Keys]
-* link:#create-an-oci-compartment[Create an OCI Compartment]
-* link:#obtain-the-necessary-ocids[Obtain the necessary OCIDs]
-* link:#configure-oci-policy-for-oke[Configure OCI Policy for OKE]
+. link:#install-terraform[Install Terraform]
+. link:#generate-api-keys[Generate API Keys]
+. link:#upload-api-keys[Upload API Keys]
+. link:#create-an-oci-compartment[Create an OCI Compartment]
+. link:#obtain-the-necessary-ocids[Obtain the necessary OCIDs]
+. link:#configure-oci-policy-for-oke[Configure OCI Policy for OKE]
 
 == Install Terraform
 

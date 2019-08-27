@@ -2,16 +2,9 @@
 
 :idprefix:
 :idseparator: -
-ifndef::env-github[:icons: font]
-ifdef::env-github[]
-:status:
-:outfilesuffix: .adoc
-:caution-caption: :fire:
-:important-caption: :exclamation:
-:note-caption: :paperclip:
-:tip-caption: :bulb:
-:warning-caption: :warning:
-endif::[]
+:sectlinks:
+
+
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 :uri-rel-file-base: link:{uri-repo}/blob/v12docs
 :uri-rel-tree-base: link:{uri-repo}/tree/v12docs
@@ -24,19 +17,24 @@ endif::[]
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 
-== Assumptions
+. link:#assumptions[Assumptions]
+. link:#pre-requisites[Pre-requisites]
+. link:#instructions[Instructions]
+. link:#related-documentation[Related documentation]
+
+=== Assumptions
 
 1. You have setup the {uri-oci-keys}[required keys]
 2. You know the {uri-oci-ocids}[required OCIDs]
 3. You have set the {uri-oci-okepolicy}[necessary OKE policy]
 
-== Pre-requisites
+=== Pre-requisites
 
 1. git is installed
 2. ssh client is installed
 3. Terraform 0.12.4+ is installed
 
-== Instructions
+=== Instructions
 
 1. Clone the repo:
 
@@ -69,7 +67,7 @@ cp terraform.tfvars.example terraform.tfvars
 * cluster_name
 * worker_mode
 
-Related documentation:
+=== Related documentation:
 
 * {uri-instructions}[Detailed Instructions]
 

@@ -1,8 +1,41 @@
 = CHANGELOG
 :idprefix:
-:idseparator: -
+:idseparator: *
 
 :uri-changelog: http://keepachangelog.com/
 All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
+
+== 1.0.0-RC1 (August 27,2019)
+
+=== Notes
+* In order to use private load balancers, the necessary oci load balancer annotations must be used.
+
+=== Improvements
+
+* Added ability to restrict access to bastion host to a CIDR block
+* Bash aliases for kubectl (k) and helm (h)
+* Generated script (tesseract.sh) to ssh to the bastion
+* Optional addition and initialization of incubator and jetstack repos on the bastion
+* Service Gateway routing is now automatically added when service gateway is enabled. Worker nodes can now use the service gateway to access Object Storage, Streaming and other OCI Services without manual configuration of routing and security lists
+* Separate and simplified security lists for public and private workers
+* Added private subnets for internal load balancers
+* Improved subnet defaults:
+** Avoid potential overlapping subnets when creating or scaling large clusters to maximum cluster size
+** Bastion: maximum of 5
+** Load Balancers: maximum of 29 per subnet
+** Worker subnets: maximum of 16380 per subnet, allowing clusters to scale to the maximum that is supported by Kubernetes (5000)
+* Ability to choose load balancer types (public or internal)
+* Improved load balancer selection algorithm. There's no need to toggle the load balancer code for single AD regions anymore
+* Added ability to specify preferred AD pair for load balancers in 3*AD regions
+* Minimum of 3 worker nodes per subnet to ensure adequate number of fault domains in single AD regions
+* Added ability to specify image OCID or choose OS version for worker nodes
+* Improved documentation
+
+=== Changes
+
+* Completed upgrade of Terraform code to 0.12
+* Documentation uses asciidoc
+* instance_principal is now disabled by default on the bastion
+* helm upgraded to version 2.14.3
