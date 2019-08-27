@@ -120,7 +120,7 @@ export KUBECONFIG=generated/kubeconfig
 
 Calico enables network policy in Kubernetes clusters across the cloud. To install calico set the parameter *install_calico = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
 
-== Installing Metrics Server
+=== Installing Metrics Server
 
 {uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *install_metricserver = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
 

@@ -5,23 +5,23 @@ data "template_file" "install_calico" {
   template = file("${path.module}/scripts/install_calico.template.sh")
 
   vars = {
-    calico_version     = var.calico_version
-    number_of_nodes    = var.nodepool_topology * var.node_pools * var.node_pool_quantity_per_subnet
-    pod_cidr           = var.cluster_options_kubernetes_network_config_pods_cidr
-    number_of_replicas = min(20,max((var.nodepool_topology * var.node_pools * var.node_pool_quantity_per_subnet)/200,3))
-    user_ocid          = var.user_ocid
+    calico_version     = var.calico.calico_version
+    number_of_nodes    = var.node_pools.nodepool_topology * var.node_pools.node_pools * var.node_pools.node_pool_quantity_per_subnet
+    pod_cidr           = var.oke_cluster.cluster_options_kubernetes_network_config_pods_cidr
+    number_of_replicas = min(20,max((var.node_pools.nodepool_topology * var.node_pools.node_pools * var.node_pools.node_pool_quantity_per_subnet)/200,3))
+    user_ocid          = var.oke_identity.user_ocid
   }
 
-  count = var.install_calico == true   ? 1 : 0
+  count = var.calico.install_calico == true   ? 1 : 0
 }
 
 resource null_resource "install_calico" {
   connection {
-    host        = var.bastion_public_ip
-    private_key = file(var.ssh_private_key_path)
+    host        = var.oke_bastion.bastion_public_ip
+    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
+    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
   }
 
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
@@ -38,5 +38,5 @@ resource null_resource "install_calico" {
     ]
   }
 
-  count = var.create_bastion == true  && var.install_calico == true   ? 1 : 0
+  count = var.oke_bastion.create_bastion == true  && var.calico.install_calico == true   ? 1 : 0
 }

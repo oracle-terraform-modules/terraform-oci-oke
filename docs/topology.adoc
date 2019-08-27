@@ -185,9 +185,7 @@ Additionally, ssh access to the worker nodes *_must_* be done through the bastio
 
 === Node Pools
 
-TBC: <explain what a node pool is>
-
-A node pool requires the following information:
+A node pool is a set of hosts within a cluster that all have the same configuration. A node pool requires the following configuration:
 
 * name
 * Kubernetes version
@@ -197,6 +195,13 @@ A node pool requires the following information:
 * the number of worker nodes per subnet
 * the public ssh key if you wish to ssh to your worker nodes (Optional)
 * the Kubernetes labels to apply to the nodes (Optional)
+
+Node pools enable you to create pools of machines within a cluster that have different configurations. For example, you might create one pool of nodes in a cluster as virtual machines, and another pool of nodes as bare metal machines. A cluster must have a minimum of one node pool, but a node pool need not contain any worker nodes.
+
+****
+*N.B. As of this version, all node pools have the same configuration. You can manually add node pools of different configuration (e.g. shapes) after the cluster is created.*
+****
+
 
 When using this project to create the node pools, the following is done:
 

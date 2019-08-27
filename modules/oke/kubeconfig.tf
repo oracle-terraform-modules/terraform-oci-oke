@@ -31,17 +31,17 @@ data "template_file" "install_kubectl" {
   template = file("${path.module}/scripts/install_kubectl.template.sh")
 
   vars = {
-    package_manager = var.image_operating_system == "ubuntu"   ? "snap" : "yum"
+    package_manager = var.oke_bastion.image_operating_system == "ubuntu"   ? "snap" : "yum"
   }
 }
 
 resource "null_resource" "install_kubectl_bastion" {
   connection {
-    host        = var.bastion_public_ip
-    private_key = file(var.ssh_private_key_path)
+    host        = var.oke_bastion.bastion_public_ip
+    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
+    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
   }
 
   provisioner "file" {
@@ -57,16 +57,16 @@ resource "null_resource" "install_kubectl_bastion" {
     ]
   }
 
-  count = var.create_bastion == true    ? 1 : 0
+  count = var.oke_bastion.create_bastion == true    ? 1 : 0
 }
 
 resource "null_resource" "write_kubeconfig_bastion" {
   connection {
-    host        = var.bastion_public_ip
-    private_key = file(var.ssh_private_key_path)
+    host        = var.oke_bastion.bastion_public_ip
+    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
+    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
   }
 
   depends_on = ["local_file.kube_config_file"]
@@ -82,5 +82,5 @@ resource "null_resource" "write_kubeconfig_bastion" {
     destination = "~/.kube/config"
   }
 
-  count = var.create_bastion == true    ? 1 : 0
+  count = var.oke_bastion.create_bastion == true    ? 1 : 0
 }
