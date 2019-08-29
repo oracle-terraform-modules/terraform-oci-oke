@@ -69,7 +69,7 @@ resource "null_resource" "write_kubeconfig_bastion" {
     user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
   }
 
-  depends_on = ["local_file.kube_config_file"]
+  depends_on = ["local_file.kube_config_file","null_resource.install_kubectl_bastion"]
 
   provisioner "remote-exec" {
     inline = [
