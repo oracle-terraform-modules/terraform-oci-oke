@@ -50,7 +50,7 @@ variable "oci_bastion_infra" {
     ig_route_id          = string
     vcn_cidr             = string
     vcn_id               = string
-    ad_names             = list
+    ad_names             = list(string)
     newbits              = number
     subnets              = number
     availability_domains = number
