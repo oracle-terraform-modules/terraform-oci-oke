@@ -97,7 +97,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
 
     content {
       protocol  = local.tcp_protocol
-      source    = var.vcn_cidr
+      source    = var.oke_network_vcn.vcn_cidr
       stateless = false
 
       tcp_options {
@@ -165,7 +165,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
 
     content {
       protocol  = local.tcp_protocol
-      source    = var.vcn_cidr
+      source    = var.oke_network_vcn.vcn_cidr
       stateless = false
 
       tcp_options {
