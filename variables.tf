@@ -170,6 +170,18 @@ variable "availability_domains" {
   }
 }
 
+# bastion packages
+variable "package_update" {
+  description = "Update apt database on first boot if bastion host uses Ubuntu as Linux distribution"
+  type        = bool
+  default     = true
+}
+variable "package_upgrade" {
+  description = "Upgrade the instance on first boot"
+  type        = bool
+  default     = true
+}
+
 # oke
 
 variable "allow_node_port_access" {
@@ -296,6 +308,7 @@ variable "ocir_urls" {
   type        = "map"
 
   default = {
+    ap-sydney-1    = "syd.ocir.io"
     ap-mumbai-1    = "bom.ocir.io"
     ap-seoul-1     = "icn.ocir.io"
     ap-tokyo-1     = "nrt.ocir.io"

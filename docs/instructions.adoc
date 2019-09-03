@@ -83,6 +83,21 @@ Use the parameter *cluster_name* to change the name of the cluster as per your n
 
 If you want to use bastion host, set the parameter *create_bastion* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
 
+==== package_update and package_upgrade
+
+There are 2 additional parameters for the bastion:
+
+* package_update
+* package_upgrade
+
+_package_update_ will update the apt database *if* you choose Ubuntu as the Linux distribution for the bastion host.
+
+_package_upgrade_ will upgrade the bastion compute instance on first boot. If you choose Ubuntu for bastion host and you set _package_upgrade_ to *true*, you should also set the _package_update_ to *true*.
+
+****
+N.B. It is good and recommended practice to upgrade your bastion host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the bastion host is available.
+****
+
 === Using the bastion host
 
 ****

@@ -16,9 +16,9 @@ variable "oci_base_identity" {
 
 variable "oci_bastion_general" {
   type = object({
-    label_prefix     = string
-    home_region      = string
-    region           = string
+    label_prefix = string
+    home_region  = string
+    region       = string
   })
 }
 
@@ -42,6 +42,8 @@ variable "oci_bastion" {
     image_ocid                     = string
     image_operating_system         = string
     image_operating_system_version = string
+    package_update                 = bool
+    package_upgrade                = bool
   })
 }
 

@@ -61,5 +61,7 @@ variable "oci_base_bastion" {
     image_operating_system         = string
     image_operating_system_version = string
     availability_domains           = number
+    package_update                 = bool
+    package_upgrade                = bool
   })
 }
