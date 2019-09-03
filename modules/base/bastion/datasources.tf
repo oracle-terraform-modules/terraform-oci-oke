@@ -23,6 +23,8 @@ data "template_file" "bastion_cloud_init_file" {
 
   vars = {
     bastion_sh_content = base64gzip(data.template_file.bastion_template[0].rendered)
+    package_update     = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? var.oci_bastion.package_update : false
+    package_upgrade    = var.oci_bastion.package_upgrade
     user               = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
   count = var.oci_bastion.create_bastion == true ? 1 : 0

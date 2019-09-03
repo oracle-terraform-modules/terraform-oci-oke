@@ -38,5 +38,7 @@ locals {
     image_ocid                     = var.oci_base_bastion.image_ocid
     image_operating_system         = var.oci_base_bastion.image_operating_system
     image_operating_system_version = var.oci_base_bastion.image_operating_system_version
+    package_update                 = var.oci_base_bastion.package_update
+    package_upgrade                = var.oci_base_bastion.package_upgrade
   }
 }

@@ -273,6 +273,16 @@ availability_domains = {
   "bastion"     = 1
 ----
 
+|package_update
+|Whether to update the apt database on first boot. Only applicable if the bastion host uses Ubuntu as Linux distribution.
+|true/false
+|true
+
+|package_upgrade
+|Whether to upgrade the instance on first boot. If you choose Ubuntu for the bastion and you set this to true, also set the package_update to true as well.
+|true/false
+|true
+
 |===
 
 == OKE

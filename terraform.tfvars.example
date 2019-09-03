@@ -82,6 +82,10 @@ availability_domains = {
   "bastion"     = 1
 }
 
+package_update = false
+
+package_upgrade = true
+
 # oke
 
 cluster_name = "oke"
