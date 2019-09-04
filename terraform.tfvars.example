@@ -110,7 +110,12 @@ node_pool_os = "Oracle Linux"
 
 node_pool_os_version = "7.6"
 
-node_pool_node_shape = "VM.Standard2.1"
+node_pool_shape = {
+ "nodepool1" = "VM.Standard2.1"
+ "nodepool2" = "VM.Standard2.2"
+ "nodepool3" = "VM.Standard2.8"
+}
+
 
 node_pool_quantity_per_subnet = 1
 
