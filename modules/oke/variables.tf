@@ -62,7 +62,7 @@ variable "node_pools" {
     node_pool_image_id            = string
     node_pool_os                  = string
     node_pool_os_version          = string
-    node_pool_node_shape          = string
+    node_pool_shape               = map(string)
     node_pool_quantity_per_subnet = number
     nodepool_topology             = number
   })
