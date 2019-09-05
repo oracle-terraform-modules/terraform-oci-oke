@@ -82,9 +82,9 @@ availability_domains = {
   "bastion"     = 1
 }
 
-package_update = false
+bastion_package_update = false
 
-package_upgrade = true
+bastion_package_upgrade = true
 
 # oke
 
