@@ -135,7 +135,7 @@ Configuration Terraform Options:
 |oke vcn
 
 |vcn_cidr
-|The VCN's CIDR block
+|The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
 |
 |10.0.0.0/16
 
@@ -165,7 +165,7 @@ Configuration Terraform Options:
 |sg
 
 |newbits
-|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function to calculate each subnet's mask.
+|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function to calculate each subnet's mask. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
 |e.g.
 [source]
 ----
@@ -184,7 +184,7 @@ newbits = {
 ----
 
 |subnets
-|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function.
+|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
 |e.g.
 [source]
 ----
@@ -273,12 +273,12 @@ availability_domains = {
   "bastion"     = 1
 ----
 
-|package_update
+|bastion_package_update
 |Whether to update the apt database on first boot. Only applicable if the bastion host uses Ubuntu as Linux distribution.
 |true/false
 |true
 
-|package_upgrade
+|bastion_package_upgrade
 |Whether to upgrade the instance on first boot. If you choose Ubuntu for the bastion and you set this to true, also set the package_update to true as well.
 |true/false
 |true
@@ -368,12 +368,12 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |3
 
 |pods_cidr
-|The CIDR for the Kubernetes POD network for flannel networking.
+|The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
 |
 |10.244.0.0/16
 
 |services_cidr
-|The CIDR for the Kubernetes services network.
+|The CIDR for the Kubernetes services network. The CIDR block specified for the Kubernetes services must not overlap with the CIDR block specified for the VCN CIDR.
 |
 |10.96.0.0/16
 

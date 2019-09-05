@@ -171,12 +171,12 @@ variable "availability_domains" {
 }
 
 # bastion packages
-variable "package_update" {
+variable "bastion_package_update" {
   description = "Update apt database on first boot if bastion host uses Ubuntu as Linux distribution"
   type        = bool
   default     = true
 }
-variable "package_upgrade" {
+variable "bastion_package_upgrade" {
   description = "Upgrade the instance on first boot"
   type        = bool
   default     = true

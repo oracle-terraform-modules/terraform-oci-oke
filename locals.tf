@@ -44,8 +44,8 @@ locals {
     image_operating_system         = var.image_operating_system
     image_operating_system_version = var.image_operating_system_version
     availability_domains           = var.availability_domains["bastion"]
-    package_update                 = var.package_update
-    package_upgrade                = var.package_upgrade
+    package_update                 = var.bastion_package_update
+    package_upgrade                = var.bastion_package_upgrade
   }
 
   ocir = {
