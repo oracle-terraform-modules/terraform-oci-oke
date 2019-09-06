@@ -82,9 +82,9 @@ availability_domains = {
   "bastion"     = 1
 }
 
-package_update = false
+bastion_package_update = false
 
-package_upgrade = true
+bastion_package_upgrade = true
 
 # oke
 
@@ -100,7 +100,10 @@ dashboard_enabled = true
 
 kubernetes_version = "LATEST"
 
-node_pools = 1
+node_pools = {
+  "np1" = ["VM.Standard2.1", 4]
+  "np2" = ["VM.Standard2.2", 2]
+}
 
 node_pool_name_prefix = "np"
 
@@ -109,15 +112,6 @@ node_pool_image_id = "NONE"
 node_pool_os = "Oracle Linux"
 
 node_pool_os_version = "7.6"
-
-node_pool_shape = {
- "nodepool1" = "VM.Standard2.1"
- "nodepool2" = "VM.Standard2.2"
- "nodepool3" = "VM.Standard2.8"
-}
-
-
-node_pool_quantity_per_subnet = 1
 
 nodepool_topology = 3
 
