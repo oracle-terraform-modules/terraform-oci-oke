@@ -318,7 +318,7 @@ node_pools = {
 nodepool_topology=3
 ----
 
-.4 Node Pools with 2 worker nodes per subnet
+.4 Mixed workload with different shapes and number of worker nodes per subnet
 image::images/mixedworkload.png[align="center"]
 
 === Fault Domains
