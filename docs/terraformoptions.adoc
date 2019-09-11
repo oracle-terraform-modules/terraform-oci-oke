@@ -236,7 +236,7 @@ subnets = {
 |bastion_shape
 |The shape of bastion instance.
 |
-|VM.Standard2.1
+|VM.Standard.E2.1
 
 |bastion_access
 |CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
@@ -326,9 +326,19 @@ availability_domains = {
 |LATEST
 
 |node_pools
-|The number of node pools to create. Refer to {uri-topology}[topology] for more thorough examples.
-|
-|1
+|The number, shape and quantities per subnets of node pools to create. Refer to {uri-topology}[topology] for more thorough examples.
+|e.g.
+[source]
+----
+node_pools = {
+  "np1" = ["VM.Standard2.1", 1]
+}
+----
+|----
+node_pools = {
+  "np1" = ["VM.Standard2.1", 1]
+}
+----
 
 |node_pool_name_prefix
 |A string prefixed to the node pool name.
@@ -349,16 +359,6 @@ availability_domains = {
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
 |7.6
-
-|node_pool_node_shape
-|The shape of worker nodes to provision.
-|
-|VM.Standard2.1
-
-|node_pool_quantity_per_subnet
-|Number of worker nodes by worker subnets in a node pool. Refer to {uri-topology}[topology] for more thorough examples.
-|
-|1
 
 |nodepool_topology
 a|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions. _Topology 2 is experimental and is only used in multiple-AD regions_.

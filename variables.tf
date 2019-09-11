@@ -127,7 +127,7 @@ variable "subnets" {
 # bastion
 variable "bastion_shape" {
   description = "shape of bastion instance"
-  default     = "VM.Standard2.1"
+  default     = "VM.Standard.E2.1"
 }
 
 variable "create_bastion" {

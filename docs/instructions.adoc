@@ -87,12 +87,12 @@ If you want to use bastion host, set the parameter *create_bastion* to *true* in
 
 There are 2 additional parameters for the bastion:
 
-* package_update
-* package_upgrade
+* bastion_package_update
+* bastion_package_upgrade
 
-_package_update_ will update the apt database *if* you choose Ubuntu as the Linux distribution for the bastion host.
+_bastion_package_update_ will update the apt database *if* you choose Ubuntu as the Linux distribution for the bastion host.
 
-_package_upgrade_ will upgrade the bastion compute instance on first boot. If you choose Ubuntu for bastion host and you set _package_upgrade_ to *true*, you should also set the _package_update_ to *true*.
+_bastion_package_upgrade_ will upgrade the bastion compute instance on first boot. If you choose Ubuntu for bastion host and you set _bastion_package_upgrade_ to *true*, you should also set the _bastion_package_update_ to *true*.
 
 ****
 N.B. It is good and recommended practice to upgrade your bastion host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the bastion host is available.
@@ -146,13 +146,14 @@ Calico enables network policy in Kubernetes clusters across the cloud. To instal
 
 {uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *install_metricserver = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
 
-=== Scaling the number of worker nodes
+=== Scaling the node pools
 
-Set the parameter *node_pool_quantity_per_subnet* to the desired quantity.For single AD region a minimum quantity of 2 will get created. This is helpful to utilize the OCI Fault Domains in single AD regions. Refer to {uri-topology}#fault-domains[Fault Domain].
+There are 2 ways you can scale the node pools:
 
-=== Scaling the number of node pools
+* add more node pools
+* increase the number of workers in a subnet per node pool.
 
-Set the parameter *node_pools* to the desired quantity. Refer to {uri-topology}#node-pools[Nodepool].
+Set the parameter *node_pools* to the desired quantities to scale the node pools accordingly. Refer to {uri-topology}#node-pools[Nodepool].
 
 === Accessing the Kubernetes dashboard
 

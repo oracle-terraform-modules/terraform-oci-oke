@@ -63,7 +63,7 @@ service_gateway_name = "sg"
 
 # bastion
 
-bastion_shape = "VM.Standard2.1"
+bastion_shape = "VM.Standard.E2.1"
 
 create_bastion = true
 
@@ -101,8 +101,7 @@ dashboard_enabled = true
 kubernetes_version = "LATEST"
 
 node_pools = {
-  "np1" = ["VM.Standard2.1", 4]
-  "np2" = ["VM.Standard2.2", 2]
+  "np1" = ["VM.Standard2.1", 1]
 }
 
 node_pool_name_prefix = "np"
