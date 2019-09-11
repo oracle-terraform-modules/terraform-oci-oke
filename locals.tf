@@ -109,8 +109,6 @@ locals {
     node_pool_image_id            = var.node_pool_image_id
     node_pool_os                  = var.node_pool_os
     node_pool_os_version          = var.node_pool_os_version
-    node_pool_node_shape          = var.node_pool_node_shape
-    node_pool_quantity_per_subnet = var.node_pool_quantity_per_subnet
     nodepool_topology             = var.nodepool_topology
   }
 

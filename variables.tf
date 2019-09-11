@@ -210,8 +210,8 @@ variable "kubernetes_version" {
 }
 
 variable "node_pools" {
+  type        = map(any)
   description = "number of node pools"
-  default     = 1
 }
 
 variable "node_pool_name_prefix" {
@@ -232,15 +232,6 @@ variable "node_pool_os" {
 variable "node_pool_os_version" {
   description = "version of image Operating System to use"
   default     = "7.6"
-}
-variable "node_pool_node_shape" {
-  description = "shape of worker nodes"
-  default     = "VM.Standard2.1"
-}
-
-variable "node_pool_quantity_per_subnet" {
-  description = "number of workers in node pool"
-  default     = 1
 }
 
 variable "nodepool_topology" {
