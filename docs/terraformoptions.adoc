@@ -326,7 +326,7 @@ availability_domains = {
 |LATEST
 
 |node_pools
-|The number, shape and quantities per subnets of node pools to create. Refer to {uri-topology}[topology] for more thorough examples.
+|The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node and the 2nd parameter sets the size of the node pool. A minimum of 3 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
 |e.g.
 [source]
 ----
@@ -359,13 +359,6 @@ node_pools = {
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
 |7.6
-
-|nodepool_topology
-a|The number of Availability Domains the node pools should span. Use 1 for single-AD regions and 3 for multiple-AD regions. _Topology 2 is experimental and is only used in multiple-AD regions_.
-
-Refer to {uri-topology}[topology] for more thorough examples.
-|1,2,3
-|3
 
 |pods_cidr
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).

@@ -154,7 +154,7 @@ The OKE parameters concern mainly the following:
 * whether you want to deploy public or private worker nodes
 * whether you want to allow NodePort or ssh access to the worker nodes
 * Kubernetes options such as dashboard, networking and helm
-* size and topology of your cluster
+* number of node pools and their respective size of the cluster
 * services and pods cidr blocks
 
 ****

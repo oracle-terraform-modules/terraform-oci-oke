@@ -112,8 +112,6 @@ node_pool_os = "Oracle Linux"
 
 node_pool_os_version = "7.6"
 
-nodepool_topology = 3
-
 pods_cidr = "10.244.0.0/16"
 
 services_cidr = "10.96.0.0/16"

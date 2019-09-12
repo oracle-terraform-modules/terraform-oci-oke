@@ -3,15 +3,9 @@
 
 output "subnet_ids" {
   value = map(    
-      "workers_ad1",join(",", oci_core_subnet.workers_ad1.*.id),
-      "workers_ad2",join(",", oci_core_subnet.workers_ad2.*.id),
-      "workers_ad3",join(",", oci_core_subnet.workers_ad3.*.id),
-      "int_lb_ad1",join(",", oci_core_subnet.int_lb_ad1.*.id),
-      "int_lb_ad2",join(",", oci_core_subnet.int_lb_ad2.*.id),
-      "int_lb_ad3",join(",", oci_core_subnet.int_lb_ad3.*.id),
-      "pub_lb_ad1",join(",", oci_core_subnet.pub_lb_ad1.*.id),
-      "pub_lb_ad2",join(",", oci_core_subnet.pub_lb_ad2.*.id),
-      "pub_lb_ad3",join(",", oci_core_subnet.pub_lb_ad3.*.id)
+      "workers",join(",", oci_core_subnet.workers.*.id),
+      "int_lb",join(",", oci_core_subnet.int_lb.*.id),
+      "pub_lb",join(",", oci_core_subnet.pub_lb.*.id)
      )    
 }
 

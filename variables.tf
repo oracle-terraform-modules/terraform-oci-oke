@@ -112,15 +112,18 @@ variable "subnets" {
 
   default = {
     bastion     = 32
-    int_lb_ad1  = 16
-    int_lb_ad2  = 17
-    int_lb_ad3  = 18
-    pub_lb_ad1  = 19
-    pub_lb_ad2  = 20
-    pub_lb_ad3  = 21
-    workers_ad1 = 1
-    workers_ad2 = 2
-    workers_ad3 = 3
+    int_lb = 16
+    pub_lb = 17
+    workers = 1
+    # int_lb_ad1  = 16
+    # int_lb_ad2  = 17
+    # int_lb_ad3  = 18
+    # pub_lb_ad1  = 19
+    # pub_lb_ad2  = 20
+    # pub_lb_ad3  = 21
+    # workers_ad1 = 1
+    # workers_ad2 = 2
+    # workers_ad3 = 3
   }
 }
 
@@ -234,11 +237,6 @@ variable "node_pool_os_version" {
   default     = "7.6"
 }
 
-variable "nodepool_topology" {
-  description = "whether to use 2 ADs or 3ADs for the node pool. Possible values are 2 or 3 only"
-  default     = 3
-}
-
 variable "pods_cidr" {
   description = "This is the CIDR range used for IP addresses by your pods. A /16 CIDR is generally sufficient. This CIDR should not overlap with any subnet range in the VCN (it can also be outside the VCN CIDR range)."
   default     = "10.244.0.0/16"
@@ -265,13 +263,6 @@ variable "lb_subnet_type" {
   description = "type of load balancer subnets to create."
   # values: both, internal, public
   default = "public"
-}
-
-variable "preferred_lb_ads" {
-  description = "preferred Availability Domains for Load Balancers"
-  type        = list
-  # list elements: choose 2 from ad1, ad2, ad3 (regarless of the number of domains your region has)
-  default = ["ad1", "ad2"]
 }
 
 variable "preferred_lb_subnets" {

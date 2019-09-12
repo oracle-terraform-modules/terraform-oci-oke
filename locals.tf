@@ -109,11 +109,9 @@ locals {
     node_pool_image_id            = var.node_pool_image_id
     node_pool_os                  = var.node_pool_os
     node_pool_os_version          = var.node_pool_os_version
-    nodepool_topology             = var.nodepool_topology
   }
 
   lbs = {
-    preferred_lb_ads     = var.preferred_lb_ads
     preferred_lb_subnets = var.preferred_lb_subnets
   }
 

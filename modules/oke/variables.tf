@@ -62,13 +62,11 @@ variable "node_pools" {
     node_pool_image_id            = string
     node_pool_os                  = string
     node_pool_os_version          = string
-    nodepool_topology             = number
   })
 }
 
 variable "lbs" {
   type = object({
-    preferred_lb_ads     = list(string)
     preferred_lb_subnets = string
   })
 }
