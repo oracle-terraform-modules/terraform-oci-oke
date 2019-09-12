@@ -5,7 +5,7 @@ data "oci_core_images" "latest_images" {
   compartment_id           = var.oke_identity.compartment_ocid
   operating_system         = var.node_pools.node_pool_os
   operating_system_version = var.node_pools.node_pool_os_version
-  shape                    = element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools),count.index))],0)
+  shape                    = element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools), count.index))], 0)
   sort_by                  = "TIMECREATED"
   count                    = length(var.node_pools.node_pools)
 }

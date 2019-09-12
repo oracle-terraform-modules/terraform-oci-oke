@@ -1,5 +1,5 @@
-# # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource "oci_containerengine_node_pool" "nodepools" {
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
@@ -20,7 +20,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
       }
     }
     # set quantity to a minimum of 3 per subnet for single AD region to ensure 3 fault domains
-    size = max(3,element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools),count.index))],1))
+    size = max(3, element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools), count.index))], 1))
   }
 
   node_image_id = var.node_pools.node_pool_image_id == "NONE" ? data.oci_core_images.latest_images[count.index].images[0].id : var.node_pools.node_pool_image_id

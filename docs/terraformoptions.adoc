@@ -170,17 +170,19 @@ Configuration Terraform Options:
 [source]
 ----
 newbits = {
-    "bastion" = 13
-    "lb"      = 11
-    "workers" = 2
+  "bastion" = 13
+  "lb"      = 11
+  "workers" = 2
 }
 ----
 |
 [source]
 ----
-"bastion" = 13
-"lb"      = 11
-"workers" = 2
+newbits = {
+  "bastion" = 13
+  "lb"      = 11
+  "workers" = 2
+}
 ----
 
 |subnets
@@ -189,31 +191,21 @@ newbits = {
 [source]
 ----
 subnets = {
-  "bastion"     = 32
-  "int_lb_ad1"  = 16
-  "int_lb_ad2"  = 17
-  "int_lb_ad3"  = 18
-  "pub_lb_ad1"  = 19
-  "pub_lb_ad2"  = 20
-  "pub_lb_ad3"  = 21
-  "workers_ad1" = 1
-  "workers_ad2" = 2
-  "workers_ad3" = 3
+  "bastion" = 32
+  "int_lb"  = 16
+  "pub_lb"  = 17
+  "workers" = 1
 }
 ----
 |
 [source]
 ----
-"bastion"     = 32
-"int_lb_ad1"  = 16
-"int_lb_ad2"  = 17
-"int_lb_ad3"  = 18
-"pub_lb_ad1"  = 19
-"pub_lb_ad2"  = 20
-"pub_lb_ad3"  = 21
-"workers_ad1" = 1
-"workers_ad2" = 2
-"workers_ad3" = 3
+subnets = {
+  "bastion" = 32
+  "int_lb"  = 16
+  "pub_lb"  = 17
+  "workers" = 1
+}
 ----
 
 
@@ -256,7 +248,7 @@ subnets = {
 |image_operating_system_version
 |The version of the selected Operating System to be used to provision the bastion host. Matching versions of available operating systems can be found {uri-oci-images}[here].
 |
-|7.6
+|7.7
 
 |availability_domains
 |The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
@@ -394,19 +386,6 @@ Even if you set the load balancer subnets to be internal, you still need to set 
 Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
 |public
-
-|preferred_lb_ads
-|The preferred Availability Domains where to provision the Load Balancers, specified in the form of a list of 2 elements.
-|
-[source]
-----
-preferred_lb_ads = ["ad1", "ad2"]
-----
-|
-[source]
-----
-["ad1", "ad2"]
-----
 
 |preferred_lb_subnets
 |The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'.

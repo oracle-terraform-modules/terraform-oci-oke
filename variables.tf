@@ -111,19 +111,10 @@ variable "subnets" {
   type        = "map"
 
   default = {
-    bastion     = 32
-    int_lb = 16
-    pub_lb = 17
+    bastion = 32
+    int_lb  = 16
+    pub_lb  = 17
     workers = 1
-    # int_lb_ad1  = 16
-    # int_lb_ad2  = 17
-    # int_lb_ad3  = 18
-    # pub_lb_ad1  = 19
-    # pub_lb_ad2  = 20
-    # pub_lb_ad3  = 21
-    # workers_ad1 = 1
-    # workers_ad2 = 2
-    # workers_ad3 = 3
   }
 }
 
@@ -159,7 +150,7 @@ variable "image_operating_system" {
 
 variable "image_operating_system_version" {
   # Versions of available operating systems can be found here: https://docs.cloud.oracle.com/iaas/images/
-  default     = "7.6"
+  default     = "7.7"
   description = "version of selected operating system"
 }
 

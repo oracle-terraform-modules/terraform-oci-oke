@@ -104,11 +104,11 @@ locals {
   }
 
   node_pools = {
-    node_pools                    = var.node_pools
-    node_pool_name_prefix         = var.node_pool_name_prefix
-    node_pool_image_id            = var.node_pool_image_id
-    node_pool_os                  = var.node_pool_os
-    node_pool_os_version          = var.node_pool_os_version
+    node_pools            = var.node_pools
+    node_pool_name_prefix = var.node_pool_name_prefix
+    node_pool_image_id    = var.node_pool_image_id
+    node_pool_os          = var.node_pool_os
+    node_pool_os_version  = var.node_pool_os_version
   }
 
   lbs = {

@@ -2,11 +2,11 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 output "subnet_ids" {
-  value = map(    
-      "workers",join(",", oci_core_subnet.workers.*.id),
-      "int_lb",join(",", oci_core_subnet.int_lb.*.id),
-      "pub_lb",join(",", oci_core_subnet.pub_lb.*.id)
-     )    
+  value = map(
+    "workers", join(",", oci_core_subnet.workers.*.id),
+    "int_lb", join(",", oci_core_subnet.int_lb.*.id),
+    "pub_lb", join(",", oci_core_subnet.pub_lb.*.id)
+  )
 }
 
 # output "subnet_ids" {
