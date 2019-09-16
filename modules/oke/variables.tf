@@ -57,18 +57,16 @@ variable "oke_cluster" {
 
 variable "node_pools" {
   type = object({
-    node_pools                    = map(any)
-    node_pool_name_prefix         = string
-    node_pool_image_id            = string
-    node_pool_os                  = string
-    node_pool_os_version          = string
-    nodepool_topology             = number
+    node_pools            = map(any)
+    node_pool_name_prefix = string
+    node_pool_image_id    = string
+    node_pool_os          = string
+    node_pool_os_version  = string
   })
 }
 
 variable "lbs" {
   type = object({
-    preferred_lb_ads     = list(string)
     preferred_lb_subnets = string
   })
 }

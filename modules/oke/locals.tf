@@ -3,8 +3,8 @@
 
 locals {
   # used by cluster
-  lb_ads = var.lbs.preferred_lb_subnets == "public" ? list(format("pub_lb_%s", element(var.lbs.preferred_lb_ads, 0)), format("pub_lb_%s", element(var.lbs.preferred_lb_ads, 1))) : list(format("int_lb_%s", element(var.lbs.preferred_lb_ads, 0)), format("int_lb_%s", element(var.lbs.preferred_lb_ads, 1)))
-   
+  lb_subnet = var.lbs.preferred_lb_subnets == "public" ? "pub_lb" : "int_lb"
+
   # used by datasources
   available_kubernetes_versions = data.oci_containerengine_cluster_option.k8s_cluster_option.kubernetes_versions
   num_kubernetes_versions       = length(local.available_kubernetes_versions)

@@ -14,6 +14,6 @@ output "kubeconfig" {
 }
 
 output "ocirtoken" {
-  value = module.auth.ocirtoken
+  value     = module.auth.ocirtoken
   sensitive = true
 }

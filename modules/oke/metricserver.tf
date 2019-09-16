@@ -4,7 +4,7 @@
 data "template_file" "install_metricserver" {
   template = file("${path.module}/scripts/install_metricserver.template.sh")
 
-  count = var.install_metricserver == true   ? 1 : 0
+  count = var.install_metricserver == true ? 1 : 0
 }
 
 resource null_resource "install_metricserver" {
@@ -13,7 +13,7 @@ resource null_resource "install_metricserver" {
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu"   ? "ubuntu" : "opc"
+    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
 
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
@@ -24,12 +24,12 @@ resource null_resource "install_metricserver" {
   }
 
   provisioner "remote-exec" {
-        inline = [
-          "chmod +x $HOME/install_metricserver.sh",
-          "$HOME/install_metricserver.sh",
-          "rm -f $HOME/install_metricserver.sh"
-        ]
-      }
+    inline = [
+      "chmod +x $HOME/install_metricserver.sh",
+      "$HOME/install_metricserver.sh",
+      "rm -f $HOME/install_metricserver.sh"
+    ]
+  }
 
-      count = var.oke_bastion.create_bastion == true  && var.install_metricserver == true   ? 1 : 0
-    }
+  count = var.oke_bastion.create_bastion == true && var.install_metricserver == true ? 1 : 0
+}

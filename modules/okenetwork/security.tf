@@ -10,7 +10,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
   dynamic "egress_security_rules" {
     # stateless egress for all traffic between worker subnets rules 1-3
     iterator = worker_iterator
-    for_each = local.worker_subnets
+    for_each = [local.worker_subnet]
 
     content {
       destination = worker_iterator.value
@@ -41,7 +41,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
   dynamic "ingress_security_rules" {
     # stateless ingress for all traffic between worker subnets rules 1-3
     iterator = worker_iterator
-    for_each = local.worker_subnets
+    for_each = [local.worker_subnet]
 
     content {
       protocol  = local.all_protocols
@@ -119,7 +119,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
   dynamic "egress_security_rules" {
     # stateless egress for all traffic between worker subnets rules 1-3
     iterator = worker_iterator
-    for_each = local.worker_subnets
+    for_each = [local.worker_subnet]
 
     content {
       destination = worker_iterator.value
@@ -150,7 +150,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
   dynamic "ingress_security_rules" {
     # stateless ingress for all traffic between worker subnets rules 1-3
     iterator = worker_iterator
-    for_each = local.worker_subnets
+    for_each = [local.worker_subnet]
 
     content {
       protocol  = local.all_protocols

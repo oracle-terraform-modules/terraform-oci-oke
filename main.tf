@@ -28,7 +28,7 @@ module "auth" {
   source = "./modules/auth"
 
   # ocir parameters
-  ocir   = local.ocir
+  ocir = local.ocir
 }
 
 # additional networking for oke

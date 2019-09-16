@@ -17,7 +17,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       services_cidr = var.oke_cluster.cluster_options_kubernetes_network_config_services_cidr
     }
 
-    service_lb_subnet_ids = length(var.oke_general.ad_names) == 1 ? [var.oke_cluster.cluster_subnets[element(local.lb_ads, 0)]] : [var.oke_cluster.cluster_subnets[element(local.lb_ads, 0)], var.oke_cluster.cluster_subnets[element(local.lb_ads, 1)]]
+    service_lb_subnet_ids = var.lbs.preferred_lb_subnets == "public" ? [var.oke_cluster.cluster_subnets["pub_lb"]] : [var.oke_cluster.cluster_subnets["int_lb"]]
   }
 
   vcn_id = var.oke_cluster.vcn_id
