@@ -139,7 +139,7 @@ install_helm = true
 
 # calico
 
-calico_version = "3.6"
+calico_version = "3.9"
 
 install_calico = false
 

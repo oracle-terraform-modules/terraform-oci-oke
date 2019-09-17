@@ -329,7 +329,7 @@ variable "install_helm" {
 # calico
 variable "calico_version" {
   description = "version of calico to install"
-  default     = "3.6"
+  default     = "3.9"
 }
 
 variable "install_calico" {
