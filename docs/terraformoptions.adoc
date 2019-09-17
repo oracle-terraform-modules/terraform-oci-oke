@@ -474,7 +474,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |calico_version
 |Version of {uri-calico}[Calico] to install.
 |
-|3.6
+|3.9
 
 |install_calico
 |Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
