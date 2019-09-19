@@ -341,3 +341,30 @@ variable "install_metricserver" {
   description = "whether to install metricserver for collecting metrics and for HPA"
   default     = false
 }
+
+# kms
+
+variable "use_encryption" {
+  description = "whether to use OCI Key Management to encrypt data"
+  default = false
+}
+
+variable "use_existing_vault" {
+  description = "whether to use an existing vault to create an encryption key"
+  default = true
+}
+
+variable "existing_vault_id" {
+  description = "ocid of existing vault to use to create an encryption key"
+  default = ""
+}
+
+variable "use_existing_key" {
+  description = "whether to use an existing key for encryption"
+  default = false  
+}
+
+variable "existing_key_id" {
+  description = "ocid of existing key"
+  default = ""
+}

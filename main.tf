@@ -24,6 +24,20 @@ module "base" {
   oci_base_bastion = local.oci_base_bastion
 }
 
+module "policies" {
+  source = "./modules/policies"
+
+  # identity
+  oci_identity = local.oci_base_identity
+  
+  label_prefix = var.label_prefix
+
+  oke_kms      = local.oke_kms
+
+  cluster_id   = module.oke.cluster_id
+
+}
+
 module "auth" {
   source = "./modules/auth"
 

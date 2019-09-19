@@ -3,7 +3,8 @@
 
 resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = var.oke_identity.compartment_ocid
-  kubernetes_version = local.kubernetes_version
+  kubernetes_version = local.kubernetes_version  
+  kms_key_id         = var.oke_cluster.use_encryption == true ? var.oke_cluster.kms_key_id : null
   name               = "${var.oke_general.label_prefix}-${var.oke_cluster.cluster_name}"
 
   options {
