@@ -14,7 +14,26 @@ variable "oci_identity" {
   })
 }
 
+# ssh keys
+
+variable "ssh_keys" {
+  type = object({
+    ssh_private_key_path = string
+    ssh_public_key_path  = string
+  })
+}
+
+
 variable "label_prefix" {}
+
+variable "bastion" {
+  type = object({
+    bastion_public_ip         = string
+    create_bastion            = bool
+    enable_instance_principal = bool
+    image_operating_system    = string
+  })
+}
 
 variable "oke_kms" {
   type = object({

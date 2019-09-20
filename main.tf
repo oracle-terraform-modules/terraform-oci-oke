@@ -29,12 +29,16 @@ module "policies" {
 
   # identity
   oci_identity = local.oci_base_identity
-  
+
+  ssh_keys = local.oci_base_ssh_keys
+
   label_prefix = var.label_prefix
 
-  oke_kms      = local.oke_kms
+  bastion = local.oke_bastion
 
-  cluster_id   = module.oke.cluster_id
+  oke_kms = local.oke_kms
+
+  cluster_id = module.oke.cluster_id
 
 }
 
