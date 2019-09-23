@@ -25,6 +25,8 @@
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
 :uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
+:uri-oci-manage-dynamic-groups: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingdynamicgroups.htm
+:uri-oci-manage-policies: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpolicies.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
@@ -71,8 +73,8 @@ This section assumes you have completed the following:
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the following is required:
 
 * the Terraform user must have the following rights
-** manage dynamic groups
-** manage policies in root tenancy
+** {uri-oci-manage-dynamic-groups}[manage dynamic groups]
+** {uri-oci-manage-policies}[manage policies in root tenancy]
 * link:#adding-the-bastion-host[bastion must be enabled]
 * link:#enabling-instance_principal-on-the-bastion-host[bastion instance_principal must be enabled]
 * use_encryption must be set to _true_

@@ -58,6 +58,7 @@
 . link:#configure-helm-parameters[Configure helm parameters]
 . link:#configure-calico-parameters[Configure Calico parameters]
 . link:#configure-kubernetes-metrics-server-parameters[Configure Kubernetes Metrics Server parameters]
+. link:#configure-kms-metrics-integration-parameters[Configure KMS Integration parameters]
 
 === Assumptions
 
