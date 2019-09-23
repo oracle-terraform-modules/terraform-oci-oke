@@ -36,6 +36,8 @@ module "policies" {
 
   bastion = local.oke_bastion
 
+  dynamic_group = module.base.group_name
+
   oke_kms = local.oke_kms
 
   cluster_id = module.oke.cluster_id

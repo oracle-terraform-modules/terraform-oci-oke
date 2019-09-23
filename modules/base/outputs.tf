@@ -11,6 +11,10 @@ output "bastion_public_ip" {
   value = module.bastion.bastion_public_ip
 }
 
+output "group_name" {
+  value = module.bastion.bastion_instance_principal_group_name
+}
+
 output "ig_route_id" {
   value = module.vcn.ig_route_id
 }

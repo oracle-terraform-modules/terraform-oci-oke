@@ -35,6 +35,11 @@ variable "bastion" {
   })
 }
 
+variable "dynamic_group" {
+  description = "name of dynamic group to allow updating dynamic-groups"
+  type        = string
+}
+
 variable "oke_kms" {
   type = object({
     use_encryption = bool
