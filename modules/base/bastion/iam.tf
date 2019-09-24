@@ -22,20 +22,20 @@ data "oci_identity_compartments" "compartments_name" {
   }
 }
 
-resource "oci_identity_dynamic_group" "instance_principal" {
+resource "oci_identity_dynamic_group" "bastion_instance_principal" {
   provider       = "oci.home"
   compartment_id = var.oci_base_identity.tenancy_ocid
   description    = "dynamic group to allow instances to call services for 1 bastion"
   matching_rule  = "ALL {instance.id = '${join(",", data.oci_core_instance.bastion.*.id)}'}"
-  name           = "${var.oci_bastion_general.label_prefix}-instance_principal"
+  name           = "${var.oci_bastion_general.label_prefix}-bastion_instance_principal"
   count          = var.oci_bastion.enable_instance_principal == true ? 1 : 0
 }
 
-resource "oci_identity_policy" "instance_principal" {
+resource "oci_identity_policy" "bastion_instance_principal" {
   provider       = "oci.home"
   compartment_id = var.oci_base_identity.compartment_ocid
-  description    = "dynamic group to allow instances to call services"
-  name           = "${var.oci_bastion_general.label_prefix}-instance_principal"
-  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.instance_principal[0].name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
+  description    = "policy to allow bastion host to call services"
+  name           = "${var.oci_bastion_general.label_prefix}-bastion_instance_principal"
+  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.bastion_instance_principal[0].name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
   count          = var.oci_bastion.enable_instance_principal == true ? 1 : 0
 }

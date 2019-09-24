@@ -29,6 +29,7 @@
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
+:uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
@@ -57,6 +58,7 @@
 . link:#configure-helm-parameters[Configure helm parameters]
 . link:#configure-calico-parameters[Configure Calico parameters]
 . link:#configure-kubernetes-metrics-server-parameters[Configure Kubernetes Metrics Server parameters]
+. link:#configure-kms-integration-parameters[Configure KMS Integration parameters]
 
 === Assumptions
 
@@ -143,7 +145,7 @@ If you need to change the default VCN's CIDR, note the following:
 
 The bastion host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the enable_instance_principal. Be aware that if this is enabled, it gives API access to the bastion host without authentication.
 
-Read more about {uri-oci-instance-principal}[instance_principal].
+Read {uri-instructions}#enabling-instance_principal-on-the-bastion-host[more] about {uri-oci-instance-principal}[instance_principal].
 
 {uri-terraform-options}#bastion-host[Reference]
 
@@ -213,3 +215,16 @@ The calico parameters control the installation of {uri-calico}[Calico] for {uri-
 The Kubernetes Metrics Server parameter controls the installation of {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 
 {uri-terraform-options}#kubernetes-metrics-server[Reference]
+
+=== Configure KMS Integration parameters
+
+The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets. Additionally, the bastion host must be enabled as well as instance_principal on the bastion.
+
+----
+create_bastion = true
+enable_instance_principal = true
+use_encryption = true
+existing_key_id = <existing_key_ocid>
+----
+
+{uri-terraform-options}#kms-integration[Reference]

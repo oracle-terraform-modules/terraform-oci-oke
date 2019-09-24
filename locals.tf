@@ -101,6 +101,9 @@ locals {
     cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
     cluster_subnets                                         = module.network.subnet_ids
     vcn_id                                                  = module.base.vcn_id
+    use_encryption                                          = var.use_encryption
+    kms_key_id                                              = var.existing_key_id
+
   }
 
   node_pools = {
@@ -135,5 +138,10 @@ locals {
   calico = {
     calico_version = var.calico_version
     install_calico = var.install_calico
+  }
+
+  oke_kms = {
+    use_encryption = var.use_encryption
+    key_id         = var.existing_key_id
   }
 }

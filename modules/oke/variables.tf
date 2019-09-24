@@ -52,6 +52,10 @@ variable "oke_cluster" {
     cluster_options_kubernetes_network_config_services_cidr = string
     cluster_subnets                                         = map(string)
     vcn_id                                                  = string
+
+    # encryption
+    use_encryption = bool
+    kms_key_id     = string
   })
 }
 

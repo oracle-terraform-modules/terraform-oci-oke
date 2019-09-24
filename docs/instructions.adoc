@@ -23,6 +23,10 @@
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
+:uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
+:uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
+:uri-oci-manage-dynamic-groups: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingdynamicgroups.htm
+:uri-oci-manage-policies: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpolicies.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
@@ -40,9 +44,13 @@
 :uri-k8s-dashboard: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 
 . link:#assumptions[Assumptions]
+. link:#kms-integration[KMS Integration]
 . link:#creating-the-oke-cluster[Creating the OKE Cluster]
 . link:#adding-the-bastion-host[Adding the bastion host]
 . link:#using-the-bastion-host[Using the bastion host]
+.. link:#enabling-instance_principal-on-the-bastion-host[Enabling instance_principal on the bastion host]
+.. link:#disabling-instance_principal-on-the-bastion-host[Disabling instance_principal on the bastion host]
+.. link:#recommendations-for-using-instance_principal[Recommendations for using instance_principal]
 . link:#interacting-with-the-oke-cluster-locally[Interacting with the OKE Cluster locally]
 . link:#creating-an-auth-token-for-ocir[Creating an auth token for OCIR]
 . link:#installing-helm[Installing helm]
@@ -59,6 +67,18 @@ This section assumes you have completed the following:
 
 . all the {uri-prereqs}[pre-requisites]
 . all the required {uri-configuration}[configuration]
+
+=== KMS Integration
+
+If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the following is required:
+
+* the Terraform user must have the following rights
+** {uri-oci-manage-dynamic-groups}[manage dynamic groups]
+** {uri-oci-manage-policies}[manage policies in root tenancy]
+* link:#adding-the-bastion-host[bastion must be enabled]
+* link:#enabling-instance_principal-on-the-bastion-host[bastion instance_principal must be enabled]
+* use_encryption must be set to _true_
+* existing_key_id must be provided
 
 === Creating the OKE Cluster
 
@@ -115,6 +135,51 @@ A utility script is also generated that contains the command to ssh to the basti
 ----
 scripts/tesseract.sh
 ----
+
+==== Enabling instance_principal on the bastion host
+{uri-oci-instance-principal}[instance_principal] is an IAM service feature that enables instances to be authorized actors (or principals) to perform actions on service resources. Each compute instance has its own identity, and it authenticates using the certificates that are added to it. These certificates are automatically created, assigned to instances and rotated, preventing the need for you to distribute credentials to your hosts and rotate them.
+
+Any user who has access to the instance (who can SSH to the instance), automatically inherits the privileges granted to the instance. Before you enable this feature, ensure that you know who can access it, and that they should be authorized with the permissions you are granting to the instance.
+
+By default, this feature is *_disabled_*. However, it is *_required_* at the time of cluster creation *_if_* you wish to enable link:#kms-integration[KMS Integration].
+
+When you enable this feature, by default, the bastion has privileges to all resources in the compartment. If you are enabling it for link:#kms-integration[KMS Integration], the bastion host will also have rights to create policies in the root tenancy. 
+
+You can also turn on and off the feature at any time without impact on the bastion or the cluster.
+
+To enable, set enable_instance_principal to true:
+
+----
+enable_instance_principal = "true"
+----
+
+and verify:
+
+----
+oci network vcn list --compartment-id <compartment-ocid>
+----
+
+==== Disabling instance_principal on the bastion host
+
+. Set enable_instance_principal to false in terraform.tfvars
+
++
+----
+enable_instance_principal = false
+----
+
+. Run terraform apply again:
+
++
+----
+terraform apply
+----
+
+==== Recommendations for using instance_principal
+
+. Do not enable instance_principal if you are not using link:#kms-integration[KMS Integration]
+. Enable instance_principal *_if and only if_* you are using link:#kms-integration[KMS Integration]
+. Disable instance_principal once the cluster is created
 
 === Interacting with the OKE Cluster locally
 

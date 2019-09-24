@@ -17,6 +17,7 @@
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
+:uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
@@ -495,3 +496,23 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Whether to install {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 |true/false
 |false
+|===
+
+== KMS integration
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|use_encryption
+|Whether to use {uri-oci-kms}[OCI KMS] to encrypt secrets.
+|true/false
+|false
+
+|existing_key_id
+|ocid of existing KMS key
+|
+|

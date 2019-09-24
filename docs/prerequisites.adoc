@@ -19,6 +19,9 @@
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#two
 :uri-oci-keys-upload: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#two
+:uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
+:uri-oci-managing-keys: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Tasks/managingkeys.htm
+:uri-oci-managing-vaults: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Tasks/managingvaults.htm
 :uri-oci-oke-policy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
 
 :uri-terraform: https://www.terraform.io
@@ -28,12 +31,20 @@ This section will guide you through the pre-requisites before you can use this p
 
 You can proceed to {uri-instructions}[creating the cluster] if you have already done these.
 
+. link:#identity-and-access-management-rights[Identity and Access Management Rights]
 . link:#install-terraform[Install Terraform]
 . link:#generate-api-keys[Generate API Keys]
 . link:#upload-your-api-keys[Upload API Keys]
 . link:#create-an-oci-compartment[Create an OCI Compartment]
 . link:#obtain-the-necessary-ocids[Obtain the necessary OCIDs]
 . link:#configure-oci-policy-for-oke[Configure OCI Policy for OKE]
+
+== Identity and Access Management Rights
+
+The Terraform user must have the rights to:
+
+. manage dynamic groups
+. manage policies in root tenancy
 
 == Install Terraform
 
@@ -107,6 +118,8 @@ To obtain the compartment OCID:
 1. Navigate to Identity > Compartments
 2. Click on your Compartment
 3. Locate OCID on the page and click on 'Copy'
+
+If you wish to encrypt Kubernetes secrets with a key from {uri-oci-kms}[OCI KMS], you also need to create {uri-oci-managing-vaults}[a vault] and {uri-oci-managing-keys}[a key] and obtain the key id.
 
 == Configure OCI Policy for OKE
 
