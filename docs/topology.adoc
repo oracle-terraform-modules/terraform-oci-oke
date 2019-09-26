@@ -35,8 +35,6 @@ link:#public-vs-private-worker-nodes[Public vs Private worker nodes]
 
 link:#node-pools[Node Pools]
 
-link:#worker-nodes-per-subnet[Worker Nodes per subnet]
-
 link:#fault-domains[Fault Domains]
 
 link:#public-and-internal-load-balancers[Public and Internal Load Balancers]
@@ -175,7 +173,7 @@ A node pool is a set of hosts within a cluster that all have the same configurat
 * the image to use to provision the worker nodes
 * the shape of the worker nodes in the node pool
 * the subnets the node pool will span
-* the number of worker nodes per subnet
+* the size of the cluster
 * the public ssh key if you wish to ssh to your worker nodes (Optional)
 * the Kubernetes labels to apply to the nodes (Optional)
 
@@ -208,7 +206,7 @@ will create 3 node pools (np1, np2 and np3).
 
 * the Kubernetes version is set automatically to the same version as the cluster.
 
-* the image used is an Oracle Linux image with the version specified. You can also specify your own image OCID. However, note that these 2 are mutually exclusive i.e. either use Operating System and version *_or_* specify the OCID of your custom image.
+* the image used is an Oracle Linux image with the version specified. You can also specify your own image OCID. However, note that these 2 parameters are *_mutually exclusive_* i.e. either use Operating System and version *_or_* specify the OCID of your custom image.
 
 * the {uri-oci-shape}[shape] of the worker node determines the compute capacity of the worker node. This is controlled by the first element in the tuple for the node pool. By default, this is VM.Standard2.1, giving you 1 OCPU, 15GB Memory, 1 Gbps in network bandwidth and 2 VNICs e.g.
 
@@ -244,16 +242,17 @@ The number, shape and size of the node pools created is controlled by the number
 N.B A minimum 3 worker nodes per node pool will be created.
 ****
 
-The diagram below shows a cluster with 1 node pool and 1 worker node per subnet using topology 3 i.e. 
+The diagram below shows a cluster with 1 node pool of size 3 i.e. setting the following configuration:
 
 ----
 node_pools = {
-  "np1" = ["VM.Standard2.1", 1]
+  "np1" = ["VM.Standard2.1", 3]
 }
 ----
 
+will result in the following:
 
-.1 Node Pool with 1 worker node per subnet (other details removed for convenience)
+.1 Node Pool of size 3 worker nodes (other details removed for convenience)
 image::images/np311.png[align="center"]
 
 {bl}
@@ -262,45 +261,43 @@ You can increase the number of node pools by adding more entries in the node_poo
 
 ----
 node_pools = {
-  "np1" = ["VM.Standard2.1", 1]
-  "np2" = ["VM.Standard2.1", 1]
-  "np3" = ["VM.Standard2.1", 1]
-  "np4" = ["VM.Standard2.1", 1]
-  "np5" = ["VM.Standard2.1", 1]
+  "np1" = ["VM.Standard2.1", 3]
+  "np2" = ["VM.Standard2.1", 3]
+  "np3" = ["VM.Standard2.1", 3]
+  "np4" = ["VM.Standard2.1", 3]
+  "np5" = ["VM.Standard2.1", 3]
 }
 ----
 
-.5 Node Pools with 1 worker node per subnet
+.5 Node Pools each of size 3 worker nodes
 image::images/np351.png[align="center"]
 
-==== Worker Nodes per subnet
-
-You can also change the number of worker nodes per subnet e.g.
+You can also change the node pool size e.g.
 
 ----
 node_pools = {
-  "np1" = ["VM.Standard2.1", 2]
+  "np1" = ["VM.Standard2.1", 6]
 }
 ----
 
 will result in the following cluster:
 
-.1 Node Pool with 2 worker nodes per subnet
+.1 Node Pool with 6 worker nodes
 image::images/np312.png[align="center"]
 
 {bl}
 
-Similarly, you can support mixed workloads by adding node pools of different shapes and number of worker nodes per subnet:
+Similarly, you can support mixed workloads by adding node pools of different shapes and sizes:
 
 ----
 node_pools = {
-  "np1" = ["VM.Standard.E2.1", 3]
-  "np2" = ["VM.Standard2.24", 2]
-  "np3" = ["BM.Standard1.36", 1]
+  "np1" = ["VM.Standard.E2.1", 9]
+  "np2" = ["VM.Standard2.24", 6]
+  "np3" = ["BM.Standard1.36", 3]
 }
 ----
 
-.4 Mixed workload with different shapes and number of worker nodes per subnet
+.4 Mixed workload with different node pool shapes and sizes
 image::images/mixedworkload.png[align="center"]
 
 === Fault Domains
