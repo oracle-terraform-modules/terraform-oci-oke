@@ -7,6 +7,6 @@ provider "oci" {
   fingerprint      = var.ocir.api_fingerprint
   private_key_path = var.ocir.api_private_key_path
   region           = var.ocir.home_region
-  tenancy_ocid     = var.ocir.tenancy_ocid
-  user_ocid        = var.ocir.user_ocid
+  tenancy_ocid     = var.ocir.tenancy_id
+  user_ocid        = var.ocir.user_id
 }

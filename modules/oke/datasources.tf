@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 data "oci_core_images" "latest_images" {
-  compartment_id           = var.oke_identity.compartment_ocid
+  compartment_id           = var.oke_identity.compartment_id
   operating_system         = var.node_pools.node_pool_os
   operating_system_version = var.node_pools.node_pool_os_version
   shape                    = element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools), count.index))], 0)
@@ -16,7 +16,7 @@ data "oci_containerengine_cluster_option" "k8s_cluster_option" {
 }
 
 data "oci_containerengine_node_pools" "all_node_pools" {
-  compartment_id = var.oke_identity.compartment_ocid
+  compartment_id = var.oke_identity.compartment_id
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
-  depends_on = ["oci_containerengine_node_pool.nodepools"]
+  depends_on     = ["oci_containerengine_node_pool.nodepools"]
 }

@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 data "oci_identity_availability_domains" "ad_list" {
-  compartment_id = var.oci_base_identity.tenancy_ocid
+  compartment_id = var.oci_base_identity.tenancy_id
 }
 
 data "template_file" "ad_names" {
@@ -11,7 +11,7 @@ data "template_file" "ad_names" {
 }
 
 data "oci_identity_tenancy" "tenancy" {
-  tenancy_id = var.oci_base_identity.tenancy_ocid
+  tenancy_id = var.oci_base_identity.tenancy_id
 }
 
 # get the tenancy's home region

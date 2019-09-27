@@ -3,7 +3,7 @@
 
 locals {
   
-  dynamic_group_rule_all_clusters = "ALL {resource.type = 'cluster', resource.compartment.id = '${var.oci_identity.compartment_ocid}'}"
+  dynamic_group_rule_all_clusters = "ALL {resource.type = 'cluster', resource.compartment.id = '${var.oci_identity.compartment_id}'}"
   
   dynamic_group_rule_this_cluster = "ALL {resource.type = 'cluster', resource.id = '${var.cluster_id}'}"
 

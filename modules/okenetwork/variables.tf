@@ -3,7 +3,7 @@
 
 # Identity and access parameters
 
-variable "compartment_ocid" {}
+variable "compartment_id" {}
 
 # general oci parameters
 

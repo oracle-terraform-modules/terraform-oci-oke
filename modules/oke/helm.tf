@@ -19,7 +19,7 @@ resource null_resource "install_helm_bastion" {
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user        = "opc"
   }
 
   depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]

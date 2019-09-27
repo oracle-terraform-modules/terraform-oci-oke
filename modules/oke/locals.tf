@@ -10,11 +10,11 @@ locals {
   num_kubernetes_versions       = length(local.available_kubernetes_versions)
   kubernetes_version            = var.oke_cluster.cluster_kubernetes_version == "LATEST" ? element(sort(local.available_kubernetes_versions), (local.num_kubernetes_versions - 1)) : var.oke_cluster.cluster_kubernetes_version
 
-  node_pools_size_list =  [
-    for node_pool in data.oci_containerengine_node_pools.all_node_pools.node_pools:
-      node_pool.node_config_details[0].size
+  node_pools_size_list = [
+    for node_pool in data.oci_containerengine_node_pools.all_node_pools.node_pools :
+    node_pool.node_config_details[0].size
   ]
-  
+
   # workaround for summing a list of numbers: https://github.com/hashicorp/terraform/issues/17239
   total_nodes = length(flatten([
     for nodes in local.node_pools_size_list : range(nodes)

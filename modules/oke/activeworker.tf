@@ -6,7 +6,7 @@ data "template_file" "check_worker_node_status" {
 
   vars = {
     cluster_id     = oci_containerengine_cluster.k8s_cluster.id
-    compartment_id = var.oke_identity.compartment_ocid
+    compartment_id = var.oke_identity.compartment_id
     region         = var.oke_general.region
   }
 
@@ -19,7 +19,7 @@ resource null_resource "is_worker_active" {
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user        = "opc"
   }
 
   depends_on = ["oci_containerengine_cluster.k8s_cluster"]

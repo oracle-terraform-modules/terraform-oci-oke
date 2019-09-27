@@ -15,19 +15,19 @@ variable "compartment_name" {
   description = "compartment name"
 }
 
-variable "compartment_ocid" {
+variable "compartment_id" {
   type        = "string"
-  description = "compartment ocid"
+  description = "compartment id"
 }
 
-variable "tenancy_ocid" {
+variable "tenancy_id" {
   type        = "string"
   description = "tenancy id"
 }
 
-variable "user_ocid" {
+variable "user_id" {
   type        = "string"
-  description = "user ocid"
+  description = "user id"
 }
 
 # ssh keys
@@ -73,7 +73,7 @@ variable "vcn_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "vcn_dns_name" {
+variable "vcn_dns_label" {
   type    = "string"
   default = "oke"
 }
@@ -138,20 +138,8 @@ variable "enable_instance_principal" {
   default     = false
 }
 
-variable "image_ocid" {
+variable "image_id" {
   default = "NONE"
-}
-
-variable "image_operating_system" {
-  # values = Oracle Linux, CentOS, Canonical Ubuntu
-  default     = "Oracle Linux"
-  description = "operating system to use for the bastion"
-}
-
-variable "image_operating_system_version" {
-  # Versions of available operating systems can be found here: https://docs.cloud.oracle.com/iaas/images/
-  default     = "7.7"
-  description = "version of selected operating system"
 }
 
 # availability domains
@@ -164,12 +152,6 @@ variable "availability_domains" {
   }
 }
 
-# bastion packages
-variable "bastion_package_update" {
-  description = "Update apt database on first boot if bastion host uses Ubuntu as Linux distribution"
-  type        = bool
-  default     = true
-}
 variable "bastion_package_upgrade" {
   description = "Upgrade the instance on first boot"
   type        = bool
@@ -355,7 +337,7 @@ variable "use_existing_vault" {
 }
 
 variable "existing_vault_id" {
-  description = "ocid of existing vault to use to create an encryption key"
+  description = "id of existing vault to use to create an encryption key"
   default = ""
 }
 
@@ -365,6 +347,6 @@ variable "use_existing_key" {
 }
 
 variable "existing_key_id" {
-  description = "ocid of existing key"
+  description = "id of existing key"
   default = ""
 }

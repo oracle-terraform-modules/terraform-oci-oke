@@ -7,10 +7,10 @@ variable "oci_base_identity" {
   type = object({
     api_fingerprint      = string
     api_private_key_path = string
-    compartment_ocid     = string
+    compartment_id       = string
     compartment_name     = string
-    tenancy_ocid         = string
-    user_ocid            = string
+    tenancy_id           = string
+    user_id              = string
   })
 }
 
@@ -38,7 +38,7 @@ variable "oci_base_general" {
 variable "oci_base_vcn" {
   type = object({
     vcn_cidr               = string
-    vcn_dns_name           = string
+    vcn_dns_label           = string
     vcn_name               = string
     create_nat_gateway     = bool
     nat_gateway_name       = string
@@ -57,11 +57,8 @@ variable "oci_base_bastion" {
     create_bastion                 = bool
     bastion_access                 = string
     enable_instance_principal      = bool
-    image_ocid                     = string
-    image_operating_system         = string
-    image_operating_system_version = string
+    image_id                       = string
     availability_domains           = number
-    package_update                 = bool
     package_upgrade                = bool
   })
 }

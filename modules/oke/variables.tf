@@ -5,8 +5,8 @@
 
 variable "oke_identity" {
   type = object({
-    compartment_ocid = string
-    user_ocid        = string
+    compartment_id = string
+    user_id        = string
   })
 }
 
@@ -36,7 +36,6 @@ variable "oke_bastion" {
     bastion_public_ip         = string
     create_bastion            = bool
     enable_instance_principal = bool
-    image_operating_system    = string
   })
 }
 
