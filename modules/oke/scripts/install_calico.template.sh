@@ -6,8 +6,6 @@ mkdir calico
 
 cd calico
 
-kubectl create clusterrolebinding clusteradminrole --clusterrole=cluster-admin --user=${user_ocid}
-
 curl https://docs.projectcalico.org/v${calico_version}/manifests/calico-policy-only.yaml -O
 
 sed -i -e "s?192.168.0.0/16?${pod_cidr}?g" calico-policy-only.yaml

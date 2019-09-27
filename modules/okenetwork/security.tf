@@ -3,7 +3,7 @@
 
 # public worker security checklist
 resource "oci_core_security_list" "public_workers_seclist" {
-  compartment_id = var.compartment_ocid
+  compartment_id = var.compartment_id
   display_name   = "${var.oke_general.label_prefix}-public-workers"
   vcn_id         = var.oke_network_vcn.vcn_id
 
@@ -112,7 +112,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
 
 # private worker security checklist
 resource "oci_core_security_list" "private_workers_seclist" {
-  compartment_id = var.compartment_ocid
+  compartment_id = var.compartment_id
   display_name   = "${var.oke_general.label_prefix}-private-workers"
   vcn_id         = var.oke_network_vcn.vcn_id
 
@@ -180,7 +180,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
 
 # internal load balancer security checklist
 resource "oci_core_security_list" "int_lb_seclist" {
-  compartment_id = var.compartment_ocid
+  compartment_id = var.compartment_id
   display_name   = "${var.oke_general.label_prefix}-int-lb"
   vcn_id         = var.oke_network_vcn.vcn_id
 
@@ -201,7 +201,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
 
 # public load balancer security checklist
 resource "oci_core_security_list" "pub_lb_seclist" {
-  compartment_id = var.compartment_ocid
+  compartment_id = var.compartment_id
   display_name   = "${var.oke_general.label_prefix}-pub-lb"
   vcn_id         = var.oke_network_vcn.vcn_id
 

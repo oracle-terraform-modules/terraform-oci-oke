@@ -3,7 +3,7 @@
 
 resource "oci_core_instance" "bastion" {
   availability_domain = element(var.oci_bastion_infra.ad_names, (var.oci_bastion_infra.availability_domains - 1))
-  compartment_id      = var.oci_base_identity.compartment_ocid
+  compartment_id      = var.oci_base_identity.compartment_id
 
   create_vnic_details {
     subnet_id      = oci_core_subnet.bastion[0].id
@@ -23,7 +23,7 @@ resource "oci_core_instance" "bastion" {
 
   source_details {
     source_type = "image"
-    source_id   = var.oci_bastion.image_ocid == "NONE" ? data.oci_core_images.bastion_images.images.0.id : var.oci_bastion.image_ocid
+    source_id   = var.oci_bastion.image_id == "NONE" ? data.oci_core_images.bastion_images.images.0.id : var.oci_bastion.image_id
   }
 
   timeouts {

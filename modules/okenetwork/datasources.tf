@@ -11,7 +11,7 @@ data "oci_core_services" "all_oci_services" {
 }
 
 data "oci_core_subnets" "oke_subnets" {
-  compartment_id = var.compartment_ocid
+  compartment_id = var.compartment_id
   vcn_id         = var.oke_network_vcn.vcn_id
 
   filter {

@@ -156,7 +156,7 @@ enable_instance_principal = "true"
 and verify:
 
 ----
-oci network vcn list --compartment-id <compartment-ocid>
+oci network vcn list --compartment-id <compartment-id>
 ----
 
 ==== Disabling instance_principal on the bastion host

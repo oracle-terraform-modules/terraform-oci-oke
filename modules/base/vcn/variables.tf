@@ -3,7 +3,7 @@
 
 variable "oci_base_vcn" {
   type = object({
-    compartment_ocid       = string
+    compartment_id         = string
     label_prefix           = string
     create_nat_gateway     = bool
     nat_gateway_name       = string

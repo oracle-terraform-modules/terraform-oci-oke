@@ -2,7 +2,6 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 #cloud-config
-package_update: ${package_update}
 package_upgrade: ${package_upgrade}
 packages:
   - ntp 
@@ -20,5 +19,5 @@ runcmd:
  - echo "Configuring bastion..." | tee /root/bastion/bastion.txt
  - bash /root/bastion/bastion.sh
  - pip install oci-cli --upgrade pip
- - echo "export OCI_CLI_AUTH=instance_principal" >>  /home/${user}/.bashrc
- - touch /home/${user}/bastion.finish
+ - echo "export OCI_CLI_AUTH=instance_principal" >>  /home/opc/.bashrc
+ - touch /home/opc/bastion.finish

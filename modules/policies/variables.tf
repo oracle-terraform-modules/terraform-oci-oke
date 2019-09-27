@@ -7,10 +7,10 @@ variable "oci_identity" {
   type = object({
     api_fingerprint      = string
     api_private_key_path = string
-    compartment_ocid     = string
+    compartment_id       = string
     compartment_name     = string
-    tenancy_ocid         = string
-    user_ocid            = string
+    tenancy_id           = string
+    user_id              = string
   })
 }
 
@@ -31,7 +31,6 @@ variable "bastion" {
     bastion_public_ip         = string
     create_bastion            = bool
     enable_instance_principal = bool
-    image_operating_system    = string
   })
 }
 

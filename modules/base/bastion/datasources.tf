@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 data "oci_core_images" "bastion_images" {
-  compartment_id           = var.oci_base_identity.compartment_ocid
-  operating_system         = var.oci_bastion.image_operating_system
-  operating_system_version = var.oci_bastion.image_operating_system_version
+  compartment_id           = var.oci_base_identity.compartment_id
+  operating_system         = "Oracle Linux"
+  operating_system_version = "7.7"
   shape                    = var.oci_bastion.bastion_shape
   sort_by                  = "TIMECREATED"
 }
@@ -12,9 +12,6 @@ data "oci_core_images" "bastion_images" {
 data "template_file" "bastion_template" {
   template = file("${path.module}/scripts/bastion.template.sh")
 
-  vars = {
-    user = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
-  }
   count = var.oci_bastion.create_bastion == true ? 1 : 0
 }
 
@@ -23,9 +20,7 @@ data "template_file" "bastion_cloud_init_file" {
 
   vars = {
     bastion_sh_content = base64gzip(data.template_file.bastion_template[0].rendered)
-    package_update     = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? var.oci_bastion.package_update : false
     package_upgrade    = var.oci_bastion.package_upgrade
-    user               = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
   }
   count = var.oci_bastion.create_bastion == true ? 1 : 0
 }
@@ -48,7 +43,6 @@ data "template_file" "tesseract_template" {
 
   vars = {
     bastion_ip       = join(",", data.oci_core_vnic.bastion_vnic.*.public_ip_address)
-    user             = var.oci_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
     private_key_path = var.oci_base_ssh_keys.ssh_private_key_path
   }
   count = var.oci_bastion.create_bastion == true ? 1 : 0
@@ -57,7 +51,7 @@ data "template_file" "tesseract_template" {
 # Gets a list of VNIC attachments on the bastion instance
 data "oci_core_vnic_attachments" "bastion_vnics_attachments" {
   availability_domain = element(var.oci_bastion_infra.ad_names, (var.oci_bastion_infra.availability_domains - 1))
-  compartment_id      = var.oci_base_identity.compartment_ocid
+  compartment_id      = var.oci_base_identity.compartment_id
   instance_id         = oci_core_instance.bastion[0].id
   count               = var.oci_bastion.create_bastion == true ? 1 : 0
 }

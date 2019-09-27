@@ -7,9 +7,9 @@ locals {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
     compartment_name     = var.compartment_name
-    compartment_ocid     = var.compartment_ocid
-    tenancy_ocid         = var.tenancy_ocid
-    user_ocid            = var.user_ocid
+    compartment_id       = var.compartment_id
+    tenancy_id           = var.tenancy_id
+    user_id              = var.user_id
   }
 
   oci_base_ssh_keys = {
@@ -40,22 +40,19 @@ locals {
     create_bastion                 = var.create_bastion
     bastion_access                 = var.bastion_access
     enable_instance_principal      = var.enable_instance_principal
-    image_ocid                     = var.image_ocid
-    image_operating_system         = var.image_operating_system
-    image_operating_system_version = var.image_operating_system_version
+    image_id                       = var.image_id
     availability_domains           = var.availability_domains["bastion"]
-    package_update                 = var.bastion_package_update
     package_upgrade                = var.bastion_package_upgrade
   }
 
   ocir = {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
-    compartment_ocid     = var.compartment_ocid
+    compartment_id       = var.compartment_id
     create_auth_token    = var.create_auth_token
     home_region          = module.base.home_region
-    tenancy_ocid         = var.tenancy_ocid
-    user_ocid            = var.user_ocid
+    tenancy_id           = var.tenancy_id
+    user_id              = var.user_id
   }
 
   oke_general = {
@@ -81,15 +78,14 @@ locals {
   }
 
   oke_identity = {
-    compartment_ocid = var.compartment_ocid
-    user_ocid        = var.user_ocid
+    compartment_id = var.compartment_id
+    user_id        = var.user_id
   }
 
   oke_bastion = {
     bastion_public_ip         = module.base.bastion_public_ip
     create_bastion            = var.create_bastion
     enable_instance_principal = var.enable_instance_principal
-    image_operating_system    = var.image_operating_system
   }
 
   oke_cluster = {

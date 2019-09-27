@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 resource "oci_core_subnet" "bastion" {
-  compartment_id             = var.oci_base_identity.compartment_ocid
+  compartment_id             = var.oci_base_identity.compartment_id
   cidr_block                 = cidrsubnet(var.oci_bastion_infra.vcn_cidr, var.oci_bastion_infra.newbits, var.oci_bastion_infra.subnets)
   display_name               = "${var.oci_bastion_general.label_prefix}-bastion"
   dns_label                  = "bastion"

@@ -60,18 +60,18 @@ Configuration Terraform Options:
 |
 |None
 
-|compartment_ocid
-|Compartment ocid where the OKE Cluster will be provisioned. *Required*
+|compartment_id
+|Compartment id where the OKE Cluster will be provisioned. *Required*
 |
 |None
 
-|tenancy_ocid
-|Tenancy ocid of the user. *Required*
+|tenancy_id
+|Tenancy id of the user. *Required*
 |
 |None
 
-|user_ocid
-|User's ocid. *Required*
+|user_id
+|User's id. *Required*
 |
 |None
 
@@ -237,19 +237,9 @@ subnets = {
 |ANYWHERE
 
 |enable_instance_principal
+|Whether to enable instance_principal on the bastion. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-bastion-host[instance_principal]
 |
 |
-|
-
-|image_operating_system
-|The Operating System image to be used to provision the bastion.
-|Oracle Linux, CentOS, Canonical Ubuntu
-|Oracle Linux
-
-|image_operating_system_version
-|The version of the selected Operating System to be used to provision the bastion host. Matching versions of available operating systems can be found {uri-oci-images}[here].
-|
-|7.7
 
 |availability_domains
 |The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
@@ -265,11 +255,6 @@ availability_domains = {
 ----
   "bastion"     = 1
 ----
-
-|bastion_package_update
-|Whether to update the apt database on first boot. Only applicable if the bastion host uses Ubuntu as Linux distribution.
-|true/false
-|true
 
 |bastion_package_upgrade
 |Whether to upgrade the instance on first boot. If you choose Ubuntu for the bastion and you set this to true, also set the package_update to true as well.
@@ -420,12 +405,12 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |None
 
 |tenancy_name
-|The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_ocid. *Required* if create_auth_token is set to true.
+|The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_id. *Required* if create_auth_token is set to true.
 |
 |None
 
 |username
-|The username that can login to the selected tenancy. This is different from tenancy_ocid. *Required* if create_auth_token is set to true.
+|The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if create_auth_token is set to true.
 
 |
 |None
@@ -513,6 +498,6 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |false
 
 |existing_key_id
-|ocid of existing KMS key
+|id of existing KMS key
 |
 |

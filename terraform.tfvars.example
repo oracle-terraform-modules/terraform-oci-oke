@@ -9,11 +9,11 @@ api_private_key_path = ""
 
 compartment_name = ""
 
-compartment_ocid = ""
+compartment_id = ""
 
-tenancy_ocid = ""
+tenancy_id = ""
 
-user_ocid = ""
+user_id = ""
 
 # ssh keys
 

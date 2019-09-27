@@ -3,7 +3,7 @@
 
 resource "oci_core_subnet" "workers" {
   cidr_block                 = local.worker_subnet
-  compartment_id             = var.compartment_ocid
+  compartment_id             = var.compartment_id
   display_name               = "${var.oke_general.label_prefix}_workers"
   dns_label                  = "workers"
   prohibit_public_ip_on_vnic = var.oke_network_worker.worker_mode == "private" ? true : false
@@ -14,7 +14,7 @@ resource "oci_core_subnet" "workers" {
 
 resource "oci_core_subnet" "int_lb" {
   cidr_block                 = local.int_lb_subnet
-  compartment_id             = var.compartment_ocid
+  compartment_id             = var.compartment_id
   display_name               = "${var.oke_general.label_prefix}_int_lb"
   dns_label                  = "intlb"
   prohibit_public_ip_on_vnic = true
@@ -27,7 +27,7 @@ resource "oci_core_subnet" "int_lb" {
 
 resource "oci_core_subnet" "pub_lb" {
   cidr_block                 = local.pub_lb_subnet
-  compartment_id             = var.compartment_ocid
+  compartment_id             = var.compartment_id
   display_name               = "${var.oke_general.label_prefix}_pub_lb"
   dns_label                  = "publb"
   prohibit_public_ip_on_vnic = false

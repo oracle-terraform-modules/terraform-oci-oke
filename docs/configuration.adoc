@@ -79,9 +79,9 @@ Enter the values for the following parameters in the terraform.tfvars file:
 * api_fingerprint
 * api_private_key_path
 * compartment_name
-* compartment_ocid
-* tenancy_ocid
-* user_ocid
+* compartment_id
+* tenancy_id
+* user_id
 
 e.g.
 
@@ -224,7 +224,7 @@ The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management 
 create_bastion = true
 enable_instance_principal = true
 use_encryption = true
-existing_key_id = <existing_key_ocid>
+existing_key_id = <existing_key_id>
 ----
 
 {uri-terraform-options}#kms-integration[Reference]

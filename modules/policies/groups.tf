@@ -3,7 +3,7 @@
 
 resource "oci_identity_dynamic_group" "oke-kms-cluster" {
   provider       = "oci.home"
-  compartment_id = var.oci_identity.tenancy_ocid
+  compartment_id = var.oci_identity.tenancy_id
   description    = "dynamic group to allow cluster to use kms"
   matching_rule  = local.dynamic_group_rule_all_clusters
   name  = "${var.label_prefix}-oke-kms-cluster"
@@ -37,7 +37,7 @@ resource null_resource "update_dynamic_group" {
     private_key = file(var.ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user        = "opc"
   }
 
   depends_on = ["oci_identity_dynamic_group.oke-kms-cluster", "oci_identity_policy.bastion_instance_principal_dynamic_group"]

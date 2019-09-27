@@ -14,7 +14,7 @@ an issue too.
 == Contributing to the terraform-oci-oke repository
 
 Pull requests can be made under
-{uri-oracle-oca} [The Oracle Contributor Agreement](OCA).
+{uri-oracle-oca}[The Oracle Contributor Agreement](OCA).
 
 For pull requests to be accepted, the bottom of your commit message must have
 the following line using your name and e-mail address as it appears in the

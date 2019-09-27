@@ -7,34 +7,88 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-== 1.0.0-RC1 (August 27,2019)
+== v1.0.0 (September 27,2019)
+
+=== Changes
+* changed all variables_ocids to ids
+* using Oracle Linux only for bastion now
+* updated docs
+
+== v1.0.0-beta.4 (September 24,2019)
+
+=== Improvements
+
+* Added integration with OCI KMS for encrypting K8s secrets
+* Added outputs for instance_principal dynamic group, enabled update_dynamic_group.sh
+* Updated documentation for KMS
+* New module for KMS usage policies
+
+=== Changes
+* Set minimum version of Terraform to 0.12.8
+* Changes in variable file - removed redundant variables e.g. nodepool_topology, quantity_per_subnet, preferred lb_subnets
+* Updated documentation
+* terraform.tfvars.example
+
+== v1.0.0-beta.3 (September 16,2019)
+
+=== Improvements
+
+* Networking
+** Worker and load balancer subnets now use regional subnets
+** Simplified network topology for both multi and single AD regions
+
+=== Changes
+* Set minimum version of Terraform to 0.12.8
+* Changes in variable file - removed redundant variables e.g. nodepool_topology, quantity_per_subnet, preferred lb_subnets
+* Updated documentation
+* terraform.tfvars.example
+
+== v1.0.0-beta.2 (September 13,2019)
+
+=== Improvements
+
+* Bastion
+** Changed default bastion shape to the smaller (and cheaper) VM.Standard.E2.1
+
+* Worker nodes
+** Added ability to support mixed Kubernetes workloads by choosing different shapes for each node pool
+
+=== Changes
+. Set minimum version of Terraform to 0.12.5
+. Temporarily disabled calico installation option
+
+== v1.0.0-beta.1 (August 27,2019)
 
 === Notes
 * In order to use private load balancers, the necessary oci load balancer annotations must be used.
 
 === Improvements
+* Bastion
+** Added ability to restrict access to bastion host to a CIDR block
+** Bash aliases for kubectl (k) and helm (h)
+** Generated script (tesseract.sh) to ssh to the bastion
+**Optional addition and initialization of incubator and jetstack repos on the bastion
 
-* Added ability to restrict access to bastion host to a CIDR block
-* Bash aliases for kubectl (k) and helm (h)
-* Generated script (tesseract.sh) to ssh to the bastion
-* Optional addition and initialization of incubator and jetstack repos on the bastion
-* Service Gateway routing is now automatically added when service gateway is enabled. Worker nodes can now use the service gateway to access Object Storage, Streaming and other OCI Services without manual configuration of routing and security lists
-* Separate and simplified security lists for public and private workers
-* Added private subnets for internal load balancers
-* Improved subnet defaults:
-** Avoid potential overlapping subnets when creating or scaling large clusters to maximum cluster size
-** Bastion: maximum of 5
-** Load Balancers: maximum of 29 per subnet
-** Worker subnets: maximum of 16380 per subnet, allowing clusters to scale to the maximum that is supported by Kubernetes (5000)
-* Ability to choose load balancer types (public or internal)
-* Improved load balancer selection algorithm. There's no need to toggle the load balancer code for single AD regions anymore
-* Added ability to specify preferred AD pair for load balancers in 3*AD regions
-* Minimum of 3 worker nodes per subnet to ensure adequate number of fault domains in single AD regions
-* Added ability to specify image OCID or choose OS version for worker nodes
-* Improved documentation
+* Networking
+** Separate and simplified security lists for public and private workers
+** Added private subnets for internal load balancers
+** Improved subnet defaults:
+*** Avoid potential overlapping subnets when creating or scaling large clusters to maximum cluster size
+*** Bastion: maximum of 5
+*** Load Balancers: maximum of 29 per subnet
+*** Worker subnets: maximum of 16380 IPv4 addresses per subnet
+** Ability to choose load balancer types (public or internal)
+** Improved load balancer selection algorithm. There’s no need to toggle the load balancer code for single AD regions anymore
+** Added ability to specify preferred AD pair for load balancers in 3*AD regions
+** Minimum of 3 worker nodes per subnet to ensure adequate number of fault domains in single AD regions
+** Service Gateway routing is now automatically added when service gateway is enabled. Worker nodes can now use the service gateway to access Object Storage, Streaming and other OCI Services without manual configuration of routing and security lists
 
-=== Changes
+* Worker nodes
+** Added ability to specify image OCID or choose OS version for worker nodes
 
+*Improved documentation
+
+===Changes
 * Completed upgrade of Terraform code to 0.12
 * Documentation uses asciidoc
 * instance_principal is now disabled by default on the bastion

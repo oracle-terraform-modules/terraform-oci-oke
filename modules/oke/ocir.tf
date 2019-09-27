@@ -25,7 +25,7 @@ resource null_resource "create_ocir_secret" {
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user        = "opc"
   }
 
   depends_on = ["null_resource.write_kubeconfig_bastion"]
@@ -52,7 +52,7 @@ resource null_resource "delete_ocir_script" {
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
-    user        = var.oke_bastion.image_operating_system == "Canonical Ubuntu" ? "ubuntu" : "opc"
+    user        = "opc"
   }
 
   provisioner "remote-exec" {

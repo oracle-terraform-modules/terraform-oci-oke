@@ -111,7 +111,7 @@ The following OCIDs are required:
 . Tenancy OCID
 . User OCID
 
-Follow the documentation for obtaining the tenancy and user ocids on {uri-oci-ocids}[OCI Documentation].
+Follow the documentation for obtaining the tenancy and user ids on {uri-oci-ocids}[OCI Documentation].
 
 To obtain the compartment OCID:
 

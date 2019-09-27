@@ -56,7 +56,7 @@ module "network" {
   source = "./modules/okenetwork"
 
   # identity parameters
-  compartment_ocid = var.compartment_ocid
+  compartment_id = var.compartment_id
 
   # general parameters
   oke_general = local.oke_general

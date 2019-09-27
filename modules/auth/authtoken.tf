@@ -4,6 +4,6 @@
 resource "oci_identity_auth_token" "ocirtoken" {
   provider    = "oci.home"
   description = "ocir auth token"
-  user_id     = var.ocir.user_ocid
+  user_id     = var.ocir.user_id
   count       = var.ocir.create_auth_token == true ? 1 : 0
 }

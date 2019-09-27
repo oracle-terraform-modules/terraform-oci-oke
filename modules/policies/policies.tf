@@ -3,7 +3,7 @@
 
 resource "oci_identity_policy" "bastion_instance_principal_dynamic_group" {
   provider       = "oci.home"
-  compartment_id = var.oci_identity.tenancy_ocid
+  compartment_id = var.oci_identity.tenancy_id
   description    = "policy to allow bastion host to manage dynamic group"
   name           = "${var.label_prefix}-bastion-instance-principal-dynamic-group"
   statements     = ["Allow dynamic-group ${var.dynamic_group} to use dynamic-groups in tenancy"]
@@ -12,7 +12,7 @@ resource "oci_identity_policy" "bastion_instance_principal_dynamic_group" {
 
 resource "oci_identity_policy" "oke-kms" {
   provider       = "oci.home"
-  compartment_id = var.oci_identity.compartment_ocid
+  compartment_id = var.oci_identity.compartment_id
   description    = "policy to allow instances to allow dynamic group ${var.label_prefix}-oke-kms-cluster to use kms"
   name           = "${var.label_prefix}-oke-kms"
   statements     = [local.policy_statement]

@@ -24,6 +24,7 @@ CONTRIBUTORS
 - @kapmani
 - @briangustafson
 - @sahitgollapudi
+- @priteshkp
 
 Others:
 

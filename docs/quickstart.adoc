@@ -49,10 +49,10 @@ cp terraform.tfvars.example terraform.tfvars
 
 * api_fingerprint
 * api_private_key_path
-* compartment_ocid
+* compartment_id
 * compartment_name
-* tenancy_ocid
-* user_ocid
+* tenancy_id
+* user_id
 
 3. Override other parameters:
 
