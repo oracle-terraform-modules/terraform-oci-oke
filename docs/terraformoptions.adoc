@@ -140,7 +140,7 @@ Configuration Terraform Options:
 |
 |10.0.0.0/16
 
-|vcn_dns_name
+|vcn_dns_label
 |The internal DNS domain for resources created and prepended to "oraclevcn.com" which is the VCN-internal domain name.
 |
 |oke

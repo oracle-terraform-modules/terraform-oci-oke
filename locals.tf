@@ -25,7 +25,7 @@ locals {
 
   oci_base_vcn = {
     vcn_cidr               = var.vcn_cidr
-    vcn_dns_name           = var.vcn_dns_name
+    vcn_dns_label           = var.vcn_dns_label
     vcn_name               = var.vcn_name
     create_nat_gateway     = var.create_nat_gateway
     nat_gateway_name       = var.nat_gateway_name

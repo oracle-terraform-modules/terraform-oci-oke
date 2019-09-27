@@ -73,7 +73,7 @@ variable "vcn_cidr" {
   default     = "10.0.0.0/16"
 }
 
-variable "vcn_dns_name" {
+variable "vcn_dns_label" {
   type    = "string"
   default = "oke"
 }

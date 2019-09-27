@@ -10,7 +10,7 @@ variable "oci_base_vcn" {
     create_service_gateway = bool
     service_gateway_name   = string
     vcn_cidr               = string
-    vcn_dns_name           = string
+    vcn_dns_label           = string
     vcn_name               = string
   })
 }

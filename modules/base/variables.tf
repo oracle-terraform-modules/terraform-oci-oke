@@ -38,7 +38,7 @@ variable "oci_base_general" {
 variable "oci_base_vcn" {
   type = object({
     vcn_cidr               = string
-    vcn_dns_name           = string
+    vcn_dns_label           = string
     vcn_name               = string
     create_nat_gateway     = bool
     nat_gateway_name       = string

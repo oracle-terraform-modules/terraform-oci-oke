@@ -61,7 +61,7 @@ cp terraform.tfvars.example terraform.tfvars
 4. Optional parameters to override:
 * ssh_private_key_path
 * ssh_public_key_path
-* vcn_dns_name
+* vcn_dns_label
 * vcn_name
 * create_bastion
 * cluster_name

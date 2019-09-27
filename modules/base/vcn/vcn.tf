@@ -5,7 +5,7 @@ resource "oci_core_vcn" "vcn" {
   cidr_block     = var.oci_base_vcn.vcn_cidr
   compartment_id = var.oci_base_vcn.compartment_id
   display_name   = "${var.oci_base_vcn.label_prefix}-${var.oci_base_vcn.vcn_name}"
-  dns_label      = var.oci_base_vcn.vcn_dns_name
+  dns_label      = var.oci_base_vcn.vcn_dns_label
 }
 
 resource "oci_core_internet_gateway" "ig" {

@@ -10,7 +10,7 @@ locals {
     create_service_gateway = var.oci_base_vcn.create_service_gateway
     service_gateway_name   = var.oci_base_vcn.service_gateway_name
     vcn_cidr               = var.oci_base_vcn.vcn_cidr
-    vcn_dns_name           = var.oci_base_vcn.vcn_dns_name
+    vcn_dns_label           = var.oci_base_vcn.vcn_dns_label
     vcn_name               = var.oci_base_vcn.vcn_name
   }
 

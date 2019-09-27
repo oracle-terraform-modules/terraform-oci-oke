@@ -43,7 +43,7 @@ subnets = {
 
 vcn_cidr = "10.0.0.0/16"
 
-vcn_dns_name = "oke"
+vcn_dns_label = "oke"
 
 vcn_name = "oke vcn"
 
