@@ -81,7 +81,7 @@ The following resources are created:
 
 The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of 10.0.2.96/27 giving a maximum possible of 5 IP addresses. This will allow room for future capabilities.
 
-The worker subnet has a CIDR of 10.0.64.0/18 assigned by default. This gives the subnet a maximum possible of 16381 IP addresses and therefore number of hosts per subnet. This is enough to scale the cluster to the theoretical maximum number of worker nodes (5000) currently supported by Kubernetes.
+The worker subnet has a CIDR of 10.0.64.0/18 assigned by default. This gives the subnet a maximum possible of 16381 IP addresses and therefore number of hosts per subnet. This is enough to scale the cluster to the maximum number of worker nodes (1000) currently allowed by Oracle Container Engine.
 
 The load balancer subnets consist of 2 types:
 
