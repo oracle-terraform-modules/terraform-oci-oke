@@ -35,6 +35,8 @@ Configuration Terraform Options:
 . link:#ocir[OCIR]
 . link:#helm[Helm]
 . link:#calico[Calico]
+. link:#kubernetes-metrics-server[Kubernetes Metrics Server]
+. link:#kms-integration[KMS integration]
 
 == Identity and access
 
