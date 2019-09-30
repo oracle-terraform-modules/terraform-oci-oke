@@ -145,3 +145,8 @@ install_calico = false
 
 #metrics server
 install_metricserver = false
+
+# kms
+use_encryption = false
+
+existing_key_id = ""
