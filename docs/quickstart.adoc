@@ -40,7 +40,8 @@
 
 [source,bash]
 ----
-git clone https://github.com/oracle/terraform-oci-oke.git tfoke
+git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke
+
 cd tfoke
 cp terraform.tfvars.example terraform.tfvars
 ----
