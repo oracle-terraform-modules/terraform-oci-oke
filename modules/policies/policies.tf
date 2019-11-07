@@ -7,7 +7,7 @@ resource "oci_identity_policy" "bastion_instance_principal_dynamic_group" {
   description    = "policy to allow bastion host to manage dynamic group"
   name           = "${var.label_prefix}-bastion-instance-principal-dynamic-group"
   statements     = ["Allow dynamic-group ${var.dynamic_group} to use dynamic-groups in tenancy"]
-  count          = var.oke_kms.use_encryption == true ? 1 : 0
+  count          = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
 }
 
 resource "oci_identity_policy" "oke-kms" {
@@ -16,5 +16,5 @@ resource "oci_identity_policy" "oke-kms" {
   description    = "policy to allow instances to allow dynamic group ${var.label_prefix}-oke-kms-cluster to use kms"
   name           = "${var.label_prefix}-oke-kms"
   statements     = [local.policy_statement]
-  count          = var.oke_kms.use_encryption == true ? 1 : 0
+  count          = (var.oke_kms.use_encryption == true) ? 1 : 0
 }

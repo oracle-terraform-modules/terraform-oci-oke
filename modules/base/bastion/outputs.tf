@@ -6,5 +6,5 @@ output "bastion_public_ip" {
 }
 
 output "bastion_instance_principal_group_name" {
-  value = oci_identity_dynamic_group.bastion_instance_principal[0].name
+  value = (var.oci_bastion.enable_instance_principal == true) ? oci_identity_dynamic_group.bastion_instance_principal[0].name : null
 }

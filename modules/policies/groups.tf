@@ -6,8 +6,8 @@ resource "oci_identity_dynamic_group" "oke-kms-cluster" {
   compartment_id = var.oci_identity.tenancy_id
   description    = "dynamic group to allow cluster to use kms"
   matching_rule  = local.dynamic_group_rule_all_clusters
-  name  = "${var.label_prefix}-oke-kms-cluster"
-  count = var.oke_kms.use_encryption == true ? 1 : 0
+  name           = "${var.label_prefix}-oke-kms-cluster"
+  count          = (var.oke_kms.use_encryption == true) ? 1 : 0
 
   lifecycle {
     ignore_changes = [matching_rule]
@@ -24,7 +24,7 @@ data "template_file" "update_dynamic_group_script" {
 
   depends_on = ["oci_identity_dynamic_group.oke-kms-cluster"]
 
-  count = var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true ? 1 : 0
+  count = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
 }
 
 resource null_resource "update_dynamic_group" {
@@ -55,5 +55,5 @@ resource null_resource "update_dynamic_group" {
     ]
   }
 
-  count = var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true ? 1 : 0
+  count = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
 }
