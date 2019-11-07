@@ -17,7 +17,8 @@
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 
 :uri-instructions: {uri-docs}/instructions.adoc
-:uri-license: {uri-rel-file-base}/LICENSE.txt
+:uri-license: {uri-rel-file-base}/LICENSE
+:uri-canonical-license: https://oss.oracle.com/licenses/upl/
 :uri-kubernetes: https://kubernetes.io/
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
@@ -61,10 +62,6 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 * {uri-networks-subnets-cidr}[Erik Berg on Networks, Subnets and CIDR]
 * {uri-terraform-cidrsubnet-deconstructed}[Lisa Hagemann on Terraform cidrsubnet Deconstructed]
 
-== License
-
-{uri-license}[LICENSE.txt]
-
 == Changelog
 
 View the {uri-changelog}[CHANGELOG].
@@ -78,3 +75,11 @@ Code derived and adapted from {uri-terraform-oke-sample}[Terraform OKE Sample] a
 {uri-contributors}[Folks who contributed with explanations, code, feedback, ideas, testing etc.]
 
 Learn how to {uri-contribute}[contribute].
+
+
+== License
+
+Copyright &copy; 2019 Oracle and/or its associates. All rights reserved.
+
+Licensed under the {uri-license}[Universal Permissive License 1.0] as shown at 
+{uri-canonical-license}[https://oss.oracle.com/licenses/upl].
