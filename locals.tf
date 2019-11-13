@@ -25,7 +25,7 @@ locals {
 
   oci_base_vcn = {
     vcn_cidr               = var.vcn_cidr
-    vcn_dns_label           = var.vcn_dns_label
+    vcn_dns_label          = var.vcn_dns_label
     vcn_name               = var.vcn_name
     create_nat_gateway     = var.create_nat_gateway
     nat_gateway_name       = var.nat_gateway_name
@@ -34,15 +34,41 @@ locals {
   }
 
   oci_base_bastion = {
-    newbits                        = var.newbits["bastion"]
-    subnets                        = var.subnets["bastion"]
-    bastion_shape                  = var.bastion_shape
-    create_bastion                 = var.create_bastion
-    bastion_access                 = var.bastion_access
-    enable_instance_principal      = var.enable_instance_principal
-    image_id                       = var.image_id
-    availability_domains           = var.availability_domains["bastion"]
-    package_upgrade                = var.bastion_package_upgrade
+    availability_domains  = var.availability_domains["bastion"]
+    bastion_access        = var.bastion_access
+    bastion_image_id      = var.bastion_image_id
+    bastion_shape         = var.bastion_shape
+    bastion_upgrade       = var.bastion_package_upgrade
+    create_bastion        = var.create_bastion
+    enable_notification   = var.bastion_enable_notification
+    netnum                = var.netnum["bastion"]
+    newbits               = var.newbits["bastion"]
+    notification_endpoint = var.bastion_notification_endpoint
+    notification_protocol = var.bastion_notification_protocol
+    notification_topic    = var.bastion_notification_topic
+    ssh_private_key_path  = var.ssh_private_key_path
+    ssh_public_key_path   = var.ssh_public_key_path
+    timezone              = var.bastion_timezone
+    use_autonomous        = var.bastion_use_autonomous
+  }
+
+  oci_base_admin = {
+    availability_domains      = var.availability_domains["admin"]
+    admin_image_id            = "NONE"
+    admin_shape               = var.admin_shape
+    admin_upgrade             = true
+    create_admin              = var.create_admin
+    enable_instance_principal = var.admin_enable_instance_principal
+    enable_notification       = var.admin_enable_notification
+    netnum                    = var.netnum["admin"]
+    newbits                   = var.newbits["admin"]
+    notification_endpoint     = var.admin_notification_endpoint
+    notification_protocol     = var.admin_notification_protocol
+    notification_topic        = var.admin_notification_topic
+    ssh_private_key_path      = var.ssh_private_key_path
+    ssh_public_key_path       = var.ssh_public_key_path
+    timezone                  = var.admin_timezone
+    use_autonomous            = var.admin_use_autonomous
   }
 
   ocir = {
@@ -65,8 +91,8 @@ locals {
     ig_route_id                = module.base.ig_route_id
     is_service_gateway_enabled = var.create_service_gateway
     nat_route_id               = module.base.nat_route_id
+    netnum                     = var.netnum
     newbits                    = var.newbits
-    subnets                    = var.subnets
     vcn_cidr                   = var.vcn_cidr
     vcn_id                     = module.base.vcn_id
   }
@@ -82,10 +108,12 @@ locals {
     user_id        = var.user_id
   }
 
-  oke_bastion = {
-    bastion_public_ip         = module.base.bastion_public_ip
-    create_bastion            = var.create_bastion
-    enable_instance_principal = var.enable_instance_principal
+  oke_admin = {
+    bastion_public_ip               = module.base.bastion_public_ip
+    admin_private_ip                = module.base.admin_private_ip
+    create_bastion                  = var.create_bastion
+    create_admin                    = var.create_admin
+    enable_admin_instance_principal = var.admin_enable_instance_principal
   }
 
   oke_cluster = {
@@ -99,7 +127,6 @@ locals {
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
     kms_key_id                                              = var.existing_key_id
-
   }
 
   node_pools = {

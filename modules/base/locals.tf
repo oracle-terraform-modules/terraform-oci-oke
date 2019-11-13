@@ -3,14 +3,12 @@
 
 locals {
   oci_base_vcn = {
-    compartment_id       = var.oci_base_identity.compartment_id
-    label_prefix           = var.oci_base_general.label_prefix
+    compartment_id         = var.oci_base_identity.compartment_id
     create_nat_gateway     = var.oci_base_vcn.create_nat_gateway
-    nat_gateway_name       = var.oci_base_vcn.nat_gateway_name
     create_service_gateway = var.oci_base_vcn.create_service_gateway
-    service_gateway_name   = var.oci_base_vcn.service_gateway_name
+    label_prefix           = var.oci_base_general.label_prefix
     vcn_cidr               = var.oci_base_vcn.vcn_cidr
-    vcn_dns_label           = var.oci_base_vcn.vcn_dns_label
+    vcn_dns_label          = var.oci_base_vcn.vcn_dns_label
     vcn_name               = var.oci_base_vcn.vcn_name
   }
 
@@ -21,21 +19,56 @@ locals {
   }
 
   oci_bastion_infra = {
+    ad_names             = data.template_file.ad_names.*.rendered
+    availability_domains = var.oci_base_bastion.availability_domains
     ig_route_id          = module.vcn.ig_route_id
+    netnum               = var.oci_base_bastion.netnum
+    newbits              = var.oci_base_bastion.newbits
     vcn_cidr             = var.oci_base_vcn.vcn_cidr
     vcn_id               = module.vcn.vcn_id
-    ad_names             = data.template_file.ad_names.*.rendered
-    newbits              = var.oci_base_bastion.newbits
-    subnets              = var.oci_base_bastion.subnets
-    availability_domains = var.oci_base_bastion.availability_domains
   }
 
   oci_bastion = {
-    bastion_shape                  = var.oci_base_bastion.bastion_shape
-    create_bastion                 = var.oci_base_bastion.create_bastion
-    bastion_access                 = var.oci_base_bastion.bastion_access
-    enable_instance_principal      = var.oci_base_bastion.enable_instance_principal
-    image_id                     = var.oci_base_bastion.image_id
-    package_upgrade                = var.oci_base_bastion.package_upgrade
+    bastion_access      = var.oci_base_bastion.bastion_access
+    bastion_image_id    = var.oci_base_bastion.bastion_image_id
+    bastion_shape       = var.oci_base_bastion.bastion_shape
+    bastion_upgrade     = var.oci_base_bastion.bastion_upgrade
+    create_bastion      = var.oci_base_bastion.create_bastion
+    ssh_public_key_path = var.oci_base_bastion.ssh_public_key_path
+    timezone            = var.oci_base_bastion.timezone
+    use_autonomous      = var.oci_base_bastion.use_autonomous
+  }
+
+  oci_bastion_notification = {
+    enable_notification   = var.oci_base_bastion.enable_notification
+    notification_endpoint = var.oci_base_bastion.notification_endpoint
+    notification_protocol = var.oci_base_bastion.notification_protocol
+    notification_topic    = var.oci_base_bastion.notification_topic
+  }
+
+  oci_admin_network = {
+    ad_names             = data.template_file.ad_names.*.rendered
+    availability_domains = var.oci_base_admin.availability_domains
+    nat_route_id          = module.vcn.nat_route_id
+    netnum               = var.oci_base_admin.netnum
+    newbits              = var.oci_base_admin.newbits
+    vcn_cidr             = var.oci_base_vcn.vcn_cidr
+    vcn_id               = module.vcn.vcn_id
+  }
+
+  oci_admin = {
+    admin_image_id    = var.oci_base_admin.admin_image_id
+    admin_shape       = var.oci_base_admin.admin_shape
+    admin_upgrade     = var.oci_base_admin.admin_upgrade
+    create_admin      = var.oci_base_admin.create_admin
+    ssh_public_key_path = var.oci_base_admin.ssh_public_key_path
+    timezone            = var.oci_base_admin.timezone
+  }
+
+  oci_admin_notification = {
+    enable_notification   = var.oci_base_admin.enable_notification
+    notification_endpoint = var.oci_base_admin.notification_endpoint
+    notification_protocol = var.oci_base_admin.notification_protocol
+    notification_topic    = var.oci_base_admin.notification_topic
   }
 }

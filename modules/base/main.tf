@@ -7,10 +7,19 @@ module "vcn" {
 }
 
 module "bastion" {
-  source              = "./bastion"
-  oci_base_identity   = var.oci_base_identity
-  oci_bastion_general = local.oci_bastion_general
-  oci_bastion_infra   = local.oci_bastion_infra
-  oci_bastion         = local.oci_bastion
-  oci_base_ssh_keys   = var.oci_base_ssh_keys
+  source                   = "./bastion"
+  oci_base_identity        = var.oci_base_identity
+  oci_bastion_general      = local.oci_bastion_general
+  oci_bastion_infra        = local.oci_bastion_infra
+  oci_bastion              = local.oci_bastion
+  oci_bastion_notification = local.oci_bastion_notification
+}
+
+module "admin" {
+  source                 = "./admin"
+  oci_admin_identity     = var.oci_base_identity
+  oci_admin_general      = local.oci_bastion_general
+  oci_admin_network      = local.oci_admin_network
+  oci_admin              = local.oci_admin
+  oci_admin_notification = local.oci_admin_notification
 }

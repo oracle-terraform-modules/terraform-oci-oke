@@ -26,11 +26,13 @@ variable "ssh_keys" {
 
 variable "label_prefix" {}
 
-variable "bastion" {
+variable "admin" {
   type = object({
-    bastion_public_ip         = string
-    create_bastion            = bool
-    enable_instance_principal = bool
+    bastion_public_ip               = string
+    admin_private_ip                = string
+    create_bastion                  = bool
+    create_admin                    = bool
+    enable_admin_instance_principal = bool
   })
 }
 

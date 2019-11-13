@@ -33,11 +33,15 @@ data "template_file" "install_kubectl" {
 
 resource "null_resource" "install_kubectl_bastion" {
   connection {
-    host        = var.oke_bastion.bastion_public_ip
+    host        = var.oke_admin.admin_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
+
+    bastion_host        = var.oke_admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
   provisioner "file" {
@@ -53,30 +57,52 @@ resource "null_resource" "install_kubectl_bastion" {
     ]
   }
 
-  count = var.oke_bastion.create_bastion == true ? 1 : 0
+  count = var.oke_admin.create_bastion == true ? 1 : 0
 }
 
-resource "null_resource" "write_kubeconfig_bastion" {
+data "template_file" "generate_kubeconfig" {
+  template = file("${path.module}/scripts/generate_kubeconfig.template.sh")
+
+  vars = {
+    cluster-id = oci_containerengine_cluster.k8s_cluster.id
+    region     = var.oke_general.region
+  }
+
+  count = var.oke_admin.create_bastion == true ? 1 : 0
+}
+
+resource "null_resource" "write_kubeconfig_on_admin" {
   connection {
-    host        = var.oke_bastion.bastion_public_ip
+    host        = var.oke_admin.admin_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
+
+    bastion_host        = var.oke_admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
   depends_on = ["local_file.kube_config_file", "null_resource.install_kubectl_bastion"]
 
+  provisioner "file" {
+    content     = data.template_file.generate_kubeconfig[0].rendered
+    destination = "~/generate_kubeconfig.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "mkdir -p $HOME/.kube",
+      "chmod +x $HOME/generate_kubeconfig.sh",
+      "$HOME/install_calico.sh"
     ]
   }
 
-  provisioner "file" {
-    source      = "generated/kubeconfig"
-    destination = "~/.kube/config"
-  }
+  # provisioner "file" {
+  #   source      = "generated/kubeconfig"
+  #   destination = "~/.kube/config"
+  # }
 
-  count = var.oke_bastion.create_bastion == true ? 1 : 0
+  count = var.oke_admin.create_bastion == true ? 1 : 0
 }

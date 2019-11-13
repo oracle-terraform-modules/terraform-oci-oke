@@ -9,17 +9,20 @@ data "template_file" "check_worker_node_status" {
     compartment_id = var.oke_identity.compartment_id
     region         = var.oke_general.region
   }
-
-  count = var.oke_bastion.create_bastion == true && var.oke_bastion.enable_instance_principal == true ? 1 : 0
+  count = var.oke_admin.create_bastion == true ? 1 : 0
 }
 
 resource null_resource "is_worker_active" {
   connection {
-    host        = var.oke_bastion.bastion_public_ip
+    host        = var.oke_admin.admin_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
+
+    bastion_host        = var.oke_admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
   depends_on = ["oci_containerengine_cluster.k8s_cluster"]
@@ -36,5 +39,5 @@ resource null_resource "is_worker_active" {
     ]
   }
 
-  count = var.oke_bastion.create_bastion == true && var.oke_bastion.enable_instance_principal == true ? 1 : 0
+  count = var.oke_admin.create_bastion == true ? 1 : 0
 }

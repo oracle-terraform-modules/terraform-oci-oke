@@ -2,22 +2,21 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
 #cloud-config
-package_upgrade: ${package_upgrade}
+package_upgrade: ${admin_upgrade}
 packages:
-  - ntp 
   - python-pip
-timezone: Australia/Sydney
+timezone: ${timezone}
 
 write_files:
 # setup script
-  - path: "/root/bastion/bastion.sh"
+  - path: "/root/admin/admin.sh"
     permissions: "0700"
     encoding: "gzip+base64"
     content: |
-      ${bastion_sh_content}
+      ${admin_sh_content}
 runcmd:
- - echo "Configuring bastion..." | tee /root/bastion/bastion.txt
- - bash /root/bastion/bastion.sh
+ - echo "Configuring admin..." | tee /root/admin/admin.txt
+ - bash /root/admin/admin.sh
  - pip install oci-cli --upgrade pip
  - echo "export OCI_CLI_AUTH=instance_principal" >>  /home/opc/.bashrc
- - touch /home/opc/bastion.finish
+ - touch /home/opc/admin.finish

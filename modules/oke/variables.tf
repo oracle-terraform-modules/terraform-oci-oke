@@ -31,11 +31,13 @@ variable "oke_general" {
 
 # bastion
 
-variable "oke_bastion" {
+variable "oke_admin" {
   type = object({
-    bastion_public_ip         = string
-    create_bastion            = bool
-    enable_instance_principal = bool
+    bastion_public_ip               = string
+    admin_private_ip                = string
+    create_bastion                  = bool
+    create_admin                    = bool
+    enable_admin_instance_principal = bool
   })
 }
 
@@ -79,7 +81,7 @@ variable "cluster_kube_config_expiration" {
   default = 2592000
 }
 variable "cluster_kube_config_token_version" {
-  default = "1.0.0"
+  default = "2.0.0"
 }
 
 # ocir

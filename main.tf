@@ -11,9 +11,6 @@ module "base" {
   # identity
   oci_base_identity = local.oci_base_identity
 
-  # ssh keys
-  oci_base_ssh_keys = local.oci_base_ssh_keys
-
   # general oci parameters
   oci_base_general = local.oci_base_general
 
@@ -22,6 +19,10 @@ module "base" {
 
   # bastion parameters
   oci_base_bastion = local.oci_base_bastion
+  
+  # admin server parameters
+  oci_base_admin = local.oci_base_admin
+
 }
 
 module "policies" {
@@ -34,14 +35,13 @@ module "policies" {
 
   label_prefix = var.label_prefix
 
-  bastion = local.oke_bastion
+  admin = local.oke_admin
 
   dynamic_group = module.base.group_name
 
   oke_kms = local.oke_kms
 
   cluster_id = module.oke.cluster_id
-
 }
 
 module "auth" {
@@ -85,7 +85,7 @@ module "oke" {
   oke_general = local.oke_general
 
   # bastion details
-  oke_bastion = local.oke_bastion
+  oke_admin = local.oke_admin
 
   # oke cluster parameters
   oke_cluster = local.oke_cluster

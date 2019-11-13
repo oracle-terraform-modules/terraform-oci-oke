@@ -7,12 +7,16 @@ output "ad_names" {
   value = sort(data.template_file.ad_names.*.rendered)
 }
 
+output "admin_private_ip" {
+  value = module.admin.admin_private_ip
+}
+
 output "bastion_public_ip" {
   value = module.bastion.bastion_public_ip
 }
 
 output "group_name" {
-  value = module.bastion.bastion_instance_principal_group_name
+  value = module.admin.admin_instance_principal_group_name
 }
 
 output "ig_route_id" {
@@ -38,5 +42,5 @@ output "home_region" {
 # convenient output
 
 output "ssh_to_bastion" {
-  value = "ssh -i ${var.oci_base_ssh_keys.ssh_private_key_path} opc@${module.bastion.bastion_public_ip}"
+  value = "ssh -i ${var.oci_base_bastion.ssh_private_key_path} opc@${module.bastion.bastion_public_ip}"
 }

@@ -34,7 +34,7 @@ newbits = {
   "workers" = 2
 }
 
-subnets = {
+netnum = {
   "bastion" = 32
   "int_lb"  = 16
   "pub_lb"  = 17
@@ -65,18 +65,12 @@ bastion_access = "ANYWHERE"
 
 enable_instance_principal = false
 
-image_operating_system = "Oracle Linux"
-
-image_operating_system_version = "7.7"
-
 # availability_domains
 
 # which AD where to place non-OKE resources
 availability_domains = {
   "bastion"     = 1
 }
-
-bastion_package_update = false
 
 bastion_package_upgrade = true
 

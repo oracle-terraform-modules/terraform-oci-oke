@@ -22,8 +22,8 @@ variable "oke_network_vcn" {
     ig_route_id                = string
     is_service_gateway_enabled = bool
     nat_route_id               = string
+    netnum                    = map(number)
     newbits                    = map(number)
-    subnets                    = map(number)
     vcn_cidr                   = string
     vcn_id                     = string
   })

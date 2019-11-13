@@ -1,13 +1,13 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
 
-resource "oci_identity_policy" "bastion_instance_principal_dynamic_group" {
+resource "oci_identity_policy" "admin_instance_principal_dynamic_group" {
   provider       = "oci.home"
   compartment_id = var.oci_identity.tenancy_id
-  description    = "policy to allow bastion host to manage dynamic group"
-  name           = "${var.label_prefix}-bastion-instance-principal-dynamic-group"
+  description    = "policy to allow admin host to manage dynamic group"
+  name           = "${var.label_prefix}-admin-instance-principal-dynamic-group"
   statements     = ["Allow dynamic-group ${var.dynamic_group} to use dynamic-groups in tenancy"]
-  count          = var.oke_kms.use_encryption == true ? 1 : 0
+  count          = (var.oke_kms.use_encryption == true  && var.admin.create_bastion == true && var.admin.enable_admin_instance_principal == true) ? 1 : 0
 }
 
 resource "oci_identity_policy" "oke-kms" {

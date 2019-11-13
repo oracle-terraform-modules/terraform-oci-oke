@@ -9,9 +9,9 @@ output "ssh_to_bastion" {
   value = module.base.ssh_to_bastion
 }
 
-output "kubeconfig" {
-  value = "export KUBECONFIG=generated/kubeconfig"
-}
+# output "kubeconfig" {
+#   value = "export KUBECONFIG=generated/kubeconfig"
+# }
 
 output "ocirtoken" {
   value     = module.auth.ocirtoken
