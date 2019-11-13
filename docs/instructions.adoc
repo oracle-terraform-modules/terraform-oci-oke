@@ -101,18 +101,15 @@ Use the parameter *cluster_name* to change the name of the cluster as per your n
 
 === Adding the bastion host
 
-If you want to use bastion host, set the parameter *create_bastion* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
+If you want to use bastion host, set the parameter *bastion_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
 
-==== package_update and package_upgrade
+==== bastion_package_upgrade
 
-There are 2 additional parameters for the bastion:
+There is 1 additional parameter for the bastion:
 
-* bastion_package_update
 * bastion_package_upgrade
 
-_bastion_package_update_ will update the apt database *if* you choose Ubuntu as the Linux distribution for the bastion host.
-
-_bastion_package_upgrade_ will upgrade the bastion compute instance on first boot. If you choose Ubuntu for bastion host and you set _bastion_package_upgrade_ to *true*, you should also set the _bastion_package_update_ to *true*.
+_bastion_package_upgrade_ will upgrade the bastion compute instance on first boot. 
 
 ****
 N.B. It is good and recommended practice to upgrade your bastion host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the bastion host is available.
@@ -121,7 +118,7 @@ N.B. It is good and recommended practice to upgrade your bastion host to the lat
 === Using the bastion host
 
 ****
-*Assumption: you have set the create_bastion parameter to true in terraform.tfvars*
+*Assumption: you have set the bastion_enabled parameter to true in terraform.tfvars*
 ****
 
 Once the terraform apply is successful you will get the bastion_public_ip as output and also a ssh command .You can also run the below command to get the output:
@@ -136,21 +133,51 @@ A utility script is also generated that contains the command to ssh to the basti
 scripts/tesseract.sh
 ----
 
-==== Enabling instance_principal on the bastion host
+=== Adding the admin host
+
+The admin host is used to minimize local dependencies such as oci-cli, kubectl and so on. 
+
+If you want to use the admin host, set the parameter *admin_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#admin-host[Admin Host] for other available bastion related parameters.
+
+==== admin_package_upgrade
+
+There is 1 additional parameter for the admin:
+
+* admin_package_upgrade
+
+_admin_package_upgrade_ will upgrade the admin compute packages on first boot. 
+
+****
+N.B. It is good and recommended practice to upgrade your package host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the package host is available.
+****
+
+=== Using the admin host
+
+****
+*Assumption: you have set the admin_enabled parameter to true in terraform.tfvars*
+****
+
+Once the terraform apply is successful you will get the admin_private_ip as output and also a ssh command .You can also run the below command to get the output:
+
+----
+terraform output
+----
+
+==== Enabling instance_principal on the admin host
 {uri-oci-instance-principal}[instance_principal] is an IAM service feature that enables instances to be authorized actors (or principals) to perform actions on service resources. Each compute instance has its own identity, and it authenticates using the certificates that are added to it. These certificates are automatically created, assigned to instances and rotated, preventing the need for you to distribute credentials to your hosts and rotate them.
 
 Any user who has access to the instance (who can SSH to the instance), automatically inherits the privileges granted to the instance. Before you enable this feature, ensure that you know who can access it, and that they should be authorized with the permissions you are granting to the instance.
 
-By default, this feature is *_disabled_*. However, it is *_required_* at the time of cluster creation *_if_* you wish to enable link:#kms-integration[KMS Integration].
+By default, this feature is *_disabled_*. However, it is *_required_* at the time of cluster creation *_if_* you wish to enable link:#kms-integration[KMS Integration], calico, metricserver, helm or creating the OCIR secret.
 
-When you enable this feature, by default, the bastion has privileges to all resources in the compartment. If you are enabling it for link:#kms-integration[KMS Integration], the bastion host will also have rights to create policies in the root tenancy. 
+When you enable this feature, by default, the admin host will have privileges to all resources in the compartment. If you are enabling it for link:#kms-integration[KMS Integration], the admin host will also have rights to create policies in the root tenancy. 
 
-You can also turn on and off the feature at any time without impact on the bastion or the cluster.
+You can also turn on and off the feature at any time without impact on the admin or the cluster.
 
-To enable, set enable_instance_principal to true:
+To enable, set admin_instance_principal to true:
 
 ----
-enable_instance_principal = "true"
+admin_instance_principal = "true"
 ----
 
 and verify:
@@ -159,13 +186,13 @@ and verify:
 oci network vcn list --compartment-id <compartment-id>
 ----
 
-==== Disabling instance_principal on the bastion host
+==== Disabling instance_principal on the admin host
 
-. Set enable_instance_principal to false in terraform.tfvars
+. Set admin_instance_principal to false in terraform.tfvars
 
 +
 ----
-enable_instance_principal = false
+admin_instance_principal = false
 ----
 
 . Run terraform apply again:
@@ -177,8 +204,8 @@ terraform apply
 
 ==== Recommendations for using instance_principal
 
-. Do not enable instance_principal if you are not using link:#kms-integration[KMS Integration]
-. Enable instance_principal *_if and only if_* you are using link:#kms-integration[KMS Integration]
+. Do not enable instance_principal if you are not using link:#kms-integration[KMS Integration] or calico
+. Enable instance_principal *_if and only if_* you are using link:#kms-integration[KMS Integration], calico, metricserver, helm or creating the OCIR secret.
 . Disable instance_principal once the cluster is created
 
 === Interacting with the OKE Cluster locally

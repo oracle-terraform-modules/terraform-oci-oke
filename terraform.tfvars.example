@@ -1,21 +1,14 @@
-# Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
-
 # Identity and access parameters
 
 api_fingerprint = ""
 
 api_private_key_path = ""
 
-compartment_name = ""
-
 compartment_id = ""
 
 tenancy_id = ""
 
 user_id = ""
-
-# ssh keys
 
 ssh_private_key_path = ""
 
@@ -28,18 +21,24 @@ region = "us-phoenix-1"
 
 # networking
 
-newbits = {
-  "bastion" = 13
-  "lb"      = 11
-  "workers" = 2
+nat_gateway_enabled = true
+
+netnum = {
+  admin   = 33
+  bastion = 32
+  int_lb  = 16
+  pub_lb  = 17
+  workers = 1
 }
 
-subnets = {
-  "bastion" = 32
-  "int_lb"  = 16
-  "pub_lb"  = 17
-  "workers" = 1
+newbits = {
+  admin   = 13
+  bastion = 13
+  lb      = 11
+  workers = 2
 }
+
+service_gateway_enabled = true
 
 vcn_cidr = "10.0.0.0/16"
 
@@ -47,49 +46,76 @@ vcn_dns_label = "oke"
 
 vcn_name = "oke vcn"
 
-create_nat_gateway = true
-
-nat_gateway_name = "nat"
-
-create_service_gateway = true
-
-service_gateway_name = "sg"
 
 # bastion
 
-bastion_shape = "VM.Standard.E2.1"
-
-create_bastion = true
-
 bastion_access = "ANYWHERE"
 
-enable_instance_principal = false
+bastion_enabled = true
+
+bastion_image_id = "NONE"
+
+bastion_notification_enabled = true
+
+bastion_notification_endpoint = "<email_address>"
+
+bastion_notification_protocol = "EMAIL"
+
+bastion_notification_topic= "bastion_server_notification"
+
+bastion_package_upgrade = false
+
+bastion_shape = "VM.Standard.E2.1"
+
+bastion_timezone = "Australia/Sydney"
+
+bastion_use_autonomous = true
+
+admin_enabled = true
+
+admin_image_id = "NONE"
+
+admin_instance_principal = true
+
+admin_notification_enabled = false
+
+admin_notification_endpoint = ""
+
+admin_notification_protocol = "EMAIL"
+
+admin_notification_topic= "admin_server_notification"
+
+admin_package_upgrade = true
+
+admin_shape   = "VM.Standard.E2.1"
+
+admin_timezone= "Australia/Sydney"
+
+admin_use_autonomous = false
 
 # availability_domains
 
-# which AD where to place non-OKE resources
 availability_domains = {
-  "bastion"     = 1
+  bastion = 1
+  admin  = 1
 }
 
-bastion_package_upgrade = true
-
 # oke
-
-cluster_name = "oke"
-
-worker_mode = "private"
 
 allow_node_port_access = false
 
 allow_worker_ssh_access = false
 
-dashboard_enabled = true
+cluster_name = "oke"
+
+dashboard_enabled = "true"
 
 kubernetes_version = "LATEST"
 
 node_pools = {
-  "np1" = ["VM.Standard2.1", 1]
+  np1 = ["VM.Standard2.1", 3]
+  #np2 = ["VM.Standard2.8", 4]
+  #np3 = ["VM.Standard1.4", 5]
 }
 
 node_pool_name_prefix = "np"
@@ -98,16 +124,15 @@ node_pool_image_id = "NONE"
 
 node_pool_os = "Oracle Linux"
 
-node_pool_os_version = "7.6"
+node_pool_os_version = "7.7"
 
 pods_cidr = "10.244.0.0/16"
 
 services_cidr = "10.96.0.0/16"
 
-tiller_enabled = true
+worker_mode = "private"
 
 # oke load balancers
-
 lb_subnet_type = "public"
 
 preferred_lb_subnets = "public"
@@ -122,14 +147,9 @@ tenancy_name = ""
 username = ""
 
 # helm
+helm_version = "3.0.0"
 
-add_incubator_repo = false
-
-add_jetstack_repo = false
-
-helm_version = "2.14.3"
-
-install_helm = true
+install_helm = false
 
 # calico
 
@@ -140,7 +160,6 @@ install_calico = false
 #metrics server
 install_metricserver = false
 
-# kms
 use_encryption = false
 
 existing_key_id = ""

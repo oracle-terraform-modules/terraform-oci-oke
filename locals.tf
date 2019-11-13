@@ -1,12 +1,11 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
 
   oci_base_identity = {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
-    compartment_name     = var.compartment_name
     compartment_id       = var.compartment_id
     tenancy_id           = var.tenancy_id
     user_id              = var.user_id
@@ -18,31 +17,55 @@ locals {
   }
 
   oci_base_general = {
-    disable_auto_retries = var.disable_auto_retries
     label_prefix         = var.label_prefix
     region               = var.region
+    disable_auto_retries = var.disable_auto_retries
   }
 
   oci_base_vcn = {
-    vcn_cidr               = var.vcn_cidr
+    nat_gateway_enabled     = var.nat_gateway_enabled
+    service_gateway_enabled = var.service_gateway_enabled
+    vcn_cidr                = var.vcn_cidr
     vcn_dns_label           = var.vcn_dns_label
-    vcn_name               = var.vcn_name
-    create_nat_gateway     = var.create_nat_gateway
-    nat_gateway_name       = var.nat_gateway_name
-    create_service_gateway = var.create_service_gateway
-    service_gateway_name   = var.service_gateway_name
+    vcn_name                = var.vcn_name
   }
 
   oci_base_bastion = {
-    newbits                        = var.newbits["bastion"]
-    subnets                        = var.subnets["bastion"]
-    bastion_shape                  = var.bastion_shape
-    create_bastion                 = var.create_bastion
-    bastion_access                 = var.bastion_access
-    enable_instance_principal      = var.enable_instance_principal
-    image_id                       = var.image_id
-    availability_domains           = var.availability_domains["bastion"]
-    package_upgrade                = var.bastion_package_upgrade
+    availability_domains  = var.availability_domains["bastion"]
+    bastion_access        = var.bastion_access
+    bastion_enabled       = var.bastion_enabled
+    bastion_image_id      = var.bastion_image_id
+    bastion_shape         = var.bastion_shape
+    bastion_upgrade       = var.bastion_package_upgrade
+    netnum                = var.netnum["bastion"]
+    newbits               = var.newbits["bastion"]
+    notification_enabled  = var.bastion_notification_enabled
+    notification_endpoint = var.bastion_notification_endpoint
+    notification_protocol = var.bastion_notification_protocol
+    notification_topic    = var.bastion_notification_topic
+    ssh_private_key_path  = var.ssh_private_key_path
+    ssh_public_key_path   = var.ssh_public_key_path
+    timezone              = var.bastion_timezone
+    use_autonomous        = var.bastion_use_autonomous
+  }
+
+  oci_base_admin = {
+    availability_domains      = var.availability_domains["admin"]
+    admin_enabled             = var.admin_enabled
+    admin_image_id            = "NONE"
+    admin_shape               = var.admin_shape
+    admin_upgrade             = var.admin_package_upgrade
+    enable_instance_principal = var.admin_instance_principal
+    netnum                    = var.netnum["admin"]
+    newbits                   = var.newbits["admin"]
+    notification_enabled      = var.admin_notification_enabled
+    notification_endpoint     = var.admin_notification_endpoint
+    notification_protocol     = var.admin_notification_protocol
+    notification_topic        = var.admin_notification_topic
+    ssh_private_key_path      = var.ssh_private_key_path
+    ssh_public_key_path       = var.ssh_public_key_path
+    timezone                  = var.admin_timezone
+    use_autonomous            = var.admin_use_autonomous
   }
 
   ocir = {
@@ -63,10 +86,10 @@ locals {
 
   oke_network_vcn = {
     ig_route_id                = module.base.ig_route_id
-    is_service_gateway_enabled = var.create_service_gateway
+    is_service_gateway_enabled = var.service_gateway_enabled
     nat_route_id               = module.base.nat_route_id
+    netnum                     = var.netnum
     newbits                    = var.newbits
-    subnets                    = var.subnets
     vcn_cidr                   = var.vcn_cidr
     vcn_id                     = module.base.vcn_id
   }
@@ -82,24 +105,24 @@ locals {
     user_id        = var.user_id
   }
 
-  oke_bastion = {
-    bastion_public_ip         = module.base.bastion_public_ip
-    create_bastion            = var.create_bastion
-    enable_instance_principal = var.enable_instance_principal
+  oke_admin = {
+    bastion_public_ip        = module.base.bastion_public_ip
+    admin_private_ip         = module.base.admin_private_ip
+    bastion_enabled          = var.bastion_enabled
+    admin_enabled            = var.admin_enabled
+    admin_instance_principal = var.admin_instance_principal
   }
 
   oke_cluster = {
     cluster_kubernetes_version                              = var.kubernetes_version
     cluster_name                                            = var.cluster_name
     cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
-    cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
     cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
     cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
     cluster_subnets                                         = module.network.subnet_ids
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
     kms_key_id                                              = var.existing_key_id
-
   }
 
   node_pools = {
@@ -125,8 +148,6 @@ locals {
   }
 
   helm = {
-    add_incubator_repo = var.add_incubator_repo
-    add_jetstack_repo  = var.add_incubator_repo
     helm_version       = var.helm_version
     install_helm       = var.install_helm
   }

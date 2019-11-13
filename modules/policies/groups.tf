@@ -1,8 +1,8 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_identity_dynamic_group" "oke-kms-cluster" {
-  provider       = "oci.home"
+  provider       = oci.home
   compartment_id = var.oci_identity.tenancy_id
   description    = "dynamic group to allow cluster to use kms"
   matching_rule  = local.dynamic_group_rule_all_clusters
@@ -22,9 +22,13 @@ data "template_file" "update_dynamic_group_script" {
     dynamic_group_rule = local.dynamic_group_rule_this_cluster
   }
 
-  depends_on = ["oci_identity_dynamic_group.oke-kms-cluster"]
+  depends_on = [oci_identity_dynamic_group.oke-kms-cluster]
 
+<<<<<<< HEAD
   count = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
+=======
+  count = var.oke_kms.use_encryption == true && var.admin.admin_enabled == true && var.admin.admin_instance_principal == true ? 1 : 0
+>>>>>>> c26d4b3... python3 and oci in admin host, using oci-cli to generate kubeconfig instead of uploading, sort all variables in alphabetical order, standard naming for enabled parameters, added additional checks to prevent locals in policies module looking up a dynamic group when instance_principal is not created and use_encryption=false and updated terraform.tfvars.example to remove unused bastion parameters, use compartment id instead of compartment name to write policy statement, update Kubernetes available versions in Terraform options doc, updated diagrams with admin host, kubeconfig v2 on admin host
 }
 
 resource null_resource "update_dynamic_group" {
@@ -33,14 +37,18 @@ resource null_resource "update_dynamic_group" {
   }
 
   connection {
-    host        = var.bastion.bastion_public_ip
+    host        = var.admin.admin_private_ip
     private_key = file(var.ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
+
+    bastion_host        = var.admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["oci_identity_dynamic_group.oke-kms-cluster", "oci_identity_policy.bastion_instance_principal_dynamic_group"]
+  depends_on = [oci_identity_dynamic_group.oke-kms-cluster, oci_identity_policy.admin_instance_principal_dynamic_group]
 
   provisioner "file" {
     content     = data.template_file.update_dynamic_group_script[0].rendered

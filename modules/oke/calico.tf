@@ -1,5 +1,5 @@
 ## Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-## Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "template_file" "install_calico" {
   template = file("${path.module}/scripts/install_calico.template.sh")
@@ -16,14 +16,18 @@ data "template_file" "install_calico" {
 
 resource null_resource "install_calico" {
   connection {
-    host        = var.oke_bastion.bastion_public_ip
+    host        = var.oke_admin.admin_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
+
+    bastion_host        = var.oke_admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["null_resource.install_kubectl_bastion", "null_resource.write_kubeconfig_bastion"]
+  depends_on = [null_resource.install_kubectl_admin, null_resource.write_kubeconfig_on_admin]
 
   provisioner "file" {
     content     = data.template_file.install_calico[0].rendered
@@ -38,5 +42,5 @@ resource null_resource "install_calico" {
     ]
   }
 
-  count = var.oke_bastion.create_bastion == true && var.calico.install_calico == true ? 1 : 0
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true && var.calico.install_calico == true ? 1 : 0
 }

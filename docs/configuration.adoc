@@ -17,8 +17,6 @@
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 :uri-helm: https://helm.sh/
-:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
-:uri-helm-jetstack: https://charts.jetstack.io
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
@@ -52,6 +50,7 @@
 . link:#configure-oci-parameters[Configure OCI parameters]
 . link:#configure-oci-networking-parameters[Configure OCI Networking parameters]
 . link:#configure-bastion-host-parameters[Configure Bastion Host parameters]
+. link:#configure-admin-host-parameters[Configure Admin Host parameters]
 . link:#configure-oke-parameters[Configure OKE parameters]
 . link:#configure-oke-load-balancer-parameters[Configure OKE Load Balancer parameters]
 . link:#configure-ocir-parameters[Configure OCIR parameters]
@@ -143,9 +142,13 @@ If you need to change the default VCN's CIDR, note the following:
 
 === Configure bastion host parameters
 
-The bastion host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the enable_instance_principal. Be aware that if this is enabled, it gives API access to the bastion host without authentication.
+The bastion host parameters concern whether you want to enable the bastion. 
 
-Read {uri-instructions}#enabling-instance_principal-on-the-bastion-host[more] about {uri-oci-instance-principal}[instance_principal].
+=== Configure admin host parameters
+
+The admin host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the admin_instance_principal. Be aware that if this is enabled, it gives API access to the admin host without authentication.
+
+Read {uri-instructions}#enabling-instance_principal-on-the-admin-host[more] about {uri-oci-instance-principal}[instance_principal].
 
 {uri-terraform-options}#bastion-host[Reference]
 
@@ -197,10 +200,7 @@ kubectl --namespace=kube-system get secret ocirsecret --export -o yaml | kubectl
 
 === Configure helm parameters
 
-The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host. Additional helm repos include the following:
-
-. {uri-helm-incubator}[incubator]
-. {uri-helm-jetstack}[jetstack]
+The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host.
 
 {uri-terraform-options}#helm[Reference]
 
@@ -221,8 +221,9 @@ The Kubernetes Metrics Server parameter controls the installation of {uri-metric
 The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets. Additionally, the bastion host must be enabled as well as instance_principal on the bastion.
 
 ----
-create_bastion = true
-enable_instance_principal = true
+bastion_enabled = true
+admin_enabled = true
+admin_instance_principal = true
 use_encryption = true
 existing_key_id = <existing_key_id>
 ----

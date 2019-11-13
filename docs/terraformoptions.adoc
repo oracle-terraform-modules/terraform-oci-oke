@@ -12,8 +12,6 @@
 :uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
 :uri-docs: {uri-rel-file-base}/docs
 :uri-helm: https://helm.sh/
-:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
-:uri-helm-jetstack: https://charts.jetstack.io
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
@@ -21,6 +19,7 @@
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
+:uri-timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 :uri-topology: {uri-docs}/topology.adoc
 
 Configuration Terraform Options:
@@ -30,6 +29,7 @@ Configuration Terraform Options:
 . link:#general-oci[General OCI]
 . link:#oci-networking[OCI Networking]
 . link:#bastion-host[Bastion Host]
+. link:#admin-host[Admin Host]
 . link:#oke[OKE]
 . link:#oke-load-balancers[OKE Load Balancers]
 . link:#ocir[OCIR]
@@ -54,11 +54,6 @@ Configuration Terraform Options:
 
 |api_private_key_path
 |path to api private key. *Required*
-|
-|None
-
-|compartment_name
-|Compartment name where the OKE Cluster will be provisioned. *Required*
 |
 |None
 
@@ -131,11 +126,62 @@ Configuration Terraform Options:
 |Values
 |Default
 
+|nat_gateway_enabled
+|Whether to create a NAT gateway. *Required* for private worker mode.
+|true/false
+|true
 
-|vcn_name
-|The name of the VCN that will be appended to the label_prefix.
+|netnum
+|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
+|e.g.
+[source]
+----
+netnum = {
+  admin   = 33
+  bastion = 32
+  int_lb  = 16
+  pub_lb  = 17
+  workers = 1
+}
+----
 |
-|oke vcn
+[source]
+----
+netnum = {
+  bastion = 32
+  admin = 33
+  int_lb  = 16
+  pub_lb  = 17
+  workers = 1}
+----
+
+|newbits
+|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function to calculate each subnet's mask. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
+|e.g.
+[source]
+----
+newbits = {
+  admin   = 13
+  bastion = 13
+  lb      = 11
+  workers = 2
+}
+----
+|
+[source]
+----
+newbits = {
+  admin   = 13
+  bastion = 13
+  lb      = 11
+  workers = 2
+}
+----
+
+|service_gateway_enabled
+|Whether to create a Service Gateway to use Oracle Services.
+|true/false
+|true
 
 |vcn_cidr
 |The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
@@ -147,70 +193,10 @@ Configuration Terraform Options:
 |
 |oke
 
-|create_nat_gateway
-|Whether to create a NAT gateway. *Required* for private worker mode.
-|true/false
-|true
-
-|nat_gateway_name
-|The NAT gateway name. Appended to the label_prefix.
-| 
-|nat
-
-|create_service_gateway
-|Whether to create a Service Gateway to use Oracle Services.
-|true/false
-|true
-
-|service_gateway_name
-|The Service gateway name. Appended to the label_prefix
-| 
-|sg
-
-|newbits
-|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function to calculate each subnet's mask. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
-|e.g.
-[source]
-----
-newbits = {
-  "bastion" = 13
-  "lb"      = 11
-  "workers" = 2
-}
-----
+|vcn_name
+|The name of the VCN that will be appended to the label_prefix.
 |
-[source]
-----
-newbits = {
-  "bastion" = 13
-  "lb"      = 11
-  "workers" = 2
-}
-----
-
-|subnets
-|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
-|e.g.
-[source]
-----
-subnets = {
-  "bastion" = 32
-  "int_lb"  = 16
-  "pub_lb"  = 17
-  "workers" = 1
-}
-----
-|
-[source]
-----
-subnets = {
-  "bastion" = 32
-  "int_lb"  = 16
-  "pub_lb"  = 17
-  "workers" = 1
-}
-----
-
+|oke vcn
 
 |===
 
@@ -223,8 +209,43 @@ subnets = {
 |Values
 |Default
 
-|create_bastion
+|bastion_access
+|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
+|XXX.XXX.XXX.XXX/YY
+|ANYWHERE
+
+|bastion_enabled
 |Whether to create the bastion host.
+|true/false
+|true
+
+|bastion_image_id
+|Custom image id for the bastion host
+|image_id or NONE. If the value is set to NONE, an Oracle Platform image will be used instead. Set use_autonomous to _false_ if you want to use your own image.
+|NONE
+
+|bastion_notification_enabled
+|Whether to enable ONS notification for the bastion host.
+|true/false
+|true
+
+|bastion_notification_endpoint
+|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others. *Required*
+|
+|
+
+|bastion_notification_protocol
+|The notification protocol used.
+|EMAIL
+|EMAIL
+
+|bastion_notification_topic
+|The name of the notification topic
+|
+|bastion
+
+|bastion_package_upgrade
+|Whether to also upgrade the packages on the bastion host.
 |true/false
 |true
 
@@ -233,15 +254,92 @@ subnets = {
 |
 |VM.Standard.E2.1
 
-|bastion_access
-|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
-|XXX.XXX.XXX.XXX/YY
-|ANYWHERE
+|bastion_timezone
+|The preferred timezone for the bastion host. {uri-timezones}[List of timezones]
+|
+|Australia/Sydney
 
-|enable_instance_principal
-|Whether to enable instance_principal on the bastion. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-bastion-host[instance_principal]
+|bastion_use_autonomous
+|Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image.
+|true/false
+|true
+
+|===
+
+== Admin Host
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|admin_enabled
+|Whether to create the admin host.
+|true/false
+|true
+
+|admin_image_id
+|Custom image id for the admin host
+|image_id or NONE. If the value is set to NONE, an Oracle Platform image will be used instead. Set use_autonomous to _false_ if you want to use your own image. For now, *do not use Autonomous for the admin host.*
+|NONE
+
+|admin_instance_principal
+|Whether to enable instance_principal on the admin server. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-admin-host[instance_principal]
+|true/false
+|true
+
+|admin_notification_enabled
+|Whether to enable ONS notification for the admin host. *Do not enable for now*.
+|true/false
+|false
+
+|admin_notification_endpoint
+|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others.
 |
 |
+
+|admin_notification_protocol
+|The notification protocol used.
+|EMAIL
+|EMAIL
+
+|admin_notification_topic
+|The name of the notification topic
+|
+|admin
+
+|admin_package_upgrade
+|Whether to also upgrade the packages for the admin host.
+|true/false
+|true
+
+|admin_shape
+|The shape of admin instance.
+|
+|VM.Standard.E2.1
+
+|admin_timezone
+|The preferred timezone for the admin host. {uri-timezones}[List of timezones]
+|
+|Australia/Sydney
+
+|admin_use_autonomous
+|Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image. *Do not use autonomous for now*
+|true/false
+|false
+
+|===
+
+== Availability Domain
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
 
 |availability_domains
 |The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
@@ -249,19 +347,16 @@ subnets = {
 [source]
 ----
 availability_domains = {
-  "bastion"     = 1
+  bastion     = 1
+  admin       = 1
 }
 ----
 |
 [source]
 ----
-  "bastion"     = 1
+  bastion     = 1
+  admin       = 1
 ----
-
-|bastion_package_upgrade
-|Whether to upgrade the instance on first boot. If you choose Ubuntu for the bastion and you set this to true, also set the package_update to true as well.
-|true/false
-|true
 
 |===
 
@@ -274,16 +369,6 @@ availability_domains = {
 |Values
 |Default
 
-|cluster_name
-|The name of the OKE cluster. This will be appended to the label_prefix.
-|
-|oke
-
-|worker_mode
-|Whether the worker nodes should be public or private. Private requires NAT gateway.
-|private/public
-|private
-
 |allow_node_port_access
 |Whether to allow access to NodePort services when worker nodes are deployed in public mode.
 |true/false
@@ -295,6 +380,11 @@ availability_domains = {
 |true/false
 |false
 
+|cluster_name
+|The name of the OKE cluster. This will be appended to the label_prefix.
+|
+|oke
+
 |dashboard_enabled
 |Whether to create the default Kubernetes dashboard.
 |true/false
@@ -302,7 +392,7 @@ availability_domains = {
 
 |kubernetes_version
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the available versions will be queries and the latest version selected. To provision a specific version, choose from available versions and override the 'LATEST' value.
-|LATEST,v1.11.9, v1.12.7
+|LATEST, v1.12.7, 1.13.5
 |LATEST
 
 |node_pools
@@ -338,7 +428,7 @@ node_pools = {
 |node_pool_os_version
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
-|7.6
+|7.7
 
 |pods_cidr
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
@@ -350,10 +440,11 @@ node_pools = {
 |
 |10.96.0.0/16
 
-|tiller_enabled
-|Whether to install the server side of Helm in the OKE cluster.
-|true/false
-|true
+|worker_mode
+|Whether the worker nodes should be public or private. Private requires NAT gateway.
+|private/public
+|private
+
 
 |===
 
@@ -413,7 +504,6 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |username
 |The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if create_auth_token is set to true.
-
 |
 |None
 
@@ -428,20 +518,10 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
-|add_incubator_repo
-|Whether to add the {uri-helm-incubator}[incubator] repo to the bastion's local helm repo.
-|true/false
-|false
-
-|add_jetstack_repo
-|Whether to add the {uri-helm-jetstack}[jetstack] repo to the bastion's local helm repo. *Required* for {uri-cert-manager}[cert-manager].
-|true/false
-|false
-
 |helm_version
-|The version of the {uri-helm}[helm] client to install on the bastion. A subsequent upgrade of tiller (server-side helm) will then be automatically performed.
+|The version of the {uri-helm}[helm] client to install on the bastion.
 |
-|2.14.3
+|3.0.0
 
 |install_helm
 |Whether to install {uri-helm}[helm] on the bastion instance.
