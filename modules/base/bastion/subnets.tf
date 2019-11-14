@@ -11,5 +11,5 @@ resource "oci_core_subnet" "bastion" {
   security_list_ids          = [oci_core_security_list.bastion[0].id]
   vcn_id                     = var.oci_bastion_infra.vcn_id
 
-  count = var.oci_bastion.create_bastion == true ? 1 : 0
+  count = var.oci_bastion.bastion_enabled == true ? 1 : 0
 }

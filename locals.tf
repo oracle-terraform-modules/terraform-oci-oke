@@ -1,12 +1,11 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
 
   oci_base_identity = {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
-    compartment_name     = var.compartment_name
     compartment_id       = var.compartment_id
     tenancy_id           = var.tenancy_id
     user_id              = var.user_id
@@ -18,19 +17,17 @@ locals {
   }
 
   oci_base_general = {
-    disable_auto_retries = var.disable_auto_retries
     label_prefix         = var.label_prefix
     region               = var.region
+    disable_auto_retries = var.disable_auto_retries
   }
 
   oci_base_vcn = {
-    vcn_cidr               = var.vcn_cidr
-    vcn_dns_label          = var.vcn_dns_label
-    vcn_name               = var.vcn_name
-    create_nat_gateway     = var.create_nat_gateway
-    nat_gateway_name       = var.nat_gateway_name
-    create_service_gateway = var.create_service_gateway
-    service_gateway_name   = var.service_gateway_name
+    nat_gateway_enabled     = var.nat_gateway_enabled
+    service_gateway_enabled = var.service_gateway_enabled
+    vcn_cidr                = var.vcn_cidr
+    vcn_dns_label           = var.vcn_dns_label
+    vcn_name                = var.vcn_name
   }
 
   oci_base_bastion = {
@@ -39,10 +36,10 @@ locals {
     bastion_image_id      = var.bastion_image_id
     bastion_shape         = var.bastion_shape
     bastion_upgrade       = var.bastion_package_upgrade
-    create_bastion        = var.create_bastion
-    enable_notification   = var.bastion_enable_notification
+    bastion_enabled       = var.bastion_enabled
     netnum                = var.netnum["bastion"]
     newbits               = var.newbits["bastion"]
+    notification_enabled  = var.bastion_notification_enabled
     notification_endpoint = var.bastion_notification_endpoint
     notification_protocol = var.bastion_notification_protocol
     notification_topic    = var.bastion_notification_topic
@@ -56,12 +53,12 @@ locals {
     availability_domains      = var.availability_domains["admin"]
     admin_image_id            = "NONE"
     admin_shape               = var.admin_shape
-    admin_upgrade             = true
-    create_admin              = var.create_admin
-    enable_instance_principal = var.admin_enable_instance_principal
-    enable_notification       = var.admin_enable_notification
+    admin_upgrade             = var.admin_package_upgrade
+    admin_enabled             = var.admin_enabled
+    enable_instance_principal = var.admin_instance_principal
     netnum                    = var.netnum["admin"]
     newbits                   = var.newbits["admin"]
+    notification_enabled      = var.admin_notification_enabled
     notification_endpoint     = var.admin_notification_endpoint
     notification_protocol     = var.admin_notification_protocol
     notification_topic        = var.admin_notification_topic
@@ -89,7 +86,7 @@ locals {
 
   oke_network_vcn = {
     ig_route_id                = module.base.ig_route_id
-    is_service_gateway_enabled = var.create_service_gateway
+    is_service_gateway_enabled = var.service_gateway_enabled
     nat_route_id               = module.base.nat_route_id
     netnum                     = var.netnum
     newbits                    = var.newbits
@@ -109,11 +106,11 @@ locals {
   }
 
   oke_admin = {
-    bastion_public_ip               = module.base.bastion_public_ip
-    admin_private_ip                = module.base.admin_private_ip
-    create_bastion                  = var.create_bastion
-    create_admin                    = var.create_admin
-    enable_admin_instance_principal = var.admin_enable_instance_principal
+    bastion_public_ip        = module.base.bastion_public_ip
+    admin_private_ip         = module.base.admin_private_ip
+    bastion_enabled          = var.bastion_enabled
+    admin_enabled            = var.admin_enabled
+    admin_instance_principal = var.admin_instance_principal
   }
 
   oke_cluster = {

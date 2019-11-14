@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 data "template_file" "create_ocir_script" {
   template = file("${path.module}/scripts/create_ocir_secret.template.sh")
 
@@ -45,7 +45,7 @@ resource null_resource "create_ocir_secret" {
     ]
   }
 
-  count = var.oke_admin.create_bastion == true && var.oke_ocir.create_auth_token == true ? 1 : 0
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true && var.oke_ocir.create_auth_token == true ? 1 : 0
 }
 
 resource null_resource "delete_ocir_script" {
@@ -69,5 +69,5 @@ resource null_resource "delete_ocir_script" {
     ]
   }
 
-  count = var.oke_admin.create_bastion == true && var.oke_ocir.create_auth_token == true ? 1 : 0
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true && var.oke_ocir.create_auth_token == true ? 1 : 0
 }

@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_core_instance" "admin" {
   availability_domain = element(var.oci_admin_network.ad_names, (var.oci_admin_network.availability_domains - 1))
@@ -31,5 +31,5 @@ resource "oci_core_instance" "admin" {
     create = "60m"
   }
 
-  count = var.oci_admin.create_admin == true ? 1 : 0
+  count = var.oci_admin.admin_enabled == true ? 1 : 0
 }

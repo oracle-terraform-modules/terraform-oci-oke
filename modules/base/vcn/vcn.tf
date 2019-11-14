@@ -24,7 +24,7 @@ resource "oci_core_route_table" "ig_route" {
   }
 
   dynamic "route_rules" {
-    for_each = (var.oci_base_vcn.create_service_gateway == true && var.oci_base_vcn.create_nat_gateway == false)  ? list(1) : []
+    for_each = (var.oci_base_vcn.service_gateway_enabled == true && var.oci_base_vcn.nat_gateway_enabled == false)  ? list(1) : []
 
     content {
       destination       = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")

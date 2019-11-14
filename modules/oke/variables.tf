@@ -1,5 +1,5 @@
 # Copyright 2017, 2019 Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # identity
 
@@ -33,11 +33,11 @@ variable "oke_general" {
 
 variable "oke_admin" {
   type = object({
-    bastion_public_ip               = string
-    admin_private_ip                = string
-    create_bastion                  = bool
-    create_admin                    = bool
-    enable_admin_instance_principal = bool
+    bastion_public_ip        = string
+    admin_private_ip         = string
+    bastion_enabled          = bool
+    admin_enabled            = bool
+    admin_instance_principal = bool
   })
 }
 

@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
 
@@ -32,19 +32,19 @@ variable "oci_base_general" {
 
 variable "oci_base_vcn" {
   type = object({
-    create_nat_gateway     = bool
-    create_service_gateway = bool
-    vcn_cidr               = string
-    vcn_dns_label          = string
-    vcn_name               = string
+    nat_gateway_enabled     = bool
+    service_gateway_enabled = bool
+    vcn_cidr                = string
+    vcn_dns_label           = string
+    vcn_name                = string
   })
   description = "VCN basic parameters"
   default = {
-    create_nat_gateway     = false
-    create_service_gateway = false
-    vcn_cidr               = "10.0.0.0/16"
-    vcn_dns_label          = "base"
-    vcn_name               = "base"
+    nat_gateway_enabled     = false
+    service_gateway_enabled = false
+    vcn_cidr                = "10.0.0.0/16"
+    vcn_dns_label           = "base"
+    vcn_name                = "base"
   }
 }
 
@@ -57,10 +57,10 @@ variable "oci_base_bastion" {
     bastion_image_id      = string
     bastion_shape         = string
     bastion_upgrade       = bool
-    create_bastion        = bool
-    enable_notification   = bool
+    bastion_enabled       = bool
     netnum                = number
     newbits               = number
+    notification_enabled  = bool
     notification_endpoint = string
     notification_protocol = string
     notification_topic    = string
@@ -76,10 +76,10 @@ variable "oci_base_bastion" {
     bastion_image_id      = "NONE"
     bastion_shape         = "VM.Standard.E2.1"
     bastion_upgrade       = true
-    create_bastion        = false
-    enable_notification   = false
+    bastion_enabled       = false
     netnum                = 13
     newbits               = 32
+    notification_enabled  = false
     notification_endpoint = ""
     notification_protocol = "EMAIL"
     notification_topic    = "bastion"
@@ -98,11 +98,11 @@ variable "oci_base_admin" {
     admin_image_id            = string
     admin_shape               = string
     admin_upgrade             = bool
-    create_admin              = bool
+    admin_enabled             = bool
     enable_instance_principal = bool
-    enable_notification       = bool
     netnum                    = number
     newbits                   = number
+    notification_enabled      = bool
     notification_endpoint     = string
     notification_protocol     = string
     notification_topic        = string
@@ -117,11 +117,11 @@ variable "oci_base_admin" {
     admin_image_id            = "NONE"
     admin_shape               = "VM.Standard.E2.1"
     admin_upgrade             = true
-    create_admin              = false
+    admin_enabled             = false
     enable_instance_principal = true
-    enable_notification       = false
     netnum                    = 33
     newbits                   = 13
+    notification_enabled      = false
     notification_endpoint     = ""
     notification_protocol     = "EMAIL"
     notification_topic        = "admin"

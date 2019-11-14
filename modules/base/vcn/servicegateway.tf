@@ -7,7 +7,7 @@ data "oci_core_services" "all_oci_services" {
     values = ["All .* Services In Oracle Services Network"]
     regex  = true
   }
-  count = var.oci_base_vcn.create_service_gateway == true ? 1 : 0
+  count = var.oci_base_vcn.service_gateway_enabled == true ? 1 : 0
 }
 
 resource "oci_core_service_gateway" "service_gateway" {
@@ -20,5 +20,5 @@ resource "oci_core_service_gateway" "service_gateway" {
   }
 
   vcn_id = oci_core_vcn.vcn.id
-  count  = var.oci_base_vcn.create_service_gateway == true ? 1 : 0
+  count  = var.oci_base_vcn.service_gateway_enabled == true ? 1 : 0
 }

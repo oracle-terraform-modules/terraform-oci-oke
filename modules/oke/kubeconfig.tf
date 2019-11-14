@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id    = oci_containerengine_cluster.k8s_cluster.id
@@ -31,7 +31,7 @@ data "template_file" "install_kubectl" {
   template = file("${path.module}/scripts/install_kubectl.template.sh")
 }
 
-resource "null_resource" "install_kubectl_bastion" {
+resource "null_resource" "install_kubectl_admin" {
   connection {
     host        = var.oke_admin.admin_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
@@ -57,7 +57,7 @@ resource "null_resource" "install_kubectl_bastion" {
     ]
   }
 
-  count = var.oke_admin.create_bastion == true ? 1 : 0
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true ? 1 : 0
 }
 
 data "template_file" "generate_kubeconfig" {
@@ -68,7 +68,7 @@ data "template_file" "generate_kubeconfig" {
     region     = var.oke_general.region
   }
 
-  count = var.oke_admin.create_bastion == true ? 1 : 0
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true ? 1 : 0
 }
 
 resource "null_resource" "write_kubeconfig_on_admin" {
@@ -84,7 +84,7 @@ resource "null_resource" "write_kubeconfig_on_admin" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["local_file.kube_config_file", "null_resource.install_kubectl_bastion"]
+  depends_on = ["oci_containerengine_cluster.k8s_cluster"]
 
   provisioner "file" {
     content     = data.template_file.generate_kubeconfig[0].rendered
@@ -93,16 +93,11 @@ resource "null_resource" "write_kubeconfig_on_admin" {
 
   provisioner "remote-exec" {
     inline = [
-      "mkdir -p $HOME/.kube",
       "chmod +x $HOME/generate_kubeconfig.sh",
-      "$HOME/install_calico.sh"
+      "$HOME/generate_kubeconfig.sh",
+      "rm -f $HOME/generate_kubeconfig.sh"
     ]
   }
 
-  # provisioner "file" {
-  #   source      = "generated/kubeconfig"
-  #   destination = "~/.kube/config"
-  # }
-
-  count = var.oke_admin.create_bastion == true ? 1 : 0
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true ? 1 : 0
 }

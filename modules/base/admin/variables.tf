@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # general
 
@@ -28,7 +28,7 @@ variable "oci_admin" {
     admin_image_id      = string
     admin_shape         = string
     admin_upgrade       = bool
-    create_admin        = bool
+    admin_enabled        = bool
     ssh_public_key_path = string
     timezone            = string
   })

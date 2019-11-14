@@ -21,5 +21,5 @@ resource "oci_core_security_list" "bastion" {
       max = local.ssh_port
     }
   }
-  count = var.oci_bastion.create_bastion == true ? 1 : 0
+  count = var.oci_bastion.bastion_enabled == true ? 1 : 0
 }

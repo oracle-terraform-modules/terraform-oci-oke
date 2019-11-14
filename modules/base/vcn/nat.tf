@@ -5,7 +5,7 @@ resource "oci_core_nat_gateway" "nat_gateway" {
   compartment_id = var.oci_base_vcn.compartment_id
   display_name   = "${var.oci_base_vcn.label_prefix}-nat-gw"
   vcn_id         = oci_core_vcn.vcn.id
-  count          = var.oci_base_vcn.create_nat_gateway == true ? 1 : 0
+  count          = var.oci_base_vcn.nat_gateway_enabled == true ? 1 : 0
 }
 
 resource "oci_core_route_table" "nat_route" {
@@ -19,7 +19,7 @@ resource "oci_core_route_table" "nat_route" {
   }
 
   dynamic "route_rules" {
-    for_each = var.oci_base_vcn.create_service_gateway == true ? list(1) : []
+    for_each = var.oci_base_vcn.service_gateway_enabled == true ? list(1) : []
 
     content {
       destination       = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
@@ -29,5 +29,5 @@ resource "oci_core_route_table" "nat_route" {
   }
 
   vcn_id = oci_core_vcn.vcn.id
-  count  = var.oci_base_vcn.create_nat_gateway == true ? 1 : 0
+  count  = var.oci_base_vcn.nat_gateway_enabled == true ? 1 : 0
 }

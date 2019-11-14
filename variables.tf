@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
 variable "api_fingerprint" {
@@ -8,11 +8,6 @@ variable "api_fingerprint" {
 
 variable "api_private_key_path" {
   description = "path to oci api private key"
-}
-
-variable "compartment_name" {
-  type        = "string"
-  description = "compartment name"
 }
 
 variable "compartment_id" {
@@ -56,6 +51,12 @@ variable "region" {
 }
 
 # networking parameters
+
+variable "nat_gateway_enabled" {
+  description = "whether to create a nat gateway"
+  default     = true
+}
+
 variable "netnum" {
   description = "zero-based index of the subnet when the network is masked with the newbit."
   type        = "map"
@@ -81,6 +82,11 @@ variable "newbits" {
   }
 }
 
+variable "service_gateway_enabled" {
+  description = "whether to create a service gateway"
+  default     = true
+}
+
 variable "vcn_cidr" {
   type        = "string"
   description = "cidr block of VCN"
@@ -98,58 +104,25 @@ variable "vcn_name" {
   default     = "oke vcn"
 }
 
-# nat
-variable "create_nat_gateway" {
-  description = "whether to create a nat gateway"
-  default     = true
-}
-
-variable "nat_gateway_name" {
-  description = "display name of the nat gateway"
-  default     = "nat"
-}
-
-# service gateway
-variable "create_service_gateway" {
-  description = "whether to create a service gateway"
-  default     = true
-}
-
-variable "service_gateway_name" {
-  description = "name of service gateway"
-  default     = "sg"
-}
-
 # bastion
 variable "bastion_access" {
   description = "cidr from where the bastion can be sshed into. Default is ANYWHERE and equivalent to 0.0.0.0/0"
   default     = "ANYWHERE"
 }
 
-variable "bastion_image_id" {
-  description = "image id to use for bastion."
-  default = "NONE"
-}
-
-variable "bastion_package_upgrade" {
-  description = "Whether to upgrade the bastion host packages after provisioning. It’s useful to set this to false during development so the bastion is provisioned faster."
-  type        = bool
-  default     = true
-}
-
-variable "bastion_shape" {
-  description = "shape of bastion instance"
-  default     = "VM.Standard.E2.1"
-}
-
-variable "create_bastion" {
+variable "bastion_enabled" {
   description = "whether to create a bastion host"
   type        = bool
   default     = true
 }
 
-variable "bastion_enable_notification" {
-  default     = false
+variable "bastion_image_id" {
+  description = "image id to use for bastion."
+  default     = "NONE"
+}
+
+variable "bastion_notification_enabled" {
+  default     = true
   type        = bool
   description = "Whether to enable notification on the bastion host"
 }
@@ -172,8 +145,19 @@ variable "bastion_notification_topic" {
   description = "The name of the notification topic."
 }
 
+variable "bastion_package_upgrade" {
+  description = "Whether to upgrade the bastion host packages after provisioning. It’s useful to set this to false during development so the bastion is provisioned faster."
+  type        = bool
+  default     = true
+}
+
+variable "bastion_shape" {
+  description = "shape of bastion instance"
+  default     = "VM.Standard.E2.1"
+}
+
 variable "bastion_timezone" {
-  default     = ""
+  default     = "Australia/Sydney"
   type        = string
   description = "The preferred timezone for the bastion host."
 }
@@ -186,27 +170,22 @@ variable "bastion_use_autonomous" {
 
 # admin server
 
+variable "admin_enabled" {
+  description = "whether to create an admin server in a private subnet"
+  default     = true
+}
+
 variable "admin_image_id" {
   description = "image id to use for admin server."
-  default = "NONE"
+  default     = "NONE"
 }
 
-variable "admin_shape" {
-  description = "shape of admin server instance"
-  default     = "VM.Standard.E2.1"
-}
-
-variable "create_admin" {
-  description = "whether to create an admin server in a private subnet"
-  default     = false
-}
-
-variable "admin_enable_instance_principal" {
+variable "admin_instance_principal" {
   description = "enable the admin server host to call OCI API services without requiring api key"
-  default     = false
+  default     = true
 }
 
-variable "admin_enable_notification" {
+variable "admin_notification_enabled" {
   default     = false
   type        = bool
   description = "Whether to enable notification on the admin host"
@@ -230,8 +209,19 @@ variable "admin_notification_topic" {
   description = "The name of the notification topic."
 }
 
+variable "admin_package_upgrade" {
+  description = "Whether to upgrade the bastion host packages after provisioning. It’s useful to set this to false during development so the bastion is provisioned faster."
+  type        = bool
+  default     = true
+}
+
+variable "admin_shape" {
+  description = "shape of admin server instance"
+  default     = "VM.Standard.E2.1"
+}
+
 variable "admin_timezone" {
-  default     = ""
+  default     = "Australia/Sydney"
   type        = string
   description = "The preferred timezone for the admin host."
 }
@@ -241,7 +231,6 @@ variable "admin_use_autonomous" {
   type        = bool
   description = "Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image."
 }
-
 
 # availability domains
 variable "availability_domains" {
@@ -303,7 +292,7 @@ variable "node_pool_os" {
 
 variable "node_pool_os_version" {
   description = "version of image Operating System to use"
-  default     = "7.6"
+  default     = "7.7"
 }
 
 variable "pods_cidr" {
