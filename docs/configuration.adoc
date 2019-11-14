@@ -78,7 +78,6 @@ Enter the values for the following parameters in the terraform.tfvars file:
 
 * api_fingerprint
 * api_private_key_path
-* compartment_name
 * compartment_id
 * tenancy_id
 * user_id
