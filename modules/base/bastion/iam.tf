@@ -11,14 +11,14 @@ provider "oci" {
   user_ocid        = var.oci_base_identity.user_id
 }
 
-data "oci_identity_compartments" "compartments_name" {
+data "oci_identity_compartments" "compartments_id" {
   access_level              = "ACCESSIBLE"
   compartment_id            = var.oci_base_identity.tenancy_id
   compartment_id_in_subtree = "true"
 
   filter {
-    name   = "name"
-    values = [var.oci_base_identity.compartment_name]
+    name   = "id"
+    values = [var.oci_base_identity.compartment_id]
   }
 }
 
@@ -36,6 +36,6 @@ resource "oci_identity_policy" "bastion_instance_principal" {
   compartment_id = var.oci_base_identity.compartment_id
   description    = "policy to allow bastion host to call services"
   name           = "${var.oci_bastion_general.label_prefix}-bastion_instance_principal"
-  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.bastion_instance_principal[0].name} to manage all-resources in compartment ${data.oci_identity_compartments.compartments_name.compartments.0.name}"]
+  statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.bastion_instance_principal[0].name} to manage all-resources in compartment id ${data.oci_identity_compartments.compartments_id.compartments.0.id}"]
   count          = var.oci_bastion.enable_instance_principal == true ? 1 : 0
 }
