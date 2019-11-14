@@ -10,11 +10,6 @@ variable "api_private_key_path" {
   description = "path to oci api private key"
 }
 
-variable "compartment_name" {
-  type        = "string"
-  description = "compartment name"
-}
-
 variable "compartment_id" {
   type        = "string"
   description = "compartment id"
