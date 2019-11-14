@@ -6,7 +6,6 @@ locals {
   oci_base_identity = {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
-    compartment_name     = var.compartment_name
     compartment_id       = var.compartment_id
     tenancy_id           = var.tenancy_id
     user_id              = var.user_id
