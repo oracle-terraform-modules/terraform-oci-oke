@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
 
@@ -22,8 +22,8 @@ variable "oke_network_vcn" {
     ig_route_id                = string
     is_service_gateway_enabled = bool
     nat_route_id               = string
+    netnum                    = map(number)
     newbits                    = map(number)
-    subnets                    = map(number)
     vcn_cidr                   = string
     vcn_id                     = string
   })

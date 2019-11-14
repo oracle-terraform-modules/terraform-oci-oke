@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_identity_dynamic_group" "oke-kms-cluster" {
   provider       = "oci.home"
@@ -24,7 +24,7 @@ data "template_file" "update_dynamic_group_script" {
 
   depends_on = ["oci_identity_dynamic_group.oke-kms-cluster"]
 
-  count = var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true ? 1 : 0
+  count = var.oke_kms.use_encryption == true && var.admin.admin_enabled == true && var.admin.admin_instance_principal == true ? 1 : 0
 }
 
 resource null_resource "update_dynamic_group" {
@@ -33,14 +33,18 @@ resource null_resource "update_dynamic_group" {
   }
 
   connection {
-    host        = var.bastion.bastion_public_ip
+    host        = var.admin.admin_private_ip
     private_key = file(var.ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
+
+    bastion_host        = var.admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["oci_identity_dynamic_group.oke-kms-cluster", "oci_identity_policy.bastion_instance_principal_dynamic_group"]
+  depends_on = ["oci_identity_dynamic_group.oke-kms-cluster", "oci_identity_policy.admin_instance_principal_dynamic_group"]
 
   provisioner "file" {
     content     = data.template_file.update_dynamic_group_script[0].rendered
@@ -55,5 +59,5 @@ resource null_resource "update_dynamic_group" {
     ]
   }
 
-  count = var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true ? 1 : 0
+  count = var.oke_kms.use_encryption == true && var.admin.bastion_enabled == true && var.admin.admin_enabled == true && var.admin.admin_instance_principal == true ? 1 : 0
 }

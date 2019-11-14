@@ -1,5 +1,5 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at http://oss.oracle.com/licenses/upl
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
 
 resource "oci_core_vcn" "vcn" {
   cidr_block     = var.oci_base_vcn.vcn_cidr
@@ -24,7 +24,7 @@ resource "oci_core_route_table" "ig_route" {
   }
 
   dynamic "route_rules" {
-    for_each = (var.oci_base_vcn.create_service_gateway == true && var.oci_base_vcn.create_nat_gateway == false) ? list(1) : []
+    for_each = (var.oci_base_vcn.service_gateway_enabled == true && var.oci_base_vcn.nat_gateway_enabled == false)  ? list(1) : []
 
     content {
       destination       = lookup(data.oci_core_services.all_oci_services[0].services[0], "cidr_block")
