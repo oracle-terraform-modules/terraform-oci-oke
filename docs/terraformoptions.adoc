@@ -57,11 +57,6 @@ Configuration Terraform Options:
 |
 |None
 
-|compartment_name
-|Compartment name where the OKE Cluster will be provisioned. *Required*
-|
-|None
-
 |compartment_id
 |Compartment id where the OKE Cluster will be provisioned. *Required*
 |
