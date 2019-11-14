@@ -8,7 +8,6 @@ variable "oci_base_identity" {
     api_fingerprint      = string
     api_private_key_path = string
     compartment_id       = string
-    compartment_name     = string
     tenancy_id           = string
     user_id              = string
   })
