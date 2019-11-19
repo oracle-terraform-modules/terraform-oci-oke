@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Protocols are specified as protocol numbers.
-# http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+# https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
 
 locals {
   all_protocols = "all"
