@@ -20,6 +20,11 @@ resource "oci_core_instance" "bastion" {
     user_data           = data.template_cloudinit_config.bastion[0].rendered
   }
 
+  # prevent the bastion from destroying and recreating itself if the image ocid changes 
+  lifecycle {
+    ignore_changes = [source_details[0].source_id]
+  }
+
   shape = var.oci_bastion.bastion_shape
 
   source_details {

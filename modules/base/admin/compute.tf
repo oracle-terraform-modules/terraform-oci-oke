@@ -20,6 +20,11 @@ resource "oci_core_instance" "admin" {
     subnet_id           = oci_core_subnet.admin[0].id
   }
 
+  # prevent the bastion from destroying and recreating itself if the image ocid changes 
+  lifecycle {
+    ignore_changes = [source_details[0].source_id]
+  }
+
   shape = var.oci_admin.admin_shape
 
   source_details {
