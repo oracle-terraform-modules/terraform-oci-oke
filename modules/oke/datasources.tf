@@ -18,5 +18,5 @@ data "oci_containerengine_cluster_option" "k8s_cluster_option" {
 data "oci_containerengine_node_pools" "all_node_pools" {
   compartment_id = var.oke_identity.compartment_id
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
-  depends_on     = ["oci_containerengine_node_pool.nodepools"]
+  depends_on     = [oci_containerengine_node_pool.nodepools]
 }

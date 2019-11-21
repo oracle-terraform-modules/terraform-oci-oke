@@ -85,20 +85,20 @@ data "oci_core_vnic_attachments" "bastion_vnics_attachments" {
   availability_domain = element(var.oci_bastion_infra.ad_names, (var.oci_bastion_infra.availability_domains - 1))
   compartment_id      = var.oci_base_identity.compartment_id
   instance_id         = oci_core_instance.bastion[0].id
-  depends_on          = ["oci_core_instance.bastion"]
+  depends_on          = [oci_core_instance.bastion]
   count               = var.oci_bastion.bastion_enabled == true ? 1 : 0
 }
 
 # Gets the OCID of the first (default) VNIC on the bastion instance
 data "oci_core_vnic" "bastion_vnic" {
   vnic_id    = lookup(data.oci_core_vnic_attachments.bastion_vnics_attachments[0].vnic_attachments[0], "vnic_id")
-  depends_on = ["oci_core_instance.bastion"]
+  depends_on = [oci_core_instance.bastion]
   count      = var.oci_bastion.bastion_enabled == true ? 1 : 0
 }
 
 data "oci_core_instance" "bastion" {
   instance_id = oci_core_instance.bastion[0].id
-  depends_on  = ["oci_core_instance.bastion"]
+  depends_on  = [oci_core_instance.bastion]
   count       = var.oci_bastion.bastion_enabled == true ? 1 : 0
 }
 

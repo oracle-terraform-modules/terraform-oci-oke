@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_identity_dynamic_group" "oke-kms-cluster" {
-  provider       = "oci.home"
+  provider       = oci.home
   compartment_id = var.oci_identity.tenancy_id
   description    = "dynamic group to allow cluster to use kms"
   matching_rule  = local.dynamic_group_rule_all_clusters
@@ -22,7 +22,7 @@ data "template_file" "update_dynamic_group_script" {
     dynamic_group_rule = local.dynamic_group_rule_this_cluster
   }
 
-  depends_on = ["oci_identity_dynamic_group.oke-kms-cluster"]
+  depends_on = [oci_identity_dynamic_group.oke-kms-cluster]
 
   count = var.oke_kms.use_encryption == true && var.admin.admin_enabled == true && var.admin.admin_instance_principal == true ? 1 : 0
 }
@@ -44,7 +44,7 @@ resource null_resource "update_dynamic_group" {
     bastion_private_key = file(var.ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["oci_identity_dynamic_group.oke-kms-cluster", "oci_identity_policy.admin_instance_principal_dynamic_group"]
+  depends_on = [oci_identity_dynamic_group.oke-kms-cluster, oci_identity_policy.admin_instance_principal_dynamic_group]
 
   provisioner "file" {
     content     = data.template_file.update_dynamic_group_script[0].rendered

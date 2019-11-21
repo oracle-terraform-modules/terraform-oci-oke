@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_identity_policy" "admin_instance_principal_dynamic_group" {
-  provider       = "oci.home"
+  provider       = oci.home
   compartment_id = var.oci_identity.tenancy_id
   description    = "policy to allow admin host to manage dynamic group"
   name           = "${var.label_prefix}-admin-instance-principal-dynamic-group"
@@ -11,7 +11,7 @@ resource "oci_identity_policy" "admin_instance_principal_dynamic_group" {
 }
 
 resource "oci_identity_policy" "oke-kms" {
-  provider       = "oci.home"
+  provider       = oci.home
   compartment_id = var.oci_identity.compartment_id
   description    = "policy to allow instances to allow dynamic group ${var.label_prefix}-oke-kms-cluster to use kms"
   name           = "${var.label_prefix}-oke-kms"

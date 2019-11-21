@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 terraform {
-  required_version = ">= 0.12.8"
+  required_version = ">= 0.12.16"
 }
 
 module "base" {

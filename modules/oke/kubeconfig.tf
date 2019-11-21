@@ -23,7 +23,7 @@ resource "null_resource" "create_local_kubeconfig" {
 
 resource "local_file" "kube_config_file" {
   content    = data.oci_containerengine_cluster_kube_config.kube_config.content
-  depends_on = ["null_resource.create_local_kubeconfig", "oci_containerengine_cluster.k8s_cluster"]
+  depends_on = [null_resource.create_local_kubeconfig, oci_containerengine_cluster.k8s_cluster]
   filename   = "${path.root}/generated/kubeconfig"
 }
 
@@ -84,7 +84,7 @@ resource "null_resource" "write_kubeconfig_on_admin" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["oci_containerengine_cluster.k8s_cluster"]
+  depends_on = [oci_containerengine_cluster.k8s_cluster]
 
   provisioner "file" {
     content     = data.template_file.generate_kubeconfig[0].rendered
