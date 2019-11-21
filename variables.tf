@@ -305,11 +305,6 @@ variable "services_cidr" {
   default     = "10.96.0.0/16"
 }
 
-variable "tiller_enabled" {
-  description = "whether to enable tiller"
-  default     = true
-}
-
 variable "worker_mode" {
   description = "whether to provision public or private workers"
   default     = "private"
@@ -373,19 +368,9 @@ variable "username" {
 }
 
 # helm
-variable "add_incubator_repo" {
-  description = "whether to add incubator repo"
-  default     = false
-}
-
-variable "add_jetstack_repo" {
-  description = "whether to add jetstack repo. Required for cert-manager"
-  default     = false
-}
-
 variable "helm_version" {
   description = "version of helm to install"
-  default     = "2.14.3"
+  default     = "3.0.0"
 }
 
 variable "install_helm" {

@@ -9,7 +9,7 @@ data "template_file" "create_ocir_script" {
     region_registry = var.oke_ocir.ocir_urls[var.oke_general.region]
     tenancy_name    = var.oke_ocir.tenancy_name
     username        = var.oke_ocir.username
-    tiller_enabled  = var.oke_cluster.cluster_options_add_ons_is_tiller_enabled
+    # tiller_enabled  = var.oke_cluster.cluster_options_add_ons_is_tiller_enabled
   }
 
   count = var.oke_ocir.create_auth_token == true ? 1 : 0

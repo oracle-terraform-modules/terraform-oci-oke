@@ -130,8 +130,6 @@ pods_cidr = "10.244.0.0/16"
 
 services_cidr = "10.96.0.0/16"
 
-tiller_enabled = true
-
 worker_mode = "private"
 
 # oke load balancers
@@ -149,12 +147,7 @@ tenancy_name = ""
 username = ""
 
 # helm
-
-add_incubator_repo = false
-
-add_jetstack_repo = false
-
-helm_version = "2.14.3"
+helm_version = "3.0.0"
 
 install_helm = false
 

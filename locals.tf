@@ -117,7 +117,7 @@ locals {
     cluster_kubernetes_version                              = var.kubernetes_version
     cluster_name                                            = var.cluster_name
     cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
-    cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
+    # cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
     cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
     cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
     cluster_subnets                                         = module.network.subnet_ids
@@ -149,8 +149,6 @@ locals {
   }
 
   helm = {
-    add_incubator_repo = var.add_incubator_repo
-    add_jetstack_repo  = var.add_incubator_repo
     helm_version       = var.helm_version
     install_helm       = var.install_helm
   }

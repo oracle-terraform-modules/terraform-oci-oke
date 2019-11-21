@@ -10,7 +10,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   options {
     add_ons {
       is_kubernetes_dashboard_enabled = var.oke_cluster.cluster_options_add_ons_is_kubernetes_dashboard_enabled
-      is_tiller_enabled               = var.oke_cluster.cluster_options_add_ons_is_tiller_enabled
+      is_tiller_enabled               = false
     }
 
     kubernetes_network_config {

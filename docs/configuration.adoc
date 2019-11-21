@@ -17,8 +17,6 @@
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
 :uri-helm: https://helm.sh/
-:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
-:uri-helm-jetstack: https://charts.jetstack.io
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
@@ -202,10 +200,7 @@ kubectl --namespace=kube-system get secret ocirsecret --export -o yaml | kubectl
 
 === Configure helm parameters
 
-The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host. Additional helm repos include the following:
-
-. {uri-helm-incubator}[incubator]
-. {uri-helm-jetstack}[jetstack]
+The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host.
 
 {uri-terraform-options}#helm[Reference]
 

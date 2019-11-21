@@ -48,7 +48,6 @@ variable "oke_cluster" {
     cluster_kubernetes_version                              = string
     cluster_name                                            = string
     cluster_options_add_ons_is_kubernetes_dashboard_enabled = bool
-    cluster_options_add_ons_is_tiller_enabled               = bool
     cluster_options_kubernetes_network_config_pods_cidr     = string
     cluster_options_kubernetes_network_config_services_cidr = string
     cluster_subnets                                         = map(string)
@@ -100,8 +99,6 @@ variable "oke_ocir" {
 # helm
 variable "helm" {
   type = object({
-    add_incubator_repo = bool
-    add_jetstack_repo  = bool
     helm_version       = string
     install_helm       = bool
   })
