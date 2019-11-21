@@ -9,7 +9,6 @@ data "template_file" "create_ocir_script" {
     region_registry = var.oke_ocir.ocir_urls[var.oke_general.region]
     tenancy_name    = var.oke_ocir.tenancy_name
     username        = var.oke_ocir.username
-    # tiller_enabled  = var.oke_cluster.cluster_options_add_ons_is_tiller_enabled
   }
 
   count = var.oke_ocir.create_auth_token == true ? 1 : 0
@@ -32,7 +31,8 @@ resource null_resource "create_ocir_secret" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = ["null_resource.write_kubeconfig_on_admin"]
+  depends_on = [null_resource.write_kubeconfig_on_admin]
+  
   provisioner "file" {
     content     = data.template_file.create_ocir_script[0].rendered
     destination = "~/create_ocir_secret.sh"
@@ -49,8 +49,6 @@ resource null_resource "create_ocir_secret" {
 }
 
 resource null_resource "delete_ocir_script" {
-  depends_on = ["null_resource.create_ocir_secret"]
-
   connection {
     host        = var.oke_admin.admin_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
@@ -62,6 +60,8 @@ resource null_resource "delete_ocir_script" {
     bastion_user        = "opc"
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
+
+  depends_on = [null_resource.create_ocir_secret]
 
   provisioner "remote-exec" {
     inline = [

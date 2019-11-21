@@ -9,7 +9,7 @@ locals {
   anywhere            = "0.0.0.0/0"
   ssh_port            = 22
   tcp_protocol        = 6
-  autonomous_image_id = lookup(data.oci_core_app_catalog_subscriptions.autonomous_linux[0].app_catalog_subscriptions[0], "listing_resource_id")
-  oracle_image_id     = data.oci_core_images.oracle_images[0].images.0.id
+  autonomous_image_id = var.oci_bastion.use_autonomous == true ? lookup(data.oci_core_app_catalog_subscriptions.autonomous_linux[0].app_catalog_subscriptions[0], "listing_resource_id") : null
+  oracle_image_id     = var.oci_bastion.use_autonomous == false ? data.oci_core_images.oracle_images[0].images.0.id  : null
   bastion_image_id    = var.oci_bastion.use_autonomous == true ? local.autonomous_image_id : (var.oci_bastion.bastion_image_id == "NONE" ? local.oracle_image_id : var.oci_bastion.bastion_image_id)
 }

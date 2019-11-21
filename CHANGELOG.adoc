@@ -11,6 +11,8 @@ The format is based on {uri-changelog}[Keep a Changelog].
 * Helm upgraded to version 3.0.0 #100
 * incubator and jetstack helm repos removed as they can now be searched from helm hub #100
 * tiller disabled and option to enable it is removed #100
+* Fixed bug for empty tuple in data.oci_core_images.oracle_images when use_autonomous=true #103
+* Set minimum version of Terraform to 0.12.16
 
 == v2.0.0-beta.1 (November 14, 2019)
 * Added admin host for operations instead of using the bastion server #91

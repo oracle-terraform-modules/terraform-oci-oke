@@ -38,21 +38,21 @@ resource "oci_ons_subscription" "bastion_notification" {
 }
 
 resource "oci_identity_dynamic_group" "bastion_notification" {
-  provider       = "oci.home"
+  provider       = oci.home
   compartment_id = var.oci_base_identity.tenancy_id
   description    = "dynamic group to allow bastion to send notifications"
   matching_rule  = "ALL {instance.id = '${join(",", data.oci_core_instance.bastion.*.id)}'}"
   name           = "${var.oci_bastion_general.label_prefix}-bastion-notification"
-  depends_on     = ["oci_core_instance.bastion"]
+  depends_on     = [oci_core_instance.bastion]
   count          = var.oci_bastion_notification.notification_enabled == true && var.oci_bastion.bastion_enabled == true ? 1 : 0
 }
 
 resource "oci_identity_policy" "bastion_notification" {
-  provider       = "oci.home"
+  provider       = oci.home
   compartment_id = var.oci_base_identity.compartment_id
   description    = "policy to allow bastion host to publish messages"
   name           = "${var.oci_bastion_general.label_prefix}-bastion-notification"
   statements     = ["Allow dynamic-group ${oci_identity_dynamic_group.bastion_notification[0].name} to use ons-topic in compartment id ${data.oci_identity_compartments.compartments_id.compartments.0.id} where request.permission='ONS_TOPIC_PUBLISH'"]
-  depends_on     = ["oci_core_instance.bastion"]
+  depends_on     = [oci_core_instance.bastion]
   count          = var.oci_bastion.bastion_enabled == true && var.oci_bastion_notification.notification_enabled == true ? 1 : 0
 }
