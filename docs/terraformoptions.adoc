@@ -12,8 +12,6 @@
 :uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
 :uri-docs: {uri-rel-file-base}/docs
 :uri-helm: https://helm.sh/
-:uri-helm-incubator: https://kubernetes-charts-incubator.storage.googleapis.com/
-:uri-helm-jetstack: https://charts.jetstack.io
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
@@ -442,11 +440,6 @@ node_pools = {
 |
 |10.96.0.0/16
 
-|tiller_enabled
-|Whether to install the server side of Helm in the OKE cluster.
-|true/false
-|true
-
 |worker_mode
 |Whether the worker nodes should be public or private. Private requires NAT gateway.
 |private/public
@@ -525,20 +518,10 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
-|add_incubator_repo
-|Whether to add the {uri-helm-incubator}[incubator] repo to the bastion's local helm repo.
-|true/false
-|false
-
-|add_jetstack_repo
-|Whether to add the {uri-helm-jetstack}[jetstack] repo to the bastion's local helm repo. *Required* for {uri-cert-manager}[cert-manager].
-|true/false
-|false
-
 |helm_version
-|The version of the {uri-helm}[helm] client to install on the bastion. A subsequent upgrade of tiller (server-side helm) will then be automatically performed.
+|The version of the {uri-helm}[helm] client to install on the bastion.
 |
-|2.14.3
+|3.0.0
 
 |install_helm
 |Whether to install {uri-helm}[helm] on the bastion instance.
