@@ -18,7 +18,7 @@ locals {
     region       = var.oci_base_general.region
   }
 
-  oci_bastion_infra = {
+  oci_bastion_network = {
     ad_names             = data.template_file.ad_names.*.rendered
     availability_domains = var.oci_base_bastion.availability_domains
     ig_route_id          = module.vcn.ig_route_id
@@ -30,10 +30,10 @@ locals {
 
   oci_bastion = {
     bastion_access      = var.oci_base_bastion.bastion_access
+    bastion_enabled     = var.oci_base_bastion.bastion_enabled
     bastion_image_id    = var.oci_base_bastion.bastion_image_id
     bastion_shape       = var.oci_base_bastion.bastion_shape
     bastion_upgrade     = var.oci_base_bastion.bastion_upgrade
-    bastion_enabled     = var.oci_base_bastion.bastion_enabled
     ssh_public_key_path = var.oci_base_bastion.ssh_public_key_path
     timezone            = var.oci_base_bastion.timezone
     use_autonomous      = var.oci_base_bastion.use_autonomous
@@ -57,16 +57,16 @@ locals {
   }
 
   oci_admin = {
+    admin_enabled       = var.oci_base_admin.admin_enabled
     admin_image_id      = var.oci_base_admin.admin_image_id
     admin_shape         = var.oci_base_admin.admin_shape
     admin_upgrade       = var.oci_base_admin.admin_upgrade
-    admin_enabled       = var.oci_base_admin.admin_enabled
     ssh_public_key_path = var.oci_base_admin.ssh_public_key_path
     timezone            = var.oci_base_admin.timezone
   }
 
   oci_admin_notification = {
-    enable_notification   = var.oci_base_admin.notification_enabled
+    notification_enabled  = var.oci_base_admin.notification_enabled
     notification_endpoint = var.oci_base_admin.notification_endpoint
     notification_protocol = var.oci_base_admin.notification_protocol
     notification_topic    = var.oci_base_admin.notification_topic

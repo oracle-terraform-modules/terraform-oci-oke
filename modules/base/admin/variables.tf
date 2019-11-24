@@ -23,17 +23,6 @@ variable "oci_admin_general" {
 
 # admin
 
-variable "oci_admin" {
-  type = object({
-    admin_image_id      = string
-    admin_shape         = string
-    admin_upgrade       = bool
-    admin_enabled        = bool
-    ssh_public_key_path = string
-    timezone            = string
-  })
-}
-
 variable "oci_admin_network" {
   type = object({
     ad_names             = list(string)
@@ -46,12 +35,22 @@ variable "oci_admin_network" {
   })
 }
 
+variable "oci_admin" {
+  type = object({
+    admin_enabled       = bool
+    admin_image_id      = string
+    admin_shape         = string
+    admin_upgrade       = bool
+    ssh_public_key_path = string
+    timezone            = string
+  })
+}
+
 variable "oci_admin_notification" {
   type = object({
-    enable_notification = bool
-    notification_endpoint  = string
-    notification_protocol  = string
-    notification_topic     = string
-
+    notification_enabled  = bool
+    notification_endpoint = string
+    notification_protocol = string
+    notification_topic    = string
   })
 }

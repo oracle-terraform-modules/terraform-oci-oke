@@ -25,7 +25,7 @@ variable "oci_bastion_general" {
 
 # bastion
 
-variable "oci_bastion_infra" {
+variable "oci_bastion_network" {
   type = object({
     ad_names             = list(string)
     availability_domains = number
@@ -41,10 +41,10 @@ variable "oci_bastion_infra" {
 variable "oci_bastion" {
   type = object({
     bastion_access      = string
+    bastion_enabled     = bool
     bastion_image_id    = string
     bastion_shape       = string
     bastion_upgrade     = bool
-    bastion_enabled     = bool
     ssh_public_key_path = string
     timezone            = string
     use_autonomous      = bool

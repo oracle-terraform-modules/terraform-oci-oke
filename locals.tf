@@ -33,10 +33,10 @@ locals {
   oci_base_bastion = {
     availability_domains  = var.availability_domains["bastion"]
     bastion_access        = var.bastion_access
+    bastion_enabled       = var.bastion_enabled
     bastion_image_id      = var.bastion_image_id
     bastion_shape         = var.bastion_shape
     bastion_upgrade       = var.bastion_package_upgrade
-    bastion_enabled       = var.bastion_enabled
     netnum                = var.netnum["bastion"]
     newbits               = var.newbits["bastion"]
     notification_enabled  = var.bastion_notification_enabled
@@ -51,10 +51,10 @@ locals {
 
   oci_base_admin = {
     availability_domains      = var.availability_domains["admin"]
+    admin_enabled             = var.admin_enabled
     admin_image_id            = "NONE"
     admin_shape               = var.admin_shape
     admin_upgrade             = var.admin_package_upgrade
-    admin_enabled             = var.admin_enabled
     enable_instance_principal = var.admin_instance_principal
     netnum                    = var.netnum["admin"]
     newbits                   = var.newbits["admin"]
@@ -117,7 +117,6 @@ locals {
     cluster_kubernetes_version                              = var.kubernetes_version
     cluster_name                                            = var.cluster_name
     cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
-    # cluster_options_add_ons_is_tiller_enabled               = var.tiller_enabled
     cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
     cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
     cluster_subnets                                         = module.network.subnet_ids
