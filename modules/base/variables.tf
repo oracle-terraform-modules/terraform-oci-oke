@@ -54,10 +54,10 @@ variable "oci_base_bastion" {
   type = object({
     availability_domains  = number
     bastion_access        = string
+    bastion_enabled       = bool
     bastion_image_id      = string
     bastion_shape         = string
     bastion_upgrade       = bool
-    bastion_enabled       = bool
     netnum                = number
     newbits               = number
     notification_enabled  = bool
@@ -73,10 +73,10 @@ variable "oci_base_bastion" {
   default = {
     availability_domains  = 1
     bastion_access        = "ANYWHERE"
+    bastion_enabled       = false
     bastion_image_id      = "NONE"
     bastion_shape         = "VM.Standard.E2.1"
     bastion_upgrade       = true
-    bastion_enabled       = false
     netnum                = 13
     newbits               = 32
     notification_enabled  = false
@@ -95,10 +95,10 @@ variable "oci_base_bastion" {
 variable "oci_base_admin" {
   type = object({
     availability_domains      = number
+    admin_enabled             = bool
     admin_image_id            = string
     admin_shape               = string
     admin_upgrade             = bool
-    admin_enabled             = bool
     enable_instance_principal = bool
     netnum                    = number
     newbits                   = number
@@ -114,10 +114,10 @@ variable "oci_base_admin" {
   description = "admin host parameters"
   default = {
     availability_domains      = 1
+    admin_enabled             = false
     admin_image_id            = "NONE"
     admin_shape               = "VM.Standard.E2.1"
     admin_upgrade             = true
-    admin_enabled             = false
     enable_instance_principal = true
     netnum                    = 33
     newbits                   = 13
