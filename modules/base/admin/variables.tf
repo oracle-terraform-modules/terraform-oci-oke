@@ -37,12 +37,13 @@ variable "oci_admin_network" {
 
 variable "oci_admin" {
   type = object({
-    admin_enabled       = bool
-    admin_image_id      = string
-    admin_shape         = string
-    admin_upgrade       = bool
-    ssh_public_key_path = string
-    timezone            = string
+    admin_enabled             = bool
+    admin_image_id            = string
+    admin_shape               = string
+    admin_upgrade             = bool
+    enable_instance_principal = bool
+    ssh_public_key_path       = string
+    timezone                  = string
   })
 }
 

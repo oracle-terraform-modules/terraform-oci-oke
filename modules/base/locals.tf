@@ -57,12 +57,13 @@ locals {
   }
 
   oci_admin = {
-    admin_enabled       = var.oci_base_admin.admin_enabled
-    admin_image_id      = var.oci_base_admin.admin_image_id
-    admin_shape         = var.oci_base_admin.admin_shape
-    admin_upgrade       = var.oci_base_admin.admin_upgrade
-    ssh_public_key_path = var.oci_base_admin.ssh_public_key_path
-    timezone            = var.oci_base_admin.timezone
+    admin_enabled             = var.oci_base_admin.admin_enabled
+    admin_image_id            = var.oci_base_admin.admin_image_id
+    admin_shape               = var.oci_base_admin.admin_shape
+    admin_upgrade             = var.oci_base_admin.admin_upgrade
+    enable_instance_principal = var.oci_base_admin.enable_instance_principal
+    ssh_public_key_path       = var.oci_base_admin.ssh_public_key_path
+    timezone                  = var.oci_base_admin.timezone
   }
 
   oci_admin_notification = {
