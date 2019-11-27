@@ -6,5 +6,5 @@ output "admin_private_ip" {
 }
 
 output "admin_instance_principal_group_name" {
-  value = oci_identity_dynamic_group.admin_instance_principal[0].name
+  value = var.oci_admin.admin_enabled == true && var.oci_admin.enable_instance_principal == true ? oci_identity_dynamic_group.admin_instance_principal[0].name : null
 }
