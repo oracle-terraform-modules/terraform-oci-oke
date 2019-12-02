@@ -27,10 +27,10 @@ variable "label_prefix" {}
 
 variable "admin" {
   type = object({
-    bastion_public_ip               = string
-    admin_private_ip                = string
-    bastion_enabled                  = bool
-    admin_enabled                    = bool
+    bastion_public_ip        = string
+    admin_private_ip         = string
+    bastion_enabled          = bool
+    admin_enabled            = bool
     admin_instance_principal = bool
   })
 }

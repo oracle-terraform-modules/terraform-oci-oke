@@ -7,7 +7,7 @@ resource "oci_identity_policy" "admin_instance_principal_dynamic_group" {
   description    = "policy to allow admin host to manage dynamic group"
   name           = "${var.label_prefix}-admin-instance-principal-dynamic-group"
   statements     = ["Allow dynamic-group ${var.dynamic_group} to use dynamic-groups in tenancy"]
-  count          = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
+  count          = (var.oke_kms.use_encryption == true && var.admin.bastion_enabled == true && var.admin.admin_instance_principal == true) ? 1 : 0
 }
 
 resource "oci_identity_policy" "oke-kms" {

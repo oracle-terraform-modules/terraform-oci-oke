@@ -59,5 +59,5 @@ resource null_resource "update_dynamic_group" {
     ]
   }
 
-  count = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
+  count = (var.oke_kms.use_encryption == true && var.admin.bastion_enabled == true && var.admin.admin_instance_principal == true) ? 1 : 0
 }
