@@ -24,11 +24,7 @@ data "template_file" "update_dynamic_group_script" {
 
   depends_on = [oci_identity_dynamic_group.oke-kms-cluster]
 
-<<<<<<< HEAD
-  count = (var.oke_kms.use_encryption == true && var.bastion.create_bastion == true && var.bastion.enable_instance_principal == true) ? 1 : 0
-=======
   count = var.oke_kms.use_encryption == true && var.admin.admin_enabled == true && var.admin.admin_instance_principal == true ? 1 : 0
->>>>>>> c26d4b3... python3 and oci in admin host, using oci-cli to generate kubeconfig instead of uploading, sort all variables in alphabetical order, standard naming for enabled parameters, added additional checks to prevent locals in policies module looking up a dynamic group when instance_principal is not created and use_encryption=false and updated terraform.tfvars.example to remove unused bastion parameters, use compartment id instead of compartment name to write policy statement, update Kubernetes available versions in Terraform options doc, updated diagrams with admin host, kubeconfig v2 on admin host
 }
 
 resource null_resource "update_dynamic_group" {
