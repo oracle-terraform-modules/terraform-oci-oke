@@ -163,3 +163,12 @@ install_metricserver = false
 use_encryption = false
 
 existing_key_id = ""
+
+# service account
+create_service_account = true
+
+service_account_name = "gitlab"
+
+service_account_namespace = "kube-system"
+
+service_account_cluster_role_binding = "gitlab-crb"

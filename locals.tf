@@ -148,8 +148,8 @@ locals {
   }
 
   helm = {
-    helm_version       = var.helm_version
-    install_helm       = var.install_helm
+    helm_version = var.helm_version
+    install_helm = var.install_helm
   }
 
   calico = {
@@ -160,5 +160,12 @@ locals {
   oke_kms = {
     use_encryption = var.use_encryption
     key_id         = var.existing_key_id
+  }
+
+  service_account = {
+    create_service_account               = var.create_service_account
+    service_account_name                 = var.service_account_name
+    service_account_namespace            = var.service_account_namespace
+    service_account_cluster_role_binding = var.service_account_cluster_role_binding
   }
 }

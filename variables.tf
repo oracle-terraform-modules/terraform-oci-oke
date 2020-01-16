@@ -460,3 +460,29 @@ variable "existing_key_id" {
   default     = ""
   type        = string
 }
+
+# serviceaccount
+
+variable "create_service_account" {
+  description = "whether to create a service account. A service account is required for CI/CD. See https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
+  default     = false
+  type        = bool
+}
+
+variable "service_account_name" {
+  description = "name of service account to create"
+  default     = "kubeconfigsa"
+  type        = string
+}
+
+variable "service_account_namespace" {
+  description = "kubernetes namespace where to create the service account"
+  default     = "kube-system"
+  type        = string
+}
+
+variable "service_account_cluster_role_binding" {
+  description = "cluster role binding name"
+  default     = ""
+  type        = string
+}
