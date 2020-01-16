@@ -99,8 +99,8 @@ variable "oke_ocir" {
 # helm
 variable "helm" {
   type = object({
-    helm_version       = string
-    install_helm       = bool
+    helm_version = string
+    install_helm = bool
   })
 }
 
@@ -116,4 +116,15 @@ variable "calico" {
 
 variable "install_metricserver" {
   default = false
+}
+
+# service account
+
+variable "service_account" {
+  type = object({
+    create_service_account               = bool
+    service_account_name                 = string
+    service_account_namespace            = string
+    service_account_cluster_role_binding = string
+  })
 }

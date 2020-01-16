@@ -37,6 +37,7 @@ Configuration Terraform Options:
 . link:#calico[Calico]
 . link:#kubernetes-metrics-server[Kubernetes Metrics Server]
 . link:#kms-integration[KMS integration]
+. link:#service-account[Service Account]
 
 == Identity and access
 
@@ -583,3 +584,35 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |id of existing KMS key
 |
 |
+|===
+
+== Service Account
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_service_account
+|Whether to create a service account. A service account is required for CI/CD. See https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
+|true/false
+|false
+
+|service_account_name
+|The name of service account to create
+|
+|kubeconfigsa
+
+|service_account_namespace
+|The Kubernetes namespace where to create the service account
+|
+|kube-system
+
+|service_account_cluster_role_binding
+|The name of the cluster role binding for the service account
+|
+|
+
+|===

@@ -19,4 +19,6 @@ locals {
   total_nodes = length(flatten([
     for nodes in local.node_pools_size_list : range(nodes)
   ]))
+
+  service_account_cluster_role_binding_name = var.service_account.service_account_cluster_role_binding == "" ? "${var.service_account.service_account_name}-crb" : var.service_account.service_account_cluster_role_binding
 }
