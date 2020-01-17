@@ -6,8 +6,8 @@ terraform {
 }
 
 module "base" {
-  source = "./modules/base"
-
+  # source = "./modules/base"
+  source = "github.com/oracle-terraform-modules/terraform-oci-base"
   # identity
   oci_base_identity = local.oci_base_identity
 

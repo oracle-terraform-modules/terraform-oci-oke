@@ -113,7 +113,7 @@ variable "vcn_name" {
 
 # bastion
 variable "bastion_access" {
-  description = "cidr from where the bastion can be sshed into. Default is ANYWHERE and equivalent to 0.0.0.0/0"
+  description = "cidr from where the bastion can be sshed into. default is ANYWHERE and equivalent to 0.0.0.0/0"
   default     = "ANYWHERE"
   type        = string
 }
@@ -126,18 +126,18 @@ variable "bastion_enabled" {
 
 variable "bastion_image_id" {
   description = "image id to use for bastion."
-  default     = "NONE"
+  default     = "Autonomous"
   type        = string
 }
 
 variable "bastion_notification_enabled" {
-  description = "Whether to enable notification on the bastion host"
+  description = "whether to enable notification on the bastion host"
   default     = true
   type        = bool
 }
 
 variable "bastion_notification_endpoint" {
-  description = "The subscription notification endpoint for the bastion. Email address to be notified."
+  description = "the subscription notification endpoint for the bastion. email address to be notified."
   default     = ""
   type        = string
 }
@@ -149,13 +149,13 @@ variable "bastion_notification_protocol" {
 }
 
 variable "bastion_notification_topic" {
-  description = "The name of the notification topic."
+  description = "the name of the notification topic."
   default     = "bastion"
   type        = string
 }
 
 variable "bastion_package_upgrade" {
-  description = "Whether to upgrade the bastion host packages after provisioning. It’s useful to set this to false during development so the bastion is provisioned faster."
+  description = "whether to upgrade the bastion host packages after provisioning. it’s useful to set this to false during development so the bastion is provisioned faster."
   default     = true
   type        = bool
 }
@@ -167,15 +167,9 @@ variable "bastion_shape" {
 }
 
 variable "bastion_timezone" {
-  description = "The preferred timezone for the bastion host."
+  description = "the preferred timezone for the bastion host."
   default     = "Australia/Sydney"
   type        = string
-}
-
-variable "bastion_use_autonomous" {
-  description = "Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image."
-  default     = true
-  type        = bool
 }
 
 # admin server
@@ -187,8 +181,8 @@ variable "admin_enabled" {
 }
 
 variable "admin_image_id" {
-  description = "image id to use for admin server."
-  default     = "NONE"
+  description = "image id to use for admin server. set either an image id or to Oracle. if value is set to Oracle, the default Oracle Linux platform image will be used."
+  default     = "Oracle"
   type        = string
 }
 
@@ -199,31 +193,31 @@ variable "admin_instance_principal" {
 }
 
 variable "admin_notification_enabled" {
-  description = "Whether to enable notification on the admin host"
+  description = "whether to enable notification on the admin host"
   default     = false
   type        = bool
 }
 
 variable "admin_notification_endpoint" {
-  description = "The subscription notification endpoint for the admin. Email address to be notified."
+  description = "the subscription notification endpoint for the admin. email address to be notified."
   default     = ""
   type        = string
 }
 
 variable "admin_notification_protocol" {
-  description = "The notification protocol used."
+  description = "the notification protocol used."
   default     = "EMAIL"
   type        = string
 }
 
 variable "admin_notification_topic" {
-  description = "The name of the notification topic."
+  description = "the name of the notification topic."
   default     = "admin"
   type        = string
 }
 
 variable "admin_package_upgrade" {
-  description = "Whether to upgrade the bastion host packages after provisioning. It’s useful to set this to false during development so the bastion is provisioned faster."
+  description = "whether to upgrade the bastion host packages after provisioning. it’s useful to set this to false during development so the bastion is provisioned faster."
   default     = true
   type        = bool
 }
@@ -236,19 +230,13 @@ variable "admin_shape" {
 
 variable "admin_timezone" {
   default     = "Australia/Sydney"
-  description = "The preferred timezone for the admin host."
+  description = "the preferred timezone for the admin host."
   type        = string
-}
-
-variable "admin_use_autonomous" {
-  description = "Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image."
-  default     = true
-  type        = bool
 }
 
 # availability domains
 variable "availability_domains" {
-  description = "ADs where to provision non-OKE resources"
+  description = "Availability Domains where to provision non-OKE resources"
   default = {
     bastion = 1
     admin   = 1
@@ -278,7 +266,7 @@ variable "cluster_name" {
 
 variable "dashboard_enabled" {
   description = "whether to enable kubernetes dashboard"
-  default     = true
+  default     = false
   type        = bool
 }
 
@@ -289,7 +277,7 @@ variable "kubernetes_version" {
 }
 
 variable "node_pools" {
-  description = "tuple node pools. each key maps to a node pool. each value is a tuple of shape (string) and size(number)"
+  description = "tuple node pools. Each key maps to a node pool. each value is a tuple of shape (string) and size(number)"
   type        = map(any)
 }
 
@@ -300,7 +288,7 @@ variable "node_pool_name_prefix" {
 }
 
 variable "node_pool_image_id" {
-  description = "OCID of custom image to use for worker node"
+  description = "ocid of custom image to use for worker node"
   default     = "NONE"
   type        = string
 }
@@ -318,13 +306,13 @@ variable "node_pool_os_version" {
 }
 
 variable "pods_cidr" {
-  description = "This is the CIDR range used for IP addresses by your pods. A /16 CIDR is generally sufficient. This CIDR should not overlap with any subnet range in the VCN (it can also be outside the VCN CIDR range)."
+  description = "this is the CIDR range used for IP addresses by the pods. a /16 CIDR is generally sufficient. This CIDR should not overlap with any subnet range in the VCN (it can also be outside the VCN CIDR range)."
   default     = "10.244.0.0/16"
   type        = string
 }
 
 variable "services_cidr" {
-  description = "This is the CIDR range used by exposed Kubernetes services (ClusterIPs). This CIDR should not overlap with the VCN CIDR range."
+  description = "This is the CIDR range used by exposed Kubernetes services (ClusterIPs). this CIDR should not overlap with the VCN CIDR range."
   default     = "10.96.0.0/16"
   type        = string
 }
@@ -345,7 +333,7 @@ variable "lb_subnet_type" {
 }
 
 variable "preferred_lb_subnets" {
-  description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are public or internal. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'"
+  description = "preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'"
   # values: public, internal. 
   # When creating an internal load balancer, the internal annotation must still be specified regardless 
   default = "public"
@@ -464,7 +452,7 @@ variable "existing_key_id" {
 # serviceaccount
 
 variable "create_service_account" {
-  description = "whether to create a service account. A service account is required for CI/CD. See https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
+  description = "whether to create a service account. A service account is required for CI/CD. see https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
   default     = false
   type        = bool
 }

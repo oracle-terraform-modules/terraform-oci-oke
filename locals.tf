@@ -19,7 +19,7 @@ locals {
   oci_base_general = {
     label_prefix         = var.label_prefix
     region               = var.region
-    disable_auto_retries = var.disable_auto_retries
+    # disable_auto_retries = var.disable_auto_retries
   }
 
   oci_base_vcn = {
@@ -46,13 +46,13 @@ locals {
     ssh_private_key_path  = var.ssh_private_key_path
     ssh_public_key_path   = var.ssh_public_key_path
     timezone              = var.bastion_timezone
-    use_autonomous        = var.bastion_use_autonomous
+    # use_autonomous        = var.bastion_use_autonomous
   }
 
   oci_base_admin = {
     availability_domains      = var.availability_domains["admin"]
     admin_enabled             = var.admin_enabled
-    admin_image_id            = "NONE"
+    admin_image_id            = var.admin_image_id
     admin_shape               = var.admin_shape
     admin_upgrade             = var.admin_package_upgrade
     enable_instance_principal = var.admin_instance_principal
@@ -65,7 +65,7 @@ locals {
     ssh_private_key_path      = var.ssh_private_key_path
     ssh_public_key_path       = var.ssh_public_key_path
     timezone                  = var.admin_timezone
-    use_autonomous            = var.admin_use_autonomous
+    # use_autonomous            = var.admin_use_autonomous
   }
 
   ocir = {
