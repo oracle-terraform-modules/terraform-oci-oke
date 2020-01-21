@@ -222,8 +222,8 @@ newbits = {
 
 |bastion_image_id
 |Custom image id for the bastion host
-|image_id or NONE. If the value is set to NONE, an Oracle Platform image will be used instead. Set use_autonomous to _false_ if you want to use your own image.
-|NONE
+|image_id or Autonomous. If the value is set to 'Autonomous', an Oracle Autonomous Linux Platform image will be used instead. If you want to use a custom image, set the image id instead.
+|Autonomous
 
 |bastion_notification_enabled
 |Whether to enable ONS notification for the bastion host.
@@ -260,11 +260,6 @@ newbits = {
 |
 |Australia/Sydney
 
-|bastion_use_autonomous
-|Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image.
-|true/false
-|true
-
 |===
 
 == Admin Host
@@ -283,8 +278,8 @@ newbits = {
 
 |admin_image_id
 |Custom image id for the admin host
-|image_id or NONE. If the value is set to NONE, an Oracle Platform image will be used instead. Set use_autonomous to _false_ if you want to use your own image. For now, *do not use Autonomous for the admin host.*
-|NONE
+|image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
+|Oracle
 
 |admin_instance_principal
 |Whether to enable instance_principal on the admin server. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-admin-host[instance_principal]
@@ -325,11 +320,6 @@ newbits = {
 |The preferred timezone for the admin host. {uri-timezones}[List of timezones]
 |
 |Australia/Sydney
-
-|admin_use_autonomous
-|Whether to use Autonomous Linux or an Oracle Linux Platform image or custom image. Set to false if you want to use your own image id or Oracle Linux Platform image. *Do not use autonomous for now*
-|true/false
-|false
 
 |===
 
@@ -389,7 +379,7 @@ availability_domains = {
 |dashboard_enabled
 |Whether to create the default Kubernetes dashboard.
 |true/false
-|true
+|false
 
 |kubernetes_version
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the available versions will be queries and the latest version selected. To provision a specific version, choose from available versions and override the 'LATEST' value.

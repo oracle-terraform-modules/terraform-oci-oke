@@ -48,18 +48,21 @@
 . link:#creating-the-oke-cluster[Creating the OKE Cluster]
 . link:#adding-the-bastion-host[Adding the bastion host]
 . link:#using-the-bastion-host[Using the bastion host]
-.. link:#enabling-instance_principal-on-the-bastion-host[Enabling instance_principal on the bastion host]
-.. link:#disabling-instance_principal-on-the-bastion-host[Disabling instance_principal on the bastion host]
+. link:#adding-the-admin-host[Adding the admin host]
+.. link:#upgrading-the-admin-host[Upgrading the admin host]
+. link:#using-the-admin-host[Using the admin host]
+.. link:#enabling-instance_principal-on-the-admin-host[Enabling instance_principal on the admin host]
+.. link:#disabling-instance_principal-on-the-admin-host[Disabling instance_principal on the admin host]
 .. link:#recommendations-for-using-instance_principal[Recommendations for using instance_principal]
-. link:#interacting-with-the-oke-cluster-locally[Interacting with the OKE Cluster locally]
+. link:#interacting-with-the-oke-cluster[Interacting with the OKE Cluster locally]
 . link:#creating-an-auth-token-for-ocir[Creating an auth token for OCIR]
 . link:#installing-helm[Installing helm]
 . link:#installing-calico[Installing Calico]
 . link:#installing-kubernetes-metrics-server[Installing Kubernetes Metrics Server]
-. link:#scaling-the-number-of-worker-nodes[Scaling the number of worker nodes]
 . link:#scaling-the-number-of-node-pools[Scaling the number of node pools]
 . link:#accessing-the-kubernetes-dashboard[Accessing the Kubernetes dashboard]
 . link:#destroying-the-cluster[Destroying the cluster]
+. link:#creating-a-service-account-for-cicd-tools[Creating a service account for CI/CD tools]
 
 === Assumptions
 
@@ -103,17 +106,6 @@ Use the parameter *cluster_name* to change the name of the cluster as per your n
 
 If you want to use bastion host, set the parameter *bastion_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
 
-==== bastion_package_upgrade
-
-There is 1 additional parameter for the bastion:
-
-* bastion_package_upgrade
-
-_bastion_package_upgrade_ will upgrade the bastion compute instance on first boot. 
-
-****
-N.B. It is good and recommended practice to upgrade your bastion host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the bastion host is available.
-****
 
 === Using the bastion host
 
@@ -121,17 +113,13 @@ N.B. It is good and recommended practice to upgrade your bastion host to the lat
 *Assumption: you have set the bastion_enabled parameter to true in terraform.tfvars*
 ****
 
-Once the terraform apply is successful you will get the bastion_public_ip as output and also a ssh command .You can also run the below command to get the output:
+Once the terraform apply is successful you will get the bastion_public_ip as output and also a ssh command. You can also run the below command to get the output:
 
 ----
 terraform output
 ----
 
-A utility script is also generated that contains the command to ssh to the bastion. You can run it directly:
-
-----
-scripts/tesseract.sh
-----
+You can then copy the ssh_to_bastion command, paste and run it in a terminal.
 
 === Adding the admin host
 
@@ -139,7 +127,7 @@ The admin host is used to minimize local dependencies such as oci-cli, kubectl a
 
 If you want to use the admin host, set the parameter *admin_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#admin-host[Admin Host] for other available bastion related parameters.
 
-==== admin_package_upgrade
+==== Upgrading the admin host
 
 There is 1 additional parameter for the admin:
 
@@ -157,11 +145,13 @@ N.B. It is good and recommended practice to upgrade your package host to the lat
 *Assumption: you have set the admin_enabled parameter to true in terraform.tfvars*
 ****
 
-Once the terraform apply is successful you will get the admin_private_ip as output and also a ssh command .You can also run the below command to get the output:
+Once the terraform apply is successful you will get the admin_private_ip as output and also a ssh command. You can also run the below command to get the output:
 
 ----
 terraform output
 ----
+
+You can then copy the ssh_to_admin command, paste and run it in a terminal.
 
 ==== Enabling instance_principal on the admin host
 {uri-oci-instance-principal}[instance_principal] is an IAM service feature that enables instances to be authorized actors (or principals) to perform actions on service resources. Each compute instance has its own identity, and it authenticates using the certificates that are added to it. These certificates are automatically created, assigned to instances and rotated, preventing the need for you to distribute credentials to your hosts and rotate them.
@@ -208,9 +198,15 @@ terraform apply
 . Enable instance_principal *_if and only if_* you are using link:#kms-integration[KMS Integration], calico, metricserver, helm or creating the OCIR secret.
 . Disable instance_principal once the cluster is created
 
-=== Interacting with the OKE Cluster locally
+=== Interacting with the OKE Cluster
 
-kubectl installed in bastion host by default and the kubeconfig file is set in the default location (~/.kube/config) so you don't need to set the KUBECONFIG environment variable every time you log in to the bastion. An alias "*k*" will be created for kubectl on the bastion host. 
+kubectl installed on the admin host by default and the kubeconfig file is set in the default location (~/.kube/config) so you don't need to set the KUBECONFIG environment variable every time you log in to the admin host. 
+
+****
+N.B. In order for kubeconfig to be created on the admin host, you need to link:#enabling-instance_principal-on-the-admin-host[enable instance_principal on the admin host].
+****
+
+An alias "*k*" will be created for kubectl on the admin host. 
 
 If you would like to use kubectl locally, {uri-install-kubectl}[install kubectl]. Then, set the KUBECONFIG to the config file path. The kubeconfig file will be saved generated locally under the folder *generated*:
 
@@ -228,11 +224,13 @@ export KUBECONFIG=generated/kubeconfig
 
 === Installing helm
 
-{uri-helm}[Helm] is a package manager for kubernetes.If you want to install helm, set the parameter *install_helm = true* in terraform.tfvars. By default, it is set to true. An alias "*h*" will be created for helm on the bastion host. For other available parameters, refer to {uri-terraform-options}#helm[Helm parameters].
+{uri-helm}[Helm] is a package manager for kubernetes. If you want to install helm on the admin host, set the parameter *install_helm = true* in terraform.tfvars. By default, it is set to false. 
+
+An alias "*h*" will be created for helm on the admin host. For other available parameters, refer to {uri-terraform-options}#helm[Helm parameters].
 
 === Installing Calico 
 
-Calico enables network policy in Kubernetes clusters across the cloud. To install calico set the parameter *install_calico = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
+Calico enables network policy in Kubernetes clusters. To install calico set the parameter *install_calico = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
 
 === Installing Kubernetes Metrics Server
 
@@ -248,6 +246,8 @@ There are 2 ways you can scale the node pools:
 Set the parameter *node_pools* to the desired quantities to scale the node pools accordingly. Refer to {uri-topology}#node-pools[Nodepool].
 
 === Accessing the Kubernetes dashboard
+
+By default, the Kubernetes dashboard is now disabled. To enable it, set the *dashboard_enabled = true* _before_ creating the cluster. The dashboard will then be deployed.
 
 In a terminal window, run the command:
 
@@ -268,3 +268,20 @@ terraform destroy
 ****
 *Only infrastructure created by terraform will get destroyed.*
 ****
+
+
+=== Creating a service account for CI/CD tools
+
+OKE now uses Kubeconfig v2 which means the default token has a limited lifespan. In order to allow CI/CD tools to deploy to OKE, a service account must be created.
+
+Set the *create_service_account = true* and you can name the other parameters as appropriate:
+
+----
+create_service_account = true
+
+service_account_name = "kubeconfigsa"
+
+service_account_namespace = "kube-system"
+
+service_account_cluster_role_binding = ""
+````

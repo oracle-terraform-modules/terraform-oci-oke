@@ -15,7 +15,7 @@ ssh_private_key_path = ""
 ssh_public_key_path = ""
 
 # general oci parameters
-label_prefix = "oke"
+label_prefix = "dev"
 
 region = "us-phoenix-1"
 
@@ -53,7 +53,7 @@ bastion_access = "ANYWHERE"
 
 bastion_enabled = true
 
-bastion_image_id = "NONE"
+bastion_image_id = "Autonomous"
 
 bastion_notification_enabled = true
 
@@ -69,11 +69,9 @@ bastion_shape = "VM.Standard.E2.1"
 
 bastion_timezone = "Australia/Sydney"
 
-bastion_use_autonomous = true
-
 admin_enabled = true
 
-admin_image_id = "NONE"
+admin_image_id = "Oracle"
 
 admin_instance_principal = true
 
@@ -91,8 +89,6 @@ admin_shape   = "VM.Standard.E2.1"
 
 admin_timezone= "Australia/Sydney"
 
-admin_use_autonomous = false
-
 # availability_domains
 
 availability_domains = {
@@ -108,7 +104,7 @@ allow_worker_ssh_access = false
 
 cluster_name = "oke"
 
-dashboard_enabled = "true"
+dashboard_enabled = false
 
 kubernetes_version = "LATEST"
 
@@ -167,8 +163,8 @@ existing_key_id = ""
 # service account
 create_service_account = true
 
-service_account_name = "gitlab"
+service_account_name = "kubeconfigsa"
 
 service_account_namespace = "kube-system"
 
-service_account_cluster_role_binding = "gitlab-crb"
+service_account_cluster_role_binding = ""
