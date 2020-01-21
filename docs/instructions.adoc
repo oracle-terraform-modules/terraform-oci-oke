@@ -200,7 +200,7 @@ terraform apply
 
 === Interacting with the OKE Cluster
 
-kubectl installed on the admin host by default and the kubeconfig file is set in the default location (~/.kube/config) so you don't need to set the KUBECONFIG environment variable every time you log in to the bastion. 
+kubectl installed on the admin host by default and the kubeconfig file is set in the default location (~/.kube/config) so you don't need to set the KUBECONFIG environment variable every time you log in to the admin host. 
 
 ****
 N.B. In order for kubeconfig to be created on the admin host, you need to link:#enabling-instance_principal-on-the-admin-host[enable instance_principal on the admin host].
