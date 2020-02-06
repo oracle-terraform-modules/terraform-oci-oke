@@ -23,7 +23,12 @@ resource "oci_containerengine_node_pool" "nodepools" {
     size = max(3, element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools), count.index))], 1))
   }
 
-  node_image_id = var.node_pools.node_pool_image_id == "NONE" ? data.oci_core_images.latest_images[count.index].images[0].id : var.node_pools.node_pool_image_id
+  node_source_details {
+    image_id    = var.node_pools.node_pool_image_id == "NONE" ? data.oci_core_images.latest_images[count.index].images[0].id : var.node_pools.node_pool_image_id
+    source_type = "IMAGE"
+  }
+
+  # node_image_id = var.node_pools.node_pool_image_id == "NONE" ? data.oci_core_images.latest_images[count.index].images[0].id : var.node_pools.node_pool_image_id
   node_shape    = element(var.node_pools.node_pools[(element(keys(var.node_pools.node_pools), count.index))], 0)
 
   ssh_public_key = file(var.oke_ssh_keys.ssh_public_key_path)
