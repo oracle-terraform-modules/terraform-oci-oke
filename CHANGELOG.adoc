@@ -7,12 +7,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-== v2.1.0 (January 17, 2019)
+== 2.1.1 (February 06, 2020)
+* Install latest version of kubectl into admin host (#119)
+* Added OCIR support for new regions (#122)
+* Changed nodepools image specs from node_image_id to node_source_details (#124)
+
+== v2.1.0 (January 17, 2020)
 * Base module now pointing directly to https://github.com/oracle-terraform-modules/terraform-oci-base v1.1.0
 * Local copy of base module removed
 * Disabled Kubernetes dashboard by default (#117)
 
-== v2.0.1 (January 16, 2019)
+== v2.0.1 (January 16, 2020)
 * fixed issue with compartment id when using KMS #112
 * added ServiceAccount for CI/CD #113
 
