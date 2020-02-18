@@ -19,6 +19,7 @@
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
+:uri-terraform-dependencies: {uri-docs}/dependencies.adoc
 :uri-timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 :uri-topology: {uri-docs}/topology.adoc
 
@@ -38,6 +39,8 @@ Configuration Terraform Options:
 . link:#kubernetes-metrics-server[Kubernetes Metrics Server]
 . link:#kms-integration[KMS integration]
 . link:#service-account[Service Account]
+
+Ensure you review the {uri-terraform-dependencies}[dependencies].
 
 == Identity and access
 

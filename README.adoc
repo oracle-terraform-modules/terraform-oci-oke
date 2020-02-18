@@ -29,6 +29,7 @@
 :uri-quickstart: {uri-docs}/quickstart.adoc
 
 :uri-terraform: https://www.terraform.io
+:uri-terraform-dependencies: {uri-docs}/dependencies.adoc
 :uri-terraform-cidrsubnet-deconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
@@ -54,6 +55,8 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 * {uri-topology}[Topology]
 
 * {uri-terraform-options}[Terraform Options]
+
+* {uri-terraform-dependencies}[Feature Dependencies]
 
 == Related Documentation, Blog
 * {uri-oci-documentation}[Oracle Cloud Infrastructure Documentation]

@@ -1,0 +1,47 @@
+= Instructions
+
+:idprefix:
+:idseparator: -
+:sectlinks:
+
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/master
+:uri-rel-tree-base: link:{uri-repo}/tree/master
+
+:uri-docs: {uri-rel-file-base}/docs
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+
+== Dependencies
+
+The following table documents the {uri-terraform-options}[Terraform Options] dependencies.
+
+[stripes=odd,cols="1d,4d,3a", options=header,width="100%"] 
+|===
+|Feature
+|Description
+|Depends on
+
+|allow_worker_ssh_access
+|Allows ssh access to worker node via the bastion host
+|bastion_enabled = true
+
+|create_service_account
+|Creates a service account that can be used for CI/CD. 
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+
+|install_calico
+|Installs calico as network policy engine
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+
+|install_metricserver
+|Installs Kubernetes metrics server for Horizontal Pod Autoscaling
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+
+|ocir secret
+|Whether to create an authentication secret for OCIR
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true, create_auth_token = true
+
+|use_encryption
+|Uses OCI KMS to encrypt data in OKE's underlying etcd
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
