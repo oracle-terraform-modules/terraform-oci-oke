@@ -7,6 +7,13 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
+== 2.1.2 (February 19, 2020)
+* base module now points to the published base module on hashicorp registry
+* updated descriptions in variables, outputs and formatting to publish to hashicorp registry
+* added readme in markdown to publish to hashicorp registry
+* removed unused kms variables and module
+* updated documentation to indicated required values
+
 == 2.1.1 (February 06, 2020)
 * Install latest version of kubectl into admin host (#119)
 * Added OCIR support for new regions (#122)
