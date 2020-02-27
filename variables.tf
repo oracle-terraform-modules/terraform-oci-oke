@@ -13,17 +13,17 @@ variable "api_private_key_path" {
 }
 
 variable "compartment_id" {
-  description = "compartment id"
+  description = "compartment id where to create all resources"
   type        = string
 }
 
 variable "tenancy_id" {
-  description = "tenancy id"
+  description = "tenancy id where to create the sources"
   type        = string
 }
 
 variable "user_id" {
-  description = "user id"
+  description = "id of user that terraform will use to create the resources"
   type        = string
 }
 
@@ -40,33 +40,32 @@ variable "ssh_public_key_path" {
 
 # general oci parameters
 variable "disable_auto_retries" {
-  default = true
-  type    = bool
+  description = ""
+  default     = true
+  type        = bool
 }
 
 variable "label_prefix" {
-  description = "a string that will be prependend to all resources"
-  default     = "oke"
+  description = "a string that will be prepended to all resources"
   type        = string
 }
 
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
-  description = "region"
-  default     = "us-phoenix-1"
+  description = "the oci region where resources will be created"
   type        = string
 }
 
 # networking parameters
 
 variable "nat_gateway_enabled" {
-  description = "whether to create a nat gateway"
+  description = "whether to create a nat gateway in the vcn."
   default     = true
   type        = bool
 }
 
 variable "netnum" {
-  description = "zero-based index of the subnet when the network is masked with the newbit."
+  description = "zero-based index of the subnet when the network is masked with the newbit. use as netnum parameter for cidrsubnet function"
   default = {
     admin   = 33
     bastion = 32
@@ -101,13 +100,11 @@ variable "vcn_cidr" {
 }
 
 variable "vcn_dns_label" {
-  default = "oke"
   type    = string
 }
 
 variable "vcn_name" {
   description = "name of vcn"
-  default     = "oke vcn"
   type        = string
 }
 
@@ -132,13 +129,12 @@ variable "bastion_image_id" {
 
 variable "bastion_notification_enabled" {
   description = "whether to enable notification on the bastion host"
-  default     = true
+  default     = false
   type        = bool
 }
 
 variable "bastion_notification_endpoint" {
   description = "the subscription notification endpoint for the bastion. email address to be notified."
-  default     = ""
   type        = string
 }
 
@@ -162,13 +158,11 @@ variable "bastion_package_upgrade" {
 
 variable "bastion_shape" {
   description = "shape of bastion instance"
-  default     = "VM.Standard.E2.1"
   type        = string
 }
 
 variable "bastion_timezone" {
   description = "the preferred timezone for the bastion host."
-  default     = "Australia/Sydney"
   type        = string
 }
 
@@ -200,7 +194,6 @@ variable "admin_notification_enabled" {
 
 variable "admin_notification_endpoint" {
   description = "the subscription notification endpoint for the admin. email address to be notified."
-  default     = ""
   type        = string
 }
 
@@ -224,12 +217,11 @@ variable "admin_package_upgrade" {
 
 variable "admin_shape" {
   description = "shape of admin server instance"
-  default     = "VM.Standard.E2.1"
+  default     = ""
   type        = string
 }
 
 variable "admin_timezone" {
-  default     = "Australia/Sydney"
   description = "the preferred timezone for the admin host."
   type        = string
 }
@@ -260,12 +252,11 @@ variable "allow_worker_ssh_access" {
 
 variable "cluster_name" {
   description = "name of oke cluster"
-  default     = "oke"
   type        = string
 }
 
 variable "dashboard_enabled" {
-  description = "whether to enable kubernetes dashboard"
+  description = "whether to enable kubernetes dashboard."
   default     = false
   type        = bool
 }
@@ -277,7 +268,7 @@ variable "kubernetes_version" {
 }
 
 variable "node_pools" {
-  description = "tuple node pools. Each key maps to a node pool. each value is a tuple of shape (string) and size(number)"
+  description = "tuple node pools. each key maps to a node pool. each value is a tuple of shape (string) and size(number)"
   type        = map(any)
 }
 
@@ -350,7 +341,6 @@ variable "create_auth_token" {
 
 variable "email_address" {
   description = "email address used for OCIR"
-  default     = ""
   type        = string
 }
 
@@ -378,14 +368,12 @@ variable "ocir_urls" {
 }
 
 variable "tenancy_name" {
-  description = "tenancy name"
-  default     = ""
+  description = "tenancy name to use when creating the ocir secret"
   type        = string
 }
 
 variable "username" {
   description = "username to access OCIR"
-  default     = ""
   type        = string
 }
 
@@ -429,27 +417,8 @@ variable "use_encryption" {
   type        = bool
 }
 
-variable "use_existing_vault" {
-  description = "whether to use an existing vault to create an encryption key"
-  default     = true
-  type        = bool
-}
-
-variable "existing_vault_id" {
-  description = "id of existing vault to use to create an encryption key"
-  default     = ""
-  type        = string
-}
-
-variable "use_existing_key" {
-  description = "whether to use an existing key for encryption"
-  default     = false
-  type        = bool
-}
-
 variable "existing_key_id" {
   description = "id of existing key"
-  default     = ""
   type        = string
 }
 
@@ -475,6 +444,5 @@ variable "service_account_namespace" {
 
 variable "service_account_cluster_role_binding" {
   description = "cluster role binding name"
-  default     = ""
   type        = string
 }
