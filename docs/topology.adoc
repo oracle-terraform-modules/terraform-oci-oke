@@ -94,7 +94,7 @@ The OCI Networking parameters are controlled by the following 3 parameters:
 
 * vcn_cidr
 * newbits
-* subnets
+* netnum
 
 Refer to this project's link:terraformoptions.adoc#oci-networking[Networking Documentation] to see how you can change these. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
 
