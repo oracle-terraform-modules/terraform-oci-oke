@@ -2,16 +2,16 @@
 
 [uri-repo]: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-[uri-docs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs
+[uri-docs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs
 
-[uri-changelog]: https://github.com/oracle-terraform-modules/terraform-oci-oke/CHANGELOG.adoc
-[uri-configuration]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/configuration.adoc
+[uri-changelog]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/CHANGELOG.adoc
+[uri-configuration]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/configuration.adoc
 
-[uri-contribute]: https://github.com/oracle-terraform-modules/terraform-oci-oke/CONTRIBUTING.adoc
-[uri-contributors]: https://github.com/oracle-terraform-modules/terraform-oci-oke/CONTRIBUTORS.adoc
+[uri-contribute]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/CONTRIBUTING.adoc
+[uri-contributors]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/CONTRIBUTORS.adoc
 
-[uri-instructions]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/instructions.adoc
-[uri-license]: https://github.com/oracle-terraform-modules/terraform-oci-oke/LICENSE
+[uri-instructions]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/instructions.adoc
+[uri-license]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/LICENSE
 [uri-canonical-license]: https://oss.oracle.com/licenses/upl/
 [uri-kubernetes]: https://kubernetes.io/
 [uri-networks-subnets-cidr]: https://erikberg.com/notes/networks.html
@@ -19,22 +19,22 @@
 [uri-oci-documentation]: https://docs.cloud.oracle.com/iaas/Content/home.htm
 [uri-oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 [uri-oracle]: https://www.oracle.com
-[uri-prereqs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/prerequisites.adoc
-[uri-quickstart]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/quickstart.adoc
+[uri-prereqs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/prerequisites.adoc
+[uri-quickstart]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/quickstart.adoc
 
 [uri-terraform]: https://www.terraform.io
-[uri-terraform-dependencies]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/dependencies.adoc
+[uri-terraform-dependencies]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/dependencies.adoc
 [uri-terraform-cidrsubnet-deconstructed]: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 [uri-terraform-oci]: https://www.terraform.io/docs/providers/oci/index.html
 [uri-terraform-oke-sample]: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
-[uri-terraform-options]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/terraformoptions.adoc
+[uri-terraform-options]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/terraformoptions.adoc
 [uri-terraform-hashircorp-examples]: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
-[uri-topology]: https://github.com/oracle-terraform-modules/terraform-oci-oke/docs/topology.adoc
+[uri-topology]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/topology.adoc
 
 
 [Oracle Container Engine (OKE)][uri-oke] is [Oracle's][uri-oracle] managed [Kubernetes][uri-kubernetes] service on [Oracle Cloud Infrastructure (OCI)][uri-oci].
 
-This [Terraform OKE Installer][uri-repo] for [Oracle Cloud Infrastructure][uri-oci] provides a reusable Terraform module that provisions a Oracle Container Engine][uri-oke] cluster.
+This [Terraform OKE Installer][uri-repo] for [Oracle Cloud Infrastructure][uri-oci] provides a reusable Terraform module that provisions an [Oracle Container Engine][uri-oke] cluster.
 
 ## [Documentation][uri-docs]
 
