@@ -71,6 +71,9 @@ module "network" {
 
   # oke load balancer network parameters
   lb_subnet_type = var.lb_subnet_type
+
+  # waf integration
+  enable_waf = var.enable_waf
 }
 
 # cluster creation for oke

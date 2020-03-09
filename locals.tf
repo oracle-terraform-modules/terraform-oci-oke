@@ -17,14 +17,13 @@ locals {
   }
 
   oci_base_general = {
-    label_prefix         = var.label_prefix
-    region               = var.region
-    # disable_auto_retries = var.disable_auto_retries
+    label_prefix = var.label_prefix
+    region       = var.region
   }
 
   oci_base_vcn = {
     nat_gateway_enabled     = var.nat_gateway_enabled
-    service_gateway_enabled = var.service_gateway_enabled
+    service_gateway_enabled = true
     vcn_cidr                = var.vcn_cidr
     vcn_dns_label           = var.vcn_dns_label
     vcn_name                = var.vcn_name
@@ -46,7 +45,6 @@ locals {
     ssh_private_key_path  = var.ssh_private_key_path
     ssh_public_key_path   = var.ssh_public_key_path
     timezone              = var.bastion_timezone
-    # use_autonomous        = var.bastion_use_autonomous
   }
 
   oci_base_admin = {
@@ -65,7 +63,6 @@ locals {
     ssh_private_key_path      = var.ssh_private_key_path
     ssh_public_key_path       = var.ssh_public_key_path
     timezone                  = var.admin_timezone
-    # use_autonomous            = var.admin_use_autonomous
   }
 
   ocir = {
@@ -86,7 +83,6 @@ locals {
 
   oke_network_vcn = {
     ig_route_id                = module.base.ig_route_id
-    is_service_gateway_enabled = var.service_gateway_enabled
     nat_route_id               = module.base.nat_route_id
     netnum                     = var.netnum
     newbits                    = var.newbits

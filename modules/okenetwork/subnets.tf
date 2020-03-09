@@ -32,7 +32,7 @@ resource "oci_core_subnet" "pub_lb" {
   dns_label                  = "publb"
   prohibit_public_ip_on_vnic = false
   route_table_id             = var.oke_network_vcn.ig_route_id
-  security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
+  security_list_ids          = var.enable_waf == false ? [oci_core_security_list.pub_lb_seclist_wo_waf[0].id] : [oci_core_security_list.pub_lb_seclist_with_waf[0].id]
   vcn_id                     = var.oke_network_vcn.vcn_id
 
   count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0

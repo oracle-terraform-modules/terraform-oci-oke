@@ -87,12 +87,6 @@ variable "newbits" {
   type = map
 }
 
-variable "service_gateway_enabled" {
-  description = "whether to create a service gateway"
-  default     = true
-  type        = bool
-}
-
 variable "vcn_cidr" {
   description = "cidr block of VCN"
   default     = "10.0.0.0/16"
@@ -100,7 +94,7 @@ variable "vcn_cidr" {
 }
 
 variable "vcn_dns_label" {
-  type    = string
+  type = string
 }
 
 variable "vcn_name" {
@@ -445,4 +439,12 @@ variable "service_account_namespace" {
 variable "service_account_cluster_role_binding" {
   description = "cluster role binding name"
   type        = string
+}
+
+# waf
+
+variable "enable_waf" {
+  description = "whether to enable WAF monitoring of load balancers"
+  type        = bool
+  default     = false
 }

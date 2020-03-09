@@ -12,6 +12,9 @@ rm -f helm-v${helm_version}-linux-amd64.tar.gz
 
 rm -rf linux-amd64
 
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com
+
 helm repo update
 
 echo "source <(helm completion bash)" >> ~/.bashrc
