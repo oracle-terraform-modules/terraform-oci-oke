@@ -68,6 +68,19 @@ cp terraform.tfvars.example terraform.tfvars
 * cluster_name
 * worker_mode
 
+5. Create a provider.tf file and add the following:
+
+----
+provider "oci" {
+  tenancy_ocid         = var.tenancy_id
+  user_ocid            = var.user_id
+  fingerprint          = var.api_fingerprint
+  private_key_path     = var.api_private_key_path
+  region               = var.region
+  disable_auto_retries = var.disable_auto_retries
+}
+----
+
 === Related documentation:
 
 * {uri-instructions}[Detailed Instructions]
