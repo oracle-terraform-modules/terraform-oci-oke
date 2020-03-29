@@ -34,7 +34,7 @@
 2. ssh client is installed
 3. Terraform 0.12.4+ is installed
 
-=== Instructions
+=== Instructions for provisioning
 
 1. Clone the repo:
 
@@ -80,6 +80,62 @@ provider "oci" {
   disable_auto_retries = var.disable_auto_retries
 }
 ----
+
+=== Instructions for using as module
+1. See basic example below:
+```hcl
+ariable "tenancy_id" {}
+variable "user_id" {}
+variable "api_fingerprint" {}
+variable "api_private_key_path" {}
+variable "region" {}
+variable "disable_auto_retries" {}
+variable "username" {}
+variable "bastion_notification_endpoint" {}
+variable "ssh_public_key_path" {}
+variable "service_account_cluster_role_binding" {}
+variable "compartment_id" {}
+variable "cluster_name" {}
+variable "bastion_timezone" {}
+variable "email_address" {}
+variable "existing_key_id" {}
+variable "tenancy_name" {}
+variable "vcn_name" {}
+variable "node_pools" {}
+variable "admin_notification_endpoint" {}
+variable "vcn_dns_label" {}
+variable "bastion_shape" {}
+variable "ssh_private_key_path" {}
+variable "label_prefix" {}
+variable "admin_timezone" {}
+module "terraform-oci-oke" {
+  source                                = "../terraform-oci-oke"
+  tenancy_name                          =   var.tenancy_name
+  tenancy_id                            =   var.tenancy_id
+  compartment_id                        =   var.compartment_id
+  user_id                               =   var.user_id
+  api_fingerprint                       =   var.api_fingerprint
+  api_private_key_path                  =   var.api_private_key_path
+  region                                =   var.region
+  disable_auto_retries                  =   var.disable_auto_retries
+  node_pools                            =   var.node_pools
+  username                              =   var.username
+  ssh_public_key_path                   =   var.ssh_public_key_path
+  ssh_private_key_path                  =   var.ssh_private_key_path
+  service_account_cluster_role_binding  =   var.service_account_cluster_role_binding
+  cluster_name                          =   var.cluster_name
+  email_address                         =   var.email_address
+  existing_key_id                       =   var.existing_key_id
+  vcn_name                              =   var.vcn_name
+  admin_notification_endpoint           =   var.admin_notification_endpoint
+  vcn_dns_label                         =   var.vcn_dns_label
+  bastion_shape                         =   var.bastion_shape
+  admin_timezone                        =   var.admin_timezone
+  bastion_notification_endpoint         =   var.bastion_notification_endpoint
+  bastion_timezone                      =   var.bastion_timezone
+  label_prefix                          =   var.label_prefix
+}
+```
 
 === Related documentation:
 
