@@ -55,7 +55,7 @@ bastion_enabled = true
 
 bastion_image_id = "Autonomous"
 
-bastion_notification_enabled = true
+bastion_notification_enabled = false
 
 bastion_notification_endpoint = "<email_address>"
 
