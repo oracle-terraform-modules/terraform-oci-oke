@@ -380,7 +380,7 @@ variable "username" {
 # helm
 variable "helm_version" {
   description = "version of helm to install"
-  default     = "3.0.0"
+  default     = "3.1.1"
   type        = string
 }
 
