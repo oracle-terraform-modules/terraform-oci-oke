@@ -84,7 +84,7 @@ resource "null_resource" "write_kubeconfig_on_admin" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = [oci_containerengine_cluster.k8s_cluster]
+  depends_on = [oci_containerengine_cluster.k8s_cluster, null_resource.install_kubectl_admin]
 
   provisioner "file" {
     content     = data.template_file.generate_kubeconfig[0].rendered
