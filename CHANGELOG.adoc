@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
+== 2.1.5 (April 06, 2020)
+* Added ig_route_id, nat_route_id, subnet_ids, vcn_id for reuse (#145)
+
 == 2.1.4 (March 31, 2020)
 * removed provider.tf so module can be used from hashicorp registry, added instructions for using this repo and hashicorp module (#130)
 * fixed incorrect part about bastion host and tools in topology (#141)
