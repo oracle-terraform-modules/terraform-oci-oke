@@ -52,7 +52,7 @@ Start by installing Terraform and configuring your path.
 
 === Download Terraform
 
-1. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 0.12.4+.
+1. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 0.12.16+.
 
 2. Download the appropriate version for your operating system
 
