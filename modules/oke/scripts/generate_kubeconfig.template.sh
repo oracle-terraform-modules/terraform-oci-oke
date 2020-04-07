@@ -8,4 +8,6 @@ do
   echo "waiting for admin to be ready"; sleep 10;
 done
 
+sleep 30
+
 oci ce cluster create-kubeconfig --cluster-id ${cluster-id} --file $HOME/.kube/config  --region ${region} --token-version 2.0.0
