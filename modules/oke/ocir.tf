@@ -31,7 +31,7 @@ resource null_resource "create_ocir_secret" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = [null_resource.write_kubeconfig_on_admin]
+  depends_on = [null_resource.install_kubectl_admin, null_resource.write_kubeconfig_on_admin]
   
   provisioner "file" {
     content     = data.template_file.create_ocir_script[0].rendered

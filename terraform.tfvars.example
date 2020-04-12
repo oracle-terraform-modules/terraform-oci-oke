@@ -96,6 +96,11 @@ availability_domains = {
   admin  = 1
 }
 
+tagging = {
+  computetag = { "Environment" = "uat" }
+  networktag = { "Name" = "network" }
+}
+
 # oke
 
 allow_node_port_access = false

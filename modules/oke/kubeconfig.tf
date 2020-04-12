@@ -3,8 +3,6 @@
 
 data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id    = oci_containerengine_cluster.k8s_cluster.id
-  expiration    = var.cluster_kube_config_expiration
-  token_version = var.cluster_kube_config_token_version
 }
 
 resource "null_resource" "create_local_kubeconfig" {
@@ -60,6 +58,31 @@ resource "null_resource" "install_kubectl_admin" {
   count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true ? 1 : 0
 }
 
+# wait for 1. admin being ready 2. instance_principal created 3. kubectl is installed (the script will create the .kube directory)
+resource null_resource "wait_for_admin" {
+  connection {
+    host        = var.oke_admin.admin_private_ip
+    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    timeout     = "40m"
+    type        = "ssh"
+    user        = "opc"
+
+    bastion_host        = var.oke_admin.bastion_public_ip
+    bastion_user        = "opc"
+    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+  }
+
+  depends_on = [null_resource.install_kubectl_admin]
+
+  provisioner "remote-exec" {
+    inline = [
+      "while [ ! -f /home/opc/admin.finish ]  || [ ! -f /home/opc/ip.finish  ]; do sleep 10; done",
+    ]
+  }
+
+  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true ? 1 : 0
+}
+
 data "template_file" "generate_kubeconfig" {
   template = file("${path.module}/scripts/generate_kubeconfig.template.sh")
 
@@ -84,7 +107,7 @@ resource "null_resource" "write_kubeconfig_on_admin" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = [oci_containerengine_cluster.k8s_cluster]
+  depends_on = [oci_containerengine_cluster.k8s_cluster, null_resource.wait_for_admin]
 
   provisioner "file" {
     content     = data.template_file.generate_kubeconfig[0].rendered

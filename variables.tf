@@ -100,7 +100,7 @@ variable "vcn_cidr" {
 }
 
 variable "vcn_dns_label" {
-  type    = string
+  type = string
 }
 
 variable "vcn_name" {
@@ -234,6 +234,19 @@ variable "availability_domains" {
     admin   = 1
   }
   type = map
+}
+
+# tagging
+
+variable "tagging" {
+  type = object({
+    computetag = map(any)
+    networktag = map(any)
+  })
+  default = {
+    computetag = { "Environment" = "uat" }
+    networktag = { "Name" = "network" }
+  }
 }
 
 # oke
