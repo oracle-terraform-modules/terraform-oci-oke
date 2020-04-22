@@ -58,7 +58,7 @@ resource "null_resource" "install_kubectl_admin" {
   count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true ? 1 : 0
 }
 
-# wait for 1. admin being ready 2. instance_principal created 3. kubectl is installed (the script will create the .kube directory)
+# wait for 1. admin being ready 2. kubectl is installed (the script will create the .kube directory)
 resource null_resource "wait_for_admin" {
   connection {
     host        = var.oke_admin.admin_private_ip
@@ -76,7 +76,7 @@ resource null_resource "wait_for_admin" {
 
   provisioner "remote-exec" {
     inline = [
-      "while [ ! -f /home/opc/admin.finish ]  || [ ! -f /home/opc/ip.finish  ]; do sleep 10; done",
+      "while [ ! -f /home/opc/admin.finish ]; do sleep 10; done",
     ]
   }
 
