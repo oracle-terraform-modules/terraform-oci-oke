@@ -97,7 +97,7 @@ availability_domains = {
 }
 
 tagging = {
-  computetag = { "Environment" = "uat" }
+  computetag = { "Environment" = "dev" }
   networktag = { "Name" = "network" }
 }
 
@@ -148,13 +148,13 @@ tenancy_name = ""
 username = ""
 
 # helm
-helm_version = "3.0.0"
+helm_version = "3.1.0"
 
 install_helm = false
 
 # calico
 
-calico_version = "3.9"
+calico_version = "3.12"
 
 install_calico = false
 

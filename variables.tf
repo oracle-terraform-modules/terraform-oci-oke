@@ -244,7 +244,7 @@ variable "tagging" {
     networktag = map(any)
   })
   default = {
-    computetag = { "Environment" = "uat" }
+    computetag = { "Environment" = "dev" }
     networktag = { "Name" = "network" }
   }
 }
@@ -393,7 +393,7 @@ variable "username" {
 # helm
 variable "helm_version" {
   description = "version of helm to install"
-  default     = "3.1.1"
+  default     = "3.1.0"
   type        = string
 }
 
@@ -406,7 +406,7 @@ variable "install_helm" {
 # calico
 variable "calico_version" {
   description = "version of calico to install"
-  default     = "3.9"
+  default     = "3.12"
   type        = string
 }
 

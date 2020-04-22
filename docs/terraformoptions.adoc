@@ -354,6 +354,36 @@ availability_domains = {
 
 |===
 
+== Tagging
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|tagging
+|Tagging on the base module resources. This is specified in the form of a map.
+| e.g.
+[source]
+----
+tagging = {
+  computetag = { "Environment" = "dev" }
+  networktag = { "Name" = "network" }
+}
+----
+|
+[source]
+----
+tagging = {
+  computetag = { "Environment" = "dev" }
+  networktag = { "Name" = "network" }
+}
+----
+
+|===
+
 == OKE
 
 [stripes=odd,cols="1d,3d,3a,3a", options=header,width="100%"] 
@@ -514,7 +544,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |helm_version
 |The version of the {uri-helm}[helm] client to install on the bastion.
 |
-|3.0.0
+|3.1.0
 
 |install_helm
 |Whether to install {uri-helm}[helm] on the bastion instance.
@@ -535,7 +565,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |calico_version
 |Version of {uri-calico}[Calico] to install.
 |
-|3.9
+|3.12
 
 |install_calico
 |Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
