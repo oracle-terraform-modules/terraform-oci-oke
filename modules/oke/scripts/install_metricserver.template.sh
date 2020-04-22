@@ -4,7 +4,7 @@
 
 git clone https://github.com/kubernetes-sigs/metrics-server.git /tmp/metricserver
 cd /tmp/metricserver
-kubectl create -f deploy/kubernetes/
+kubectl create -f manifests/
 
 sleep 5
 rm -rf /tmp/metricserver/
