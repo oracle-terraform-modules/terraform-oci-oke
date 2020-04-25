@@ -346,10 +346,10 @@ variable "preferred_lb_subnets" {
 
 # ocir
 
-variable "create_auth_token" {
-  description = "whether to create an auth token to use with OCIR"
-  default     = false
-  type        = bool
+variable "secret_id" {
+  description = "OCID of Oracle Vault Secret"
+  type        =  string
+  default     = null
 }
 
 variable "email_address" {
@@ -459,3 +459,4 @@ variable "service_account_cluster_role_binding" {
   description = "cluster role binding name"
   type        = string
 }
+

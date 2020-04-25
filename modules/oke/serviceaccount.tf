@@ -37,7 +37,7 @@ resource null_resource "create_service_account" {
     inline = [
       "chmod +x $HOME/create_service_account.sh",
       "$HOME/create_service_account.sh",
-      # "rm -f $HOME/create_service_account.sh"
+      "rm -f $HOME/create_service_account.sh"
     ]
   }
 

@@ -510,23 +510,23 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
-|create_auth_token
-|Whether to create an Auth Token. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
-|true/false
-|false
+|secret_id
+|The Auth Token is stored in Oracle Vault Secret and then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
+|secret ocid
+
 
 |email_address
-|The email address to be used when creating the Docker secret. *Required* if _create_auth_token_ is set to *true*.
+|The email address to be used when creating the Docker secret. *Required* if secret_id is set.
 |
 |None
 
 |tenancy_name
-|The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_id. *Required* if _create_auth_token_ is set to *true*.
+|The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_id. *Required* if secret_id is set.
 |
 |None
 
 |username
-|The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if _create_auth_token_ is set to *true*.
+|The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if secret_id is set.
 |
 |None
 

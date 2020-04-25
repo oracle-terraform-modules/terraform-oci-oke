@@ -220,7 +220,7 @@ export KUBECONFIG=generated/kubeconfig
 
 === Creating an auth token for OCIR
 
-{uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. To pull images from OCIR, set the parameter *create_auth_token = true* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
+{uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. To pull images from OCIR, set the parameter *secret_id = <secretocid>* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
 
 === Installing helm
 

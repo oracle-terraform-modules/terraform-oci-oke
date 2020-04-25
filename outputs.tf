@@ -50,8 +50,8 @@ output "kubeconfig" {
   value       = "export KUBECONFIG=generated/kubeconfig"
 }
 
-output "ocirtoken" {
-  description = "authentication token for ocir"
-  sensitive   = true
-  value       = module.auth.ocirtoken
-}
+# output "ocirtoken" {
+#   description = "authentication token for ocir"
+#   sensitive   = true
+#   value       = module.auth.ocirtoken
+# }

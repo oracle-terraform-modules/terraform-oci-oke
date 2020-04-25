@@ -48,13 +48,6 @@ module "policies" {
   cluster_id = module.oke.cluster_id
 }
 
-module "auth" {
-  source = "./modules/auth"
-
-  # ocir parameters
-  ocir = local.ocir
-}
-
 # additional networking for oke
 module "network" {
   source = "./modules/okenetwork"
@@ -114,4 +107,5 @@ module "oke" {
 
   # service account
   service_account = local.service_account
+
 }

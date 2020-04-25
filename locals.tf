@@ -72,10 +72,10 @@ locals {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
     compartment_id       = var.compartment_id
-    create_auth_token    = var.create_auth_token
     home_region          = module.base.home_region
     tenancy_id           = var.tenancy_id
     user_id              = var.user_id
+    
   }
 
   oke_general = {
@@ -138,13 +138,11 @@ locals {
   }
 
   oke_ocir = {
-    auth_token        = module.auth.ocirtoken
-    create_auth_token = var.create_auth_token
     email_address     = var.email_address
-    ocirtoken_id      = module.auth.ocirtoken_id
     ocir_urls         = var.ocir_urls
     tenancy_name      = var.tenancy_name
     username          = var.username
+    secret_id         = var.secret_id
   }
 
   helm = {
