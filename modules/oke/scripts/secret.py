@@ -35,9 +35,9 @@ secret_content = read_secret_value(secret_client, secret_id=secret_id)
 secret_content = re.escape(secret_content)
 
 
-command = "kubectl -n default delete secret ocirsecret"
-os.system(command)
+delsecret = "kubectl -n default delete secret ocirsecret"
+os.system(delsecret)
 
-command1 = ("kubectl create secret docker-registry ocirsecret -n default --docker-server=${region_registry} --docker-username=${tenancy_name}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
+crtsecret = ("kubectl create secret docker-registry ocirsecret -n default --docker-server=${region_registry} --docker-username=${tenancy_name}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
 
-subprocess.call(["/bin/bash" , "-c" , command1])
+subprocess.call(["/bin/bash" , "-c" , crtsecret])
