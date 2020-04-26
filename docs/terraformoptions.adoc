@@ -512,7 +512,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |secret_id
 |The Auth Token is stored in Oracle Vault Secret and then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
-|secret ocid
+|Secret ocid
+|null
 
 
 |email_address
