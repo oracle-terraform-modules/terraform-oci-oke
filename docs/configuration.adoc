@@ -189,7 +189,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 === Configure OCIR parameters
 
-The {uri-oci-ocir}[OCIR] parameters is used to create a Kubernetes secret to pull image from OCIR. The {uri-oci-authtoken}#[Auth Token] needs to be manually created  and stored in {uri-oci-secret}#[Oracle Vault Secret] then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.If you dont want to use OCIR then leave the *secret_id* parameter empty.
+The {uri-oci-authtoken}#[Auth Token] needs to be manually created  and stored in {uri-oci-secret}#[Oracle Vault Secret] then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.If you dont want to use OCIR then leave the *secret_id* parameter empty.
 
 The secret is created in the kube-system namespace. To copy it to your namespace, use the following command:
 
