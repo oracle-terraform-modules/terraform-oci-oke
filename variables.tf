@@ -368,6 +368,7 @@ variable "ocir_urls" {
     ap-seoul-1     = "icn.ocir.io"
     ap-tokyo-1     = "nrt.ocir.io"
     ca-toronto-1   = "yyz.ocir.io"
+    ca-montreal-1  = "yul.ocir.io"
     eu-amsterdam-1 = "ams.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
     eu-zurich-1    = "zrh.ocir.io"

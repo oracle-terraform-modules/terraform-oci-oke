@@ -24,6 +24,7 @@
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
+:uri-oci-secret: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingsecrets.htm
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
@@ -188,7 +189,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 === Configure OCIR parameters
 
-The {uri-oci-ocir}[OCIR] parameters control the creation of an {uri-oci-authtoken}[Auth Token] for the user in OCI. The Auth Token is then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.
+The {uri-oci-ocir}[OCIR] parameters is used to create a Kubernetes secret to pull image from OCIR. The {uri-oci-authtoken}#[Auth Token] needs to be manually created  and stored in {uri-oci-secret}#[Oracle Vault Secret] then subsequently used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment.If you dont want to use OCIR then leave the *secret_id* parameter empty.
 
 The secret is created in the kube-system namespace. To copy it to your namespace, use the following command:
 

@@ -28,6 +28,8 @@
 :uri-oci-manage-dynamic-groups: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingdynamicgroups.htm
 :uri-oci-manage-policies: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpolicies.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
+:uri-oci-secret: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingsecrets.htm
+:uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
 :uri-prereqs: {uri-docs}/prerequisites.adoc
@@ -55,7 +57,7 @@
 .. link:#disabling-instance_principal-on-the-admin-host[Disabling instance_principal on the admin host]
 .. link:#recommendations-for-using-instance_principal[Recommendations for using instance_principal]
 . link:#interacting-with-the-oke-cluster[Interacting with the OKE Cluster locally]
-. link:#creating-an-auth-token-for-ocir[Creating an auth token for OCIR]
+. link:#creating-secret-for-ocir[Creating Secret for OCIR]
 . link:#installing-helm[Installing helm]
 . link:#installing-calico[Installing Calico]
 . link:#installing-kubernetes-metrics-server[Installing Kubernetes Metrics Server]
@@ -218,9 +220,9 @@ export KUBECONFIG=generated/kubeconfig
 *Ensure you install the same kubectl version as the OKE Kubernetes version for compatibility.*
 ****
 
-=== Creating an auth token for OCIR
+=== Creating Secret for OCIR
 
-{uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. To pull images from OCIR, set the parameter *secret_id = <secretocid>* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
+{uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. To pull images from OCIR, you need to create a a {uri-oci-authtoken}[authtoken] .You will store that securely in {uri-oci-secret}[Oracle Vault Secret]. Assign the Secret OCID to *secret_id* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
 
 === Installing helm
 
