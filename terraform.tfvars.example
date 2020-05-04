@@ -139,7 +139,8 @@ lb_subnet_type = "public"
 preferred_lb_subnets = "public"
 
 # ocir
-create_auth_token = false
+
+secret_id = ""
 
 email_address = ""
 

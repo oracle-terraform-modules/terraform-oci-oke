@@ -40,7 +40,7 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |ocir secret
 |Whether to create an authentication secret for OCIR
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true, create_auth_token = true
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true, secret_id = secret ocid
 
 |use_encryption
 |Uses OCI KMS to encrypt data in OKE's underlying etcd
