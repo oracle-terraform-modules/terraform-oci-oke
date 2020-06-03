@@ -28,6 +28,8 @@
 :uri-oci-manage-dynamic-groups: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingdynamicgroups.htm
 :uri-oci-manage-policies: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpolicies.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
+:uri-oci-secret: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingsecrets.htm
+:uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
 :uri-oci-waf: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/overview.htm
 :uri-oci-waf-certificate: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/gettingstarted.htm#upload
 :uri-oci-waf-dns: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/gettingstarted.htm#update
