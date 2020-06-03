@@ -230,6 +230,19 @@ variable "availability_domains" {
   type = map
 }
 
+# tagging
+
+variable "tagging" {
+  type = object({
+    computetag = map(any)
+    networktag = map(any)
+  })
+  default = {
+    computetag = { "Environment" = "dev" }
+    networktag = { "Name" = "network" }
+  }
+}
+
 # oke
 
 variable "allow_node_port_access" {
@@ -327,10 +340,10 @@ variable "preferred_lb_subnets" {
 
 # ocir
 
-variable "create_auth_token" {
-  description = "whether to create an auth token to use with OCIR"
-  default     = false
-  type        = bool
+variable "secret_id" {
+  description = "OCID of Oracle Vault Secret"
+  type        =  string
+  default     = null
 }
 
 variable "email_address" {
@@ -348,6 +361,7 @@ variable "ocir_urls" {
     ap-osaka-1     = "kix.ocir.io"
     ap-seoul-1     = "icn.ocir.io"
     ap-tokyo-1     = "nrt.ocir.io"
+    ca-montreal-1  = "yul.ocir.io"
     ca-toronto-1   = "yyz.ocir.io"
     eu-amsterdam-1 = "ams.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
@@ -374,7 +388,7 @@ variable "username" {
 # helm
 variable "helm_version" {
   description = "version of helm to install"
-  default     = "3.0.0"
+  default     = "3.1.0"
   type        = string
 }
 
@@ -387,7 +401,7 @@ variable "install_helm" {
 # calico
 variable "calico_version" {
   description = "version of calico to install"
-  default     = "3.9"
+  default     = "3.12"
   type        = string
 }
 

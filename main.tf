@@ -6,9 +6,8 @@ terraform {
 }
 
 module "base" {
-  # source = "github.com/oracle-terraform-modules/terraform-oci-base?ref=v1.1.1"
   source  = "oracle-terraform-modules/base/oci"
-  version = "1.1.1"
+  version = "1.1.3"
 
   # identity
   oci_base_identity = local.oci_base_identity
@@ -24,6 +23,9 @@ module "base" {
 
   # admin server parameters
   oci_base_admin = local.oci_base_admin
+
+  # tagging
+  tagging = var.tagging
 
 }
 
@@ -44,13 +46,6 @@ module "policies" {
   oke_kms = local.oke_kms
 
   cluster_id = module.oke.cluster_id
-}
-
-module "auth" {
-  source = "./modules/auth"
-
-  # ocir parameters
-  ocir = local.ocir
 }
 
 # additional networking for oke
@@ -115,4 +110,5 @@ module "oke" {
 
   # service account
   service_account = local.service_account
+
 }

@@ -53,7 +53,7 @@ bastion_enabled = true
 
 bastion_image_id = "Autonomous"
 
-bastion_notification_enabled = true
+bastion_notification_enabled = false
 
 bastion_notification_endpoint = "<email_address>"
 
@@ -92,6 +92,11 @@ admin_timezone= "Australia/Sydney"
 availability_domains = {
   bastion = 1
   admin  = 1
+}
+
+tagging = {
+  computetag = { "Environment" = "dev" }
+  networktag = { "Name" = "network" }
 }
 
 # oke
@@ -134,7 +139,8 @@ preferred_lb_subnets = "public"
 enable_waf = true
 
 # ocir
-create_auth_token = false
+
+secret_id = ""
 
 email_address = ""
 
@@ -143,13 +149,13 @@ tenancy_name = ""
 username = ""
 
 # helm
-helm_version = "3.0.0"
+helm_version = "3.1.0"
 
 install_helm = false
 
 # calico
 
-calico_version = "3.9"
+calico_version = "3.12"
 
 install_calico = false
 

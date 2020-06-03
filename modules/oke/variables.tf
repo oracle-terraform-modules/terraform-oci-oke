@@ -75,26 +75,17 @@ variable "lbs" {
   })
 }
 
-# kubeconfig
-variable "cluster_kube_config_expiration" {
-  default = 2592000
-}
-variable "cluster_kube_config_token_version" {
-  default = "2.0.0"
-}
-
 # ocir
 variable "oke_ocir" {
   type = object({
-    auth_token        = string
-    create_auth_token = bool
+    secret_id         = string
     email_address     = string
-    ocirtoken_id      = string
     ocir_urls         = map(string)
     tenancy_name      = string
     username          = string
   })
 }
+
 
 # helm
 variable "helm" {
@@ -128,3 +119,4 @@ variable "service_account" {
     service_account_cluster_role_binding = string
   })
 }
+

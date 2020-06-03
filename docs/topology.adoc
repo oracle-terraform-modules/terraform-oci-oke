@@ -94,7 +94,7 @@ The OCI Networking parameters are controlled by the following 3 parameters:
 
 * vcn_cidr
 * newbits
-* subnets
+* netnum
 
 Refer to this project's link:terraformoptions.adoc#oci-networking[Networking Documentation] to see how you can change these. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
 
@@ -133,14 +133,6 @@ To ssh to the worker nodes, you can do the following:
 ----
 ssh -i /path/to/private_key -J <username>@bastion_ip opc@worker_node_private_ip
 ----
-
-When the bastion host is created, the following are pre-installed and configured:
-
-* git, kubectl, helm, oci-cli
-* default KUBECONFIG location (~/.kube/config)
-* aliases kubectl (k), helm (h), oci-cli (oci)
-
-Although oci-cli is pre-installed, it is *_not_* configured. Read more about {uri-oci-configure-cli}[configuring the oci-cli].
 
 === Public vs Private worker nodes
 

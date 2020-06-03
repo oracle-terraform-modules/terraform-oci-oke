@@ -60,7 +60,7 @@
 .. link:#disabling-instance_principal-on-the-admin-host[Disabling instance_principal on the admin host]
 .. link:#recommendations-for-using-instance_principal[Recommendations for using instance_principal]
 . link:#interacting-with-the-oke-cluster[Interacting with the OKE Cluster locally]
-. link:#creating-an-auth-token-for-ocir[Creating an auth token for OCIR]
+. link:#creating-a-secret-for-ocir[Creating a Secret for OCIR]
 . link:#installing-helm[Installing helm]
 . link:#installing-calico[Installing Calico]
 . link:#installing-kubernetes-metrics-server[Installing Kubernetes Metrics Server]
@@ -224,9 +224,18 @@ export KUBECONFIG=generated/kubeconfig
 *Ensure you install the same kubectl version as the OKE Kubernetes version for compatibility.*
 ****
 
-=== Creating an auth token for OCIR
+=== Creating a Secret for OCIR
 
-{uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. To pull images from OCIR, set the parameter *create_auth_token = true* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
+{uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. Use the following rules to determine if you need to create a Kubernetes Secret for OCIR:
+
+* If your container repository is public, you do not need to create a secret. 
+* If your container repository is private, you need to create a secret before OKE can pull your images from the private repository. 
+
+If you plan on creating a Kubernetes Secret for OCIR, you must first {uri-oci-authtoken}[create an Auth Token]. Copy and temporarily save the value of the Auth Token.
+
+You must then {uri-oci-secret}[create a Secret in OCI Vault to store] the value of the Auth Token in it. 
+
+Finally, assign the Secret OCID to *secret_id* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
 
 === Installing helm
 

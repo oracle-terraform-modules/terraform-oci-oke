@@ -16,6 +16,8 @@
 :uri-terraform: https://www.terraform.io
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-topology: {uri-docs}/topology.adoc
+:uri-variables: {uri-rel-file-base}/variables.tf
 
 . link:#assumptions[Assumptions]
 . link:#pre-requisites[Pre-requisites]
@@ -32,12 +34,13 @@
 
 1. git is installed
 2. ssh client is installed
-3. Terraform 0.12.4+ is installed
+3. Terraform 0.12.16+ is installed
 
-=== Instructions
+=== Provisioning using this git repo
 
-1. Clone the repo:
+. Clone the repo:
 
++
 [source,bash]
 ----
 git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke
@@ -46,7 +49,21 @@ cd tfoke
 cp terraform.tfvars.example terraform.tfvars
 ----
 
-2. Set mandatory parameters:
+. Create a provider.tf file and add the following:
+
++
+----
+provider "oci" {
+  tenancy_ocid         = var.tenancy_id
+  user_ocid            = var.user_id
+  fingerprint          = var.api_fingerprint
+  private_key_path     = var.api_private_key_path
+  region               = var.region
+  disable_auto_retries = var.disable_auto_retries
+}
+----
+
+. Set mandatory parameters:
 
 * api_fingerprint
 * api_private_key_path
@@ -55,18 +72,99 @@ cp terraform.tfvars.example terraform.tfvars
 * tenancy_id
 * user_id
 
-3. Override other parameters:
+. Override other parameters:
 
 * region
 
-4. Optional parameters to override:
-* ssh_private_key_path
-* ssh_public_key_path
-* vcn_dns_label
-* vcn_name
+. Optional parameters to override:
 * bastion_enabled
 * cluster_name
+* ssh_private_key_path (Required if bastion is enabled)
+* ssh_public_key_path (Required if bastion is enabled)
+* vcn_dns_label
+* vcn_name
 * worker_mode
+
+. Run Terraform:
+
++
+[source,bash]
+----
+terraform init
+terraform plan
+terraform apply
+----
+
+=== Provisioning using the Hashicorp registry module
+
+. In your project root, create a provider.tf file and add the following:
+
++
+----
+provider "oci" {
+  tenancy_ocid         = var.tenancy_id
+  user_ocid            = var.user_id
+  fingerprint          = var.api_fingerprint
+  private_key_path     = var.api_private_key_path
+  region               = var.region
+  disable_auto_retries = var.disable_auto_retries
+}
+----
+
+. In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the oke module root.
+
+. In your project root, create a main.tf file and add the following:
+
++
+----
+module "oke" {
+  source  = "oracle-terraform-modules/oke/oci"
+  version = "2.1.5"
+  # insert the 23 required variables here
+}
+----
+
+. Edit your oke module definition and pass the required variables:
+
++
+----
+module "oke" {
+  source                                =   "oracle-terraform-modules/oke/oci"
+  version                               =   "2.1.5"
+
+  compartment_id                        =   var.compartment_id
+  tenancy_id                            =   var.tenancy_id
+  user_id                               =   var.user_id
+
+  ssh_private_key_path                  =   var.ssh_private_key_path
+  ssh_public_key_path                   =   var.ssh_public_key_path
+
+  label_prefix                          =   var.label_prefix
+  region                                =   var.region
+
+  vcn_dns_label                         =   var.vcn_dns_label
+  vcn_name                              =   var.vcn_name
+
+  bastion_shape                         =   var.bastion_shape
+  bastion_timezone                      =   var.bastion_timezone
+
+  admin_shape                           =   var.admin_shape
+  admin_timezone                        =   var.admin_timezone
+
+  # add additional parameters for availability_domains, oke etc as you need
+
+}
+----
+
+. Run Terraform:
+
++
+[source,bash]
+----
+terraform init
+terraform plan
+terraform apply
+----
 
 === Related documentation:
 
