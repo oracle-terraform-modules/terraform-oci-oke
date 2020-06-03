@@ -20,9 +20,8 @@ variable "oke_general" {
 variable "oke_network_vcn" {
   type = object({
     ig_route_id                = string
-    is_service_gateway_enabled = bool
     nat_route_id               = string
-    netnum                    = map(number)
+    netnum                     = map(number)
     newbits                    = map(number)
     vcn_cidr                   = string
     vcn_id                     = string
@@ -41,4 +40,10 @@ variable "oke_network_worker" {
 
 # load balancers
 
-variable "lb_subnet_type" {}
+variable "lb_subnet_type" {
+  type = string
+}
+
+variable "enable_waf" {
+  type = bool
+}

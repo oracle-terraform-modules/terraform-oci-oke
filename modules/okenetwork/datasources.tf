@@ -7,7 +7,6 @@ data "oci_core_services" "all_oci_services" {
     values = ["All .* Services In Oracle Services Network"]
     regex  = true
   }
-  count = var.oke_network_vcn.is_service_gateway_enabled == true ? 1 : 0
 }
 
 data "oci_core_subnets" "oke_subnets" {

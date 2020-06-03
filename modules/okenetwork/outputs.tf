@@ -8,10 +8,3 @@ output "subnet_ids" {
     "pub_lb", join(",", oci_core_subnet.pub_lb.*.id)
   )
 }
-
-# output "subnet_ids" {
-#   value = {
-#     for subnet in data.oci_core_subnets.oke_subnets.subnets:
-#     substr(subnet.display_name, length(var.label_prefix)+1,length(subnet.display_name)) => subnet.id
-#   }
-# }

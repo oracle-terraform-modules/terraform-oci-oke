@@ -182,11 +182,6 @@ newbits = {
 }
 ----
 
-|service_gateway_enabled
-|Whether to create a Service Gateway to use Oracle Services.
-|true/false
-|true
-
 |vcn_cidr
 |The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
 |
@@ -498,6 +493,11 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |internal/public
 |public
+
+|enable_waf
+|Whether to enable WAF monitoring and protection of public load balancers.
+|true/false
+|false
 
 |===
 

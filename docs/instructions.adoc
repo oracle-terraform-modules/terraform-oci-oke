@@ -28,8 +28,11 @@
 :uri-oci-manage-dynamic-groups: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingdynamicgroups.htm
 :uri-oci-manage-policies: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/managingpolicies.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
-:uri-oci-secret: https://docs.cloud.oracle.com/en-us/iaas/Content/KeyManagement/Tasks/managingsecrets.htm
-:uri-oci-authtoken: https://docs.cloud.oracle.com/iaas/Content/Registry/Tasks/registrygettingauthtoken.htm
+:uri-oci-waf: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/overview.htm
+:uri-oci-waf-certificate: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/gettingstarted.htm#upload
+:uri-oci-waf-dns: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/gettingstarted.htm#update
+:uri-oci-waf-policy: https://docs.cloud.oracle.com/en-us/iaas/Content/WAF/Concepts/gettingstarted.htm#create
+:uri-oci-waf-tutorial: https://www.youtube.com/watch?v=CfoK9JjBxts
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 :uri-oracle: https://www.oracle.com
 :uri-prereqs: {uri-docs}/prerequisites.adoc
@@ -65,6 +68,7 @@
 . link:#accessing-the-kubernetes-dashboard[Accessing the Kubernetes dashboard]
 . link:#destroying-the-cluster[Destroying the cluster]
 . link:#creating-a-service-account-for-cicd-tools[Creating a service account for CI/CD tools]
+. link:#enabling-waf[Monitor and Protect your application using OCI WAF]
 
 === Assumptions
 
@@ -296,3 +300,26 @@ service_account_namespace = "kube-system"
 
 service_account_cluster_role_binding = ""
 ````
+----
+
+=== Enabling WAF
+
+You can monitor and protect the load balancers created by OKE using {uri-oci-waf}[OCI Web Application Firewall].
+
+If you would like to monitor and protect your application with OCI Web Application firewall, set *_enable_waf = true_*.
+
+You'll then need to:
+
+. {uri-oci-waf-policy}[create a WAF Policy]
+. {uri-oci-waf-dns}[Update your DNS records to enable WAF]
+
+You may also need to {uri-oci-waf-certificate}[upload your certificate and key].
+
+Follow this {uri-oci-waf-tutorial}[tutorial] on WAF to configure your policy and update your DNS record.
+
+****
+N.B. 
+
+. It is good and recommended practice to monitor and protect your application using WAF.
+. WAF protection currently only works if you use a public load balancer as a front end to your services. This means that services deployed as NodePort services are currently *not protected* by WAF.
+****

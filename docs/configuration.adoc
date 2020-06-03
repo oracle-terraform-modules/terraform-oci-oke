@@ -125,7 +125,7 @@ The list of regions can be found {uri-oci-region}[here].
 
 === Configure OCI Networking parameters
 
-The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT or the Service Gateways. 
+The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT Gateway. 
 
 You can leave most of the default options. However, you may want to change the following 2 parameters:
 

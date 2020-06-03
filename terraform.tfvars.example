@@ -38,8 +38,6 @@ newbits = {
   workers = 2
 }
 
-service_gateway_enabled = true
-
 vcn_cidr = "10.0.0.0/16"
 
 vcn_dns_label = "oke"
@@ -137,6 +135,8 @@ worker_mode = "private"
 lb_subnet_type = "public"
 
 preferred_lb_subnets = "public"
+
+enable_waf = true
 
 # ocir
 
