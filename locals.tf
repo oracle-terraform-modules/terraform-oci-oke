@@ -3,12 +3,27 @@
 
 locals {
 
-  oci_base_identity = {
+  oci_base_general = {
+    compartment_id = var.compartment_id
+    label_prefix   = var.label_prefix
+  }
+
+  oci_base_provider = {
     api_fingerprint      = var.api_fingerprint
     api_private_key_path = var.api_private_key_path
-    compartment_id       = var.compartment_id
+    region               = var.region
     tenancy_id           = var.tenancy_id
     user_id              = var.user_id
+  }
+
+  oci_base_vcn = {
+    internet_gateway_enabled = true
+    nat_gateway_enabled      = var.nat_gateway_enabled
+    service_gateway_enabled  = true
+    tags                     = var.tags["vcn"]
+    vcn_cidr                 = var.vcn_cidr
+    vcn_dns_label            = var.vcn_dns_label
+    vcn_name                 = var.vcn_name
   }
 
   oci_base_ssh_keys = {
@@ -16,21 +31,8 @@ locals {
     ssh_public_key_path  = var.ssh_public_key_path
   }
 
-  oci_base_general = {
-    label_prefix = var.label_prefix
-    region       = var.region
-  }
-
-  oci_base_vcn = {
-    nat_gateway_enabled     = var.nat_gateway_enabled
-    service_gateway_enabled = true
-    vcn_cidr                = var.vcn_cidr
-    vcn_dns_label           = var.vcn_dns_label
-    vcn_name                = var.vcn_name
-  }
-
   oci_base_bastion = {
-    availability_domains  = var.availability_domains["bastion"]
+    availability_domain   = var.availability_domains["bastion"]
     bastion_access        = var.bastion_access
     bastion_enabled       = var.bastion_enabled
     bastion_image_id      = var.bastion_image_id
@@ -44,50 +46,36 @@ locals {
     notification_topic    = var.bastion_notification_topic
     ssh_private_key_path  = var.ssh_private_key_path
     ssh_public_key_path   = var.ssh_public_key_path
+    tags                  = var.tags["bastion"]
     timezone              = var.bastion_timezone
   }
 
-  oci_base_admin = {
-    availability_domains      = var.availability_domains["admin"]
-    admin_enabled             = var.admin_enabled
-    admin_image_id            = var.admin_image_id
-    admin_shape               = var.admin_shape
-    admin_upgrade             = var.admin_package_upgrade
-    enable_instance_principal = var.admin_instance_principal
-    netnum                    = var.netnum["admin"]
-    newbits                   = var.newbits["admin"]
-    notification_enabled      = var.admin_notification_enabled
-    notification_endpoint     = var.admin_notification_endpoint
-    notification_protocol     = var.admin_notification_protocol
-    notification_topic        = var.admin_notification_topic
+  oci_base_operator = {
+    availability_domain       = var.availability_domains["operator"]
+    operator_enabled          = var.operator_enabled
+    operator_image_id         = var.operator_image_id
+    operator_shape            = var.operator_shape
+    operator_upgrade          = var.operator_package_upgrade
+    enable_instance_principal = var.operator_instance_principal
+    netnum                    = var.netnum["operator"]
+    newbits                   = var.newbits["operator"]
+    notification_enabled      = var.operator_notification_enabled
+    notification_endpoint     = var.operator_notification_endpoint
+    notification_protocol     = var.operator_notification_protocol
+    notification_topic        = var.operator_notification_topic
     ssh_private_key_path      = var.ssh_private_key_path
     ssh_public_key_path       = var.ssh_public_key_path
-    timezone                  = var.admin_timezone
-  }
-
-  ocir = {
-    api_fingerprint      = var.api_fingerprint
-    api_private_key_path = var.api_private_key_path
-    compartment_id       = var.compartment_id
-    home_region          = module.base.home_region
-    tenancy_id           = var.tenancy_id
-    user_id              = var.user_id
-    
-  }
-
-  oke_general = {
-    ad_names     = module.base.ad_names
-    label_prefix = var.label_prefix
-    region       = var.region
+    tags                      = var.tags["bastion"]
+    timezone                  = var.operator_timezone
   }
 
   oke_network_vcn = {
-    ig_route_id                = module.base.ig_route_id
-    nat_route_id               = module.base.nat_route_id
-    netnum                     = var.netnum
-    newbits                    = var.newbits
-    vcn_cidr                   = var.vcn_cidr
-    vcn_id                     = module.base.vcn_id
+    ig_route_id  = module.base.ig_route_id
+    nat_route_id = module.base.nat_route_id
+    netnum       = var.netnum
+    newbits      = var.newbits
+    vcn_cidr     = var.vcn_cidr
+    vcn_id       = module.base.vcn_id
   }
 
   oke_network_worker = {
@@ -96,17 +84,12 @@ locals {
     worker_mode             = var.worker_mode
   }
 
-  oke_identity = {
-    compartment_id = var.compartment_id
-    user_id        = var.user_id
-  }
-
-  oke_admin = {
-    bastion_public_ip        = module.base.bastion_public_ip
-    admin_private_ip         = module.base.admin_private_ip
-    bastion_enabled          = var.bastion_enabled
-    admin_enabled            = var.admin_enabled
-    admin_instance_principal = var.admin_instance_principal
+  oke_operator = {
+    bastion_public_ip           = module.base.bastion_public_ip
+    operator_private_ip         = module.base.operator_private_ip
+    bastion_enabled             = var.bastion_enabled
+    operator_enabled            = var.operator_enabled
+    operator_instance_principal = var.operator_instance_principal
   }
 
   oke_cluster = {
@@ -134,21 +117,21 @@ locals {
   }
 
   oke_ocir = {
-    email_address     = var.email_address
-    ocir_urls         = var.ocir_urls
-    tenancy_name      = var.tenancy_name
-    username          = var.username
-    secret_id         = var.secret_id
+    email_address = var.email_address
+    ocir_urls     = var.ocir_urls
+    tenancy_name  = var.tenancy_name
+    username      = var.username
+    secret_id     = var.secret_id
   }
 
   helm = {
+    helm_enabled = var.helm_enabled
     helm_version = var.helm_version
-    install_helm = var.install_helm
   }
 
   calico = {
+    calico_enabled = var.calico_enabled
     calico_version = var.calico_version
-    install_calico = var.install_calico
   }
 
   oke_kms = {

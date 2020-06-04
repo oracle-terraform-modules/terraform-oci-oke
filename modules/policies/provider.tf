@@ -4,9 +4,9 @@
 # create a home region provider for identity operations
 provider "oci" {
   alias            = "home"
-  fingerprint      = var.oci_identity.api_fingerprint
-  private_key_path = var.oci_identity.api_private_key_path
+  fingerprint      = var.oci_provider.api_fingerprint
+  private_key_path = var.oci_provider.api_private_key_path
   region           = lookup(data.oci_identity_regions.home_region.regions[0], "name")
-  tenancy_ocid     = var.oci_identity.tenancy_id
-  user_ocid        = var.oci_identity.user_id
+  tenancy_ocid     = var.oci_provider.tenancy_id
+  user_ocid        = var.oci_provider.user_id
 }

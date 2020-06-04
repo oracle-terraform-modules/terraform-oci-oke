@@ -30,7 +30,7 @@ Configuration Terraform Options:
 . link:#general-oci[General OCI]
 . link:#oci-networking[OCI Networking]
 . link:#bastion-host[Bastion Host]
-. link:#admin-host[Admin Host]
+. link:#operator-host[Admin Host]
 . link:#oke[OKE]
 . link:#oke-load-balancers[OKE Load Balancers]
 . link:#ocir[OCIR]
@@ -141,7 +141,7 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 [source]
 ----
 netnum = {
-  admin   = 33
+  operator   = 33
   bastion = 32
   int_lb  = 16
   pub_lb  = 17
@@ -153,7 +153,7 @@ netnum = {
 ----
 netnum = {
   bastion = 32
-  admin = 33
+  operator = 33
   int_lb  = 16
   pub_lb  = 17
   workers = 1}
@@ -165,7 +165,7 @@ netnum = {
 [source]
 ----
 newbits = {
-  admin   = 13
+  operator   = 13
   bastion = 13
   lb      = 11
   workers = 2
@@ -175,7 +175,7 @@ newbits = {
 [source]
 ----
 newbits = {
-  admin   = 13
+  operator   = 13
   bastion = 13
   lb      = 11
   workers = 2
@@ -269,53 +269,53 @@ newbits = {
 |Values
 |Default
 
-|admin_enabled
-|Whether to create the admin host.
+|operator_enabled
+|Whether to create the operator host.
 |true/false
 |true
 
-|admin_image_id
-|Custom image id for the admin host
+|operator_image_id
+|Custom image id for the operator host
 |image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
 |Oracle
 
-|admin_instance_principal
-|Whether to enable instance_principal on the admin server. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-admin-host[instance_principal]
+|operator_instance_principal
+|Whether to enable instance_principal on the operator server. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-operator-host[instance_principal]
 |true/false
 |true
 
-|admin_notification_enabled
-|Whether to enable ONS notification for the admin host. *Do not enable for now*.
+|operator_notification_enabled
+|Whether to enable ONS notification for the operator host. *Do not enable for now*.
 |true/false
 |false
 
-|admin_notification_endpoint
+|operator_notification_endpoint
 |The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others.
 |
 |
 
-|admin_notification_protocol
+|operator_notification_protocol
 |The notification protocol used.
 |EMAIL
 |EMAIL
 
-|admin_notification_topic
+|operator_notification_topic
 |The name of the notification topic
 |
-|admin
+|operator
 
-|admin_package_upgrade
-|Whether to also upgrade the packages for the admin host.
+|operator_package_upgrade
+|Whether to also upgrade the packages for the operator host.
 |true/false
 |true
 
-|admin_shape
-|The shape of admin instance. *Required*
+|operator_shape
+|The shape of operator instance. *Required*
 |
 |
 
-|admin_timezone
-|The preferred timezone for the admin host. {uri-timezones}[List of timezones]. *Required*
+|operator_timezone
+|The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
 |e.g. Australia/Sydney
 |
 
@@ -337,14 +337,14 @@ newbits = {
 ----
 availability_domains = {
   bastion     = 1
-  admin       = 1
+  operator       = 1
 }
 ----
 |
 [source]
 ----
   bastion     = 1
-  admin       = 1
+  operator       = 1
 ----
 
 |===
@@ -358,22 +358,50 @@ availability_domains = {
 |Values
 |Default
 
-|tagging
-|Tagging on the base module resources. This is specified in the form of a map.
+|tags
+|Tagging on the base module resources. This is specified in the form of a map of maps.
 | e.g.
 [source]
 ----
-tagging = {
-  computetag = { "Environment" = "dev" }
-  networktag = { "Name" = "network" }
+tags = {
+  # vcn, bastion and operator tags are required
+  # add more tags in each as desired
+  vcn = {
+    # department = "finance"
+    environment = "dev"
+  }
+  bastion = {
+    department  = "finance"
+    environment = "dev"
+    role        = "bastion"
+  }
+  operator = {
+    department = "finance"
+    environment = "dev"
+    role        = "operator"
+  }
 }
 ----
 |
 [source]
 ----
-tagging = {
-  computetag = { "Environment" = "dev" }
-  networktag = { "Name" = "network" }
+tags = {
+  # vcn, bastion and operator tags are required
+  # add more tags in each as desired
+  vcn = {
+    # department = "finance"
+    environment = "dev"
+  }
+  bastion = {
+    department  = "finance"
+    environment = "dev"
+    role        = "bastion"
+  }
+  operator = {
+    department = "finance"
+    environment = "dev"
+    role        = "operator"
+  }
 }
 ----
 
@@ -494,7 +522,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |internal/public
 |public
 
-|enable_waf
+|waf_enabled
 |Whether to enable WAF monitoring and protection of public load balancers.
 |true/false
 |false
@@ -547,7 +575,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |
 |3.1.0
 
-|install_helm
+|helm_enabled
 |Whether to install {uri-helm}[helm] on the bastion instance.
 |true/false
 |false
@@ -568,7 +596,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |
 |3.12
 
-|install_calico
+|calico_enabled
 |Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
 |true/false
 |false
@@ -583,7 +611,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
-|install_metricserver
+|metricserver_enabled
 |Whether to install {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 |true/false
 |false

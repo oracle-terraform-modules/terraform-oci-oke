@@ -4,38 +4,39 @@ api_fingerprint = ""
 
 api_private_key_path = ""
 
-compartment_id = ""
+region = "us-phoenix-1"
 
 tenancy_id = ""
 
 user_id = ""
 
+# general oci parameters
+compartment_id = ""
+
+label_prefix = "dev"
+
+# ssh keys
 ssh_private_key_path = ""
 
 ssh_public_key_path = ""
-
-# general oci parameters
-label_prefix = "dev"
-
-region = "us-phoenix-1"
 
 # networking
 
 nat_gateway_enabled = true
 
 netnum = {
-  admin   = 33
-  bastion = 32
-  int_lb  = 16
-  pub_lb  = 17
-  workers = 1
+  bastion    = 32
+  int_lb     = 16
+  operator   = 33
+  pub_lb     = 17
+  workers    = 1
 }
 
 newbits = {
-  admin   = 13
-  bastion = 13
-  lb      = 11
-  workers = 2
+  bastion    = 13
+  lb         = 11
+  operator   = 13
+  workers    = 2
 }
 
 vcn_cidr = "10.0.0.0/16"
@@ -67,31 +68,31 @@ bastion_shape = "VM.Standard.E2.1"
 
 bastion_timezone = "Australia/Sydney"
 
-admin_enabled = true
+operator_enabled = true
 
-admin_image_id = "Oracle"
+operator_image_id = "Oracle"
 
-admin_instance_principal = true
+operator_instance_principal = true
 
-admin_notification_enabled = false
+operator_notification_enabled = false
 
-admin_notification_endpoint = ""
+operator_notification_endpoint = ""
 
-admin_notification_protocol = "EMAIL"
+operator_notification_protocol = "EMAIL"
 
-admin_notification_topic= "admin_server_notification"
+operator_notification_topic= "operator_server_notification"
 
-admin_package_upgrade = true
+operator_package_upgrade = true
 
-admin_shape   = "VM.Standard.E2.1"
+operator_shape   = "VM.Standard.E2.1"
 
-admin_timezone= "Australia/Sydney"
+operator_timezone= "Australia/Sydney"
 
 # availability_domains
 
 availability_domains = {
   bastion = 1
-  admin  = 1
+  operator  = 1
 }
 
 tagging = {
@@ -123,7 +124,7 @@ node_pool_image_id = "NONE"
 
 node_pool_os = "Oracle Linux"
 
-node_pool_os_version = "7.7"
+node_pool_os_version = "7.8"
 
 pods_cidr = "10.244.0.0/16"
 
@@ -136,10 +137,9 @@ lb_subnet_type = "public"
 
 preferred_lb_subnets = "public"
 
-enable_waf = true
+waf_enabled = false
 
 # ocir
-
 secret_id = ""
 
 email_address = ""
@@ -149,18 +149,17 @@ tenancy_name = ""
 username = ""
 
 # helm
+helm_enabled = false
+
 helm_version = "3.1.0"
 
-install_helm = false
-
 # calico
+calico_enabled = false
 
 calico_version = "3.12"
 
-install_calico = false
-
 #metrics server
-install_metricserver = false
+metricserver_enabled = false
 
 use_encryption = false
 

@@ -1,20 +1,23 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Identity and access parameters
+# general oci
+variable "compartment_id" {}
 
-variable "oci_identity" {
+variable "label_prefix" {}
+
+# provider
+variable "oci_provider" {
   type = object({
     api_fingerprint      = string
     api_private_key_path = string
-    compartment_id       = string
+    region               = string
     tenancy_id           = string
     user_id              = string
   })
 }
 
 # ssh keys
-
 variable "ssh_keys" {
   type = object({
     ssh_private_key_path = string
@@ -22,16 +25,13 @@ variable "ssh_keys" {
   })
 }
 
-
-variable "label_prefix" {}
-
-variable "admin" {
+variable "operator" {
   type = object({
-    bastion_public_ip        = string
-    admin_private_ip         = string
-    bastion_enabled          = bool
-    admin_enabled            = bool
-    admin_instance_principal = bool
+    bastion_public_ip           = string
+    operator_private_ip         = string
+    bastion_enabled             = bool
+    operator_enabled            = bool
+    operator_instance_principal = bool
   })
 }
 
