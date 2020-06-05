@@ -2,10 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_containerengine_cluster" "k8s_cluster" {
-  compartment_id     = var.oke_identity.compartment_id
+  compartment_id     = var.compartment_id
   kubernetes_version = local.kubernetes_version
   kms_key_id         = var.oke_cluster.use_encryption == true ? var.oke_cluster.kms_key_id : null
-  name               = "${var.oke_general.label_prefix}-${var.oke_cluster.cluster_name}"
+  name               = "${var.label_prefix}-${var.oke_cluster.cluster_name}"
 
   options {
     add_ons {

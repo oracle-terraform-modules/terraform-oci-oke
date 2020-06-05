@@ -30,11 +30,11 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 |Creates a service account that can be used for CI/CD. 
 |bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
 
-|install_calico
+|calico_enabled
 |Installs calico as network policy engine
 |bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
 
-|install_metricserver
+|metricserver_enabled
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling
 |bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
 

@@ -30,14 +30,14 @@ output "bastion_public_ip" {
   value       = module.base.bastion_public_ip
 }
 
-output "admin_private_ip" {
-  description = "private ip address of admin host"
-  value       = module.base.admin_private_ip
+output "operator_private_ip" {
+  description = "private ip address of operator host"
+  value       = module.base.operator_private_ip
 }
 
-output "ssh_to_admin" {
-  description = "convenient command to ssh to the admin host"
-  value       = module.base.ssh_to_admin
+output "ssh_to_operator" {
+  description = "convenient command to ssh to the operator host"
+  value       = module.base.ssh_to_operator
 }
 
 output "ssh_to_bastion" {
@@ -49,9 +49,3 @@ output "kubeconfig" {
   description = "convenient command to set KUBECONFIG environment variable before running kubectl locally"
   value       = "export KUBECONFIG=generated/kubeconfig"
 }
-
-# output "ocirtoken" {
-#   description = "authentication token for ocir"
-#   sensitive   = true
-#   value       = module.auth.ocirtoken
-# }

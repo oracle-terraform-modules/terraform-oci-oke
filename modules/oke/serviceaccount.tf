@@ -15,18 +15,18 @@ data "template_file" "create_service_account" {
 
 resource null_resource "create_service_account" {
   connection {
-    host        = var.oke_admin.admin_private_ip
+    host        = var.oke_operator.operator_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_admin.bastion_public_ip
+    bastion_host        = var.oke_operator.bastion_public_ip
     bastion_user        = "opc"
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = [null_resource.install_kubectl_admin, null_resource.write_kubeconfig_on_admin]
+  depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
     content     = data.template_file.create_service_account[0].rendered
@@ -41,5 +41,5 @@ resource null_resource "create_service_account" {
     ]
   }
 
-  count = var.oke_admin.bastion_enabled == true && var.oke_admin.admin_enabled == true && var.service_account.create_service_account == true ? 1 : 0
+  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.service_account.create_service_account == true ? 1 : 0
 }

@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_identity_tenancy" "tenancy" {
-  tenancy_id = var.oci_identity.tenancy_id  
+  tenancy_id = var.oci_provider.tenancy_id  
 }
 
 # get the tenancy's home region
@@ -13,13 +13,13 @@ data "oci_identity_regions" "home_region" {
   }
 }
 
-data "oci_identity_compartments" "compartments_id" {
-  access_level              = "ACCESSIBLE"
-  compartment_id            = var.oci_identity.tenancy_id
-  compartment_id_in_subtree = "true"
+# data "oci_identity_compartments" "compartments_id" {
+#   access_level              = "ACCESSIBLE"
+#   compartment_id            = var.oci_identity.tenancy_id
+#   compartment_id_in_subtree = "true"
 
-  filter {
-    name   = "id"
-    values = [var.oci_identity.compartment_id]
-  }
-}
+#   filter {
+#     name   = "id"
+#     values = [var.oci_identity.compartment_id]
+#   }
+# }

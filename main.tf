@@ -2,18 +2,18 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 terraform {
-  required_version = ">= 0.12.16"
+  required_version = ">= 0.12.24"
 }
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "1.1.3"
-
-  # identity
-  oci_base_identity = local.oci_base_identity
+  version = "1.2.2"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
+
+  # identity
+  oci_base_provider = local.oci_base_provider
 
   # vcn parameters
   oci_base_vcn = local.oci_base_vcn
@@ -21,25 +21,24 @@ module "base" {
   # bastion parameters
   oci_base_bastion = local.oci_base_bastion
 
-  # admin server parameters
-  oci_base_admin = local.oci_base_admin
-
-  # tagging
-  tagging = var.tagging
+  # operator server parameters
+  oci_base_operator = local.oci_base_operator
 
 }
 
 module "policies" {
   source = "./modules/policies"
 
-  # identity
-  oci_identity = local.oci_base_identity
+  # general oci parameters
+  compartment_id = var.compartment_id
+  label_prefix   = var.label_prefix
+
+  # provider
+  oci_provider = local.oci_base_provider
 
   ssh_keys = local.oci_base_ssh_keys
 
-  label_prefix = var.label_prefix
-
-  admin = local.oke_admin
+  operator = local.oke_operator
 
   dynamic_group = module.base.group_name
 
@@ -52,11 +51,9 @@ module "policies" {
 module "network" {
   source = "./modules/okenetwork"
 
-  # identity parameters
+  # general oci parameters
   compartment_id = var.compartment_id
-
-  # general parameters
-  oke_general = local.oke_general
+  label_prefix   = var.label_prefix
 
   # oke networking parameters
   oke_network_vcn = local.oke_network_vcn
@@ -68,24 +65,26 @@ module "network" {
   lb_subnet_type = var.lb_subnet_type
 
   # waf integration
-  enable_waf = var.enable_waf
+  waf_enabled = var.waf_enabled
 }
 
 # cluster creation for oke
 module "oke" {
   source = "./modules/oke"
 
-  # identity
-  oke_identity = local.oke_identity
+  # general oci parameters
+  compartment_id = var.compartment_id
+  label_prefix   = var.label_prefix
+
+  # region parameters
+  ad_names = module.base.ad_names
+  region   = var.region
 
   # ssh keys
   oke_ssh_keys = local.oci_base_ssh_keys
 
-  # oci parameters
-  oke_general = local.oke_general
-
   # bastion details
-  oke_admin = local.oke_admin
+  oke_operator = local.oke_operator
 
   # oke cluster parameters
   oke_cluster = local.oke_cluster
@@ -106,7 +105,7 @@ module "oke" {
   calico = local.calico
 
   # metric server
-  install_metricserver = var.install_metricserver
+  metricserver_enabled = var.metricserver_enabled
 
   # service account
   service_account = local.service_account

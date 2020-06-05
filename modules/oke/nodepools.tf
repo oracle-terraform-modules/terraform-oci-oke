@@ -3,17 +3,17 @@
 
 resource "oci_containerengine_node_pool" "nodepools" {
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
-  compartment_id = var.oke_identity.compartment_id
+  compartment_id = var.compartment_id
   depends_on     = [oci_containerengine_cluster.k8s_cluster]
 
   kubernetes_version = local.kubernetes_version
-  name               = "${var.oke_general.label_prefix}-${var.node_pools.node_pool_name_prefix}-${count.index + 1}"
+  name               = "${var.label_prefix}-${var.node_pools.node_pool_name_prefix}-${count.index + 1}"
 
   node_config_details {
 
     dynamic "placement_configs" {
       iterator = ad_iterator
-      for_each = var.oke_general.ad_names
+      for_each = var.ad_names
       content {
         availability_domain = ad_iterator.value
         subnet_id           = var.oke_cluster.cluster_subnets["workers"]

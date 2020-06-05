@@ -51,7 +51,7 @@
 . link:#configure-oci-parameters[Configure OCI parameters]
 . link:#configure-oci-networking-parameters[Configure OCI Networking parameters]
 . link:#configure-bastion-host-parameters[Configure Bastion Host parameters]
-. link:#configure-admin-host-parameters[Configure Admin Host parameters]
+. link:#configure-operator-host-parameters[Configure Admin Host parameters]
 . link:#configure-oke-parameters[Configure OKE parameters]
 . link:#configure-oke-load-balancer-parameters[Configure OKE Load Balancer parameters]
 . link:#configure-ocir-parameters[Configure OCIR parameters]
@@ -145,11 +145,11 @@ If you need to change the default VCN's CIDR, note the following:
 
 The bastion host parameters concern whether you want to enable the bastion. 
 
-=== Configure admin host parameters
+=== Configure operator host parameters
 
-The admin host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the admin_instance_principal. Be aware that if this is enabled, it gives API access to the admin host without authentication.
+The operator host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the operator_instance_principal. Be aware that if this is enabled, it gives API access to the operator host without authentication.
 
-Read {uri-instructions}#enabling-instance_principal-on-the-admin-host[more] about {uri-oci-instance-principal}[instance_principal].
+Read {uri-instructions}#enabling-instance_principal-on-the-operator-host[more] about {uri-oci-instance-principal}[instance_principal].
 
 {uri-terraform-options}#bastion-host[Reference]
 
@@ -223,8 +223,8 @@ The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management 
 
 ----
 bastion_enabled = true
-admin_enabled = true
-admin_instance_principal = true
+operator_enabled = true
+operator_instance_principal = true
 use_encryption = true
 existing_key_id = <existing_key_id>
 ----

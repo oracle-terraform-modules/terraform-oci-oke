@@ -5,16 +5,16 @@
    template = file("${path.module}/scripts/secret.py")
 
    vars = {
-     compartment_id  = var.oke_identity.compartment_id
-     region          = var.oke_general.region
+     compartment_id  = var.compartment_id
+     region          = var.region
      secret_id       = var.oke_ocir.secret_id
      email_address   = var.oke_ocir.email_address
-     region_registry = var.oke_ocir.ocir_urls[var.oke_general.region]
+     region_registry = var.oke_ocir.ocir_urls[var.region]
      tenancy_name    = var.oke_ocir.tenancy_name
      username        = var.oke_ocir.username
 
    }
-   count = var.oke_admin.admin_enabled == true && var.oke_admin.admin_instance_principal == true && var.oke_ocir.secret_id != null ? 1 : 0
+   count = var.oke_operator.operator_enabled == true && var.oke_operator.operator_instance_principal == true && var.oke_ocir.secret_id != null ? 1 : 0
  }
 
  resource null_resource "secret" {
@@ -22,18 +22,18 @@
     secret_id = var.oke_ocir.secret_id
   }
    connection {
-     host        = var.oke_admin.admin_private_ip
+     host        = var.oke_operator.operator_private_ip
      private_key = file(var.oke_ssh_keys.ssh_private_key_path)
      timeout     = "40m"
      type        = "ssh"
      user        = "opc"
 
-     bastion_host        = var.oke_admin.bastion_public_ip
+     bastion_host        = var.oke_operator.bastion_public_ip
      bastion_user        = "opc"
      bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
    }
 
-   depends_on = [null_resource.write_kubeconfig_on_admin]
+   depends_on = [null_resource.write_kubeconfig_on_operator]
 
    provisioner "file" {
      content     = data.template_file.secret[0].rendered
@@ -49,5 +49,5 @@
      ]
    }
 
-   count = var.oke_admin.admin_enabled == true && var.oke_admin.admin_instance_principal == true && var.oke_ocir.secret_id != null ? 1 : 0
+   count = var.oke_operator.operator_enabled == true && var.oke_operator.operator_instance_principal == true && var.oke_ocir.secret_id != null ? 1 : 0
  }

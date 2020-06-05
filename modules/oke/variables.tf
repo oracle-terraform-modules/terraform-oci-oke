@@ -1,14 +1,16 @@
 # Copyright 2017, 2019 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# identity
+# general oci parameters
+variable "compartment_id" {}
 
-variable "oke_identity" {
-  type = object({
-    compartment_id = string
-    user_id        = string
-  })
+variable "label_prefix" {}
+
+# region parameters
+variable "ad_names" {
+  type = list(string)
 }
+variable "region" {}
 
 # ssh keys
 
@@ -19,25 +21,15 @@ variable "oke_ssh_keys" {
   })
 }
 
-# general oci
-
-variable "oke_general" {
-  type = object({
-    ad_names     = list(string)
-    label_prefix = string
-    region       = string
-  })
-}
-
 # bastion
 
-variable "oke_admin" {
+variable "oke_operator" {
   type = object({
-    bastion_public_ip        = string
-    admin_private_ip         = string
-    bastion_enabled          = bool
-    admin_enabled            = bool
-    admin_instance_principal = bool
+    bastion_public_ip           = string
+    operator_private_ip         = string
+    bastion_enabled             = bool
+    operator_enabled            = bool
+    operator_instance_principal = bool
   })
 }
 
@@ -78,11 +70,11 @@ variable "lbs" {
 # ocir
 variable "oke_ocir" {
   type = object({
-    secret_id         = string
-    email_address     = string
-    ocir_urls         = map(string)
-    tenancy_name      = string
-    username          = string
+    secret_id     = string
+    email_address = string
+    ocir_urls     = map(string)
+    tenancy_name  = string
+    username      = string
   })
 }
 
@@ -90,22 +82,22 @@ variable "oke_ocir" {
 # helm
 variable "helm" {
   type = object({
+    helm_enabled = bool
     helm_version = string
-    install_helm = bool
   })
 }
 
 # calico
 variable "calico" {
   type = object({
+    calico_enabled = bool
     calico_version = string
-    install_calico = bool
   })
 }
 
 #metricserver
 
-variable "install_metricserver" {
+variable "metricserver_enabled" {
   default = false
 }
 
