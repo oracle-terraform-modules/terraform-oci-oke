@@ -254,6 +254,11 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "check_node_active" {
+  description = "check worker node is active"
+  type        = bool
+}
+
 variable "dashboard_enabled" {
   default     = false
   description = "Whether to enable kubernetes dashboard."
@@ -335,9 +340,9 @@ variable "preferred_lb_subnets" {
 
 # ocir
 variable "secret_id" {
-  default     = null
-  description = "The id of Oracle Vault Secret which stores the Auth Token."
-  type        = string
+  description = "OCID of Oracle Vault Secret"
+  type        =  string
+  default     = "NONE"
 }
 
 variable "email_address" {

@@ -432,6 +432,11 @@ tags = {
 |
 |
 
+|check_node_active
+|Setting this variable to true will make the script to wait till the OKE node become active
+|true/false
+|false
+
 |dashboard_enabled
 |Whether to create the default Kubernetes dashboard.
 |true/false
@@ -541,7 +546,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |secret_id
 |The id of the Secret in Vault where the Auth Token is stored.
 |
-|null
+|"NONE"
 
 
 |email_address
