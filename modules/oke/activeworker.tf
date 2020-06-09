@@ -5,11 +5,12 @@ data "template_file" "check_worker_node_status" {
   template = file("${path.module}/scripts/is_worker_active.py")
 
   vars = {
-    cluster_id     = oci_containerengine_cluster.k8s_cluster.id
-    compartment_id = var.compartment_id
-    region         = var.region
+    cluster_id        = oci_containerengine_cluster.k8s_cluster.id
+    compartment_id    = var.compartment_id
+    region            = var.region
+    check_node_active = var.check_node_active
   }
-  count = var.oke_operator.operator_enabled == true && var.check_node_active == true ? 1 : 0
+  count = var.oke_operator.operator_enabled == true && var.check_node_active != "NONE"  ? 1 : 0
 }
 
 resource null_resource "is_worker_active" {
@@ -35,11 +36,12 @@ resource null_resource "is_worker_active" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x $HOME/is_worker_active.py",
-      "rm -f $HOME/node.active",
-      "while [ ! -f $HOME/node.active ]; do $HOME/is_worker_active.py; sleep 10; done",
+      "sleep 240",
+      "rm -f $HOME/node*.active",
+      "while [ ! -f $HOME/node*.active ]; do $HOME/is_worker_active.py; sleep 10; done",
       "rm -f $HOME/is_worker_active.py"
     ]
   }
 
-  count = var.oke_operator.operator_enabled == true && var.check_node_active == true ? 1 : 0 
+  count = var.oke_operator.operator_enabled == true && var.check_node_active != "NONE" ? 1 : 0
 }

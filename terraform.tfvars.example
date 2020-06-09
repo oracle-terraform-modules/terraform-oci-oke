@@ -124,7 +124,7 @@ allow_worker_ssh_access = false
 
 cluster_name = "oke"
 
-check_node_active = false
+check_node_active = "NONE"
 
 dashboard_enabled = false
 

@@ -433,9 +433,9 @@ tags = {
 |
 
 |check_node_active
-|Setting this variable to true will make the script to wait till the OKE node become active
-|true/false
-|false
+|Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*NONE* means no check.
+|"one","all","NONE"
+|NONE
 
 |dashboard_enabled
 |Whether to create the default Kubernetes dashboard.

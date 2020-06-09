@@ -256,7 +256,8 @@ variable "cluster_name" {
 
 variable "check_node_active" {
   description = "check worker node is active"
-  type        = bool
+  type        = string
+  default     = "NONE"
 }
 
 variable "dashboard_enabled" {

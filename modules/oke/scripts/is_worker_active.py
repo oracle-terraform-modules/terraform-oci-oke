@@ -9,6 +9,7 @@ from oci.container_engine import ContainerEngineClient
 compartment_id = '${compartment_id}'
 cluster_id = '${cluster_id}'
 region = '${region}'
+check_node_active ='${check_node_active}'
 
 signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
 
@@ -60,5 +61,10 @@ for nodepool in node_pools:
         continue
         
 # if there's a worker node that is active, create a file node.active
-if "ACTIVE" in all_statuses:
+
+if (check_node_active == "one" and "ACTIVE" in all_statuses):
     os.mknod("node.active")
+
+# if all worker nodes are active, create a file nodeall.active
+if (check_node_active == "all" and all(status == 'ACTIVE' for status in all_statuses)):
+    os.mknod("nodeall.active")
