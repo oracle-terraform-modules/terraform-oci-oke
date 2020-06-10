@@ -7,7 +7,7 @@ terraform {
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "1.2.2"
+  version = "1.2.3"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
