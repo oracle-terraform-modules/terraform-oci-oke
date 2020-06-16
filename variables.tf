@@ -42,13 +42,13 @@ variable "label_prefix" {
 
 # ssh keys
 variable "ssh_private_key_path" {
-  default     = "NONE"
+  default     = "none"
   description = "The path to ssh private key."
   type        = string
 }
 
 variable "ssh_public_key_path" {
-  default     = "NONE"
+  default     = "none"
   description = "The path to ssh public key."
   type        = string
 }
@@ -127,7 +127,7 @@ variable "bastion_notification_enabled" {
 }
 
 variable "bastion_notification_endpoint" {
-  default     = "NONE"
+  default     = "none"
   description = "The subscription notification endpoint for the bastion. The email address to be notified."
   type        = string
 }
@@ -189,7 +189,7 @@ variable "operator_notification_enabled" {
 }
 
 variable "operator_notification_endpoint" {
-  default     = "NONE"
+  default     = "none"
   description = "The subscription notification endpoint for the operator. Email address to be notified."
   type        = string
 }
@@ -257,7 +257,7 @@ variable "cluster_name" {
 variable "check_node_active" {
   description = "check worker node is active"
   type        = string
-  default     = "NONE"
+  default     = "none"
 }
 
 variable "dashboard_enabled" {
@@ -287,7 +287,7 @@ variable "node_pool_name_prefix" {
 }
 
 variable "node_pool_image_id" {
-  default     = "NONE"
+  default     = "none"
   description = "The ocid of a custom image to use for worker node."
   type        = string
 }
@@ -343,11 +343,11 @@ variable "preferred_lb_subnets" {
 variable "secret_id" {
   description = "OCID of Oracle Vault Secret"
   type        =  string
-  default     = "NONE"
+  default     = "none"
 }
 
 variable "email_address" {
-  default     = "NONE"
+  default     = "none"
   description = "The email address used for OCIR."
   type        = string
 }
@@ -379,13 +379,13 @@ variable "ocir_urls" {
 }
 
 variable "tenancy_name" {
-  default     = "NONE"
+  default     = "none"
   description = "The tenancy name to use when creating the ocir secret."
   type        = string
 }
 
 variable "username" {
-  default     = "NONE"
+  default     = "none"
   description = "The username to access OCIR."
   type        = string
 }

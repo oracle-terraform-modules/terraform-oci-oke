@@ -54,27 +54,27 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |api_fingerprint
 |ssl fingerprint of api public key. *Required*
 |
-|None
+|none
 
 |api_private_key_path
 |path to api private key. *Required*
 |
-|None
+|none
 
 |compartment_id
 |Compartment id where the OKE Cluster will be provisioned. *Required*
 |
-|None
+|none
 
 |tenancy_id
 |Tenancy id of the user. *Required*
 |
-|None
+|none
 
 |user_id
 |User's id. *Required*
 |
-|None
+|none
 
 |===
 
@@ -91,12 +91,12 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
 
 |
-|None
+|none
 
 |ssh_public_key_path
 |path to ssh public key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
 |
-|None
+|none
 
 |===
 
@@ -433,9 +433,9 @@ tags = {
 |
 
 |check_node_active
-|Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*NONE* means no check.
-|"one","all","NONE"
-|NONE
+|Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*none* means no check.
+|"one","all","none"
+|none
 
 |dashboard_enabled
 |Whether to create the default Kubernetes dashboard.
@@ -469,7 +469,7 @@ node_pools = {
 |node_pool_image_id
 |The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_os and node_pool_os_version to identify an image to provision the worker nodes.
 |
-|NONE
+|none
 
 |node_pool_os
 |The name of the Operating System image to use to provision the worker nodes.
@@ -546,23 +546,23 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |secret_id
 |The id of the Secret in Vault where the Auth Token is stored.
 |
-|"NONE"
+|none
 
 
 |email_address
 |The email address to be used when creating the Docker secret. *Required* if secret_id is set.
 |
-|None
+|none
 
 |tenancy_name
 |The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_id. *Required* if secret_id is set.
 |
-|None
+|none
 
 |username
 |The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if secret_id is set.
 |
-|None
+|none
 
 |===
 

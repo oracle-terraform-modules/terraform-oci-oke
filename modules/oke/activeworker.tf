@@ -10,7 +10,7 @@ data "template_file" "check_worker_node_status" {
     region            = var.region
     check_node_active = var.check_node_active
   }
-  count = var.oke_operator.operator_enabled == true && var.check_node_active != "NONE"  ? 1 : 0
+  count = var.oke_operator.operator_enabled == true && var.check_node_active != "none"  ? 1 : 0
 }
 
 resource null_resource "is_worker_active" {
@@ -43,5 +43,5 @@ resource null_resource "is_worker_active" {
     ]
   }
 
-  count = var.oke_operator.operator_enabled == true && var.check_node_active != "NONE" ? 1 : 0
+  count = var.oke_operator.operator_enabled == true && var.check_node_active != "none" ? 1 : 0
 }
