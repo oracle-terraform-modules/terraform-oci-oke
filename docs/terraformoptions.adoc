@@ -434,7 +434,7 @@ tags = {
 
 |check_node_active
 |Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*none* means no check.
-|"one","all","none"
+|one,all,none
 |none
 
 |dashboard_enabled
