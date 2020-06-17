@@ -110,4 +110,7 @@ module "oke" {
   # service account
   service_account = local.service_account
 
+  #check worker nodes are active
+  check_node_active = var.check_node_active
+
 }

@@ -124,6 +124,8 @@ allow_worker_ssh_access = false
 
 cluster_name = "oke"
 
+check_node_active = "none"
+
 dashboard_enabled = false
 
 kubernetes_version = "LATEST"
@@ -136,7 +138,7 @@ node_pools = {
 
 node_pool_name_prefix = "np"
 
-node_pool_image_id = "NONE"
+node_pool_image_id = "none"
 
 node_pool_os = "Oracle Linux"
 
@@ -156,7 +158,7 @@ preferred_lb_subnets = "public"
 waf_enabled = false
 
 # ocir
-secret_id = ""
+secret_id = "none"
 
 email_address = ""
 
