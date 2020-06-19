@@ -48,3 +48,7 @@ variable "oke_kms" {
 }
 
 variable "cluster_id" {}
+
+variable "reuse" {
+  type = bool
+}

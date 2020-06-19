@@ -55,7 +55,7 @@ resource "null_resource" "install_kubectl_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.reuse == false ? 1 : 0
 }
 
 # wait for 1. operator being ready 2. kubectl is installed (the script will create the .kube directory)
@@ -89,6 +89,7 @@ data "template_file" "generate_kubeconfig" {
   vars = {
     cluster-id = oci_containerengine_cluster.k8s_cluster.id
     region     = var.region
+    cluster_name = var.oke_cluster.cluster_name
   }
 
   count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true ? 1 : 0

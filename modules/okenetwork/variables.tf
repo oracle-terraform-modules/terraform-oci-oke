@@ -38,3 +38,15 @@ variable "lb_subnet_type" {
 variable "waf_enabled" {
   type = bool
 }
+
+variable "reuse" {
+  type = bool
+}
+
+variable "worker_dnslabel" {
+  type = string
+}
+
+variable "lb_dnslabel" {
+  type = string
+}

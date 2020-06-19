@@ -116,3 +116,7 @@ variable "service_account" {
 variable "check_node_active" {
   type = string
 }
+
+variable "reuse" {
+  type = bool
+}

@@ -5,26 +5,15 @@ terraform {
   required_version = ">= 0.12.24"
 }
 
-module "base" {
-  source  = "oracle-terraform-modules/base/oci"
-  version = "1.2.3"
-
-  # general oci parameters
-  oci_base_general = local.oci_base_general
-
-  # identity
-  oci_base_provider = local.oci_base_provider
-
-  # vcn parameters
-  oci_base_vcn = local.oci_base_vcn
-
-  # bastion parameters
-  oci_base_bastion = local.oci_base_bastion
-
-  # operator server parameters
-  oci_base_operator = local.oci_base_operator
-
+data "oci_identity_availability_domains" "ad_list" {
+  compartment_id = var.tenancy_id
 }
+
+data "template_file" "ad_names" {
+  count    = length(data.oci_identity_availability_domains.ad_list.availability_domains)
+  template = lookup(data.oci_identity_availability_domains.ad_list.availability_domains[count.index], "name")
+}
+
 
 module "policies" {
   source = "./modules/policies"
@@ -40,11 +29,13 @@ module "policies" {
 
   operator = local.oke_operator
 
-  dynamic_group = module.base.group_name
+  dynamic_group = var.group_name
 
   oke_kms = local.oke_kms
 
   cluster_id = module.oke.cluster_id
+
+  reuse = var.reuse
 }
 
 # additional networking for oke
@@ -66,6 +57,12 @@ module "network" {
 
   # waf integration
   waf_enabled = var.waf_enabled
+
+  reuse = var.reuse
+
+#dns label
+  worker_dnslabel = var.worker_dnslabel
+  lb_dnslabel = var.lb_dnslabel
 }
 
 # cluster creation for oke
@@ -77,7 +74,7 @@ module "oke" {
   label_prefix   = var.label_prefix
 
   # region parameters
-  ad_names = module.base.ad_names
+  ad_names = sort(data.template_file.ad_names.*.rendered)
   region   = var.region
 
   # ssh keys
@@ -112,5 +109,7 @@ module "oke" {
 
   #check worker nodes are active
   check_node_active = var.check_node_active
+
+  reuse = var.reuse
 
 }

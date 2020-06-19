@@ -45,75 +45,16 @@ vcn_dns_label = "oke"
 
 vcn_name = "oke vcn"
 
-
-# bastion
-
-bastion_access = "ANYWHERE"
-
 bastion_enabled = true
-
-bastion_image_id = "Autonomous"
-
-bastion_notification_enabled = false
-
-bastion_notification_endpoint = "<email_address>"
-
-bastion_notification_protocol = "EMAIL"
-
-bastion_notification_topic= "bastion_server_notification"
-
-bastion_package_upgrade = false
-
-bastion_shape = "VM.Standard.E2.1"
-
-bastion_timezone = "Australia/Sydney"
 
 operator_enabled = true
 
-operator_image_id = "Oracle"
-
-operator_instance_principal = true
-
-operator_notification_enabled = false
-
-operator_notification_endpoint = ""
-
-operator_notification_protocol = "EMAIL"
-
-operator_notification_topic= "operator_server_notification"
-
-operator_package_upgrade = true
-
-operator_shape   = "VM.Standard.E2.1"
-
-operator_timezone= "Australia/Sydney"
 
 # availability_domains
 
 availability_domains = {
   bastion = 1
   operator  = 1
-}
-
-# tags
-
-tags = {
-  # vcn, bastion and operator tags are required
-  # add more tags in each as desired
-  vcn = {
-    # department = "finance"
-    environment = "dev"
-  }
-  bastion = {
-    # department  = "finance"
-    environment = "dev"
-    role        = "bastion"
-  }
-  operator = {
-    # department = "finance"
-    environment = "dev"
-    role        = "operator"
-  }
 }
 
 # oke
@@ -191,3 +132,25 @@ service_account_name = "kubeconfigsa"
 service_account_namespace = "kube-system"
 
 service_account_cluster_role_binding = ""
+
+#reuse existing vcn.If you are using base module below values can be derived from output values.
+ 
+ vcn_id =
+
+ bastion_public_ip = 
+ 
+ operator_private_ip = 
+
+ ig_route_id = 
+
+ nat_route_id = 
+ 
+ group_name = 
+
+ reuse = false
+
+ worker_dnslabel = "worker"
+
+ lb_dnslabel = "publb"
+
+  

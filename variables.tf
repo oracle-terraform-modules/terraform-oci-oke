@@ -492,3 +492,40 @@ variable "tags" {
   description = "Tags to apply to different resources."
   type        = map(any)
 }
+
+#reuseexisting VCN
+variable "reuse" {
+  type = string
+}
+
+variable "vcn_id" {
+  type = string
+}
+
+variable "bastion_public_ip" {
+  type = string
+}
+
+variable "operator_private_ip" {
+  type = string
+}
+
+variable "ig_route_id" {
+  type = string
+}
+
+variable "nat_route_id" {
+  type = string
+}
+
+variable "group_name" {
+  type = string
+}
+
+variable "worker_dnslabel" {
+  type = string
+}
+
+variable "lb_dnslabel" {
+  type = string
+}

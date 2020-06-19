@@ -8,6 +8,7 @@ data "template_file" "create_service_account" {
     service_account_name                 = var.service_account.service_account_name
     service_account_namespace            = var.service_account.service_account_namespace
     service_account_cluster_role_binding = local.service_account_cluster_role_binding_name
+    cluster_name                         = var.oke_cluster.cluster_name
   }
 
   count = var.service_account.create_service_account == true ? 1 : 0
