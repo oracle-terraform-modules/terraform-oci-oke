@@ -13,6 +13,6 @@ data "template_file" "ad_names" {
 data "oci_core_vcns" "oke_vcn" {
     #Required
     compartment_id = var.compartment_id
-    display_name = var.vcn_name
-    
+    display_name = var.vcn_name  
 }
+
