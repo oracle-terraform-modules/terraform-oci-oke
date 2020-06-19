@@ -7,6 +7,7 @@ data "template_file" "check_active_worker" {
   vars = {
     check_node_active = var.check_node_active
     total_nodes       = local.total_nodes
+    cluster_name      = var.oke_cluster.cluster_name
   }
   count = var.oke_operator.operator_enabled == true && var.check_node_active != "none" ? 1 : 0
 }

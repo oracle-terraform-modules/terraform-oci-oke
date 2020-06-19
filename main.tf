@@ -5,16 +5,6 @@ terraform {
   required_version = ">= 0.12.24"
 }
 
-data "oci_identity_availability_domains" "ad_list" {
-  compartment_id = var.tenancy_id
-}
-
-data "template_file" "ad_names" {
-  count    = length(data.oci_identity_availability_domains.ad_list.availability_domains)
-  template = lookup(data.oci_identity_availability_domains.ad_list.availability_domains[count.index], "name")
-}
-
-
 module "policies" {
   source = "./modules/policies"
 

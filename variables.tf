@@ -500,6 +500,7 @@ variable "reuse" {
 
 variable "vcn_id" {
   type = string
+  default = ""
 }
 
 variable "bastion_public_ip" {

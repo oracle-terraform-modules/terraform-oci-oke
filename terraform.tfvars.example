@@ -135,8 +135,6 @@ service_account_cluster_role_binding = ""
 
 #reuse existing vcn.If you are using base module below values can be derived from output values.
  
- vcn_id =
-
  bastion_public_ip = 
  
  operator_private_ip = 
@@ -145,6 +143,7 @@ service_account_cluster_role_binding = ""
 
  nat_route_id = 
  
+ #dynamic group name for instance principal
  group_name = 
 
  reuse = false
