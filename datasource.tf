@@ -10,9 +10,9 @@ data "template_file" "ad_names" {
   template = lookup(data.oci_identity_availability_domains.ad_list.availability_domains[count.index], "name")
 }
 
-data "oci_core_vcns" "oke_vcn" {
-    #Required
-    compartment_id = var.compartment_id
-    display_name = var.vcn_name  
-}
+# data "oci_core_vcns" "oke_vcn" {
+#     #Required
+#     compartment_id = var.compartment_id
+#     display_name = var.vcn_name  
+# }
 

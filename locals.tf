@@ -25,8 +25,8 @@ locals {
     nat_route_id = var.nat_route_id
     netnum       = var.netnum
     newbits      = var.newbits
-    vcn_cidr     = data.oci_core_vcns.oke_vcn.virtual_networks.0.cidr_block
-    vcn_id       = data.oci_core_vcns.oke_vcn.virtual_networks.0.id
+    vcn_cidr     = var.vcn_cidr
+    vcn_id       = var.vcn_id
   }
 
   oke_network_worker = {
@@ -50,7 +50,7 @@ locals {
     cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
     cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
     cluster_subnets                                         = module.network.subnet_ids
-    vcn_id                                                  = data.oci_core_vcns.oke_vcn.virtual_networks.0.id
+    vcn_id                                                  = var.vcn_id
     use_encryption                                          = var.use_encryption
     kms_key_id                                              = var.existing_key_id
   }
