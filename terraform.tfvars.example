@@ -22,8 +22,6 @@ ssh_public_key_path = ""
 
 # networking
 
-nat_gateway_enabled = true
-
 netnum = {
   bastion    = 32
   int_lb     = 16
@@ -39,16 +37,11 @@ newbits = {
   workers    = 2
 }
 
-vcn_cidr = "10.0.0.0/16"
-
-vcn_dns_label = "oke"
-
-vcn_name = "oke vcn"
-
 bastion_enabled = true
 
 operator_enabled = true
 
+operator_instance_principal = true
 
 # availability_domains
 
@@ -133,24 +126,24 @@ service_account_namespace = "kube-system"
 
 service_account_cluster_role_binding = ""
 
-#reuse existing vcn.If you are using base module below values can be derived from output values.
- vcn_id = 
+# reuse existing vcn.If you are using base module below values can be derived from terraform output values.
+reuse = false
 
- bastion_public_ip = 
+vcn_id = 
+
+bastion_public_ip = 
  
- operator_private_ip = 
+operator_private_ip = 
 
- ig_route_id = 
+ig_route_id = 
 
- nat_route_id = 
+nat_route_id = 
  
- #dynamic group name for instance principal
- group_name = 
+#dynamic group name for instance principal
+dynamicgroup_name = 
 
- reuse = false
+worker_dnslabel = "worker"
 
- worker_dnslabel = "worker"
-
- lb_dnslabel = "publb"
+lb_dnslabel = "publb"
 
   

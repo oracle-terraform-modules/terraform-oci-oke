@@ -30,7 +30,7 @@ Configuration Terraform Options:
 . link:#general-oci[General OCI]
 . link:#oci-networking[OCI Networking]
 . link:#bastion-host[Bastion Host]
-. link:#operator-host[Admin Host]
+. link:#operator-host[Operator Host]
 . link:#oke[OKE]
 . link:#oke-load-balancers[OKE Load Balancers]
 . link:#ocir[OCIR]
@@ -39,6 +39,7 @@ Configuration Terraform Options:
 . link:#kubernetes-metrics-server[Kubernetes Metrics Server]
 . link:#kms-integration[KMS integration]
 . link:#service-account[Service Account]
+. link:#reuse-vcn[Reuse VCN]
 
 Ensure you review the {uri-terraform-dependencies}[dependencies].
 
@@ -130,10 +131,6 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Values
 |Default
 
-|nat_gateway_enabled
-|Whether to create a NAT gateway. *Required* for private worker mode.
-|true/false
-|true
 
 |netnum
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
@@ -181,22 +178,6 @@ newbits = {
   workers = 2
 }
 ----
-
-|vcn_cidr
-|The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
-|
-|10.0.0.0/16
-
-|vcn_dns_label
-|The internal DNS domain for resources created and prepended to "oraclevcn.com" which is the VCN-internal domain name. *Required*
-|
-|
-
-|vcn_name
-|The name of the VCN that will be appended to the label_prefix. *Required*
-|
-|
-
 |===
 
 == Bastion Host
@@ -208,59 +189,17 @@ newbits = {
 |Values
 |Default
 
-|bastion_access
-|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
-|XXX.XXX.XXX.XXX/YY
-|ANYWHERE
+
 
 |bastion_enabled
-|Whether to create the bastion host.
-|true/false
+|bastion host should be there if you are creating OKE in existing VCN
+|true
 |true
 
-|bastion_image_id
-|Custom image id for the bastion host
-|image_id or Autonomous. If the value is set to 'Autonomous', an Oracle Autonomous Linux Platform image will be used instead. If you want to use a custom image, set the image id instead.
-|Autonomous
-
-|bastion_notification_enabled
-|Whether to enable ONS notification for the bastion host.
-|true/false
-|true
-
-|bastion_notification_endpoint
-|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others. *Required*
-|
-|
-
-|bastion_notification_protocol
-|The notification protocol used.
-|EMAIL
-|EMAIL
-
-|bastion_notification_topic
-|The name of the notification topic
-|
-|bastion
-
-|bastion_package_upgrade
-|Whether to also upgrade the packages on the bastion host.
-|true/false
-|true
-
-|bastion_shape
-|The shape of bastion instance. *Required*
-|
-|
-
-|bastion_timezone
-|The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
-|
-|
 
 |===
 
-== Admin Host
+== Operator Host
 
 [stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
@@ -270,54 +209,9 @@ newbits = {
 |Default
 
 |operator_enabled
-|Whether to create the operator host.
-|true/false
+|Operator host should be there if you are creating OKE in existing VCN.
 |true
-
-|operator_image_id
-|Custom image id for the operator host
-|image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
-|Oracle
-
-|operator_instance_principal
-|Whether to enable instance_principal on the operator server. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-operator-host[instance_principal]
-|true/false
 |true
-
-|operator_notification_enabled
-|Whether to enable ONS notification for the operator host. *Do not enable for now*.
-|true/false
-|false
-
-|operator_notification_endpoint
-|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others.
-|
-|
-
-|operator_notification_protocol
-|The notification protocol used.
-|EMAIL
-|EMAIL
-
-|operator_notification_topic
-|The name of the notification topic
-|
-|operator
-
-|operator_package_upgrade
-|Whether to also upgrade the packages for the operator host.
-|true/false
-|true
-
-|operator_shape
-|The shape of operator instance. *Required*
-|
-|
-
-|operator_timezone
-|The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
-|e.g. Australia/Sydney
-|
 
 |===
 
@@ -479,7 +373,7 @@ node_pools = {
 |node_pool_os_version
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
-|7.7
+|7.8
 
 |pods_cidr
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
@@ -670,5 +564,62 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |The name of the cluster role binding for the service account
 |
 |
+
+|===
+
+== Reuse VCN
+
+[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|reuse
+|To create cluster in existing VCN.If you want to create multiple clusters in the same vcn then set this to true
+|true/false
+|false
+
+|vcn_id
+|VCN OCID
+|
+|
+
+|bastion_public_ip
+|Bastion public ip address
+|
+|
+
+|operator_private_ip
+|Operator private ip address
+|
+|
+
+|ig_route_id
+|Internet gateway route OCID
+|
+|
+
+|nat_route_id
+|NAT gateway route OCID
+|
+|
+
+
+|dynamicgroup_name
+|Dynamic group name for instance principal
+|
+|
+
+|worker_dnslabel
+|OKE worker node dns label
+|
+|
+
+|lb_dnslabel
+|Loadbalancer dns label
+|
+|lb_dnslabel
 
 |===

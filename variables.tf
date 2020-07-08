@@ -54,10 +54,10 @@ variable "ssh_public_key_path" {
 }
 
 # networking parameters
-variable "nat_gateway_enabled" {
-  default     = true
-  description = "Whether to create a nat gateway in the vcn."
-  type        = bool
+variable "vcn_cidr" {
+  default     = "10.0.0.0/16"
+  description = "The cidr block of VCN."
+  type        = string
 }
 
 variable "netnum" {
@@ -83,83 +83,13 @@ variable "newbits" {
   type        = map
 }
 
-variable "vcn_cidr" {
-  default     = "10.0.0.0/16"
-  description = "The cidr block of VCN."
-  type        = string
-}
-
-variable "vcn_dns_label" {
-  default     = "oke"
-  description = "A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet."
-  type        = string
-}
-
-variable "vcn_name" {
-  default     = "oke-vcn"
-  description = "name of vcn"
-  type        = string
-}
 
 # bastion
-variable "bastion_access" {
-  default     = "ANYWHERE"
-  description = "The cidr from where the bastion can be sshed into. default is ANYWHERE and equivalent to 0.0.0.0/0."
-  type        = string
-}
 
 variable "bastion_enabled" {
   default     = true
   description = "Whether to create a bastion host."
   type        = bool
-}
-
-variable "bastion_image_id" {
-  default     = "Autonomous"
-  description = "The image id to use for bastion."
-  type        = string
-}
-
-variable "bastion_notification_enabled" {
-  default     = false
-  description = "Whether to enable notification on the bastion host."
-  type        = bool
-}
-
-variable "bastion_notification_endpoint" {
-  default     = "none"
-  description = "The subscription notification endpoint for the bastion. The email address to be notified."
-  type        = string
-}
-
-variable "bastion_notification_protocol" {
-  default     = "EMAIL"
-  description = "The notification protocol used."
-  type        = string
-}
-
-variable "bastion_notification_topic" {
-  default     = "bastion"
-  description = "The name of the notification topic."
-  type        = string
-}
-
-variable "bastion_package_upgrade" {
-  default     = true
-  description = "Whether to upgrade the bastion host packages after provisioning. it’s useful to set this to false during development so the bastion is provisioned faster."
-  type        = bool
-}
-
-variable "bastion_shape" {
-  default     = "VM.Standard.E2.1"
-  description = "The shape of bastion instance."
-  type        = string
-}
-
-variable "bastion_timezone" {
-  default     = "Australia/Sydney"
-  description = "The preferred timezone for the bastion host."
-  type        = string
 }
 
 # operator
@@ -170,59 +100,12 @@ variable "operator_enabled" {
   type        = bool
 }
 
-variable "operator_image_id" {
-  default     = "Oracle"
-  description = "The image id to use for operator server. Set either an image id or to Oracle. If value is set to Oracle, the default Oracle Linux platform image will be used."
-  type        = string
-}
-
 variable "operator_instance_principal" {
   default     = true
   description = "Whether to enable the operator to call OCI API services without requiring api key."
   type        = bool
 }
 
-variable "operator_notification_enabled" {
-  default     = false
-  description = "Whether to enable notification on the operator host."
-  type        = bool
-}
-
-variable "operator_notification_endpoint" {
-  default     = "none"
-  description = "The subscription notification endpoint for the operator. Email address to be notified."
-  type        = string
-}
-
-variable "operator_notification_protocol" {
-  default     = "EMAIL"
-  description = "The notification protocol used."
-  type        = string
-}
-
-variable "operator_notification_topic" {
-  description = "The name of the notification topic."
-  default     = "operator"
-  type        = string
-}
-
-variable "operator_package_upgrade" {
-  default     = true
-  description = "Whether to upgrade the operator packages after provisioning. It’s useful to set this to false during development so the operator is provisioned faster."
-  type        = bool
-}
-
-variable "operator_shape" {
-  default     = "VM.Standard.E2.1"
-  description = "The shape of operator instance."
-  type        = string
-}
-
-variable "operator_timezone" {
-  default     = "Australia/Sydney"
-  description = "The preferred timezone for the operator host."
-  type        = string
-}
 
 # availability domains
 variable "availability_domains" {
@@ -469,63 +352,49 @@ variable "waf_enabled" {
   default     = false
 }
 
-# tagging
-variable "tags" {
-  default = {
-    # vcn, bastion and operator tags are required
-    # add more tags in each as desired
-    vcn = {
-      # department = "finance"
-      environment = "dev"
-    }
-    bastion = {
-      # department  = "finance"
-      environment = "dev"
-      role        = "bastion"
-    }
-    operator = {
-      # department = "finance"
-      environment = "dev"
-      role        = "operator"
-    }
-  }
-  description = "Tags to apply to different resources."
-  type        = map(any)
-}
-
 #reuseexisting VCN
 variable "reuse" {
-  type = string
+  description = "Reuse existing VCN and create one or more OKE cluster"
+  type        = string
+  default     = false
 }
 
 variable "vcn_id" {
-  type = string
+  description = "Existing VCN OCID"
+  type        = string
 }
 
 variable "bastion_public_ip" {
-  type = string
+  description = "Bastion public IP address"
+  type        = string
 }
 
 variable "operator_private_ip" {
-  type = string
+  description = "Operator private IP address"
+  type        = string
 }
 
 variable "ig_route_id" {
-  type = string
+  description = "Internet gateway route table OCID"
+  type        = string
 }
 
 variable "nat_route_id" {
-  type = string
+  description = "NAT gateway route table OCID"
+  type        = string
 }
 
-variable "group_name" {
-  type = string
+variable "dynamicgroup_name" {
+  description = "Dynamic group name"
+  type        = string
 }
 
 variable "worker_dnslabel" {
-  type = string
+  description = "DNS label for OKE worker"
+  type        = string
 }
 
 variable "lb_dnslabel" {
-  type = string
+  description = "DNS label for load balancer"
+  type        = string
 }

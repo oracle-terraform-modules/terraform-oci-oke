@@ -29,6 +29,7 @@
 1. You have setup the {uri-oci-keys}[required keys]
 2. You know the {uri-oci-ocids}[required OCIDs]
 3. You have set the {uri-oci-okepolicy}[necessary OKE policy]
+4. You have created the required VCN and other components using https://github.com/oracle-terraform-modules/terraform-oci-base
 
 === Pre-requisites
 
@@ -43,7 +44,7 @@
 +
 [source,bash]
 ----
-git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke
+git clone -b reuse-vcn https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke
 
 cd tfoke
 cp terraform.tfvars.example terraform.tfvars
@@ -72,18 +73,27 @@ provider "oci" {
 * tenancy_id
 * user_id
 
+. Reuse VCN mandatory parameters
+
+* reuse
+* vcn_id
+* bastion_public_ip
+* operator_private_ip
+* ig_route_id
+* nat_route_id
+* dynamicgroup_name
+
 . Override other parameters:
 
 * region
 
 . Optional parameters to override:
-* bastion_enabled
 * cluster_name
 * ssh_private_key_path (Required if bastion is enabled)
 * ssh_public_key_path (Required if bastion is enabled)
-* vcn_dns_label
-* vcn_name
 * worker_mode
+* worker_dnslabel
+* lb_dnslabel
 
 . Run Terraform:
 
@@ -112,49 +122,6 @@ provider "oci" {
 ----
 
 . In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the oke module root.
-
-. In your project root, create a main.tf file and add the following:
-
-+
-----
-module "oke" {
-  source  = "oracle-terraform-modules/oke/oci"
-  version = "2.1.5"
-  # insert the 23 required variables here
-}
-----
-
-. Edit your oke module definition and pass the required variables:
-
-+
-----
-module "oke" {
-  source                                =   "oracle-terraform-modules/oke/oci"
-  version                               =   "2.1.5"
-
-  compartment_id                        =   var.compartment_id
-  tenancy_id                            =   var.tenancy_id
-  user_id                               =   var.user_id
-
-  ssh_private_key_path                  =   var.ssh_private_key_path
-  ssh_public_key_path                   =   var.ssh_public_key_path
-
-  label_prefix                          =   var.label_prefix
-  region                                =   var.region
-
-  vcn_dns_label                         =   var.vcn_dns_label
-  vcn_name                              =   var.vcn_name
-
-  bastion_shape                         =   var.bastion_shape
-  bastion_timezone                      =   var.bastion_timezone
-
-  admin_shape                           =   var.admin_shape
-  admin_timezone                        =   var.admin_timezone
-
-  # add additional parameters for availability_domains, oke etc as you need
-
-}
-----
 
 . Run Terraform:
 

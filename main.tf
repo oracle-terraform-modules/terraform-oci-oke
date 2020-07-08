@@ -19,7 +19,7 @@ module "policies" {
 
   operator = local.oke_operator
 
-  dynamic_group = var.group_name
+  dynamic_group = var.dynamicgroup_name
 
   oke_kms = local.oke_kms
 

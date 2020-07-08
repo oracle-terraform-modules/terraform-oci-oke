@@ -123,27 +123,6 @@ The list of regions can be found {uri-oci-region}[here].
 
 {uri-terraform-options}#general-oci[Reference]
 
-=== Configure OCI Networking parameters
-
-The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT Gateway. 
-
-You can leave most of the default options. However, you may want to change the following 2 parameters:
-
-* vcn_dns_label: this is the internal dns domain for resources created
-* vcn_name: this is the name of the vcn that will be appended to the label prefix
-
-****
-If you need to change the default VCN's CIDR, note the following:
-
-* The CIDR block you specify for the VCN *must not* overlap with the CIDR block you specify for the Kubernetes services.
-* The CIDR blocks you specify for pods running in the cluster *must not* overlap with CIDR blocks you specify for worker node and load balancer subnets.
-****
-
-{uri-terraform-options}#oci-networking[Reference]
-
-=== Configure bastion host parameters
-
-The bastion host parameters concern whether you want to enable the bastion. 
 
 === Configure operator host parameters
 

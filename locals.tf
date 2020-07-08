@@ -25,7 +25,7 @@ locals {
     nat_route_id = var.nat_route_id
     netnum       = var.netnum
     newbits      = var.newbits
-    vcn_cidr     = var.vcn_cidr
+    vcn_cidr     = data.oci_core_vcn.oke_vcn.cidr_block
     vcn_id       = var.vcn_id
   }
 
