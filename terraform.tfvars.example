@@ -138,7 +138,7 @@ node_pools = {
 
 node_pool_name_prefix = "np"
 
-node_pool_image_id = "none"
+node_pool_image_id = "NONE"
 
 node_pool_os = "Oracle Linux"
 
