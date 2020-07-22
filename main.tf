@@ -113,10 +113,10 @@ module "oke" {
   #check worker nodes are active
   check_node_active = var.check_node_active
 
-  nodepool_upgrade = var.nodepool_upgrade
+  nodepool_drain = var.nodepool_drain
 
   nodepool_upgrade_method = var.nodepool_upgrade_method
 
-  node_pools_to_upgrade = var.node_pools_to_upgrade
+  node_pools_to_drain = var.node_pools_to_drain
 
 }

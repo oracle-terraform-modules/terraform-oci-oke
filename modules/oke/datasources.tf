@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_core_images" "latest_images" {
-  for_each = var.node_pools.node_pools
+  for_each                 = var.node_pools.node_pools
   compartment_id           = var.compartment_id
   operating_system         = var.node_pools.node_pool_os
   operating_system_version = var.node_pools.node_pool_os_version

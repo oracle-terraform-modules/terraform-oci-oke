@@ -38,6 +38,10 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling
 |bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
 
+|node_pools_to_drain
+|Drains existing node pools before upgrading
+|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+
 |ocir secret
 |Whether to create an authentication secret for OCIR
 |bastion_enabled = true, admin_enabled = true, admin_instance_principal = true, secret_id = secret ocid

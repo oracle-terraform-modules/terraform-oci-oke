@@ -117,7 +117,8 @@ variable "check_node_active" {
   type = string
 }
 
-variable "nodepool_upgrade" {
+# upgrade
+variable "nodepool_drain" {
   type = bool
 }
 
@@ -125,6 +126,6 @@ variable "nodepool_upgrade_method" {
   type = string
 }
 
-variable "node_pools_to_upgrade" {
+variable "node_pools_to_drain" {
   type = list(string)
 }

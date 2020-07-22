@@ -301,7 +301,6 @@ service_account_name = "kubeconfigsa"
 service_account_namespace = "kube-system"
 
 service_account_cluster_role_binding = ""
-````
 ----
 
 === Enabling WAF

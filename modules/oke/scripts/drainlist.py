@@ -51,7 +51,7 @@ for p in pools_to_drain:
         except TypeError:
             continue
 
-# for each node in the node pool, get their private_ip
+# for each node in the node pool, get their private_ip and write to file
     with open('drainlist.txt', 'a') as filehandle:
       for nodepool in node_pools:
           try:

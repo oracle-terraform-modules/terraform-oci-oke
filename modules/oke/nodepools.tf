@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_containerengine_node_pool" "nodepools" {
-  for_each = var.node_pools.node_pools
+  for_each       = var.node_pools.node_pools
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
   compartment_id = var.compartment_id
   depends_on     = [oci_containerengine_cluster.k8s_cluster]

@@ -274,19 +274,22 @@ variable "kubernetes_version" {
 
 variable "node_pools" {
   default = {
-    np1 = ["VM.Standard2.1", 3]
+    np1 = ["VM.Standard.E2.2", 1]
+    np2 = ["VM.Standard2.8", 2]
+    np3 = ["VM.Standard.E2.2", 1]
+
   }
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string) and size(number)."
   type        = map(any)
 }
 
-variable "node_pools_to_upgrade" {
+variable "node_pools_to_drain" {
   default     = ["none"]
   description = "List of node pool names to upgrade. This list is used to determine the worker nodes to drain."
   type        = list(string)
 }
 
-variable "nodepool_upgrade" {
+variable "nodepool_drain" {
   default     = false
   description = "Whether to upgrade the Kubernetes version of the node pools."
   type        = bool
@@ -416,7 +419,7 @@ variable "helm_enabled" {
 }
 
 variable "helm_version" {
-  default     = "3.1.0"
+  default     = "3.2.4"
   description = "The version of helm to install."
   type        = string
 }

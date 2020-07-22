@@ -38,7 +38,7 @@ This project supports only the out-of-place method of upgrading the worker nodes
 
 === Upgrading the master nodes
 
-. Locate your ```kubernetes_version``` in your terraform variable file and change:
+. Locate your `kubernetes_version` in your terraform variable file and change:
 
 +
 ----
@@ -84,15 +84,15 @@ node_pools = {
 }
 ----
 
-When node pools 3 and 4 are created, they will be created with the cluster version of Kubernetes. Since you have already upgrade your cluster to ```1.16.8 ```, node pools 3 and 4 will be running Kubernetes 1.16.8
+When node pools 3 and 4 are created, they will be created with the cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.16.8`, node pools 3 and 4 will be running Kubernetes v1.16.8
 
-. Set ```nodepool_upgrade=true```. This will instruct the OKE cluster that some node pools will be drained.
+. Set `nodepool_drain=true`. This will instruct the OKE cluster that some node pools will be drained.
 
 . Provide the list of node pools to drain. This should usually be only the old node pools. You don't need to upgrade all the node pools at once.
 
 +
 ----
-node_pools_to_upgrade = [ "np1", "np2"] 
+node_pools_to_drain = [ "np1", "np2"] 
 ----
 
 . Run terraform apply:
