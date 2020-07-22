@@ -35,7 +35,7 @@ variable "compartment_id" {
 }
 
 variable "label_prefix" {
-  default     = "dev"
+  default     = "none"
   description = "A string that will be prepended to all resources."
   type        = string
 }
@@ -268,7 +268,7 @@ variable "dashboard_enabled" {
 
 variable "kubernetes_version" {
   default     = "LATEST"
-  description = "The version of kubernetes to use when provisioning OKE."
+  description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
 
@@ -278,6 +278,24 @@ variable "node_pools" {
   }
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string) and size(number)."
   type        = map(any)
+}
+
+variable "node_pools_to_upgrade" {
+  default     = ["none"]
+  description = "List of node pool names to upgrade. This list is used to determine the worker nodes to drain."
+  type        = list(string)
+}
+
+variable "nodepool_upgrade" {
+  default     = false
+  description = "Whether to upgrade the Kubernetes version of the node pools."
+  type        = bool
+}
+
+variable "nodepool_upgrade_method" {
+  default     = "out_of_place"
+  description = "The upgrade method to use when upgrading to a new version. Only out-of-place supported at the moment."
+  type        = string
 }
 
 variable "node_pool_name_prefix" {

@@ -124,9 +124,13 @@ By default, the bastion host can be accessed from anywhere. However, you can res
 You can use the bastion host for the following:
 
 . ssh to the worker nodes
-. manage your Kubernetes cluster
+. ssh to the operator host to manage your Kubernetes cluster
 
-To ssh to the bastion, a script (scripts/tesseract.sh) is generated which you can use to login to the bastion itself.
+To ssh to the bastion, copy the command that terraform outputs at the end of its run:
+
+---
+ssh_to_bastion = ssh -i /path/to/private_key opc@bastion_ip
+---
 
 To ssh to the worker nodes, you can do the following:
 

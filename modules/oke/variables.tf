@@ -116,3 +116,15 @@ variable "service_account" {
 variable "check_node_active" {
   type = string
 }
+
+variable "nodepool_upgrade" {
+  type = bool
+}
+
+variable "nodepool_upgrade_method" {
+  type = string
+}
+
+variable "node_pools_to_upgrade" {
+  type = list(string)
+}

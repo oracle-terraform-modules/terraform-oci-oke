@@ -36,7 +36,7 @@
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 :uri-terraform-hashircorp-examples: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
 :uri-topology: {uri-docs}/topology.adoc
-
+:uri-upgrade: {uri-docs}/upgrade.adoc
 
 {uri-oke}[Oracle Container Engine] (OKE) is {uri-oracle}[Oracle]'s managed {uri-kubernetes}[Kubernetes] service on {uri-oci}[Oracle Cloud Infrastructure (OCI)].
 
@@ -55,6 +55,8 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 * {uri-topology}[Topology]
 
 * {uri-terraform-options}[Terraform Options]
+
+* {uri-upgrade}[Upgrading OKE]
 
 * {uri-terraform-dependencies}[Feature Dependencies]
 

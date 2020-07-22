@@ -280,7 +280,7 @@ newbits = {
 |Oracle
 
 |operator_instance_principal
-|Whether to enable instance_principal on the operator server. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-operator-host[instance_principal]
+|Whether to enable instance_principal on the operator host. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-operator-host[instance_principal]
 |true/false
 |true
 

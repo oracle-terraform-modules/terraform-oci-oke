@@ -21,4 +21,9 @@ locals {
   ]))
 
   service_account_cluster_role_binding_name = var.service_account.service_account_cluster_role_binding == "" ? "${var.service_account.service_account_name}-crb" : var.service_account.service_account_cluster_role_binding
+
+  # node_pools_to_upgrade = [
+  #   for node_pool in keys(var.node_pools.node_pools) :
+  #   element(lookup(var.node_pools.node_pools, node_pool),2) == true ? node_pool : null
+  # ]
 }

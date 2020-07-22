@@ -11,7 +11,11 @@ data "template_file" "check_active_worker" {
   count = var.oke_operator.operator_enabled == true && var.check_node_active != "none" ? 1 : 0
 }
 
-resource null_resource "check_worker_active" {
+resource null_resource "check_worker_active" {  
+  triggers = {
+    node_pools = length(data.oci_containerengine_node_pools.all_node_pools.node_pools)
+  }
+
   connection {
     host        = var.oke_operator.operator_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)

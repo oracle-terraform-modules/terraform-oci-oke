@@ -4,7 +4,7 @@
 resource "oci_core_subnet" "workers" {
   cidr_block                 = local.worker_subnet
   compartment_id             = var.compartment_id
-  display_name               = "${var.label_prefix}-workers"
+  display_name               = var.label_prefix == "none" ? "workers" : "${var.label_prefix}-workers"
   dns_label                  = "workers"
   prohibit_public_ip_on_vnic = var.oke_network_worker.worker_mode == "private" ? true : false
   route_table_id             = var.oke_network_worker.worker_mode == "private" ? var.oke_network_vcn.nat_route_id : var.oke_network_vcn.ig_route_id
@@ -15,7 +15,7 @@ resource "oci_core_subnet" "workers" {
 resource "oci_core_subnet" "int_lb" {
   cidr_block                 = local.int_lb_subnet
   compartment_id             = var.compartment_id
-  display_name               = "${var.label_prefix}-int_lb"
+  display_name               = var.label_prefix == "none" ? "int_lb" : "${var.label_prefix}-int_lb"
   dns_label                  = "intlb"
   prohibit_public_ip_on_vnic = true
   route_table_id             = var.oke_network_vcn.ig_route_id
@@ -28,7 +28,7 @@ resource "oci_core_subnet" "int_lb" {
 resource "oci_core_subnet" "pub_lb" {
   cidr_block                 = local.pub_lb_subnet
   compartment_id             = var.compartment_id
-  display_name               = "${var.label_prefix}-pub_lb"
+  display_name               = var.label_prefix == "none" ? "pub_lb" : "${var.label_prefix}-pub_lb"
   dns_label                  = "publb"
   prohibit_public_ip_on_vnic = false
   route_table_id             = var.oke_network_vcn.ig_route_id
