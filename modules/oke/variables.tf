@@ -48,6 +48,9 @@ variable "oke_cluster" {
     # encryption
     use_encryption = bool
     kms_key_id     = string
+
+    # admission controller options
+    admission_controller_options = map(bool)
   })
 }
 

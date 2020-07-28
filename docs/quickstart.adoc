@@ -54,12 +54,11 @@ cp terraform.tfvars.example terraform.tfvars
 +
 ----
 provider "oci" {
-  tenancy_ocid         = var.tenancy_id
-  user_ocid            = var.user_id
   fingerprint          = var.api_fingerprint
   private_key_path     = var.api_private_key_path
   region               = var.region
-  disable_auto_retries = var.disable_auto_retries
+  tenancy_ocid         = var.tenancy_id
+  user_ocid            = var.user_id
 }
 ----
 
@@ -68,7 +67,6 @@ provider "oci" {
 * api_fingerprint
 * api_private_key_path
 * compartment_id
-* compartment_name
 * tenancy_id
 * user_id
 
@@ -95,19 +93,18 @@ terraform plan
 terraform apply
 ----
 
-=== Provisioning using the Hashicorp registry module
+=== Provisioning using the HashiCorp registry module
 
 . In your project root, create a provider.tf file and add the following:
 
 +
 ----
 provider "oci" {
-  tenancy_ocid         = var.tenancy_id
-  user_ocid            = var.user_id
   fingerprint          = var.api_fingerprint
   private_key_path     = var.api_private_key_path
   region               = var.region
-  disable_auto_retries = var.disable_auto_retries
+  tenancy_ocid         = var.tenancy_id
+  user_ocid            = var.user_id
 }
 ----
 
@@ -119,8 +116,8 @@ provider "oci" {
 ----
 module "oke" {
   source  = "oracle-terraform-modules/oke/oci"
-  version = "2.1.5"
-  # insert the 23 required variables here
+  version = "2.2.2"
+  # insert the 9 required variables here
 }
 ----
 

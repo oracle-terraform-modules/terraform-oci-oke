@@ -49,6 +49,7 @@
 :uri-helm: https://helm.sh/
 :uri-metricserver: https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/#metrics-server
 :uri-k8s-dashboard: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
+:uri-psp: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingpspswithoke.htm#Using_Pod_Security_Polices_with_Container_Engine_for_Kubernetes
 
 . link:#assumptions[Assumptions]
 . link:#kms-integration[KMS Integration]
@@ -71,6 +72,7 @@
 . link:#destroying-the-cluster[Destroying the cluster]
 . link:#creating-a-service-account-for-cicd-tools[Creating a service account for CI/CD tools]
 . link:#enabling-waf[Monitor and Protect your application using OCI WAF]
+. link:#enabling-podsecuritypolicy[Enabling PodSecurityPolicy Admissions Controller]
 
 === Assumptions
 
@@ -324,3 +326,17 @@ N.B.
 . It is good and recommended practice to monitor and protect your application using WAF.
 . WAF protection currently only works if you use a public load balancer as a front end to your services. This means that services deployed as NodePort services are currently *not protected* by WAF.
 ****
+
+=== Enabling PodSecurityPolicy
+
+If you would like to enable the PodSecurityPolicy Admission Controller, set 
+
+[source]
+admission_controller_options = {
+  PodSecurityPolicy = true
+}
+
+Ensure you also read {uri-psp}[the documentation] before enabling it. 
+
+****
+N.B. This field is updatable. You can set to `true` and `false` and run terraform apply again.

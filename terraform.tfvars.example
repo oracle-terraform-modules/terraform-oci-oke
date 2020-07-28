@@ -118,6 +118,10 @@ tags = {
 
 # oke
 
+admission_controller_options = {
+  PodSecurityPolicy = false
+}
+
 allow_node_port_access = false
 
 allow_worker_ssh_access = false

@@ -416,6 +416,19 @@ tags = {
 |Values
 |Default
 
+|`admission_controller_options`
+|Various Admission Controller options
+|e.g.
+[source]
+admission_controller_options = {
+  PodSecurityPolicy = true
+}
+|
+[source]
+admission_controller_options = {
+  PodSecurityPolicy = false
+}
+
 |`allow_node_port_access`
 |Whether to allow access to NodePort services when worker nodes are deployed in public mode.
 |true/false

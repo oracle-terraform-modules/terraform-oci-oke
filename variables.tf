@@ -236,6 +236,14 @@ variable "availability_domains" {
 
 # oke
 
+variable "admission_controller_options" {
+  default = {
+    PodSecurityPolicy = false
+  }
+  description = "various Admission Controller options"
+  type        = map(bool)
+}
+
 variable "allow_node_port_access" {
   default     = false
   description = "Whether to allow access to NodePorts when worker nodes are deployed in public mode."
