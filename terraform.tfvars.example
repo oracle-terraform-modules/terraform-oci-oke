@@ -118,6 +118,10 @@ tags = {
 
 # oke
 
+admission_controller_options = {
+  PodSecurityPolicy = false
+}
+
 allow_node_port_access = false
 
 allow_worker_ssh_access = false
@@ -131,10 +135,17 @@ dashboard_enabled = false
 kubernetes_version = "LATEST"
 
 node_pools = {
-  np1 = ["VM.Standard2.1", 3]
-  #np2 = ["VM.Standard2.8", 4]
-  #np3 = ["VM.Standard1.4", 5]
+  np1 = ["VM.Standard.E2.2", 1]
+  np2 = ["VM.Standard2.8", 2]
+  np3 = ["VM.Standard.E2.2", 1]
+  # np4 = ["VM.Standard.E2.2", 4]
 }
+
+node_pools_to_drain = [ "np1", "np2", "np3" ] 
+
+nodepool_drain = false
+
+nodepool_upgrade_method = "out_of_place"
 
 node_pool_name_prefix = "np"
 

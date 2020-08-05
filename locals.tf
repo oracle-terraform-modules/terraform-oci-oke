@@ -102,6 +102,7 @@ locals {
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
     kms_key_id                                              = var.existing_key_id
+    admission_controller_options                            = var.admission_controller_options
   }
 
   node_pools = {

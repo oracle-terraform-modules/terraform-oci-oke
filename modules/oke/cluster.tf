@@ -5,12 +5,16 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = var.compartment_id
   kubernetes_version = local.kubernetes_version
   kms_key_id         = var.oke_cluster.use_encryption == true ? var.oke_cluster.kms_key_id : null
-  name               = "${var.label_prefix}-${var.oke_cluster.cluster_name}"
+  name               = var.label_prefix == "none" ? var.oke_cluster.cluster_name : "${var.label_prefix}-${var.oke_cluster.cluster_name}"
 
   options {
     add_ons {
       is_kubernetes_dashboard_enabled = var.oke_cluster.cluster_options_add_ons_is_kubernetes_dashboard_enabled
       is_tiller_enabled               = false
+    }
+
+    admission_controller_options {
+      is_pod_security_policy_enabled = var.oke_cluster.admission_controller_options["PodSecurityPolicy"]
     }
 
     kubernetes_network_config {

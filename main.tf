@@ -7,7 +7,7 @@ terraform {
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "1.2.3"
+  version = "1.2.4"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
@@ -112,5 +112,11 @@ module "oke" {
 
   #check worker nodes are active
   check_node_active = var.check_node_active
+
+  nodepool_drain = var.nodepool_drain
+
+  nodepool_upgrade_method = var.nodepool_upgrade_method
+
+  node_pools_to_drain = var.node_pools_to_drain
 
 }

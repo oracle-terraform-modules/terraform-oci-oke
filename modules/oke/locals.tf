@@ -21,4 +21,5 @@ locals {
   ]))
 
   service_account_cluster_role_binding_name = var.service_account.service_account_cluster_role_binding == "" ? "${var.service_account.service_account_name}-crb" : var.service_account.service_account_cluster_role_binding
+
 }

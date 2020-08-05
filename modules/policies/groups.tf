@@ -6,7 +6,7 @@ resource "oci_identity_dynamic_group" "oke-kms-cluster" {
   compartment_id = var.oci_provider.tenancy_id
   description    = "dynamic group to allow cluster to use kms"
   matching_rule  = local.dynamic_group_rule_all_clusters
-  name           = "${var.label_prefix}-oke-kms-cluster"
+  name           = var.label_prefix == "none" ? "oke-kms-cluster" : "${var.label_prefix}-oke-kms-cluster"
   count          = (var.oke_kms.use_encryption == true) ? 1 : 0
 
   lifecycle {

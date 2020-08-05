@@ -78,7 +78,6 @@ Enter the values for the following parameters in the terraform.tfvars file:
 
 * api_fingerprint
 * api_private_key_path
-* compartment_name
 * compartment_id
 * tenancy_id
 * user_id
@@ -147,7 +146,7 @@ The bastion host parameters concern whether you want to enable the bastion.
 
 === Configure operator host parameters
 
-The operator host parameters concern whether you want to enable the bastion. 1 parameter to keep in mind here is the operator_instance_principal. Be aware that if this is enabled, it gives API access to the operator host without authentication.
+The operator host parameters concern whether you want to enable the operator host. 1 parameter to keep in mind here is the operator_instance_principal. Be aware that if this is enabled, it gives API access to the operator host without authentication.
 
 Read {uri-instructions}#enabling-instance_principal-on-the-operator-host[more] about {uri-oci-instance-principal}[instance_principal].
 

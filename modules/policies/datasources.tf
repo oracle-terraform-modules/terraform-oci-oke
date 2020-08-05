@@ -12,14 +12,3 @@ data "oci_identity_regions" "home_region" {
     values = [data.oci_identity_tenancy.tenancy.home_region_key]
   }
 }
-
-# data "oci_identity_compartments" "compartments_id" {
-#   access_level              = "ACCESSIBLE"
-#   compartment_id            = var.oci_identity.tenancy_id
-#   compartment_id_in_subtree = "true"
-
-#   filter {
-#     name   = "id"
-#     values = [var.oci_identity.compartment_id]
-#   }
-# }

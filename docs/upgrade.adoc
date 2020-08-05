@@ -1,0 +1,122 @@
+= Upgrading
+
+:idprefix:
+:idseparator: -
+:sectlinks:
+
+
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+:uri-rel-file-base: link:{uri-repo}/blob/master
+:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-docs: {uri-rel-file-base}/docs
+:uri-instructions: {uri-docs}/instructions.adoc
+:uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
+:uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
+:uri-oci-okepolicy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
+:uri-terraform: https://www.terraform.io
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-topology: {uri-docs}/topology.adoc
+:uri-upgrade-oke: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengupgradingk8sworkernode.htm
+:uri-variables: {uri-rel-file-base}/variables.tf
+
+. link:#pre-requisites[Pre-requisites]
+
+This section documents how to upgrade the OKE Cluster using this project. At a high level, upgrading the OKE cluster is fairly straightforward:
+
+1. Upgrade the master nodes
+2. Upgrade the worker nodes using either {uri-upgrade-oke}[in-place or out-of-place] approach
+
+This has to be done in order.
+
+This project supports only the out-of-place method of upgrading the worker nodes at the moment.
+
+=== Pre-requisites
+
+. bastion host is created
+. operator host is created
+
+=== Upgrading the master nodes
+
+. Locate your `kubernetes_version` in your terraform variable file and change:
+
++
+----
+kubernetes_version = "v1.15.7" 
+----
+to 
+
++
+----
+kubernetes_version = "v1.16.8"
+----
+
+. Run terraform:
+
++
+----
+terraform apply --auto-approve
+----
+
+This will upgrade the master nodes. You can verify this in the OCI Console.
+
+
+=== Upgrading the worker nodes using the out-of-place method
+
+1. Add a new node pool in your list of node pools e.g. change
++
+[source,bash]
+----
+node_pools = {
+  np1 = ["VM.Standard.E2.2", 7]
+  np2 = ["VM.Standard2.8", 5]
+}
+----
+to
+
++
+----
+node_pools = {
+  np1 = ["VM.Standard.E2.2", 7]
+  np2 = ["VM.Standard2.8", 5]
+  np3 = ["VM.Standard.E2.2", 7]
+  np4 = ["VM.Standard2.8", 5]
+}
+----
+
+When node pools 3 and 4 are created, they will be created with the cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.16.8`, node pools 3 and 4 will be running Kubernetes v1.16.8
+
+. Set `nodepool_drain=true`. This will instruct the OKE cluster that some node pools will be drained.
+
+. Provide the list of node pools to drain. This should usually be only the old node pools. You don't need to upgrade all the node pools at once.
+
++
+----
+node_pools_to_drain = [ "np1", "np2"] 
+----
+
+. Run terraform apply:
+
++
+----
+terraform apply --auto-approve
+----
+
+. Finally delete the old node pools by removing them from the list of node pools:
+
++
+----
+node_pools = {
+#  np1 = ["VM.Standard.E2.2", 7]
+#  np2 = ["VM.Standard2.8", 5]
+  np3 = ["VM.Standard.E2.2", 7]
+  np4 = ["VM.Standard2.8", 5]
+}
+----
+
+. Run terraform again:
+
++
+----
+terraform apply --auto-approve
+----

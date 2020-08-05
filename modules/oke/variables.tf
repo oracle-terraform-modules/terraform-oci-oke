@@ -48,6 +48,9 @@ variable "oke_cluster" {
     # encryption
     use_encryption = bool
     kms_key_id     = string
+
+    # admission controller options
+    admission_controller_options = map(bool)
   })
 }
 
@@ -115,4 +118,17 @@ variable "service_account" {
 #check worker node active
 variable "check_node_active" {
   type = string
+}
+
+# upgrade
+variable "nodepool_drain" {
+  type = bool
+}
+
+variable "nodepool_upgrade_method" {
+  type = string
+}
+
+variable "node_pools_to_drain" {
+  type = list(string)
 }

@@ -4,7 +4,7 @@
 # public worker security checklist
 resource "oci_core_security_list" "public_workers_seclist" {
   compartment_id = var.compartment_id
-  display_name   = "${var.label_prefix}-public-workers"
+  display_name   = var.label_prefix == "none" ? "public-workers" : "${var.label_prefix}-public-workers"
   vcn_id         = var.oke_network_vcn.vcn_id
 
   dynamic "egress_security_rules" {
@@ -116,7 +116,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
 # private worker security checklist
 resource "oci_core_security_list" "private_workers_seclist" {
   compartment_id = var.compartment_id
-  display_name   = "${var.label_prefix}-private-workers"
+  display_name   = var.label_prefix == "none" ? "private-workers" :"${var.label_prefix}-private-workers"
   vcn_id         = var.oke_network_vcn.vcn_id
 
   dynamic "egress_security_rules" {
@@ -193,7 +193,7 @@ resource "oci_core_security_list" "private_workers_seclist" {
 # internal load balancer security checklist
 resource "oci_core_security_list" "int_lb_seclist" {
   compartment_id = var.compartment_id
-  display_name   = "${var.label_prefix}-int-lb"
+  display_name   = var.label_prefix == "none" ? "int-lb" : "${var.label_prefix}-int-lb"
   vcn_id         = var.oke_network_vcn.vcn_id
 
   egress_security_rules {
@@ -216,7 +216,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
 # public load balancer security checklist
 resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
   compartment_id = var.compartment_id
-  display_name   = "${var.label_prefix}-pub-lb"
+  display_name   = var.label_prefix == "none" ? "pub-lb" : "${var.label_prefix}-pub-lb"
   vcn_id         = var.oke_network_vcn.vcn_id
 
   egress_security_rules {
@@ -238,7 +238,7 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
 
 resource "oci_core_security_list" "pub_lb_seclist_with_waf" {
   compartment_id = var.compartment_id
-  display_name   = "${var.label_prefix}-pub-lb"
+  display_name   = var.label_prefix == "none" ? "pub-lb" : "${var.label_prefix}-pub-lb"
   vcn_id         = var.oke_network_vcn.vcn_id
 
   egress_security_rules {
