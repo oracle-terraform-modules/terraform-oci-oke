@@ -19,7 +19,7 @@ locals {
 
   oci_base_vcn = {
     internet_gateway_enabled = true
-    nat_gateway_enabled      = var.worker_mode == "private" || var.operator_enabled == true ? true : false
+    nat_gateway_enabled      = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
     service_gateway_enabled  = true
     tags                     = var.tags["vcn"]
     vcn_cidr                 = var.vcn_cidr
