@@ -37,7 +37,7 @@ locals {
 
   worker_egress = [
     {
-      description      = "Allow ingress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
+      description      = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.all_protocols,

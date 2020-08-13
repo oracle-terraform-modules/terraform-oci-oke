@@ -7,6 +7,24 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
+== 2.3.1 (August 13, 2020)
+* Missing security rule when workers are in public mode (#183)
+* Updated docs for terraform options and for resetting nodepool_drain (#190)
+* Upgraded base module to 1.3.0 (#191)
+* Removed nat_gateway_enabled variable. Determination of whether the NAT gateway is needed is now done automatically (#192)
+* Removed "LATEST" from acceptable values for kubernetes_version so that upgrade can be performed (#193)
+* Internal load balancer subnet uses wrong routing table (#194)
+
+== 2.3.0 (August 5, 2020)
+
+* Added option to enable admission controllers and PodSecurityPolicy (#150)
+* Added ability to upgrade OKE cluster and worker nodes using out-of-place method (#178)
+* Changed node pools specification from list to map so the specific node pool is deleted when removed from the variable (#179)
+* Made minimum worker node pool to 1 to allow experimentation on free tier ( #180 )
+* Made label_prefix optional (#181)
+* Added trigger for check_worker_node_active (#182)
+* Removed disable_auto_retries in quick start guide (#185)
+
 == 2.2.2 (June 10, 2020)
 * Upgraded base module to 1.2.3 (#169)
 

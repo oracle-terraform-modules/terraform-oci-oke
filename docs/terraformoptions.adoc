@@ -130,11 +130,6 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Values
 |Default
 
-|`nat_gateway_enabled`
-|Whether to create a NAT gateway. *Required* for private worker mode.
-|true/false
-|true
-
 |`netnum`
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
 |e.g.
@@ -456,9 +451,9 @@ admission_controller_options = {
 |false
 
 |`kubernetes_version`
-|The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the available versions will be queries and the latest version selected. To provision a specific version, choose from available versions and override the 'LATEST' value.
-|LATEST, v1.14.8,v1.15.7, v1.16.8
-|LATEST
+|The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
+|v1.14.8,v1.15.7, v1.16.8
+|v1.16.8
 
 |`node_pools`
 |The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node and the 2nd parameter sets the size of the node pool. A minimum of 3 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.

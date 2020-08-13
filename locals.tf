@@ -4,8 +4,9 @@
 locals {
 
   oci_base_general = {
-    compartment_id = var.compartment_id
-    label_prefix   = var.label_prefix
+    compartment_id      = var.compartment_id
+    label_prefix        = var.label_prefix
+    root_compartment_id = var.tenancy_id
   }
 
   oci_base_provider = {
@@ -18,7 +19,7 @@ locals {
 
   oci_base_vcn = {
     internet_gateway_enabled = true
-    nat_gateway_enabled      = var.nat_gateway_enabled
+    nat_gateway_enabled      = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
     service_gateway_enabled  = true
     tags                     = var.tags["vcn"]
     vcn_cidr                 = var.vcn_cidr
@@ -45,6 +46,7 @@ locals {
     notification_protocol = var.bastion_notification_protocol
     notification_topic    = var.bastion_notification_topic
     ssh_private_key_path  = var.ssh_private_key_path
+    ssh_public_key        = var.ssh_public_key
     ssh_public_key_path   = var.ssh_public_key_path
     tags                  = var.tags["bastion"]
     timezone              = var.bastion_timezone
@@ -64,6 +66,7 @@ locals {
     notification_protocol     = var.operator_notification_protocol
     notification_topic        = var.operator_notification_topic
     ssh_private_key_path      = var.ssh_private_key_path
+    ssh_public_key            = var.ssh_public_key
     ssh_public_key_path       = var.ssh_public_key_path
     tags                      = var.tags["bastion"]
     timezone                  = var.operator_timezone
