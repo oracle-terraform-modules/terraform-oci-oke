@@ -29,6 +29,13 @@ resource "oci_core_security_list" "public_workers_seclist" {
     }
   }
 
+  egress_security_rules {
+    description = "Allow all outbound traffic to the internet. Required for getting container images or using external services"
+    destination = local.anywhere
+    protocol    = local.all_protocols
+    stateless   = false
+  }
+  
   dynamic "ingress_security_rules" {
     iterator = public_worker_ingress_iterator
     for_each = local.public_worker_ingress

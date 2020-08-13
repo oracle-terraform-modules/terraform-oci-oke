@@ -7,7 +7,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   compartment_id = var.compartment_id
   depends_on     = [oci_containerengine_cluster.k8s_cluster]
 
-  kubernetes_version = local.kubernetes_version
+  kubernetes_version = var.oke_cluster.cluster_kubernetes_version
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
   node_config_details {

@@ -10,10 +10,6 @@ data "oci_core_images" "latest_images" {
   sort_by                  = "TIMECREATED"
 }
 
-data "oci_containerengine_cluster_option" "k8s_cluster_option" {
-  cluster_option_id = "all"
-}
-
 data "oci_containerengine_node_pools" "all_node_pools" {
   compartment_id = var.compartment_id
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id

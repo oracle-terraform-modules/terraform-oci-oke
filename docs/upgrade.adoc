@@ -120,3 +120,5 @@ node_pools = {
 ----
 terraform apply --auto-approve
 ----
+
+. This completes the upgrade process. Now, set ```nodepool_drain = false``` to prevent draining from current nodes.

@@ -18,7 +18,7 @@ resource "oci_core_subnet" "int_lb" {
   display_name               = var.label_prefix == "none" ? "int_lb" : "${var.label_prefix}-int_lb"
   dns_label                  = "intlb"
   prohibit_public_ip_on_vnic = true
-  route_table_id             = var.oke_network_vcn.ig_route_id
+  route_table_id             = var.oke_network_vcn.nat_route_id
   security_list_ids          = [oci_core_security_list.int_lb_seclist[0].id]
   vcn_id                     = var.oke_network_vcn.vcn_id
 

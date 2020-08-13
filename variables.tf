@@ -60,12 +60,6 @@ variable "ssh_public_key_path" {
 }
 
 # networking parameters
-variable "nat_gateway_enabled" {
-  default     = true
-  description = "Whether to create a nat gateway in the vcn."
-  type        = bool
-}
-
 variable "netnum" {
   description = "0-based index of the subnet when the network is masked with the newbit. Used as netnum parameter for cidrsubnet function."
   default = {
@@ -281,7 +275,7 @@ variable "dashboard_enabled" {
 }
 
 variable "kubernetes_version" {
-  default     = "LATEST"
+  default     = "v.16.8"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
