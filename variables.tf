@@ -47,6 +47,12 @@ variable "ssh_private_key_path" {
   type        = string
 }
 
+variable "ssh_public_key" {
+  default     = ""
+  description = "The ssh public key."
+  type        = string
+}
+
 variable "ssh_public_key_path" {
   default     = "none"
   description = "The path to ssh public key."

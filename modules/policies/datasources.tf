@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_identity_tenancy" "tenancy" {
-  tenancy_id = var.oci_provider.tenancy_id  
+  tenancy_id = var.tenancy_id  
 }
 
 # get the tenancy's home region

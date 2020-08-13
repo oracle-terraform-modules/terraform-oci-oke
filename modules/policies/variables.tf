@@ -7,15 +7,9 @@ variable "compartment_id" {}
 variable "label_prefix" {}
 
 # provider
-variable "oci_provider" {
-  type = object({
-    api_fingerprint      = string
-    api_private_key_path = string
-    region               = string
-    tenancy_id           = string
-    user_id              = string
-  })
-}
+variable "region" {}
+
+variable "tenancy_id" {}
 
 # ssh keys
 variable "ssh_keys" {
