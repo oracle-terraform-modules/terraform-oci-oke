@@ -7,6 +7,9 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
+== 2.3.2 (August 19, 2020)
+* Unable to install kube in operator (#197)
+
 == 2.3.1 (August 13, 2020)
 * Missing security rule when workers are in public mode (#183)
 * Updated docs for terraform options and for resetting nodepool_drain (#190)
