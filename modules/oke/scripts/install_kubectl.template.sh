@@ -4,7 +4,7 @@
 
 sudo yum install -y oracle-olcne-release-el7
 
-sudo yum-config-manager --enable ol7_olcne
+sudo yum-config-manager --enable ol7_olcne11
 
 sudo yum install -y kubectl git
 
