@@ -130,7 +130,7 @@ check_node_active = "none"
 
 dashboard_enabled = false
 
-kubernetes_version = "v.16.8"
+kubernetes_version = "v1.16.8"
 
 node_pools = {
   np1 = ["VM.Standard.E2.2", 1]
