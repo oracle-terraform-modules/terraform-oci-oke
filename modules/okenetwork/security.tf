@@ -234,9 +234,24 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
   }
 
   ingress_security_rules {
-    description = "allow public ingress from anywhere"
+    description = "allow public ingress from anywhere on default http port"
     protocol    = local.tcp_protocol
     source      = local.anywhere
+    tcp_options {
+      min = 80
+      max = 80
+    }
+    stateless   = false
+  }
+
+  ingress_security_rules {
+    description = "allow public ingress from anywhere on default https port"
+    protocol    = local.tcp_protocol
+    source      = local.anywhere
+    tcp_options {
+      min = 443
+      max = 443
+    }
     stateless   = false
   }
 
