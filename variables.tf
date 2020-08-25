@@ -368,6 +368,12 @@ variable "preferred_lb_subnets" {
   type        = string
 }
 
+variable "public_lb_ports" {
+  default     = [80, 443]
+  description = "List of destination ports for public LB security list."
+  type        = list(number)
+}
+
 # ocir
 variable "secret_id" {
   description = "OCID of Oracle Vault Secret"

@@ -67,6 +67,9 @@ module "network" {
 
   # waf integration
   waf_enabled = var.waf_enabled
+
+  # oke load balancer ports
+  public_lb_ports = var.public_lb_ports
 }
 
 # cluster creation for oke
