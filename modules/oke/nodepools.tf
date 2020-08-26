@@ -36,8 +36,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
   lifecycle {
       ignore_changes = [kubernetes_version]
   }
-  # initial_node_labels {
-  #   key   = "key"
-  #   value = "value"
-  # }
+  initial_node_labels {
+     key   = "name"
+     value = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
+   }
 }
