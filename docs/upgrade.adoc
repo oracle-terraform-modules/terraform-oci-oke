@@ -68,8 +68,8 @@ This will upgrade the master nodes. You can verify this in the OCI Console.
 [source,bash]
 ----
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 7]
-  np2 = ["VM.Standard2.8", 5]
+  np1 = ["VM.Standard.E2.2", 7, 50, ""]
+  np2 = ["VM.Standard2.8", 5, 50, ""]
 }
 ----
 to
@@ -77,10 +77,10 @@ to
 +
 ----
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 7]
-  np2 = ["VM.Standard2.8", 5]
-  np3 = ["VM.Standard.E2.2", 7]
-  np4 = ["VM.Standard2.8", 5]
+  np1 = ["VM.Standard.E2.2", 7, 50, ""]
+  np2 = ["VM.Standard2.8", 5, 50, ""]
+  np3 = ["VM.Standard.E2.2", 7, 50, ""]
+  np4 = ["VM.Standard2.8", 5, 50, ""]
 }
 ----
 

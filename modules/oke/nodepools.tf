@@ -14,9 +14,9 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
     dynamic "placement_configs" {
       iterator = ad_iterator
-      for_each = var.ad_names
+      for_each = length(element(each.value,3)) == 0 ? var.ad_names : split(",",element(each.value,3))
       content {
-        availability_domain = ad_iterator.value
+        availability_domain = length(element(each.value,3)) == 0 ? ad_iterator.value : lookup(local.ad_mapping, ad_iterator.value,lookup(local.ad_mapping,"AD1"))
         subnet_id           = var.oke_cluster.cluster_subnets["workers"]
       }
     }

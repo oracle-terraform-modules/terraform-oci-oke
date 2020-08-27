@@ -456,21 +456,21 @@ admission_controller_options = {
 |v1.16.8
 
 |`node_pools`
-|The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node and the 2nd parameter sets the size of the node pool. A minimum of 3 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
+|The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node, the 2nd parameter sets the size of the node pool, the 3rd parameter the boot volume size in GB and 4th parameter is availability_domain preference i.e "AD1,AD2" and if left empty(i.e "") it will span nodes across all the AD in the region. A minimum of 1 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
 |e.g.
 [source]
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1]
-  np2 = ["VM.Standard2.8", 2]
-  np3 = ["VM.Standard.E2.2", 1]
+  np1 = ["VM.Standard.E2.2", 1, 50, "AD1"]
+  np2 = ["VM.Standard2.8", 2, 100, "AD1,AD2"]
+  np3 = ["VM.Standard.E2.2", 1, 200, ""]
 }
  
 |
 [source]
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1]
-  np2 = ["VM.Standard2.8", 2]
-  np3 = ["VM.Standard.E2.2", 1]
+  np1 = ["VM.Standard.E2.2", 1, 50, "AD1"]
+  np2 = ["VM.Standard2.8", 2, 100, "AD1,AD2"]
+  np3 = ["VM.Standard.E2.2", 1, 200, ""]
 }
 
 |`node_pools_to_drain`

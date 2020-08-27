@@ -17,4 +17,7 @@ locals {
 
   service_account_cluster_role_binding_name = var.service_account.service_account_cluster_role_binding == "" ? "${var.service_account.service_account_name}-crb" : var.service_account.service_account_cluster_role_binding
 
+   ad_mapping = {
+        for index, AD in var.ad_names : "AD${index+1}" => AD
+  }
 }
