@@ -134,7 +134,7 @@ kubernetes_version = "v1.16.8"
 
 node_pools = {
   np1 = ["VM.Standard.E2.2", 1, 50, ""]
-  np2 = ["VM.Standard2.8", 2], 100, ""
+  np2 = ["VM.Standard2.8", 2, 100, ""]
   np3 = ["VM.Standard.E2.2", 1, 200, ""]
   # np4 = ["VM.Standard.E2.2", 4, 500, ""]
 }
