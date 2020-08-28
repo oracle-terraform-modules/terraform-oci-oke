@@ -262,6 +262,10 @@ There are 2 ways you can scale the node pools:
 * add more node pools
 * increase the number of workers in a subnet per node pool.
 
+Node pools can be added and removed, their size and boot volume size can be updated as well. After each change, run ```terraform apply```. 
+
+Scaling changes to the number and size of node pools are immediate after changing the parameters and running ```terraform apply```. The changes to boot volume size will only be effective in newly created nodes _after_ the change is completed.
+
 Set the parameter *node_pools* to the desired quantities to scale the node pools accordingly. Refer to {uri-topology}#node-pools[Nodepool].
 
 === Accessing the Kubernetes dashboard

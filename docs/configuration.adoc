@@ -53,6 +53,7 @@
 . link:#configure-bastion-host-parameters[Configure Bastion Host parameters]
 . link:#configure-operator-host-parameters[Configure Admin Host parameters]
 . link:#configure-oke-parameters[Configure OKE parameters]
+. link:#configure-oke-node-pool-parameters[Configure OKE Node Pool parameters]
 . link:#configure-oke-load-balancer-parameters[Configure OKE Load Balancer parameters]
 . link:#configure-ocir-parameters[Configure OCIR parameters]
 . link:#configure-helm-parameters[Configure helm parameters]
@@ -172,6 +173,21 @@ If you need to change the default services and pods' CIDRs, note the following:
 Refer to {uri-topology}[topology] for more thorough examples.
 
 {uri-terraform-options}#oke[Reference]
+
+=== Configure OKE Node Pool parameters
+
+The OKE Node Pool parameters control the following:
+
+. the number of node pools to be created
+. the size of each node pool
+. the shape of the worker node in each node pool
+. the boot volume size in GB
+. the node pool name prefix
+. whether to use a custom image id. Else, the major.minor version of Oracle Linux to use
+
+An empty value for boot volume size will default the boot volume to 50GB. This value is updatable. However the effect will be effective in newly created nodes _only_.
+
+Refer to {uri-topology}[topology] for more thorough examples.
 
 === Configure OKE Load Balancer parameters
 
