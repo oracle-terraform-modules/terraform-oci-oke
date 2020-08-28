@@ -257,11 +257,11 @@ You can increase the number of node pools by adding more entries in the node_poo
 
 ----
 node_pools = {
-  "np1" = ["VM.Standard2.1", 3,50
-  "np2" = ["VM.Standard2.1", 3,50
-  "np3" = ["VM.Standard2.1", 3,50
-  "np4" = ["VM.Standard2.1", 3,50
-  "np5" = ["VM.Standard2.1", 3,50
+  "np1" = ["VM.Standard2.1", 3, 50]
+  "np2" = ["VM.Standard2.1", 3, 50]
+  "np3" = ["VM.Standard2.1", 3, 50]
+  "np4" = ["VM.Standard2.1", 3, 50]
+  "np5" = ["VM.Standard2.1", 3, 50]
 }
 ----
 
