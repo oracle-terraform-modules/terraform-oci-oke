@@ -188,6 +188,7 @@ calico_version = "3.12"
 #metrics server
 metricserver_enabled = false
 
+# kms
 use_encryption = false
 
 existing_key_id = ""
