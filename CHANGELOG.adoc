@@ -9,6 +9,7 @@ The format is based on {uri-changelog}[Keep a Changelog].
 
 == 2.3.2 (August 19, 2020)
 * Unable to install kube in operator (#197)
+* node_pool_image_id value should be "none" in case no custom image is used. In previous versions, this was in upper case (#207)
 
 == 2.3.1 (August 13, 2020)
 * Missing security rule when workers are in public mode (#183)

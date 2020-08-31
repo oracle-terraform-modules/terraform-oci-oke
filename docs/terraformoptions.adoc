@@ -112,7 +112,7 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |`label_prefix`
 |a string to be prepended to the name of resources. *Required*
 |
-|
+|none
 
 |`region`
 |Region where to provision the OKE cluster. {uri-oci-region}[List of regions]. *Required*
@@ -185,12 +185,12 @@ newbits = {
 |vcn_dns_label
 |The internal DNS domain for resources created and prepended to "oraclevcn.com" which is the VCN-internal domain name. *Required*
 |
-|
+|oke
 
 |vcn_name
 |The name of the VCN that will be appended to the label_prefix. *Required*
 |
-|
+|oke-vcn
 
 |===
 
@@ -246,12 +246,12 @@ newbits = {
 |`bastion_shape`
 |The shape of bastion instance. *Required*
 |
-|
+|VM.Standard.E2.1
 
 |`bastion_timezone`
 |The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
 |
-|
+|Australia/Sydney
 
 |===
 
@@ -312,7 +312,7 @@ newbits = {
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
 |e.g. Australia/Sydney
-|
+|Australia/Sydney
 
 |===
 
@@ -332,14 +332,14 @@ newbits = {
 ----
 availability_domains = {
   bastion     = 1
-  operator       = 1
+  operator    = 1
 }
 ----
 |
 [source]
 ----
   bastion     = 1
-  operator       = 1
+  operator    = 1
 ----
 
 |===
@@ -438,7 +438,7 @@ admission_controller_options = {
 |`cluster_name`
 |The name of the OKE cluster. This will be appended to the label_prefix. *Required*
 |
-|
+|oke
 
 |`check_node_active`
 |Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*none* means no check.
@@ -456,21 +456,22 @@ admission_controller_options = {
 |v1.16.8
 
 |`node_pools`
-|The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node and the 2nd parameter sets the size of the node pool. A minimum of 3 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
+|The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node, the 2nd parameter sets the size of the node pool and the 3rd parameter the boot volume size in GB. An empty value ("") for the boot volume size will default the boot volume size to 50GB. A minimum of 1 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
 |e.g.
 [source]
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1]
-  np2 = ["VM.Standard2.8", 2]
-  np3 = ["VM.Standard.E2.2", 1]
+  np1 = ["VM.Standard.E2.2", 1, 50]
+  np2 = ["VM.Standard2.8", 2, 100]
+  np3 = ["VM.Standard.E2.2", 1, 200]
+  np4 = ["VM.Standard.E2.2", 1, ""] 
 }
  
 |
 [source]
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1]
-  np2 = ["VM.Standard2.8", 2]
-  np3 = ["VM.Standard.E2.2", 1]
+  np1 = ["VM.Standard.E2.2", 1, 50]
+  np2 = ["VM.Standard2.8", 2, 100]
+  np3 = ["VM.Standard.E2.2", 1, 200]
 }
 
 |`node_pools_to_drain`
@@ -506,7 +507,7 @@ node_pools = {
 |`node_pool_os_version`
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
-|7.7
+|7.8
 
 |`pods_cidr`
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
