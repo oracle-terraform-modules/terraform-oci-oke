@@ -20,11 +20,12 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.oke_cluster.cluster_subnets["workers"]
       }
     }
-    # set quantity to a minimum of 3 per subnet for single AD region to ensure 3 fault domains
+    # set quantity to a minimum of 1 to allow small clusters. 
     size = max(1, element(each.value,1))
   }
 
   node_source_details {
+    boot_volume_size_in_gbs = element(each.value,2) == "" ? 50 : element(each.value,2)
     image_id    = var.node_pools.node_pool_image_id == "none" ? data.oci_core_images.latest_images[each.key].images[0].id : var.node_pools.node_pool_image_id
     source_type = "IMAGE"
   }

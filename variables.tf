@@ -282,10 +282,9 @@ variable "kubernetes_version" {
 
 variable "node_pools" {
   default = {
-    np1 = ["VM.Standard.E2.2", 1]
-    np2 = ["VM.Standard2.8", 2]
-    np3 = ["VM.Standard.E2.2", 1]
-
+    np1 = ["VM.Standard.E2.2", 1, 50]
+    np2 = ["VM.Standard2.8", 2, 100]
+    np3 = ["VM.Standard.E2.2", 1, 200]
   }
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string) and size(number)."
   type        = map(any)

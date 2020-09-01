@@ -215,7 +215,7 @@ node_pools = {
 
 In the above example, workers in node pool np1 will all have a shape of VM.Standard2.1 whereas workers in node pool np2 will all have a shape of BM.Standard.2.52.
 
-* the total number of worker nodes that will be created for this node pool. This is controlled by the 2nd element in the tuple for each node pool. A minimum of 3 worker nodes per node pool will be created e.g.
+* the total number of worker nodes that will be created for this node pool. This is controlled by the 2nd element in the tuple for each node pool. A minimum of 1 worker nodes per node pool will be created e.g.
 
 ----
 node_pools = {
