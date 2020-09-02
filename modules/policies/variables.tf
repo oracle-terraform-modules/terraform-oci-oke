@@ -7,9 +7,15 @@ variable "compartment_id" {}
 variable "label_prefix" {}
 
 # provider
+variable "api_fingerprint" {}
+
+variable "api_private_key_path" {}
+
 variable "region" {}
 
 variable "tenancy_id" {}
+
+variable "user_id" {}
 
 # ssh keys
 variable "ssh_keys" {

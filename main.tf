@@ -7,7 +7,7 @@ terraform {
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "1.3.1"
+  version = "1.3.2"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
@@ -34,9 +34,12 @@ module "policies" {
   label_prefix   = var.label_prefix
 
   # provider
-  region = var.region
-  tenancy_id = var.tenancy_id
-  
+  api_fingerprint      = var.api_fingerprint
+  api_private_key_path = var.api_private_key_path
+  region               = var.region
+  tenancy_id           = var.tenancy_id
+  user_id              = var.user_id
+
   ssh_keys = local.oci_base_ssh_keys
 
   operator = local.oke_operator
