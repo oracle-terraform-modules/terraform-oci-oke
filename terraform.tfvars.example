@@ -164,9 +164,9 @@ lb_subnet_type = "public"
 
 preferred_lb_subnets = "public"
 
-waf_enabled = false
-
 public_lb_ports = [80, 443]
+
+waf_enabled = false
 
 # ocir
 secret_id = "none"

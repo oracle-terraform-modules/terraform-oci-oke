@@ -554,6 +554,11 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |internal/public
 |public
 
+|`public_lb_ports`
+|The list of destination ports to allow for public ingress.
+|List of ports.
+|80, 443
+
 |`waf_enabled`
 |Whether to enable WAF monitoring and protection of public load balancers.
 |true/false
