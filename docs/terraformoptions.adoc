@@ -205,7 +205,7 @@ newbits = {
 
 |`bastion_access`
 |CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
-|XXX.XXX.XXX.XXX/YY
+|XYZ.XYZ.XYZ.XYZ/YZ
 |ANYWHERE
 
 |`bastion_enabled`
@@ -554,6 +554,11 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |internal/public
 |public
+
+|`public_lb_ports`
+|The list of destination ports to allow for public ingress.
+|`e.g.: [80,443,8080]`
+|`[80, 443]`
 
 |`waf_enabled`
 |Whether to enable WAF monitoring and protection of public load balancers.

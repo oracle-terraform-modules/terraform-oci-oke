@@ -35,6 +35,11 @@ variable "lb_subnet_type" {
   type = string
 }
 
+variable "public_lb_ports" {
+  type = list(number)
+}
+
 variable "waf_enabled" {
   type = bool
 }
+

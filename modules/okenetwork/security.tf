@@ -233,11 +233,20 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
     stateless   = false
   }
 
-  ingress_security_rules {
-    description = "allow public ingress from anywhere"
-    protocol    = local.tcp_protocol
-    source      = local.anywhere
-    stateless   = false
+  dynamic "ingress_security_rules" {
+    iterator = pub_lb_ingress_iterator
+    for_each = var.public_lb_ports
+
+    content {
+      description = "allow public ingress from anywhere on specified ports"
+      protocol    = local.tcp_protocol
+      source      = local.anywhere
+      tcp_options {
+        min = pub_lb_ingress_iterator.value
+        max = pub_lb_ingress_iterator.value
+      }
+      stateless   = false
+    }
   }
 
   count = ((var.lb_subnet_type == "public" || var.lb_subnet_type == "both") && var.waf_enabled == false) ? 1 : 0
