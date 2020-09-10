@@ -456,22 +456,35 @@ admission_controller_options = {
 |v1.16.8
 
 |`node_pools`
-|The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node, the 2nd parameter sets the size of the node pool and the 3rd parameter the boot volume size in GB. An empty value ("") for the boot volume size will default the boot volume size to 50GB. A minimum of 1 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
+a|The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
+
+* shape defines the worker node shape to use for each pool
+* ocpus defines the number of OCPUs that will be used if VM.Standard.E3.Flex shape is used
+* node_pool_size defines the number of worker nodes in each nodepool
+* boot_volume_size defines the custom boot volume size in GBs for the worker nodes.
+
+If an empty nodepool like np3 = {} is specified, then a nodepool will default values: 
+
+* shape=VM.Standard.E3.Flex
+* ocpus=1
+* node_pool_size=1
+* boot_volume_size=50
+
+Refer to {uri-topology}[topology] for more thorough examples.
 |e.g.
 [source]
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1, 50]
-  np2 = ["VM.Standard2.8", 2, 100]
-  np3 = ["VM.Standard.E2.2", 1, 200]
-  np4 = ["VM.Standard.E2.2", 1, ""] 
+  np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
+  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150}
+  np3 = {shape="VM.Standard.E2.2",node_pool_size=1} 
 }
  
 |
 [source]
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1, 50]
-  np2 = ["VM.Standard2.8", 2, 100]
-  np3 = ["VM.Standard.E2.2", 1, 200]
+  np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
+  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150}
+  np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
 }
 
 |`node_pools_to_drain`

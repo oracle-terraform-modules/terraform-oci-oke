@@ -282,11 +282,11 @@ variable "kubernetes_version" {
 
 variable "node_pools" {
   default = {
-    np1 = ["VM.Standard.E2.2", 1, 50]
-    np2 = ["VM.Standard2.8", 2, 100]
-    np3 = ["VM.Standard.E2.2", 1, 200]
+    np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
+    np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150}
+    np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
   }
-  description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string) and size(number)."
+  description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"
   type        = map(any)
 }
 
@@ -408,6 +408,7 @@ variable "ocir_urls" {
     uk-london-1    = "lhr.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
     us-phoenix-1   = "phx.ocir.io"
+    us-sanjose-1   = "sjc.ocir.io"
   }
   type = map(string)
 }
