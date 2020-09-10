@@ -6,7 +6,7 @@ data "oci_core_images" "latest_images" {
   compartment_id           = var.compartment_id
   operating_system         = var.node_pools.node_pool_os
   operating_system_version = var.node_pools.node_pool_os_version
-  shape                    = element(each.value, 0)
+  shape                    = lookup(each.value,"shape","VM.Standard.E3.Flex")
   sort_by                  = "TIMECREATED"
 }
 

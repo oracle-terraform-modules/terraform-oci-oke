@@ -133,10 +133,10 @@ dashboard_enabled = false
 kubernetes_version = "v1.16.8"
 
 node_pools = {
-  np1 = ["VM.Standard.E2.2", 1, 50]
-  np2 = ["VM.Standard2.8", 2, 100]
-  np3 = ["VM.Standard.E2.2", 1, 200]
-  # np4 = ["VM.Standard.E2.2", 4, 500]
+  np1 = ["VM.Standard.E2.2",null,1, 50]
+  np2 = ["VM.Standard.E3.Flex",3, 2, 100]
+  np3 = ["VM.Standard.E2.2",null, 1, 200]
+  # np4 = ["VM.Standard.E2.2", null,4, 500]
 }
 
 node_pools_to_drain = [ "np1", "np2", "np3" ] 
