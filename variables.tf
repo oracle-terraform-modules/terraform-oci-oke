@@ -403,6 +403,7 @@ variable "ocir_urls" {
     eu-amsterdam-1 = "ams.ocir.io"
     eu-frankfurt-1 = "fra.ocir.io"
     eu-zurich-1    = "zrh.ocir.io"
+    me-dubai-1     = "dxb.ocir.io"
     me-jeddah-1    = "jed.ocir.io"
     sa-saopaulo-1  = "gru.ocir.io"
     uk-london-1    = "lhr.ocir.io"
