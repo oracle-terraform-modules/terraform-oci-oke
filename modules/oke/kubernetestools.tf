@@ -4,10 +4,6 @@
 data "template_file" "helm_enabled" {
   template = file("${path.module}/scripts/install_helm.template.sh")
 
-  vars = {
-    helm_version       = var.helm.helm_version
-  }
-
   count = var.oke_operator.operator_enabled == true && var.helm.helm_enabled == true ? 1 : 0
 }
 
@@ -24,7 +20,7 @@ resource null_resource "install_helm_operator" {
     bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
   }
 
-  depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
+  depends_on = [null_resource.install_kubectl_operator]
 
   provisioner "file" {
     content     = data.template_file.helm_enabled[0].rendered
