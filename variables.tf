@@ -433,12 +433,6 @@ variable "helm_enabled" {
   type        = bool
 }
 
-variable "helm_version" {
-  default     = "3.2.4"
-  description = "The version of helm to install."
-  type        = string
-}
-
 # calico
 variable "calico_enabled" {
   description = "whether to install calico for network pod security policy"
