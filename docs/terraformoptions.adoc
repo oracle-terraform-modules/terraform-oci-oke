@@ -452,8 +452,8 @@ admission_controller_options = {
 
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
-|v1.14.8,v1.15.7, v1.16.8
-|v1.16.8
+|v1.14.8,v1.15.7, v1.16.8, v1.17.9
+|v1.17.9
 
 |`node_pools`
 |The number, shape and quantities per subnets of node pools to create. Each key and tuple pair corresponds to 1 node pool. The first parameter in the tuple sets the shape of the worker node and the 2nd parameter sets the size of the node pool. A minimum of 3 worker worker nodes per node pool will be created.  Refer to {uri-topology}[topology] for more thorough examples.
