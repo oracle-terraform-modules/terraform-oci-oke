@@ -7,7 +7,7 @@ terraform {
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "1.3.2"
+  version = "1.3.3"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
@@ -105,9 +105,6 @@ module "oke" {
 
   # ocir parameters
   oke_ocir = local.oke_ocir
-
-  # helm parameters
-  helm = local.helm
 
   # calico parameters
   calico = local.calico

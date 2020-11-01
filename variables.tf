@@ -426,13 +426,6 @@ variable "username" {
   type        = string
 }
 
-# helm
-variable "helm_enabled" {
-  description = "Whether to install helm client on the bastion."
-  default     = false
-  type        = bool
-}
-
 # calico
 variable "calico_enabled" {
   description = "whether to install calico for network pod security policy"

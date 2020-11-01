@@ -1,10 +1,10 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "template_file" "helm_enabled" {
+data "template_file" "install_helm" {
   template = file("${path.module}/scripts/install_helm.template.sh")
 
-  count = var.oke_operator.operator_enabled == true && var.helm.helm_enabled == true ? 1 : 0
+  count = var.oke_operator.operator_enabled == true ? 1 : 0
 }
 
 resource null_resource "install_helm_operator" {
@@ -23,17 +23,17 @@ resource null_resource "install_helm_operator" {
   depends_on = [null_resource.install_kubectl_operator]
 
   provisioner "file" {
-    content     = data.template_file.helm_enabled[0].rendered
-    destination = "~/helm_enabled.sh"
+    content     = data.template_file.install_helm[0].rendered
+    destination = "~/install_helm.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/helm_enabled.sh",
-      "bash $HOME/helm_enabled.sh",
-      "rm -f $HOME/helm_enabled.sh"
+      "chmod +x $HOME/install_helm.sh",
+      "bash $HOME/install_helm.sh",
+      "rm -f $HOME/install_helm.sh"
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.helm.helm_enabled == true ? 1 : 0
+  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true ? 1 : 0
 }

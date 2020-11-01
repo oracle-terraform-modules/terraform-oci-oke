@@ -176,9 +176,6 @@ tenancy_name = ""
 
 username = ""
 
-# helm
-helm_enabled = false
-
 # calico
 calico_enabled = false
 

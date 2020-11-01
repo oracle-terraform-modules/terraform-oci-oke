@@ -16,7 +16,6 @@
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
-:uri-helm: https://helm.sh/
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-license: {uri-rel-file-base}/LICENSE.txt
 :uri-kubernetes: https://kubernetes.io/
@@ -56,7 +55,6 @@
 . link:#configure-oke-node-pool-parameters[Configure OKE Node Pool parameters]
 . link:#configure-oke-load-balancer-parameters[Configure OKE Load Balancer parameters]
 . link:#configure-ocir-parameters[Configure OCIR parameters]
-. link:#configure-helm-parameters[Configure helm parameters]
 . link:#configure-calico-parameters[Configure Calico parameters]
 . link:#configure-kubernetes-metrics-server-parameters[Configure Kubernetes Metrics Server parameters]
 . link:#configure-kms-integration-parameters[Configure KMS Integration parameters]
@@ -159,7 +157,7 @@ The OKE parameters concern mainly the following:
 
 * whether you want to deploy public or private worker nodes
 * whether you want to allow NodePort or ssh access to the worker nodes
-* Kubernetes options such as dashboard, networking and helm
+* Kubernetes options such as dashboard, networking
 * number of node pools and their respective size of the cluster
 * services and pods cidr blocks
 
@@ -214,12 +212,6 @@ kubectl --namespace=kube-system get secret ocirsecret --export -o yaml | kubectl
 ----
 
 {uri-terraform-options}#ocir[Reference]
-
-=== Configure helm parameters
-
-The {uri-helm}[helm] parameters control the installation and the version of the helm client as well as optional helm repos to add and initialize on the bastion host.
-
-{uri-terraform-options}#helm[Reference]
 
 === Configure Calico parameters
 
