@@ -81,15 +81,6 @@ variable "oke_ocir" {
   })
 }
 
-
-# helm
-variable "helm" {
-  type = object({
-    helm_enabled = bool
-    helm_version = string
-  })
-}
-
 # calico
 variable "calico" {
   type = object({

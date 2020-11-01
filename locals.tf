@@ -128,11 +128,6 @@ locals {
     secret_id     = var.secret_id
   }
 
-  helm = {
-    helm_enabled = var.helm_enabled
-    helm_version = var.helm_version
-  }
-
   calico = {
     calico_enabled = var.calico_enabled
     calico_version = var.calico_version

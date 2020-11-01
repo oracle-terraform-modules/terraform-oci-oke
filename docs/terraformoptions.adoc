@@ -11,7 +11,6 @@
 :uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
 :uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
 :uri-docs: {uri-rel-file-base}/docs
-:uri-helm: https://helm.sh/
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
@@ -34,7 +33,6 @@ Configuration Terraform Options:
 . link:#oke[OKE]
 . link:#oke-load-balancers[OKE Load Balancers]
 . link:#ocir[OCIR]
-. link:#helm[Helm]
 . link:#calico[Calico]
 . link:#kubernetes-metrics-server[Kubernetes Metrics Server]
 . link:#kms-integration[KMS integration]
@@ -452,8 +450,8 @@ admission_controller_options = {
 
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
-|v1.14.8,v1.15.7, v1.16.8
-|v1.16.8
+|v1.15.7, v1.16.8 ,v1.17.9
+|v1.17.9
 
 |`node_pools`
 a|The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
@@ -609,27 +607,6 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if secret_id is set.
 |
 |none
-
-|===
-
-== Helm
-
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
-|===
-|Parameter
-|Description
-|Values
-|Default
-
-|`helm_version`
-|The version of the {uri-helm}[helm] client to install on the bastion.
-|
-|3.2.4
-
-|`helm_enabled`
-|Whether to install {uri-helm}[helm] on the bastion instance.
-|true/false
-|false
 
 |===
 
