@@ -7,9 +7,11 @@
    vars = {
      compartment_id  = var.compartment_id
      region          = var.region
-     secret_id       = var.oke_ocir.secret_id
+
      email_address   = var.oke_ocir.email_address
      region_registry = var.oke_ocir.ocir_urls[var.region]
+     secret_id       = var.oke_ocir.secret_id
+     secret_name     = var.oke_ocir.secret_name
      tenancy_name    = var.oke_ocir.tenancy_name
      username        = var.oke_ocir.username
 

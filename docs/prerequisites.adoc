@@ -86,7 +86,7 @@ Follow the steps below to configure your path on Windows:
 [source,bash]
 ----
 terraform -v
-Terraform v0.12.4
+Terraform v0.12.24
 ----
 
 == Generate API keys

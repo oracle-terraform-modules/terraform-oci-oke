@@ -168,9 +168,11 @@ public_lb_ports = [80, 443]
 waf_enabled = false
 
 # ocir
+email_address = ""
+
 secret_id = "none"
 
-email_address = ""
+secret_name = "ocirsecret"
 
 tenancy_name = ""
 
@@ -196,4 +198,4 @@ service_account_name = "kubeconfigsa"
 
 service_account_namespace = "kube-system"
 
-service_account_cluster_role_binding = ""
+service_account_cluster_role_binding = "cluster-admin"
