@@ -41,10 +41,13 @@ You can proceed to {uri-instructions}[creating the cluster] if you have already 
 
 == Identity and Access Management Rights
 
-The Terraform user must have the rights to:
+The Terraform user must have the permission to:
 
 . manage dynamic groups
 . manage policies in root tenancy
+. manage cluster-family in compartment
+. manage virtual-network-family in compartment
+. manage instance-family in compartment
 
 == Install Terraform
 
@@ -86,7 +89,7 @@ Follow the steps below to configure your path on Windows:
 [source,bash]
 ----
 terraform -v
-Terraform v0.12.4
+Terraform v0.12.24
 ----
 
 == Generate API keys

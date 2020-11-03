@@ -9,9 +9,10 @@ import oci
           
 compartment_id  = '${compartment_id}'
 region          = '${region}'
-secret_id       = '${secret_id}'
 email_address   = '${email_address}'
 region_registry = '${region_registry}'
+secret_id       = '${secret_id}'
+secret_name     = '${secret_name}'
 tenancy_name    = '${tenancy_name}'
 username        = '${username}'
 
@@ -34,10 +35,10 @@ def read_secret_value(secret_client, secret_id):
 try:
     secret_content = read_secret_value(secret_client, secret_id=secret_id)
     secret_content = re.escape(secret_content)
-    delsecret = "kubectl -n default delete secret ocirsecret"
+    delsecret = "kubectl -n default delete secret ${secret_name}"
     os.system(delsecret)
 
-    crtsecret = ("kubectl create secret docker-registry ocirsecret -n default --docker-server=${region_registry} --docker-username=${tenancy_name}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
+    crtsecret = ("kubectl create secret docker-registry ${secret_name} -n default --docker-server=${region_registry} --docker-username=${tenancy_name}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
 
     subprocess.call(["/bin/bash" , "-c" , crtsecret])
  

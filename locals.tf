@@ -123,9 +123,10 @@ locals {
   oke_ocir = {
     email_address = var.email_address
     ocir_urls     = var.ocir_urls
+    secret_id     = var.secret_id
+    secret_name   = var.secret_name
     tenancy_name  = var.tenancy_name
     username      = var.username
-    secret_id     = var.secret_id
   }
 
   calico = {

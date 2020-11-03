@@ -104,7 +104,7 @@ variable "vcn_name" {
 # bastion
 variable "bastion_access" {
   default     = "ANYWHERE"
-  description = "The cidr from where the bastion can be sshed into. default is ANYWHERE and equivalent to 0.0.0.0/0."
+  description = "The cidr from where the bastion can be ssh'ed into. default is ANYWHERE and equivalent to 0.0.0.0/0."
   type        = string
 }
 
@@ -282,9 +282,9 @@ variable "kubernetes_version" {
 
 variable "node_pools" {
   default = {
-    np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
-    np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150}
-    np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
+    np1 = { shape = "VM.Standard.E3.Flex", ocpus = 2, node_pool_size = 2, boot_volume_size = 150 }
+    np2 = { shape = "VM.Standard.E2.2", node_pool_size = 2, boot_volume_size = 150 }
+    np3 = { shape = "VM.Standard.E2.2", node_pool_size = 1 }
   }
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"
   type        = map(any)
@@ -374,11 +374,6 @@ variable "public_lb_ports" {
 }
 
 # ocir
-variable "secret_id" {
-  description = "OCID of Oracle Vault Secret"
-  type        =  string
-  default     = "none"
-}
 
 variable "email_address" {
   default     = "none"
@@ -406,12 +401,25 @@ variable "ocir_urls" {
     me-dubai-1     = "dxb.ocir.io"
     me-jeddah-1    = "jed.ocir.io"
     sa-saopaulo-1  = "gru.ocir.io"
+    uk-cardiff-1   = "cwl.ocir.io"
     uk-london-1    = "lhr.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
     us-phoenix-1   = "phx.ocir.io"
     us-sanjose-1   = "sjc.ocir.io"
   }
   type = map(string)
+}
+
+variable "secret_id" {
+  description = "OCID of Oracle Vault Secret"
+  type        = string
+  default     = "none"
+}
+
+variable "secret_name" {
+  description = "Secret name in Kubernetes that will hold the authentication token"
+  type        = string
+  default     = "ocirsecret"
 }
 
 variable "tenancy_name" {
@@ -481,6 +489,7 @@ variable "service_account_namespace" {
 
 variable "service_account_cluster_role_binding" {
   description = "cluster role binding name"
+  default     = "cluster-admin"
   type        = string
 }
 
