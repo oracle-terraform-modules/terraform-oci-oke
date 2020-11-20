@@ -21,26 +21,27 @@ resource "oci_containerengine_node_pool" "nodepools" {
       }
     }
     # set quantity to a minimum of 1 to allow small clusters. 
-    size = max(1, lookup(each.value,"node_pool_size",1))
+    size = max(1, lookup(each.value, "node_pool_size", 1))
   }
   dynamic "node_shape_config" {
-    for_each = length(regexall("Flex",lookup(each.value,"shape","VM.Standard.E3.Flex"))) > 0 ? [1] : []
+    for_each = length(regexall("Flex", lookup(each.value, "shape", "VM.Standard.E3.Flex"))) > 0 ? [1] : []
     content {
-      ocpus = max(1,lookup(each.value,"ocpus",1))
+      ocpus         = max(1, lookup(each.value, "ocpus", 1))
+      memory_in_gbs = (lookup(each.value, "memory", 16) / lookup(each.value, "ocpus", 1)) > 64 ? (lookup(each.value, "ocpus", 1) * 64) : lookup(each.value, "memory", 16)
     }
   }
   node_source_details {
-    boot_volume_size_in_gbs = lookup(each.value,"boot_volume_size",50)
-    image_id    = var.node_pools.node_pool_image_id == "none" ? data.oci_core_images.latest_images[each.key].images[0].id : var.node_pools.node_pool_image_id
-    source_type = "IMAGE"
+    boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
+    image_id                = var.node_pools.node_pool_image_id == "none" ? data.oci_core_images.latest_images[each.key].images[0].id : var.node_pools.node_pool_image_id
+    source_type             = "IMAGE"
   }
 
-  node_shape = lookup(each.value,"shape","VM.Standard.E3.Flex")
+  node_shape = lookup(each.value, "shape", "VM.Standard.E3.Flex")
 
   ssh_public_key = file(var.oke_ssh_keys.ssh_public_key_path)
 
   lifecycle {
-      ignore_changes = [kubernetes_version]
+    ignore_changes = [kubernetes_version]
   }
   # initial_node_labels {
   #   key   = "key"
