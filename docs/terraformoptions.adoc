@@ -450,8 +450,8 @@ admission_controller_options = {
 
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
-|v1.15.7, v1.16.8 ,v1.17.9
-|v1.17.9
+|v1.16.8, v1.17.9, v1.18.10
+|v1.18.10
 
 |`node_pools`
 a|The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
