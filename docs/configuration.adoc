@@ -50,7 +50,7 @@
 . link:#configure-oci-parameters[Configure OCI parameters]
 . link:#configure-oci-networking-parameters[Configure OCI Networking parameters]
 . link:#configure-bastion-host-parameters[Configure Bastion Host parameters]
-. link:#configure-operator-host-parameters[Configure Admin Host parameters]
+. link:#configure-operator-host-parameters[Configure Operator Host parameters]
 . link:#configure-oke-parameters[Configure OKE parameters]
 . link:#configure-oke-node-pool-parameters[Configure OKE Node Pool parameters]
 . link:#configure-oke-load-balancer-parameters[Configure OKE Load Balancer parameters]

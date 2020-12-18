@@ -29,7 +29,7 @@ Configuration Terraform Options:
 . link:#general-oci[General OCI]
 . link:#oci-networking[OCI Networking]
 . link:#bastion-host[Bastion Host]
-. link:#operator-host[Admin Host]
+. link:#operator-host[Operator Host]
 . link:#oke[OKE]
 . link:#oke-load-balancers[OKE Load Balancers]
 . link:#ocir[OCIR]
@@ -244,7 +244,13 @@ newbits = {
 |`bastion_shape`
 |The shape of bastion instance. *Required*
 |
-|VM.Standard.E2.1
+|`bastion_shape = {
+  # shape = "VM.Standard.E2.2"
+  shape            = "VM.Standard.E3.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}`
 
 |`bastion_timezone`
 |The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
@@ -253,7 +259,7 @@ newbits = {
 
 |===
 
-== Admin Host
+== Operator Host
 
 [stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
 |===
@@ -305,7 +311,13 @@ newbits = {
 |`operator_shape`
 |The shape of operator instance. *Required*
 |
-|
+|`operator_shape = {
+  # shape = "VM.Standard.E2.2"
+  shape            = "VM.Standard.E3.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}`
 
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
@@ -462,7 +474,7 @@ a|The number, shape of node pools and node_pool_size to create. Each key and tup
 * node_pool_size defines the number of worker nodes in each nodepool
 * boot_volume_size defines the custom boot volume size in GBs for the worker nodes.
 
-If an empty nodepool like np3 = {} is specified, then a nodepool will default values: 
+If an empty nodepool like np3 = {} is specified, then a nodepool will have the following default values: 
 
 * shape=VM.Standard.E3.Flex
 * ocpus=1
@@ -520,7 +532,7 @@ node_pools = {
 |`node_pool_os_version`
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
-|7.8
+|7.9
 
 |`pods_cidr`
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).

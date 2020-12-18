@@ -3,7 +3,7 @@
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "2.0.0-RC1"
+  version = "2.0.0"
 
   # general oci parameters
   oci_base_general = local.oci_base_general

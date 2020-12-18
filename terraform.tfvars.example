@@ -62,7 +62,13 @@ bastion_notification_topic= "bastion_server_notification"
 
 bastion_package_upgrade = false
 
-bastion_shape = "VM.Standard.E2.1"
+bastion_shape = {
+  # shape = "VM.Standard.E2.2"
+  shape            = "VM.Standard.E3.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}
 
 bastion_timezone = "Australia/Sydney"
 
@@ -82,7 +88,13 @@ operator_notification_topic= "operator_server_notification"
 
 operator_package_upgrade = true
 
-operator_shape   = "VM.Standard.E2.1"
+operator_shape = {
+  # shape = "VM.Standard.E2.2"
+  shape            = "VM.Standard.E3.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}
 
 operator_timezone= "Australia/Sydney"
 
