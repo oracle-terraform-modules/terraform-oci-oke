@@ -107,6 +107,7 @@ module "oke" {
 
   # metric server
   metricserver_enabled = var.metricserver_enabled
+  vpa                  = var.vpa
 
   # service account
   service_account = local.service_account

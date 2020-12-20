@@ -49,6 +49,7 @@
 :uri-metricserver: https://kubernetes.io/docs/tasks/debug-application-cluster/resource-metrics-pipeline/#metrics-server
 :uri-k8s-dashboard: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 :uri-psp: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingpspswithoke.htm#Using_Pod_Security_Polices_with_Container_Engine_for_Kubernetes
+:uri-kubernetes-vpa: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
 
 . link:#assumptions[Assumptions]
 . link:#kms-integration[KMS Integration]
@@ -65,6 +66,7 @@
 . link:#creating-a-secret-for-ocir[Creating a Secret for OCIR]
 . link:#installing-calico[Installing Calico]
 . link:#installing-kubernetes-metrics-server[Installing Kubernetes Metrics Server]
+. link:#installing-vertical-pod-autoscaler[Installing Vertical Pod Autoscaler]
 . link:#scaling-the-number-of-node-pools[Scaling the number of node pools]
 . link:#accessing-the-kubernetes-dashboard[Accessing the Kubernetes dashboard]
 . link:#destroying-the-cluster[Destroying the cluster]
@@ -246,6 +248,17 @@ Calico enables network policy in Kubernetes clusters. To install calico set the 
 === Installing Kubernetes Metrics Server
 
 {uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *metricserver_enabled = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
+
+=== Installing Vertical Pod Autoscaler
+
+{uri-kubernetes-vpa}[Vertical Pod Autoscaler] can be installed by configuring the `vpa` parameter:
+
+`vpa = {
+  enabled = true,
+  version = 0.8
+}`
+
+NOTE: Installing the Vertical Pod Autoscaler also requires installing the Metrics Server, so you need to enable that too.
 
 === Scaling the node pools
 

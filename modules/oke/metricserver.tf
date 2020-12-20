@@ -4,6 +4,11 @@
 data "template_file" "metricserver_enabled" {
   template = file("${path.module}/scripts/install_metricserver.template.sh")
 
+  vars = {
+    vpa_enabled = var.vpa.enabled
+    vpa_version = var.vpa.version
+  }
+
   count = var.metricserver_enabled == true ? 1 : 0
 }
 

@@ -12,6 +12,7 @@
 :uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
 :uri-docs: {uri-rel-file-base}/docs
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+:uri-kubernetes-vpa: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
 :uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
@@ -657,6 +658,17 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Whether to install {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 |true/false
 |false
+
+|`vpa`
+|Whether to install {uri-kubernetes-vpa}[Vertical Pod Autoscaler] and the version to install. *Requires*  {uri-metrics-server}[Kubernetes Metrics Server].
+|`vpa = {
+  enabled = true,
+  version = 0.8
+}`
+|`vpa = {
+  enabled = false,
+  version = 0.8
+}`
 |===
 
 == KMS integration

@@ -198,6 +198,11 @@ calico_version = "3.12"
 #metrics server
 metricserver_enabled = false
 
+vpa = {
+  enabled = false,
+  version = 0.8
+}
+
 # kms
 use_encryption = false
 

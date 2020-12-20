@@ -2,9 +2,23 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-git clone https://github.com/kubernetes-sigs/metrics-server.git /tmp/metricserver
-cd /tmp/metricserver
-kubectl create -f manifests/
+# git clone https://github.com/kubernetes-sigs/metrics-server.git /tmp/metricserver
+# cd /tmp/metricserver
+# kubectl create -f manifests/
+
+# sleep 5
+# rm -rf /tmp/metricserver/
+echo "Installing Metrics Server"
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml > /dev/null 2>&1
 
 sleep 5
-rm -rf /tmp/metricserver/
+
+if [ ${vpa_enabled} = true ]; then
+  echo "Installing Vertical Pod Autoscaler"
+  cd /tmp > /dev/null 2>&1
+  git clone -b vpa-release-${vpa_version} https://github.com/kubernetes/autoscaler.git > /dev/null 2>&1
+  cd /tmp/autoscaler/vertical-pod-autoscaler > /dev/null 2>&1
+  ./hack/vpa-down.sh > /dev/null 2>&1
+  ./hack/vpa-up.sh > /dev/null 2>&1
+  cd && rm -rf /tmp/autoscaler > /dev/null 2>&1
+fi

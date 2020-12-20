@@ -151,12 +151,12 @@ variable "bastion_package_upgrade" {
 }
 
 variable "bastion_shape" {
-  default     = {
+  default = {
     # shape = "VM.Standard.E2.2"
-    shape="VM.Standard.E3.Flex",
-    ocpus=1,
-    memory=4,
-    boot_volume_size=50
+    shape            = "VM.Standard.E3.Flex",
+    ocpus            = 1,
+    memory           = 4,
+    boot_volume_size = 50
   }
   description = "The shape of bastion instance."
   type        = map(any)
@@ -219,12 +219,12 @@ variable "operator_package_upgrade" {
 }
 
 variable "operator_shape" {
-  default     = {
+  default = {
     # shape = "VM.Standard.E2.2"
-    shape="VM.Standard.E3.Flex",
-    ocpus=1,
-    memory=4,
-    boot_volume_size=50
+    shape            = "VM.Standard.E3.Flex",
+    ocpus            = 1,
+    memory           = 4,
+    boot_volume_size = 50
   }
   description = "The shape of operator instance."
   type        = map(any)
@@ -465,6 +465,18 @@ variable "metricserver_enabled" {
   description = "whether to install metricserver for collecting metrics and for HPA"
   default     = false
   type        = bool
+}
+
+variable "vpa" {
+  description = "whether to install vertical pod autoscaler"
+  default = {
+    enabled = false,
+    version = "0.8"
+  }
+  type = object({
+    enabled = bool
+    version = string
+  })
 }
 
 # kms
