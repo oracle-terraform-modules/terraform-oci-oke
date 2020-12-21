@@ -193,8 +193,6 @@ username = ""
 # calico
 calico_enabled = false
 
-calico_version = "3.12"
-
 #metrics server
 metricserver_enabled = false
 

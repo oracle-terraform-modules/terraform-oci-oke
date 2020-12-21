@@ -8,7 +8,7 @@
 :uri-rel-file-base: link:{uri-repo}/blob/master
 :uri-rel-tree-base: link:{uri-repo}/tree/master
 :uri-calico: https://www.projectcalico.org/
-:uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
+:uri-calico-policy: https://docs.projectcalico.org/getting-started/kubernetes/flannel/flannel
 :uri-cert-manager: https://cert-manager.readthedocs.io/en/latest/
 :uri-docs: {uri-rel-file-base}/docs
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
@@ -633,11 +633,6 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Description
 |Values
 |Default
-
-|`calico_version`
-|Version of {uri-calico}[Calico] to install.
-|
-|3.12
 
 |`calico_enabled`
 |Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
