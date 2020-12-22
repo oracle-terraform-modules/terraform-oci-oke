@@ -4,8 +4,8 @@
 
 sudo yum install -y helm
 
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
-helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com
+helm repo add stable https://kubernetes-charts.storage.googleapis.com > /dev/null 2>&1
+helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com > /dev/null 2>&1
 
 helm repo update
 

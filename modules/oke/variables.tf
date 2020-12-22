@@ -74,7 +74,7 @@ variable "lbs" {
 variable "oke_ocir" {
   type = object({
     email_address = string
-    ocir_urls     = map(string)    
+    ocir_urls     = map(string)
     secret_id     = string
     secret_name   = string
     tenancy_name  = string
@@ -82,18 +82,23 @@ variable "oke_ocir" {
   })
 }
 
-# calico
-variable "calico" {
-  type = object({
-    calico_enabled = bool
-    calico_version = string
-  })
+variable "calico_enabled" {
+  default = false
+  type    = bool
 }
 
 #metricserver
 
 variable "metricserver_enabled" {
   default = false
+  type    = bool
+}
+
+variable "vpa" {
+  type = object({
+    enabled = bool
+    version = string
+  })
 }
 
 # service account

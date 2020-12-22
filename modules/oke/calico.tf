@@ -4,14 +4,7 @@
 data "template_file" "calico_enabled" {
   template = file("${path.module}/scripts/install_calico.template.sh")
 
-  vars = {
-    calico_version     = var.calico.calico_version
-    number_of_nodes    = local.total_nodes
-    pod_cidr           = var.oke_cluster.cluster_options_kubernetes_network_config_pods_cidr
-    number_of_replicas = min(20, max((local.total_nodes) / 200, 3))
-  }
-
-  count = var.calico.calico_enabled == true ? 1 : 0
+  count = var.calico_enabled == true ? 1 : 0
 }
 
 resource null_resource "calico_enabled" {
@@ -42,5 +35,5 @@ resource null_resource "calico_enabled" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.calico.calico_enabled == true ? 1 : 0
+  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.calico_enabled == true ? 1 : 0
 }
