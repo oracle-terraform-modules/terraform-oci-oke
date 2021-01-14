@@ -4,11 +4,11 @@
 
 sleep 60s
 
-sudo yum install -y oracle-olcne-release-el7
+sudo yum install -y oracle-olcne-release-el7 > /dev/null 2>&1
 
-sudo yum-config-manager --enable ol7_olcne11
+sudo yum-config-manager --enable ol7_olcne11 > /dev/null 2>&1
 
-sudo yum install -y kubectl git
+sudo yum install -y kubectl git > /dev/null 2>&1
 
 mkdir ~/.kube
 

@@ -3,7 +3,7 @@
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "2.0.0-RC1"
+  version = "2.0.0"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
@@ -103,10 +103,11 @@ module "oke" {
   oke_ocir = local.oke_ocir
 
   # calico parameters
-  calico = local.calico
+  calico_enabled = var.calico_enabled
 
   # metric server
   metricserver_enabled = var.metricserver_enabled
+  vpa                  = var.vpa
 
   # service account
   service_account = local.service_account

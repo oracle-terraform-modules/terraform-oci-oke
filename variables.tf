@@ -151,9 +151,15 @@ variable "bastion_package_upgrade" {
 }
 
 variable "bastion_shape" {
-  default     = "VM.Standard.E2.1"
+  default = {
+    # shape = "VM.Standard.E2.2"
+    shape            = "VM.Standard.E3.Flex",
+    ocpus            = 1,
+    memory           = 4,
+    boot_volume_size = 50
+  }
   description = "The shape of bastion instance."
-  type        = string
+  type        = map(any)
 }
 
 variable "bastion_timezone" {
@@ -213,9 +219,15 @@ variable "operator_package_upgrade" {
 }
 
 variable "operator_shape" {
-  default     = "VM.Standard.E2.1"
+  default = {
+    # shape = "VM.Standard.E2.2"
+    shape            = "VM.Standard.E3.Flex",
+    ocpus            = 1,
+    memory           = 4,
+    boot_volume_size = 50
+  }
   description = "The shape of operator instance."
-  type        = string
+  type        = map(any)
 }
 
 variable "operator_timezone" {
@@ -327,7 +339,7 @@ variable "node_pool_os" {
 }
 
 variable "node_pool_os_version" {
-  default     = "7.8"
+  default     = "7.9"
   description = "The version of image Operating System to use."
   type        = string
 }
@@ -401,6 +413,7 @@ variable "ocir_urls" {
     me-dubai-1     = "dxb.ocir.io"
     me-jeddah-1    = "jed.ocir.io"
     sa-saopaulo-1  = "gru.ocir.io"
+    sa-santiago-1  = "scl.ocir.io"
     uk-cardiff-1   = "cwl.ocir.io"
     uk-london-1    = "lhr.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
@@ -441,17 +454,23 @@ variable "calico_enabled" {
   type        = bool
 }
 
-variable "calico_version" {
-  description = "The version of calico to install"
-  default     = "3.12"
-  type        = string
-}
-
 # metrics server
 variable "metricserver_enabled" {
   description = "whether to install metricserver for collecting metrics and for HPA"
   default     = false
   type        = bool
+}
+
+variable "vpa" {
+  description = "whether to install vertical pod autoscaler"
+  default = {
+    enabled = false,
+    version = "0.8"
+  }
+  type = object({
+    enabled = bool
+    version = string
+  })
 }
 
 # kms

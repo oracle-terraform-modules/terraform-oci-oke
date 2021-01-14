@@ -28,24 +28,30 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |create_service_account
 |Creates a service account that can be used for CI/CD. 
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
 
 |calico_enabled
 |Installs calico as network policy engine
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
 
 |metricserver_enabled
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
 
 |node_pools_to_drain
 |Drains existing node pools before upgrading
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
 
 |ocir secret
 |Whether to create an authentication secret for OCIR
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true, secret_id = secret ocid
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true, secret_id = secret ocid
 
 |use_encryption
 |Uses OCI KMS to encrypt data in OKE's underlying etcd
-|bastion_enabled = true, admin_enabled = true, admin_instance_principal = true
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
+
+|vpa
+|Installs Kubernetes Vertical Pod Autoscaler
+|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true, metricserver_enabled = true
+
+|===
