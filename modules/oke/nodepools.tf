@@ -32,8 +32,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
   }
   node_source_details {
     boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
-    image_id                = var.node_pools.node_pool_image_id == "none" ? data.oci_core_images.latest_images[each.key].images[0].id : var.node_pools.node_pool_image_id
-    source_type             = "IMAGE"
+    image_id = var.node_pools.node_pool_image_id == "none" ? data.oci_containerengine_node_pool_option.node_pool_options.sources[0].image_id : var.node_pools.node_pool_image_id
+    source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
   }
 
   node_shape = lookup(each.value, "shape", "VM.Standard.E3.Flex")
