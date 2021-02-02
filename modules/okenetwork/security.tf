@@ -227,9 +227,10 @@ resource "oci_core_security_list" "int_lb_seclist" {
   }
 
   ingress_security_rules {
-    description = "allow ingress only from within the VCN"
+    description = "allow ingress only from the public lb subnet"
     protocol    = local.tcp_protocol
-    source      = var.oke_network_vcn.vcn_cidr
+    # source      = var.oke_network_vcn.vcn_cidr
+    source      = local.pub_lb_subnet
     stateless   = false
   }
 
@@ -256,6 +257,18 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
     destination = local.worker_subnet
     stateless   = false
   }
+
+  dynamic "egress_security_rules" {
+    iterator = dual_lb_iterator
+    for_each = var.lb_subnet_type == "both" ? list(1) : []
+
+    content {
+      description = "allow egress from public load balancer to private load balancer"
+      protocol    = local.all_protocols
+      destination = local.int_lb_subnet
+      stateless   = false
+    }
+  }  
 
   dynamic "ingress_security_rules" {
     iterator = pub_lb_ingress_iterator
@@ -295,6 +308,18 @@ resource "oci_core_security_list" "pub_lb_seclist_with_waf" {
     destination = local.worker_subnet
     stateless   = false
   }
+
+  dynamic "egress_security_rules" {
+    iterator = dual_lb_iterator
+    for_each = var.lb_subnet_type == "both" ? list(1) : []
+
+    content {
+      description = "allow egress from public load balancer to private load balancer"
+      protocol    = local.all_protocols
+      destination = local.int_lb_subnet
+      stateless   = false
+    }
+  }  
 
   dynamic "ingress_security_rules" {
     iterator = waf_iterator
