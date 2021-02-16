@@ -43,7 +43,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
   # do not destroy the node pool if the kubernetes version has changed as part of the upgrade or the node pool image id has been updated
   lifecycle {
-    ignore_changes = [kubernetes_version, node_source_details.image_id]
+    ignore_changes = [kubernetes_version, node_source_details[0].image_id]
   }
   # initial_node_labels {
   #   key   = "key"
