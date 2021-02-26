@@ -23,18 +23,20 @@ ssh_public_key_path = ""
 # networking
 
 netnum = {
-  bastion    = 32
-  int_lb     = 16
-  operator   = 33
-  pub_lb     = 17
-  workers    = 1
+    bastion  = 0
+    cp       = 2
+    int_lb   = 16
+    operator = 1
+    pub_lb   = 17
+    workers  = 1
 }
 
 newbits = {
-  bastion    = 13
-  lb         = 11
-  operator   = 13
-  workers    = 2
+    bastion  = 14
+    cp       = 14
+    lb       = 11
+    operator = 14
+    workers  = 2
 }
 
 vcn_cidr = "10.0.0.0/16"
@@ -135,6 +137,10 @@ admission_controller_options = {
 allow_node_port_access = false
 
 allow_worker_ssh_access = false
+
+cluster_access = "public"
+
+cluster_access_source = "0.0.0.0/0"
 
 cluster_name = "oke"
 

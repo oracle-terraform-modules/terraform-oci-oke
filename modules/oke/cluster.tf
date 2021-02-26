@@ -7,6 +7,11 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   kms_key_id         = var.oke_cluster.use_encryption == true ? var.oke_cluster.kms_key_id : null
   name               = var.label_prefix == "none" ? var.oke_cluster.cluster_name : "${var.label_prefix}-${var.oke_cluster.cluster_name}"
 
+  endpoint_config {
+    is_public_ip_enabled = var.oke_cluster.cluster_access == "public" ? true : false
+    subnet_id            = var.oke_cluster.cluster_subnets["cp"]
+  }
+
   options {
     add_ons {
       is_kubernetes_dashboard_enabled = var.oke_cluster.cluster_options_add_ons_is_kubernetes_dashboard_enabled

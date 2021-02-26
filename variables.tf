@@ -63,9 +63,10 @@ variable "ssh_public_key_path" {
 variable "netnum" {
   description = "0-based index of the subnet when the network is masked with the newbit. Used as netnum parameter for cidrsubnet function."
   default = {
-    bastion  = 32
+    bastion  = 0
+    cp       = 2
     int_lb   = 16
-    operator = 33
+    operator = 1
     pub_lb   = 17
     workers  = 1
   }
@@ -74,9 +75,10 @@ variable "netnum" {
 
 variable "newbits" {
   default = {
-    bastion  = 13
+    bastion  = 14
+    cp       = 14
     lb       = 11
-    operator = 13
+    operator = 14
     workers  = 2
   }
   description = "The masks for the subnets within the virtual network. Used as newbits parameter for cidrsubnet function."
@@ -268,6 +270,18 @@ variable "allow_worker_ssh_access" {
   type        = bool
 }
 
+variable "cluster_access" {
+  default     = "public"
+  description = "Whether to allow public or private access to the control plane endpoint"
+  type        = string
+}
+
+variable "cluster_access_source" {
+  default     = "0.0.0.0/0"
+  description = "CIDR range from which to allow access"
+  type        = string
+}
+
 variable "cluster_name" {
   default     = "oke"
   description = "The name of oke cluster."
@@ -287,7 +301,7 @@ variable "dashboard_enabled" {
 }
 
 variable "kubernetes_version" {
-  default     = "v1.18.10"
+  default     = "v1.19.7"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }

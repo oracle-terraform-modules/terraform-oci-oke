@@ -1,6 +1,18 @@
 # Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+resource "oci_core_subnet" "cp" {
+  cidr_block                 = local.cp_subnet
+  compartment_id             = var.compartment_id
+  display_name               = var.label_prefix == "none" ? "control-plane" : "${var.label_prefix}-control-plane"
+  dns_label                  = "cp"
+  prohibit_public_ip_on_vnic = var.cluster_access == "private" ? true : false
+  route_table_id             = var.cluster_access == "private" ? var.oke_network_vcn.nat_route_id : var.oke_network_vcn.ig_route_id
+  security_list_ids          = [oci_core_security_list.control_plane_seclist.id]
+  # security_list_ids          = var.oke_network_worker.worker_mode == "private" ? [oci_core_security_list.private_workers_seclist[0].id] : [oci_core_security_list.public_workers_seclist[0].id]
+  vcn_id = var.oke_network_vcn.vcn_id
+}
+
 resource "oci_core_subnet" "workers" {
   cidr_block                 = local.worker_subnet
   compartment_id             = var.compartment_id
@@ -8,7 +20,8 @@ resource "oci_core_subnet" "workers" {
   dns_label                  = "workers"
   prohibit_public_ip_on_vnic = var.oke_network_worker.worker_mode == "private" ? true : false
   route_table_id             = var.oke_network_worker.worker_mode == "private" ? var.oke_network_vcn.nat_route_id : var.oke_network_vcn.ig_route_id
-  security_list_ids          = var.oke_network_worker.worker_mode == "private" ? [oci_core_security_list.private_workers_seclist[0].id] : [oci_core_security_list.public_workers_seclist[0].id]
+  security_list_ids          = [oci_core_security_list.workers_seclist.id]
+  # security_list_ids          = var.oke_network_worker.worker_mode == "private" ? [oci_core_security_list.private_workers_seclist[0].id] : [oci_core_security_list.public_workers_seclist[0].id]
   vcn_id                     = var.oke_network_vcn.vcn_id
 }
 
