@@ -20,7 +20,7 @@ locals {
   ssh_port = 22
 
   # protocols
-  # # special OCI designation for all protocols
+  # # special OCI value for all protocols
   all_protocols = "all"
 
   # # IANA protocol numbers
