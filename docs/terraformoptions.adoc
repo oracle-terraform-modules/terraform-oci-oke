@@ -613,11 +613,6 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |
 |none
 
-|`tenancy_name`
-|The *_name_* of the tenancy to be used when creating the Docker secret.  This is different from tenancy_id. *Required* if secret_id is set.
-|
-|none
-
 |`username`
 |The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if secret_id is set.
 |

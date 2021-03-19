@@ -13,7 +13,7 @@ email_address   = '${email_address}'
 region_registry = '${region_registry}'
 secret_id       = '${secret_id}'
 secret_name     = '${secret_name}'
-tenancy_name    = '${tenancy_name}'
+tenancy_namespace    = '${tenancy_namespace}'
 username        = '${username}'
 
 signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
@@ -38,7 +38,7 @@ try:
     delsecret = "kubectl -n default delete secret ${secret_name}"
     os.system(delsecret)
 
-    crtsecret = ("kubectl create secret docker-registry ${secret_name} -n default --docker-server=${region_registry} --docker-username=${tenancy_name}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
+    crtsecret = ("kubectl create secret docker-registry ${secret_name} -n default --docker-server=${region_registry} --docker-username=${tenancy_namespace}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
 
     subprocess.call(["/bin/bash" , "-c" , crtsecret])
  

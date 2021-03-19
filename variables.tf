@@ -435,12 +435,6 @@ variable "secret_name" {
   default     = "ocirsecret"
 }
 
-variable "tenancy_name" {
-  default     = "none"
-  description = "The tenancy name to use when creating the ocir secret."
-  type        = string
-}
-
 variable "username" {
   default     = "none"
   description = "The username to access OCIR."

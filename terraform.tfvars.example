@@ -186,8 +186,6 @@ secret_id = "none"
 
 secret_name = "ocirsecret"
 
-tenancy_name = ""
-
 username = ""
 
 # calico
