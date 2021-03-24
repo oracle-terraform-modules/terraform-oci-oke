@@ -15,7 +15,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
       description      = cp_egress_iterator.value["description"]
       destination      = cp_egress_iterator.value["destination"]
       destination_type = cp_egress_iterator.value["destination_type"]
-      protocol         = cp_egress_iterator.value["protocol"] == "all" ? "all" : tonumber(cp_egress_iterator.value["protocol"])
+      protocol         = cp_egress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : cp_egress_iterator.value["protocol"]
       stateless        = cp_egress_iterator.value["stateless"]
 
       dynamic "tcp_options" {
@@ -44,7 +44,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
 
     content {
       description = cp_ingress_iterator.value["description"]
-      protocol    = cp_ingress_iterator.value["protocol"] == "all" ? "all" : tonumber(cp_ingress_iterator.value["protocol"])
+      protocol    = cp_ingress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : cp_ingress_iterator.value["protocol"]
       source      = cp_ingress_iterator.value["source"]
       stateless   = cp_ingress_iterator.value["stateless"]
 
@@ -88,7 +88,7 @@ resource "oci_core_security_list" "workers_seclist" {
       description      = workers_egress_iterator.value["description"]
       destination      = workers_egress_iterator.value["destination"]
       destination_type = workers_egress_iterator.value["destination_type"]
-      protocol         = workers_egress_iterator.value["protocol"] == "all" ? "all" : tonumber(workers_egress_iterator.value["protocol"])
+      protocol         = workers_egress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : workers_egress_iterator.value["protocol"]
       stateless        = workers_egress_iterator.value["stateless"]
 
       dynamic "tcp_options" {
@@ -117,7 +117,7 @@ resource "oci_core_security_list" "workers_seclist" {
 
     content {
       description = workers_ingress_iterator.value["description"]
-      protocol    = workers_ingress_iterator.value["protocol"] == "all" ? "all" : tonumber(workers_ingress_iterator.value["protocol"])
+      protocol    = workers_ingress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : workers_ingress_iterator.value["protocol"]
       source      = workers_ingress_iterator.value["source"]
       stateless   = workers_ingress_iterator.value["stateless"]
 

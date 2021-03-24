@@ -3,9 +3,9 @@
 
 output "subnet_ids" {
   value = map(
-    "cp", join(",", oci_core_subnet.cp.*.id),
-    "workers", join(",", oci_core_subnet.workers.*.id),
-    "int_lb", join(",", oci_core_subnet.int_lb.*.id),
-    "pub_lb", join(",", oci_core_subnet.pub_lb.*.id)
+    "cp", join(",", oci_core_subnet.cp[*].id),
+    "workers", join(",", oci_core_subnet.workers[*].id),
+    "int_lb", join(",", oci_core_subnet.int_lb[*].id),
+    "pub_lb", join(",", oci_core_subnet.pub_lb[*].id)
   )
 }

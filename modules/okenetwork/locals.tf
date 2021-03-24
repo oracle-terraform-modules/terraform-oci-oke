@@ -100,7 +100,7 @@ locals {
       description      = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
-      protocol         = tostring(local.all_protocols),
+      protocol         = local.all_protocols,
       port             = -1,
       stateless        = false
     },
@@ -108,7 +108,7 @@ locals {
       description      = "Allow path discovery",
       destination      = local.anywhere,
       destination_type = "CIDR_BLOCK",
-      protocol         = tostring(local.icmp_protocol),
+      protocol         = local.icmp_protocol,
       port             = -1,
       stateless        = false
     },
@@ -116,7 +116,7 @@ locals {
       description      = "Allow worker nodes to communicate with OKE",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
-      protocol         = tostring(local.tcp_protocol),
+      protocol         = local.tcp_protocol,
       port             = -1,
       stateless        = false
     },
@@ -124,7 +124,7 @@ locals {
       description      = "Allow worker nodes to control plane API endpoint communication",
       destination      = local.cp_subnet,
       destination_type = "CIDR_BLOCK",
-      protocol         = tostring(local.tcp_protocol),
+      protocol         = local.tcp_protocol,
       port             = 6443,
       stateless        = false
     },
@@ -132,7 +132,7 @@ locals {
       description      = "Allow worker nodes to control plane communication",
       destination      = local.cp_subnet,
       destination_type = "CIDR_BLOCK",
-      protocol         = tostring(local.tcp_protocol),
+      protocol         = local.tcp_protocol,
       port             = 12250,
       stateless        = false
     },
@@ -140,7 +140,7 @@ locals {
       description      = "Allow worker nodes access to Internet. Required for getting container images or using external services",
       destination      = local.anywhere,
       destination_type = "CIDR_BLOCK",
-      protocol         = tostring(local.tcp_protocol),
+      protocol         = local.tcp_protocol,
       port             = -1,
       stateless        = false
     }    
