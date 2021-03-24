@@ -330,6 +330,11 @@ newbits = {
 |e.g. Australia/Sydney
 |Australia/Sydney
 
+|`operator_version`
+|The Oracle Linux version to use for the operator host.
+|e.g. 7.9, 8
+|8
+
 |===
 
 == Availability Domain

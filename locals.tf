@@ -57,6 +57,7 @@ locals {
     operator_enabled          = var.operator_enabled
     operator_image_id         = var.operator_image_id
     operator_shape            = var.operator_shape
+    operating_system_version  = var.operator_version
     operator_upgrade          = var.operator_package_upgrade
     enable_instance_principal = var.operator_instance_principal
     netnum                    = var.netnum["operator"]
@@ -93,6 +94,7 @@ locals {
     bastion_enabled             = var.bastion_enabled
     operator_enabled            = var.operator_enabled
     operator_instance_principal = var.operator_instance_principal
+    operator_version            = var.operator_version
   }
 
   oke_cluster = {

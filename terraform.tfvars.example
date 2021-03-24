@@ -100,6 +100,8 @@ operator_shape = {
 
 operator_timezone= "Australia/Sydney"
 
+operator_version = "8"
+
 # availability_domains
 
 availability_domains = {

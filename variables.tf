@@ -238,6 +238,12 @@ variable "operator_timezone" {
   type        = string
 }
 
+variable "operator_version" {
+  default     = "8"
+  description = "The Oracle Linux version to use for the operator host"
+  type        = string
+}
+
 # availability domains
 variable "availability_domains" {
   description = "Availability Domains where to provision non-OKE resources"
