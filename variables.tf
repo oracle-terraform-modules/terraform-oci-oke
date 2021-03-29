@@ -19,7 +19,7 @@ variable "region" {
 }
 
 variable "tenancy_id" {
-  description = "The tenancy id in which to create the sources."
+  description = "The tenancy id in which to create the resources."
   type        = string
 }
 
