@@ -15,7 +15,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
       description      = cp_egress_iterator.value["description"]
       destination      = cp_egress_iterator.value["destination"]
       destination_type = cp_egress_iterator.value["destination_type"]
-      protocol         = cp_egress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : cp_egress_iterator.value["protocol"]
+      protocol         = cp_egress_iterator.value["protocol"]
       stateless        = cp_egress_iterator.value["stateless"]
 
       dynamic "tcp_options" {
@@ -44,7 +44,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
 
     content {
       description = cp_ingress_iterator.value["description"]
-      protocol    = cp_ingress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : cp_ingress_iterator.value["protocol"]
+      protocol    = cp_ingress_iterator.value["protocol"]
       source      = cp_ingress_iterator.value["source"]
       stateless   = cp_ingress_iterator.value["stateless"]
 
@@ -88,7 +88,7 @@ resource "oci_core_security_list" "workers_seclist" {
       description      = workers_egress_iterator.value["description"]
       destination      = workers_egress_iterator.value["destination"]
       destination_type = workers_egress_iterator.value["destination_type"]
-      protocol         = workers_egress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : workers_egress_iterator.value["protocol"]
+      protocol         = workers_egress_iterator.value["protocol"]
       stateless        = workers_egress_iterator.value["stateless"]
 
       dynamic "tcp_options" {
@@ -117,7 +117,7 @@ resource "oci_core_security_list" "workers_seclist" {
 
     content {
       description = workers_ingress_iterator.value["description"]
-      protocol    = workers_ingress_iterator.value["protocol"] == local.all_protocols ? local.all_protocols : workers_ingress_iterator.value["protocol"]
+      protocol    = workers_ingress_iterator.value["protocol"]
       source      = workers_ingress_iterator.value["source"]
       stateless   = workers_ingress_iterator.value["stateless"]
 
@@ -231,8 +231,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
   count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
-# public load balancer security checklist
-resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
+resource "oci_core_security_list" "pub_lb_seclist" {
   compartment_id = var.compartment_id
   display_name   = var.label_prefix == "none" ? "pub-lb" : "${var.label_prefix}-pub-lb"
   vcn_id         = var.oke_network_vcn.vcn_id
@@ -255,10 +254,24 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
       stateless   = false
     }
   }
+  
+  # allow only from WAF
+  dynamic "ingress_security_rules" {
+    iterator = waf_iterator
+    for_each = var.waf_enabled == true ? data.oci_waas_edge_subnets.waf_cidr_blocks.edge_subnets : []
 
+    content {
+      description = "allow public ingress only from WAF CIDR blocks"
+      protocol    = local.tcp_protocol
+      source      = waf_iterator.value.cidr
+      stateless   = false
+    }
+  }
+  
+  # restrict by ports only
   dynamic "ingress_security_rules" {
     iterator = pub_lb_ingress_iterator
-    for_each = var.public_lb_ports
+    for_each = var.waf_enabled == false ? var.public_lb_ports : []
 
     content {
       description = "allow public ingress from anywhere on specified ports"
@@ -280,52 +293,5 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
       egress_security_rules,
     ]
   }
-  count = ((var.lb_subnet_type == "public" || var.lb_subnet_type == "both") && var.waf_enabled == false) ? 1 : 0
-}
-
-resource "oci_core_security_list" "pub_lb_seclist_with_waf" {
-  compartment_id = var.compartment_id
-  display_name   = var.label_prefix == "none" ? "pub-lb" : "${var.label_prefix}-pub-lb"
-  vcn_id         = var.oke_network_vcn.vcn_id
-
-  egress_security_rules {
-    description = "allow stateful egress to workers. required for NodePorts and load balancer http/tcp health checks"
-    protocol    = local.all_protocols
-    destination = local.worker_subnet
-    stateless   = false
-  }
-
-  dynamic "egress_security_rules" {
-    iterator = dual_lb_iterator
-    for_each = var.lb_subnet_type == "both" ? [1] : []
-
-    content {
-      description = "allow egress from public load balancer to private load balancer"
-      protocol    = local.all_protocols
-      destination = local.int_lb_subnet
-      stateless   = false
-    }
-  }
-
-  dynamic "ingress_security_rules" {
-    iterator = waf_iterator
-    for_each = data.oci_waas_edge_subnets.waf_cidr_blocks.edge_subnets
-
-    content {
-      description = "allow public ingress only from WAF CIDR blocks"
-      protocol    = local.tcp_protocol
-      source      = waf_iterator.value.cidr
-      stateless   = false
-    }
-  }
-
-  lifecycle {
-    ignore_changes = [
-      # Ignore changes to egress_security_rules,
-      # because Kubernetes will dynamically add new ones based on
-      # LoadBalancer requirements
-      egress_security_rules,
-    ]
-  }
-  count = ((var.lb_subnet_type == "public" || var.lb_subnet_type == "both") && var.waf_enabled == true) ? 1 : 0
+  count = (var.lb_subnet_type == "public" || var.lb_subnet_type == "both") ? 1 : 0
 }
