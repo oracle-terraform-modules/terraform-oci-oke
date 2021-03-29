@@ -135,22 +135,25 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 [source]
 ----
 netnum = {
-  operator   = 33
-  bastion = 32
-  int_lb  = 16
-  pub_lb  = 17
-  workers = 1
+    bastion  = 0
+    cp       = 2
+    int_lb   = 16
+    operator = 1
+    pub_lb   = 17
+    workers  = 1
 }
 ----
 |
 [source]
 ----
 netnum = {
-  bastion = 32
-  operator = 33
-  int_lb  = 16
-  pub_lb  = 17
-  workers = 1}
+    bastion  = 0
+    cp       = 2
+    int_lb   = 16
+    operator = 1
+    pub_lb   = 17
+    workers  = 1
+}
 ----
 
 |`newbits`
@@ -159,27 +162,29 @@ netnum = {
 [source]
 ----
 newbits = {
-  operator   = 13
-  bastion = 13
-  lb      = 11
-  workers = 2
+    bastion  = 14
+    cp       = 14
+    lb       = 11
+    operator = 14
+    workers  = 2
 }
 ----
 |
 [source]
 ----
 newbits = {
-  operator   = 13
-  bastion = 13
-  lb      = 11
-  workers = 2
+    bastion  = 14
+    cp       = 14
+    lb       = 11
+    operator = 14
+    workers  = 2
 }
 ----
 
 |`vcn_cidr`
 |The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
 |
-|10.0.0.0/16
+|`10.0.0.0/16`
 
 |vcn_dns_label
 |The internal DNS domain for resources created and prepended to "oraclevcn.com" which is the VCN-internal domain name. *Required*
@@ -325,6 +330,11 @@ newbits = {
 |e.g. Australia/Sydney
 |Australia/Sydney
 
+|`operator_version`
+|The Oracle Linux version to use for the operator host.
+|e.g. 7.9, 8
+|8
+
 |===
 
 == Availability Domain
@@ -446,6 +456,16 @@ admission_controller_options = {
 |true/false
 |false
 
+|`cluster_access`
+|Whether to allow public or private access to the control plane endpoint.
+|public/private
+|public
+
+|`cluster_access_source`
+|CIDR range from which to allow access.
+|`0.0.0.0/0`
+|`0.0.0.0/0`
+
 |`cluster_name`
 |The name of the OKE cluster. This will be appended to the label_prefix. *Required*
 |
@@ -463,8 +483,8 @@ admission_controller_options = {
 
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
-|v1.16.8, v1.17.9, v1.18.10
-|v1.18.10
+|v1.16.8, v1.17.9, v1.18.10, v1.19.7
+|v1.19.7
 
 |`node_pools`
 a|The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
@@ -538,12 +558,12 @@ node_pools = {
 |`pods_cidr`
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
 |
-|10.244.0.0/16
+|`10.244.0.0/16`
 
 |`services_cidr`
 |The CIDR for the Kubernetes services network. The CIDR block specified for the Kubernetes services must not overlap with the CIDR block specified for the VCN CIDR.
 |
-|10.96.0.0/16
+|`10.96.0.0/16`
 
 |`worker_mode`
 |Whether the worker nodes should be public or private. Private requires NAT gateway.

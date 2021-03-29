@@ -57,6 +57,7 @@ locals {
     operator_enabled          = var.operator_enabled
     operator_image_id         = var.operator_image_id
     operator_shape            = var.operator_shape
+    operating_system_version  = var.operator_version
     operator_upgrade          = var.operator_package_upgrade
     enable_instance_principal = var.operator_instance_principal
     netnum                    = var.netnum["operator"]
@@ -93,10 +94,12 @@ locals {
     bastion_enabled             = var.bastion_enabled
     operator_enabled            = var.operator_enabled
     operator_instance_principal = var.operator_instance_principal
+    operator_version            = var.operator_version
   }
 
   oke_cluster = {
     cluster_kubernetes_version                              = var.kubernetes_version
+    cluster_access                                          = var.cluster_access
     cluster_name                                            = var.cluster_name
     cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
     cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr

@@ -3,7 +3,7 @@
 
 module "base" {
   source  = "oracle-terraform-modules/base/oci"
-  version = "2.0.0"
+  version = "2.1.1"
 
   # general oci parameters
   oci_base_general = local.oci_base_general
@@ -57,6 +57,10 @@ module "network" {
 
   # oke networking parameters
   oke_network_vcn = local.oke_network_vcn
+
+  # control plane endpoint parameters
+  cluster_access        = var.cluster_access
+  cluster_access_source = var.cluster_access_source
 
   # oke worker network parameters
   oke_network_worker = local.oke_network_worker

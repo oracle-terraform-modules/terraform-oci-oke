@@ -30,6 +30,7 @@ variable "oke_operator" {
     bastion_enabled             = bool
     operator_enabled            = bool
     operator_instance_principal = bool
+    operator_version            = string
   })
 }
 
@@ -38,6 +39,7 @@ variable "oke_operator" {
 variable "oke_cluster" {
   type = object({
     cluster_kubernetes_version                              = string
+    cluster_access                                          = string
     cluster_name                                            = string
     cluster_options_add_ons_is_kubernetes_dashboard_enabled = bool
     cluster_options_kubernetes_network_config_pods_cidr     = string
