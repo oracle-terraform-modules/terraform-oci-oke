@@ -19,7 +19,7 @@ variable "region" {
 }
 
 variable "tenancy_id" {
-  description = "The tenancy id in which to create the sources."
+  description = "The tenancy id in which to create the resources."
   type        = string
 }
 
@@ -433,12 +433,6 @@ variable "secret_name" {
   description = "Secret name in Kubernetes that will hold the authentication token"
   type        = string
   default     = "ocirsecret"
-}
-
-variable "tenancy_name" {
-  default     = "none"
-  description = "The tenancy name to use when creating the ocir secret."
-  type        = string
 }
 
 variable "username" {

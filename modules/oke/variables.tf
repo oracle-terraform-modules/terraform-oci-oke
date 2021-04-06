@@ -73,12 +73,11 @@ variable "lbs" {
 # ocir
 variable "oke_ocir" {
   type = object({
-    email_address = string
-    ocir_urls     = map(string)
-    secret_id     = string
-    secret_name   = string
-    tenancy_name  = string
-    username      = string
+    email_address     = string
+    ocir_urls         = map(string)
+    secret_id         = string
+    secret_name       = string
+    username          = string
   })
 }
 
