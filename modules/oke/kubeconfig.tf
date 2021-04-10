@@ -23,6 +23,7 @@ resource "local_file" "kube_config_file" {
   content    = data.oci_containerengine_cluster_kube_config.kube_config.content
   depends_on = [null_resource.create_local_kubeconfig, oci_containerengine_cluster.k8s_cluster]
   filename   = "${path.root}/generated/kubeconfig"
+  file_permission = "0600"
 }
 
 data "template_file" "generate_kubeconfig" {
