@@ -107,6 +107,7 @@ locals {
     cluster_subnets                                         = module.network.subnet_ids
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
+    cluster_image_policy_enabled                            = var.cluster_image_policy_enabled
     kms_key_id                                              = var.existing_key_id
     admission_controller_options                            = var.admission_controller_options
   }

@@ -70,7 +70,7 @@ variable "netnum" {
     pub_lb   = 17
     workers  = 1
   }
-  type = map
+  type = map(any)
 }
 
 variable "newbits" {
@@ -82,7 +82,7 @@ variable "newbits" {
     workers  = 2
   }
   description = "The masks for the subnets within the virtual network. Used as newbits parameter for cidrsubnet function."
-  type        = map
+  type        = map(any)
 }
 
 variable "vcn_cidr" {
@@ -251,7 +251,7 @@ variable "availability_domains" {
     bastion  = 1
     operator = 1
   }
-  type = map
+  type = map(any)
 }
 
 # oke
@@ -306,6 +306,11 @@ variable "dashboard_enabled" {
   type        = bool
 }
 
+variable "cluster_image_policy_enabled" {
+  description = "Enforcing use of signed images from registry"
+  default     = false
+  type        = bool
+}
 variable "kubernetes_version" {
   default     = "v1.19.7"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."

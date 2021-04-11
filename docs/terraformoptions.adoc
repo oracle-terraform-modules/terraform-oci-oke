@@ -481,6 +481,11 @@ admission_controller_options = {
 |true/false
 |false
 
+|`cluster_image_policy_enabled`
+|Whether to enforce use of signed images from registry.
+|true/false
+|false
+
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
 |v1.16.8, v1.17.9, v1.18.10, v1.19.7
@@ -701,7 +706,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |false
 
 |`existing_key_id`
-|id of existing KMS key. *Required* if _use_encryption_ is set to *true*
+|id of existing KMS key. *Required* if _use_encryption_ is set to *true* or _cluster_image_policy_enabled_ is set to *true*
 |
 |
 |===

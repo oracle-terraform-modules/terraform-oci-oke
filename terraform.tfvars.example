@@ -150,6 +150,8 @@ check_node_active = "none"
 
 dashboard_enabled = false
 
+cluster_image_policy_enabled = false
+
 kubernetes_version = "v1.19.7"
 
 node_pools = {

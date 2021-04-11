@@ -46,6 +46,7 @@ variable "oke_cluster" {
     cluster_options_kubernetes_network_config_services_cidr = string
     cluster_subnets                                         = map(string)
     vcn_id                                                  = string
+    cluster_image_policy_enabled                            = bool
 
     # encryption
     use_encryption = bool
