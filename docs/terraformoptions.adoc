@@ -565,7 +565,7 @@ node_pools = {
 |
 |`10.96.0.0/16`
 
-|`use_signed_images `
+|`use_signed_images`
 |To enforce use of signed images from oracle registry.
 |true/false
 |false
