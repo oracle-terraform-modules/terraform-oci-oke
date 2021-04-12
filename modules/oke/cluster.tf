@@ -12,6 +12,13 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     subnet_id            = var.oke_cluster.cluster_subnets["cp"]
   }
 
+  image_policy_config {
+    is_policy_enabled = var.oke_cluster.use_signed_images
+    key_details {
+      kms_key_id = var.oke_cluster.use_signed_images == true ? var.oke_cluster.kms_key_id : null
+    }
+  }
+
   options {
     add_ons {
       is_kubernetes_dashboard_enabled = var.oke_cluster.cluster_options_add_ons_is_kubernetes_dashboard_enabled

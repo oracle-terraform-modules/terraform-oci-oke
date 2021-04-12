@@ -107,6 +107,7 @@ locals {
     cluster_subnets                                         = module.network.subnet_ids
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
+    use_signed_images                                       = var.use_signed_images
     kms_key_id                                              = var.existing_key_id
     admission_controller_options                            = var.admission_controller_options
   }
@@ -124,11 +125,11 @@ locals {
   }
 
   oke_ocir = {
-    email_address     = var.email_address
-    ocir_urls         = var.ocir_urls
-    secret_id         = var.secret_id
-    secret_name       = var.secret_name
-    username          = var.username
+    email_address = var.email_address
+    ocir_urls     = var.ocir_urls
+    secret_id     = var.secret_id
+    secret_name   = var.secret_name
+    username      = var.username
   }
 
   oke_kms = {

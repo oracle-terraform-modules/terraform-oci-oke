@@ -565,6 +565,11 @@ node_pools = {
 |
 |`10.96.0.0/16`
 
+|`use_signed_images `
+|To enforce use of signed images from oracle registry.
+|true/false
+|false
+
 |`worker_mode`
 |Whether the worker nodes should be public or private. Private requires NAT gateway.
 |private/public
@@ -696,7 +701,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |false
 
 |`existing_key_id`
-|id of existing KMS key. *Required* if _use_encryption_ is set to *true*
+|id of existing KMS key. *Required* if _use_encryption_ is set to *true* or _use_signed_images_ is set to *true* 
 |
 |
 |===

@@ -70,7 +70,7 @@ variable "netnum" {
     pub_lb   = 17
     workers  = 1
   }
-  type = map
+  type = map(any)
 }
 
 variable "newbits" {
@@ -82,7 +82,7 @@ variable "newbits" {
     workers  = 2
   }
   description = "The masks for the subnets within the virtual network. Used as newbits parameter for cidrsubnet function."
-  type        = map
+  type        = map(any)
 }
 
 variable "vcn_cidr" {
@@ -251,7 +251,7 @@ variable "availability_domains" {
     bastion  = 1
     operator = 1
   }
-  type = map
+  type = map(any)
 }
 
 # oke
@@ -374,6 +374,12 @@ variable "services_cidr" {
   default     = "10.96.0.0/16"
   description = "The CIDR range used by exposed Kubernetes services (ClusterIPs). This CIDR should not overlap with the VCN CIDR range."
   type        = string
+}
+
+variable "use_signed_images" {
+  description = "Enforcing use of signed images from oracle registry"
+  default     = false
+  type        = bool
 }
 
 variable "worker_mode" {

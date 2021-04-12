@@ -51,6 +51,9 @@ variable "oke_cluster" {
     use_encryption = bool
     kms_key_id     = string
 
+    #signed images
+    use_signed_images = bool
+
     # admission controller options
     admission_controller_options = map(bool)
   })
@@ -75,11 +78,11 @@ variable "lbs" {
 # ocir
 variable "oke_ocir" {
   type = object({
-    email_address     = string
-    ocir_urls         = map(string)
-    secret_id         = string
-    secret_name       = string
-    username          = string
+    email_address = string
+    ocir_urls     = map(string)
+    secret_id     = string
+    secret_name   = string
+    username      = string
   })
 }
 
