@@ -19,6 +19,16 @@ variable "oke_network_vcn" {
   })
 }
 
+# cluster endpoint
+
+variable "cluster_access" {
+  type = string
+}
+
+variable "cluster_access_source" {
+  type = string
+}
+
 # oke workers
 
 variable "oke_network_worker" {

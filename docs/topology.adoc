@@ -51,10 +51,13 @@ By default, the following resources are created:
 * 1 private regional worker subnet along with security list
 * 1 public regional load balancer subnet along with security list
 * 1 Bastion Host
-* 1 Kubernetes Cluster with worker nodes
+* 1 public kubernetes Cluster with private worker nodes
 
-[Note]
-The Kubernetes Master Nodes run in Oracle's tenancy and are not shown here.
+[Important]
+====
+. The Kubernetes Master Nodes run in Oracle's tenancy and are not shown here.
+. Although the recommended approach is to now deploy private clusters, we are currently keeping the default setting to public. This is to give our users the time to adjust other configurations e.g. their CI/CD tools and such.
+====
 
 The Load Balancers are only created when services of type *LoadBalancer* are deployed.
 
@@ -75,11 +78,13 @@ image::images/networking.png[align="Networking and Gateways"]
 
 The following resources are created:
 
-* 1 regional worker subnet
-* 1 regional load balancer subnet
-* 1 regional bastion subnet
+* 1 public regional control plane subnet
+* 1 private regional worker subnet
+* 1 public regional load balancer subnet
+* 1 public regional bastion subnet
+* 1 private regional operator subnet
 
-The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of 10.0.1.0/29 giving a maximum possible of 5 IP addresses. This will allow room for future capabilities.
+The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of 10.0.0.0/30 giving a maximum possible of 1 IP address.
 
 The worker subnet has a CIDR of 10.0.64.0/18 assigned by default. This gives the subnet a maximum possible of 16381 IP addresses and therefore number of hosts per subnet. This is enough to scale the cluster to the maximum number of worker nodes (1000) currently allowed by Oracle Container Engine.
 
@@ -88,7 +93,7 @@ The load balancer subnets consist of 2 types:
 * public
 * private
 
-By default, only the the public load balancer subnets are created. See link:#public-and-internal-load-balancers[Public and Internal Load Balancers] for more details. The private load balancer subnet has a CIDR of 10.0.2.0/27 whereas the public load balancer subnet has a CIDR of 10.0.2.32/27 assigned by default. This allows both subnets to assign a maximum of 29 IP addresses and therefore 9 load balancers can be created.
+By default, only the the public load balancer subnets are created. See link:#public-and-internal-load-balancers[Public and Internal Load Balancers] for more details. The private load balancer subnet has a CIDR of 10.0.2.0/27 whereas the public load balancer subnet has a CIDR of 10.0.2.32/27 assigned by default. This allows both subnets to assign a maximum of 29 IP addresses and therefore 9 load balancers can be created in each.
 
 The OCI Networking parameters are controlled by the following 3 parameters:
 
@@ -106,13 +111,13 @@ Additionally, the following gateways are created:
 
 * Internet Gateway (required)
 * NAT Gateway if deployed in link:#public-vs-private-worker-nodes[private mode]
-* Service Gateway if using Oracle Services
+* Service Gateway
 
 The Service Gateway enables cloud resources without public IP addresses to privately access Oracle services. The Service Gateway allows access to Oracle Services without the traffic going over the public Internet. Refer to the {uri-oci-service-gateway}[OCI Service Gateway documentation] to understand whether you need to enable it.
 
 === Bastion Host
 
-.SSH to Bastion (load balancer subnets removed for convenience)
+.SSH to Bastion
 image::images/bastion.png[align="center"]
 
 {bl}
@@ -128,20 +133,62 @@ You can use the bastion host for the following:
 
 To ssh to the bastion, copy the command that terraform outputs at the end of its run:
 
----
+```
 ssh_to_bastion = ssh -i /path/to/private_key opc@bastion_ip
----
+```
 
 To ssh to the worker nodes, you can do the following:
 
-----
+```
 ssh -i /path/to/private_key -J <username>@bastion_ip opc@worker_node_private_ip
-----
+```
+
+=== Public vs Private Clusters
+
+When deployed in public mode, the Kubernetes API endpoint is publicly accessible.
+
+.Accessing the Kubernetes API endpoint publicly
+image::images/publiccluster.png[align="center"]
+
+You can set the Kubernetes cluster to be public by using the following parameters:
+
+```
+cluster_access = "public"
+
+cluster_access_source = "0.0.0.0/0"
+```
+
+When deployed in private cluster mode, the Kubernetes endpoint can only be accessed from the operator host.
+
+.Accessing the Kubernetes API endpoint from the operator host
+image::images/privatecluster.png[align="center"]
+
+The following table maps all possible cluster and workers deployment combinations.
+
+.Public and Private cluster and workers combinations
+[stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
+|===
+|
+|cluster_access=public
+|cluster_access=private
+
+|worker_mode=public
+|X
+|X
+
+|worker_mode=private
+|X
+|X
+
+|===
+
+[IMPORTANT]
+For new clusters, we recommend you provision private clusters and workers.
 
 === Public vs Private worker nodes
 
 .Public Worker Nodes
-image::images/public.png[align="center"]
+image::images/publicworkers.png[align="center"]
 
 {bl}
 

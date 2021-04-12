@@ -18,3 +18,6 @@ data "oci_core_subnets" "oke_subnets" {
     values = ["AVAILABLE"]
   }
 }
+
+data "oci_waas_edge_subnets" "waf_cidr_blocks" {
+}
