@@ -60,6 +60,46 @@ variable "ssh_public_key_path" {
 }
 
 # networking parameters
+variable "create_drg" {
+  description = "whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN."
+  type        = bool
+  default     = false
+}
+
+variable "drg_display_name" {
+  description = "(Updatable) Name of Dynamic Routing Gateway. Does not have to be unique."
+  type        = string
+  default     = "drg"
+}
+
+variable "internet_gateway_route_rules" {
+  description = "(Updatable) List of routing rules to add to Internet Gateway Route Table"
+  type = list(object({
+    destination       = string
+    destination_type  = string
+    network_entity_id = string
+    description       = string
+  }))
+  default = null
+}
+
+variable "lockdown_default_seclist" {
+  description = "whether to remove all default security rules from the VCN Default Security List"
+  default     = true
+  type        = bool
+}
+
+variable "nat_gateway_route_rules" {
+  description = "(Updatable) List of routing rules to add to NAT Gateway Route Table"
+  type = list(object({
+    destination       = string
+    destination_type  = string
+    network_entity_id = string
+    description       = string
+  }))
+  default = null
+}
+
 variable "netnum" {
   description = "0-based index of the subnet when the network is masked with the newbit. Used as netnum parameter for cidrsubnet function."
   default = {

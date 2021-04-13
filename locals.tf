@@ -18,13 +18,18 @@ locals {
   }
 
   oci_base_vcn = {
-    internet_gateway_enabled = true
-    nat_gateway_enabled      = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
-    service_gateway_enabled  = true
-    tags                     = var.tags["vcn"]
-    vcn_cidr                 = var.vcn_cidr
-    vcn_dns_label            = var.vcn_dns_label
-    vcn_name                 = var.vcn_name
+    create_drg                   = var.create_drg
+    drg_display_name              = var.drg_display_name
+    internet_gateway_enabled     = true
+    lockdown_default_seclist     = var.lockdown_default_seclist
+    nat_gateway_enabled          = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
+    service_gateway_enabled      = true
+    tags                         = var.tags["vcn"]
+    vcn_cidr                     = var.vcn_cidr
+    vcn_dns_label                = var.vcn_dns_label
+    vcn_name                     = var.vcn_name
+    internet_gateway_route_rules = var.internet_gateway_route_rules
+    nat_gateway_route_rules      = var.nat_gateway_route_rules
   }
 
   oci_base_ssh_keys = {
@@ -124,11 +129,11 @@ locals {
   }
 
   oke_ocir = {
-    email_address     = var.email_address
-    ocir_urls         = var.ocir_urls
-    secret_id         = var.secret_id
-    secret_name       = var.secret_name
-    username          = var.username
+    email_address = var.email_address
+    ocir_urls     = var.ocir_urls
+    secret_id     = var.secret_id
+    secret_name   = var.secret_name
+    username      = var.username
   }
 
   oke_kms = {
