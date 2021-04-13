@@ -52,7 +52,8 @@ variable "oke_cluster" {
     kms_key_id     = string
 
     #signed images
-    use_signed_images = bool
+    use_signed_images  = bool
+    signedimage_key_id = string
 
     # admission controller options
     admission_controller_options = map(bool)

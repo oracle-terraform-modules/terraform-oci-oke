@@ -506,6 +506,10 @@ variable "existing_key_id" {
   type        = string
 }
 
+variable "signedimage_key_id" {
+  description = "KMS key id used for signing images"
+  type        = string
+}
 # serviceaccount
 
 variable "create_service_account" {

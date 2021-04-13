@@ -214,6 +214,8 @@ use_encryption = false
 
 existing_key_id = ""
 
+signedimage_key_id = ""
+
 # service account
 create_service_account = true
 
