@@ -14,8 +14,11 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
 
   image_policy_config {
     is_policy_enabled = var.oke_cluster.use_signed_images
-    key_details {
-      kms_key_id = var.oke_cluster.use_signed_images == true ? var.oke_cluster.signedimage_key_id : null
+    dynamic "key_details" {
+      for_each = var.oke_cluster.use_signed_images == true ? var.oke_cluster.image_signing_keys : []
+      content {
+        kms_key_id = key_details.value
+      }
     }
   }
 

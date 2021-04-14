@@ -53,7 +53,7 @@ variable "oke_cluster" {
 
     #signed images
     use_signed_images  = bool
-    signedimage_key_id = string
+    image_signing_keys = list(string)
 
     # admission controller options
     admission_controller_options = map(bool)

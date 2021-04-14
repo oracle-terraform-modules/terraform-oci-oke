@@ -705,8 +705,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |
 |
 
-|`signedimage_key_id`
-|id of existing KMS key. *Required* if _use_signed_images_ is set to *true* 
+|`image_signing_keys`
+|list of existing KMS key id. *Required* if _use_signed_images_ is set to *true* 
 |
 |
 |===

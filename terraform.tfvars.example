@@ -170,7 +170,7 @@ node_pool_image_id = "none"
 
 node_pool_os = "Oracle Linux"
 
-node_pool_os_version = "7.8"
+node_pool_os_version = "7.9"
 
 pods_cidr = "10.244.0.0/16"
 
@@ -214,7 +214,7 @@ use_encryption = false
 
 existing_key_id = ""
 
-signedimage_key_id = ""
+image_signing_keys = [""]
 
 # service account
 create_service_account = true
