@@ -113,6 +113,8 @@ locals {
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
     kms_key_id                                              = var.existing_key_id
+    use_signed_images                                       = var.use_signed_images
+    image_signing_keys                                      = var.image_signing_keys
     admission_controller_options                            = var.admission_controller_options
   }
 
