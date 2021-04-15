@@ -417,7 +417,7 @@ variable "services_cidr" {
 }
 
 variable "use_signed_images" {
-  description = "Enforcing use of signed images from oracle registry"
+  description = "Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys."
   default     = false
   type        = bool
 }
@@ -547,9 +547,10 @@ variable "existing_key_id" {
 }
 
 variable "image_signing_keys" {
-  description = "KMS key id used for signing images"
+  description = "A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm."
   type        = list(string)
 }
+
 # serviceaccount
 
 variable "create_service_account" {

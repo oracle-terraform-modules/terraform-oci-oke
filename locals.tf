@@ -19,7 +19,7 @@ locals {
 
   oci_base_vcn = {
     create_drg                   = var.create_drg
-    drg_display_name              = var.drg_display_name
+    drg_display_name             = var.drg_display_name
     internet_gateway_enabled     = true
     lockdown_default_seclist     = var.lockdown_default_seclist
     nat_gateway_enabled          = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false

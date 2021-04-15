@@ -51,7 +51,7 @@ variable "oke_cluster" {
     use_encryption = bool
     kms_key_id     = string
 
-    #signed images
+    # signed images
     use_signed_images  = bool
     image_signing_keys = list(string)
 

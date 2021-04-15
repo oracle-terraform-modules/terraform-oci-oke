@@ -227,7 +227,7 @@ The Kubernetes Metrics Server parameter controls the installation of {uri-metric
 
 === Configure KMS Integration parameters
 
-The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets. Additionally, the bastion host must be enabled as well as instance_principal on the bastion.
+The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets. Additionally, the bastion and operator hosts must be enabled as well as instance_principal on the operator.
 
 ----
 bastion_enabled = true
@@ -237,4 +237,12 @@ use_encryption = true
 existing_key_id = <existing_key_id>
 ----
 
+OKE also supports enforcing the use of signed images. You can enforce the use of signed image using the following parameters:
+
+
+----
+use_signed_images = false
+image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
+----
 {uri-terraform-options}#kms-integration[Reference]
+

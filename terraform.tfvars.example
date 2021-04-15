@@ -266,7 +266,7 @@ use_encryption = false
 
 existing_key_id = ""
 
-image_signing_keys = [""]
+image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
 
 # service account
 create_service_account = true
