@@ -110,7 +110,7 @@ variable "netnum" {
     pub_lb   = 17
     workers  = 1
   }
-  type = map
+  type = map(any)
 }
 
 variable "newbits" {
@@ -122,7 +122,7 @@ variable "newbits" {
     workers  = 2
   }
   description = "The masks for the subnets within the virtual network. Used as newbits parameter for cidrsubnet function."
-  type        = map
+  type        = map(any)
 }
 
 variable "vcn_cidr" {
@@ -291,7 +291,7 @@ variable "availability_domains" {
     bastion  = 1
     operator = 1
   }
-  type = map
+  type = map(any)
 }
 
 # oke
@@ -416,6 +416,12 @@ variable "services_cidr" {
   type        = string
 }
 
+variable "use_signed_images" {
+  description = "Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys."
+  default     = false
+  type        = bool
+}
+
 variable "worker_mode" {
   default     = "private"
   description = "Whether to provision public or private workers."
@@ -538,6 +544,11 @@ variable "use_encryption" {
 variable "existing_key_id" {
   description = "id of existing key"
   type        = string
+}
+
+variable "image_signing_keys" {
+  description = "A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm."
+  type        = list(string)
 }
 
 # serviceaccount

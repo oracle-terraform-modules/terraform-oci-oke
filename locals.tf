@@ -19,7 +19,7 @@ locals {
 
   oci_base_vcn = {
     create_drg                   = var.create_drg
-    drg_display_name              = var.drg_display_name
+    drg_display_name             = var.drg_display_name
     internet_gateway_enabled     = true
     lockdown_default_seclist     = var.lockdown_default_seclist
     nat_gateway_enabled          = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
@@ -113,6 +113,8 @@ locals {
     vcn_id                                                  = module.base.vcn_id
     use_encryption                                          = var.use_encryption
     kms_key_id                                              = var.existing_key_id
+    use_signed_images                                       = var.use_signed_images
+    image_signing_keys                                      = var.image_signing_keys
     admission_controller_options                            = var.admission_controller_options
   }
 
