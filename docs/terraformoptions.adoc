@@ -129,6 +129,77 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Values
 |Default
 
+|`create_drg`
+|Whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN.
+|`true/false`
+|`false`
+
+|`drg_display_name`
+|(Updatable) Name of Dynamic Routing Gateway. Does not have to be unique.
+|""
+|drg
+
+|`internet_gateway_route_rules`
+|(Updatable) List of routing rules to add to Internet Gateway Route Table.
+|
+[source]
+[
+    /*
+    {
+      destination = "192.168.1.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
+      description = "route through drg"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "internet_gateway" // use Internet Gateway created by this module. Requires `internet_gateway_enabled = true`
+      description = "route through Internet Gateway"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
+      description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
+    }
+    */ 
+]
+|[]
+
+|`lockdown_default_seclist`
+|Whether to remove all default security rules from the VCN Default Security List.
+|`true/false`
+|`true`
+
+|`nat_gateway_route_rules`
+|(Updatable) List of routing rules to add to Internet Gateway Route Table.
+|
+[source]
+[
+    /*
+    {
+      destination = "192.168.1.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
+      description = "route through drg"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "nat_gateway" // use NAT gateway created by this module. Requires `nat_gateway_enabled = true`
+      description = "route through NAT gateway"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
+      description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
+    }
+    */
+]
+|[]
+
 |`netnum`
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
 |e.g.
@@ -566,7 +637,7 @@ node_pools = {
 |`10.96.0.0/16`
 
 |`use_signed_images`
-|To enforce use of signed images from oracle registry.
+|Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys.
 |true/false
 |false
 
@@ -702,12 +773,13 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |`existing_key_id`
 |id of existing KMS key. *Required* if _use_encryption_ is set to *true*
-|
+|`ocid1.key.oc1....`
 |
 
 |`image_signing_keys`
-|list of existing KMS key id. *Required* if _use_signed_images_ is set to *true* 
+|A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm. *Required* if _use_signed_images_ is set to *true* 
 |
+`["ocid1.key.oc1....", "ocid1.key.oc1...."]`
 |
 |===
 

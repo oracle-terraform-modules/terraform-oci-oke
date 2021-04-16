@@ -22,6 +22,58 @@ ssh_public_key_path = ""
 
 # networking
 
+create_drg = false
+
+drg_display_name = "drg"
+
+internet_gateway_route_rules = [
+    /*
+    {
+      destination = "192.168.1.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
+      description = "route through drg"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "internet_gateway" // use Internet Gateway created by this module. Requires `internet_gateway_enabled = true`
+      description = "route through Internet Gateway"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
+      description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
+    }
+    */ 
+]
+
+lockdown_default_seclist = false
+
+nat_gateway_route_rules      = [
+    /*
+    {
+      destination = "192.168.1.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
+      description = "route through drg"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "nat_gateway" // use NAT gateway created by this module. Requires `nat_gateway_enabled = true`
+      description = "route through NAT gateway"
+    },
+    {
+      destination = "8.8.8.0/24"
+      destination_type = "CIDR_BLOCK"
+      network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
+      description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
+    }
+    */
+]
+
 netnum = {
     bastion  = 0
     cp       = 2
@@ -214,7 +266,7 @@ use_encryption = false
 
 existing_key_id = ""
 
-image_signing_keys = [""]
+image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
 
 # service account
 create_service_account = true

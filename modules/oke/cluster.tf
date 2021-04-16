@@ -12,12 +12,19 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     subnet_id            = var.oke_cluster.cluster_subnets["cp"]
   }
 
-  image_policy_config {
-    is_policy_enabled = var.oke_cluster.use_signed_images
-    dynamic "key_details" {
-      for_each = var.oke_cluster.use_signed_images == true ? var.oke_cluster.image_signing_keys : []
-      content {
-        kms_key_id = key_details.value
+  dynamic "image_policy_config" {
+    for_each = var.oke_cluster.use_signed_images == true ? [1] : []
+
+    content {
+      is_policy_enabled = true
+      
+      dynamic "key_details" {
+        iterator = signing_keys_iterator
+        for_each = var.oke_cluster.image_signing_keys
+
+        content {
+          kms_key_id = signing_keys_iterator.value
+        }
       }
     }
   }
