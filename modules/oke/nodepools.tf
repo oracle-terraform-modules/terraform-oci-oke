@@ -32,8 +32,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
   }
   node_source_details {
     boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
-    image_id = var.node_pools.node_pool_image_id == "none" ? local.node_pool_image_id : var.node_pools.node_pool_image_id
-    source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+    image_id                = var.node_pools.node_pool_image_id == "none" ? local.node_pool_image_id : var.node_pools.node_pool_image_id
+    source_type             = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
   }
 
   node_shape = lookup(each.value, "shape", "VM.Standard.E3.Flex")
@@ -44,8 +44,11 @@ resource "oci_containerengine_node_pool" "nodepools" {
   lifecycle {
     ignore_changes = [kubernetes_version, node_source_details[0].image_id]
   }
-  # initial_node_labels {
-  #   key   = "key"
-  #   value = "value"
-  # }
+  dynamic "initial_node_labels" {
+    for_each = lookup(each.value, "label", "") != "" ? each.value.label : {}
+    content {
+      key   = initial_node_labels.key
+      value = initial_node_labels.value
+    }
+  }
 }

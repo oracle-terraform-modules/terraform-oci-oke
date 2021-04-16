@@ -359,7 +359,7 @@ variable "node_pools" {
     np3 = { shape = "VM.Standard.E2.2", node_pool_size = 1 }
   }
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"
-  type        = map(any)
+  type        = any
 }
 
 variable "node_pools_to_drain" {

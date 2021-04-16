@@ -62,7 +62,7 @@ variable "oke_cluster" {
 
 variable "node_pools" {
   type = object({
-    node_pools            = map(any)
+    node_pools            = any
     node_pool_name_prefix = string
     node_pool_image_id    = string
     node_pool_os          = string
