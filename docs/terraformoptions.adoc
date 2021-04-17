@@ -580,7 +580,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 [source]
 node_pools = {
   np1 = {shape="VM.Standard.E3.Flex",ocpus=2,memory=20,node_pool_size=2,boot_volume_size=150}
-  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application"}}
+  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
   np3 = {shape="VM.Standard.E2.2",node_pool_size=1} 
 }
  
@@ -588,7 +588,7 @@ node_pools = {
 [source]
 node_pools = {
   np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
-  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application"}}
+  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
   np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
 }
 

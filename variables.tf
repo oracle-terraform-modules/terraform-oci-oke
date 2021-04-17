@@ -402,6 +402,10 @@ variable "node_pool_os_version" {
   default     = "7.9"
   description = "The version of image Operating System to use."
   type        = string
+  validation {
+    condition     = (var.node_pool_os_version >= 7.9)
+    error_message = "Node_pool_os_version should be equal or greater than 7.9."
+  }
 }
 
 variable "pods_cidr" {
