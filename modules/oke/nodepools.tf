@@ -40,9 +40,9 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
   ssh_public_key = file(var.oke_ssh_keys.ssh_public_key_path)
 
-  # do not destroy the node pool if the kubernetes version has changed as part of the upgrade or the node pool image id has been updated
+  # do not destroy the node pool if the kubernetes version has changed as part of the upgrade
   lifecycle {
-    ignore_changes = [kubernetes_version, node_source_details[0].image_id]
+    ignore_changes = [kubernetes_version]
   }
   dynamic "initial_node_labels" {
     for_each = lookup(each.value, "label", "") != "" ? each.value.label : {}
