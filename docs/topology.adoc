@@ -5,8 +5,8 @@
 :bl: pass:[ +]
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-:uri-rel-file-base: link:{uri-repo}/blob/master
-:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
 :uri-docs: {uri-rel-file-base}/docs
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci-configure-cli: https://docs.cloud.oracle.com/iaas/Content/API/SDKDocs/cliinstall.htm#SettinguptheConfigFile
@@ -55,7 +55,7 @@ By default, the following resources are created:
 
 [Important]
 ====
-. The Kubernetes Master Nodes run in Oracle's tenancy and are not shown here.
+. The Kubernetes Control Plane Nodes run in Oracle's tenancy and are not shown here.
 . Although the recommended approach is to now deploy private clusters, we are currently keeping the default setting to public. This is to give our users the time to adjust other configurations e.g. their CI/CD tools and such.
 ====
 
