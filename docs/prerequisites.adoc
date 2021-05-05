@@ -6,8 +6,8 @@
 :sectnums:
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-:uri-rel-file-base: link:{uri-repo}/blob/master
-:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
 
 :uri-docs: {uri-rel-file-base}/docs
 
@@ -43,8 +43,7 @@ You can proceed to {uri-instructions}[creating the cluster] if you have already 
 
 The Terraform user must have the permission to:
 
-. manage dynamic groups
-. manage policies in root tenancy
+. manage dynamic groups (instance_principal and KMS integration)
 . manage cluster-family in compartment
 . manage virtual-network-family in compartment
 . manage instance-family in compartment
