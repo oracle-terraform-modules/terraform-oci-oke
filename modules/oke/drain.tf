@@ -53,5 +53,5 @@ resource null_resource "drain_nodes" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.nodepool_drain == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.nodepool_drain == true ? 1 : 0
 }

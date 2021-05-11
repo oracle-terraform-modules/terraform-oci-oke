@@ -31,6 +31,7 @@ variable "oke_operator" {
     operator_enabled            = bool
     operator_instance_principal = bool
     operator_version            = string
+    bastion_state               = string
   })
 }
 

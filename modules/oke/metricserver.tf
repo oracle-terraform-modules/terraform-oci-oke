@@ -40,5 +40,5 @@ resource null_resource "metricserver_enabled" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.metricserver_enabled == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.metricserver_enabled == true ? 1 : 0
 }

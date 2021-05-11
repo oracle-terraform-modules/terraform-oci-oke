@@ -16,7 +16,7 @@ data "template_file" "secret" {
     username          = var.oke_ocir.username
 
   }
-  count = var.oke_operator.operator_enabled == true && var.oke_operator.operator_instance_principal == true && var.oke_ocir.secret_id != "none" ? 1 : 0
+  count = local.post_provisioning_ops == true && var.oke_ocir.secret_id != "none" ? 1 : 0
 }
 
 resource null_resource "secret" {
@@ -51,5 +51,5 @@ resource null_resource "secret" {
     ]
   }
 
-  count = var.oke_operator.operator_enabled == true && var.oke_operator.operator_instance_principal == true && var.oke_ocir.secret_id != "none" ? 1 : 0
+  count = local.post_provisioning_ops == true && var.oke_ocir.secret_id != "none" ? 1 : 0
 }

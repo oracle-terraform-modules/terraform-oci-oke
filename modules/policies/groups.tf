@@ -59,5 +59,5 @@ resource null_resource "update_dynamic_group" {
     ]
   }
 
-  count = (var.oke_kms.use_encryption == true && var.operator.bastion_enabled == true && var.operator.operator_instance_principal == true) ? 1 : 0
+  count = (var.oke_kms.use_encryption == true && var.operator.bastion_enabled == true && var.operator.bastion_state == "RUNNING" && var.operator.operator_instance_principal == true) ? 1 : 0
 }

@@ -313,6 +313,11 @@ newbits = {
 |
 |bastion
 
+|`bastion_operating_system_version`
+|In case Autonomous Linux is used, allow specification of Autonomous version.
+|7.9
+|7.9
+
 |`bastion_package_upgrade`
 |Whether to also upgrade the packages on the bastion host.
 |true/false
@@ -328,6 +333,11 @@ newbits = {
   memory           = 4,
   boot_volume_size = 50
 }`
+
+|`bastion_state`
+|The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)
+| RUNNING/STOPPED
+| RUNNING
 
 |`bastion_timezone`
 |The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
