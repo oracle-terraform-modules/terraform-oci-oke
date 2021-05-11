@@ -32,6 +32,7 @@ variable "operator" {
     bastion_enabled             = bool
     operator_enabled            = bool
     operator_instance_principal = bool
+    bastion_state               = string
   })
 }
 

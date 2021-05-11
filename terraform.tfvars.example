@@ -114,6 +114,8 @@ bastion_notification_protocol = "EMAIL"
 
 bastion_notification_topic= "bastion_server_notification"
 
+bastion_operating_system_version = "7.9"
+
 bastion_package_upgrade = false
 
 bastion_shape = {
@@ -123,6 +125,8 @@ bastion_shape = {
   memory           = 4,
   boot_volume_size = 50
 }
+
+bastion_state = "RUNNING"
 
 bastion_timezone = "Australia/Sydney"
 

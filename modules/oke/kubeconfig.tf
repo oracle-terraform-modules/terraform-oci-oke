@@ -34,7 +34,7 @@ data "template_file" "generate_kubeconfig" {
     region     = var.region
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = local.post_provisioning_ops == true ? 1 : 0
 }
 
 resource "null_resource" "write_kubeconfig_on_operator" {
@@ -65,5 +65,5 @@ resource "null_resource" "write_kubeconfig_on_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = local.post_provisioning_ops == true ? 1 : 0
 }

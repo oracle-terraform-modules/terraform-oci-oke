@@ -35,5 +35,5 @@ resource null_resource "calico_enabled" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.calico_enabled == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.calico_enabled == true ? 1 : 0
 }

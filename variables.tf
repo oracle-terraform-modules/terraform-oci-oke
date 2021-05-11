@@ -186,6 +186,12 @@ variable "bastion_notification_topic" {
   type        = string
 }
 
+variable "bastion_operating_system_version" {
+  description = "In case Autonomous Linux is used, allow specification of Autonomous version"
+  default     = "7.9"
+  type        = string
+}
+
 variable "bastion_package_upgrade" {
   default     = true
   description = "Whether to upgrade the bastion host packages after provisioning. it’s useful to set this to false during development so the bastion is provisioned faster."
@@ -202,6 +208,12 @@ variable "bastion_shape" {
   }
   description = "The shape of bastion instance."
   type        = map(any)
+}
+
+variable "bastion_state" {
+  description = "The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)"
+  default     = "RUNNING"
+  type        = string
 }
 
 variable "bastion_timezone" {
