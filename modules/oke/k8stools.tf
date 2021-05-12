@@ -7,7 +7,7 @@ data "template_file" "install_kubectl" {
 
   vars = {
     ol = var.oke_operator.operator_version
-  }  
+  }
 }
 
 resource "null_resource" "install_kubectl_operator" {
@@ -36,7 +36,7 @@ resource "null_resource" "install_kubectl_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" &&  var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" && var.oke_operator.operator_enabled == true ? 1 : 0
 }
 
 # helm
