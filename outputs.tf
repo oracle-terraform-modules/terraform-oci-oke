@@ -10,7 +10,7 @@ output "cluster_id" {
 
 output "nodepool_ids" {
   description = "Map of Nodepool names and IDs"
-  value = module.oke.nodepool_ids
+  value       = module.oke.nodepool_ids
 }
 
 
@@ -26,7 +26,7 @@ output "nat_route_id" {
 
 output "subnet_ids" {
   description = "map of subnet ids (worker, int_lb, pub_lb) used by OKE."
-  value = module.network.subnet_ids
+  value       = module.network.subnet_ids
 }
 
 output "vcn_id" {

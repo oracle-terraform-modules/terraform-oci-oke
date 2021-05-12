@@ -17,7 +17,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
 
     content {
       is_policy_enabled = true
-      
+
       dynamic "key_details" {
         iterator = signing_keys_iterator
         for_each = var.oke_cluster.image_signing_keys
