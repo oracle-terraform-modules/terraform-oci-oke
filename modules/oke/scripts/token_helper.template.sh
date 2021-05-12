@@ -5,7 +5,7 @@
 TOKEN_FILE=~/.kube/TOKEN
 
 if ! test -f "$TOKEN_FILE" || test $(( `date +%s` - `stat -L -c %Y $TOKEN_FILE` )) -gt 240; then
-  umask 377
+  umask 022
   oci ce cluster generate-token --cluster-id ${cluster-id} --region ${region} >$TOKEN_FILE
 fi
 
