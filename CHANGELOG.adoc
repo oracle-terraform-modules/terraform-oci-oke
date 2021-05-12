@@ -10,21 +10,29 @@ The format is based on {uri-changelog}[Keep a Changelog].
 = Unreleased
 
 === Additions
-
+* Added faster kubectl script (Thanks @joelezell-conga, @rgmccaw, Richard Exley)
 * Added support for VCN native endpoint for Kubernetes
 ** Added a subnet for control plane (#270)
 ** Added 2 parameters (cluster_access and cluster_source) to control access to Kubernetes API endpoint (#270)
+* Added support for initial node labels (#265)
+** Node labels can now be specified in node pools
+* Added support for enforcing use of signed images from registry (#274)
+* Added ability to specify node_pool_os_version (#281)
+* Added cluster_id and nodepool_ids for improved reusability (Thanks @yasn77)
 
 === Changes
 
-* Changed base module version to 2.2.0. This allows choosing between Oracle Linux 7.X or 8 for the operator host as well as supporting custom route rules on the NAT gateway route table (#279). Custom route rules will make hybrid deployment easier to manage.
+* Updated permissions required in documentation (#292)
+* Made node pool image updatable (#286)
+* Changed deprecated map function (#283)
+* Changed base module version to 2.2.1. This allows controlling the state of the bastion (RUNNING or STOPPED), choosing between Oracle Linux 7.X or 8 for the operator host as well as supporting custom route rules on the NAT gateway route table (#279). Custom route rules will make hybrid deployment easier to manage.
 * Reworked the subnet boundaries for bastion and operator hosts (#270)
 * Updated and simplified OKE security lists to support VCN native endpoints (#270)
 * All port numbers and stateless are now in integer and boolean formats respectively (#270)
 * Updated default Kubernetes version to v 1.19.7
 * Updated documentation and topology diagrams
 * Fixed incorrect namespace issue when creating secret for OCIR (#267)
-* Narrow permissions for kubeconfig file 
+* Narrow permissions for kubeconfig file
 
 === Deletions
 Removed hardcoded WAF CIDRs and used data source instead.
