@@ -561,6 +561,7 @@ variable "existing_key_id" {
 variable "image_signing_keys" {
   description = "A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm."
   type        = list(string)
+  default     = []
 }
 
 # serviceaccount
