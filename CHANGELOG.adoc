@@ -7,7 +7,7 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-= Unreleased
+= 3.2.0 (May 12, 2021)
 
 === Additions
 * Added faster kubectl script (Thanks @joelezell-conga, @rgmccaw, Richard Exley)
