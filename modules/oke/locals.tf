@@ -20,8 +20,8 @@ locals {
   # 1. get a list of available images for this cluster
   # 2. filter by version
   # 3. if more than 1 image found for this version, pick the latest
-  node_pool_image_id = element([for source in data.oci_containerengine_node_pool_option.node_pool_options.sources : source.image_id if length(regexall(var.node_pools.node_pool_os_version, source.source_name)) > 0], 0)
-
+  #node_pool_image_id = element([for source in data.oci_containerengine_node_pool_option.node_pool_options.sources : source.image_id if length(regexall("$-${var.node_pools.node_pool_os_version}", source.source_name)) > 0], 0)
+  node_pool_image_ids = data.oci_containerengine_node_pool_option.node_pool_options.sources
   # determine if post provisioning operations are possible
   # requires:
   ## 1. bastion to be enabled and in a running state
