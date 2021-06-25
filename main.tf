@@ -107,7 +107,7 @@ module "oke" {
   oke_ocir = local.oke_ocir
 
   # calico parameters
-  calico_enabled = var.calico_enabled
+  calico = local.calico
 
   # metric server
   metricserver_enabled = var.metricserver_enabled

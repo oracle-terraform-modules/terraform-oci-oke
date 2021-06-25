@@ -141,6 +141,11 @@ locals {
     username      = var.username
   }
 
+  calico = {
+    calico_version = var.calico_version
+    install_calico = var.calico_enabled
+  }
+
   oke_kms = {
     use_encryption = var.use_encryption
     key_id         = var.existing_key_id
