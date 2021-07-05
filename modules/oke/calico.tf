@@ -4,10 +4,17 @@
 data "template_file" "calico_enabled" {
   template = file("${path.module}/scripts/install_calico.template.sh")
 
-  count = var.calico_enabled == true ? 1 : 0
+vars = {
+    calico_version     = var.calico.calico_version
+    number_of_nodes    = local.total_nodes
+    pod_cidr           = var.oke_cluster.cluster_options_kubernetes_network_config_pods_cidr
+    number_of_replicas = min(20, max((local.total_nodes) / 200, 3))
+  }  
+
+  count = var.calico.install_calico == true ? 1 : 0
 }
 
-resource null_resource "calico_enabled" {
+resource null_resource "install_calico" {
   connection {
     host        = var.oke_operator.operator_private_ip
     private_key = file(var.oke_ssh_keys.ssh_private_key_path)
@@ -24,16 +31,16 @@ resource null_resource "calico_enabled" {
 
   provisioner "file" {
     content     = data.template_file.calico_enabled[0].rendered
-    destination = "~/calico_enabled.sh"
+    destination = "~/install_calico.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/calico_enabled.sh",
-      "$HOME/calico_enabled.sh",
-      "rm -f $HOME/calico_enabled.sh"
+      "chmod +x $HOME/install_calico.sh",
+      "$HOME/install_calico.sh",
+      # "rm -f $HOME/install_calico.sh"
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.calico_enabled == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.calico.install_calico == true ? 1 : 0
 }

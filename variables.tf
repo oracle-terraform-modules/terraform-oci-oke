@@ -526,6 +526,12 @@ variable "calico_enabled" {
   type        = bool
 }
 
+variable "calico_version" {
+  description = "The version of calico to install"
+  default     = "3.19"
+  type        = string
+}
+
 # metrics server
 variable "metricserver_enabled" {
   description = "whether to install metricserver for collecting metrics and for HPA"

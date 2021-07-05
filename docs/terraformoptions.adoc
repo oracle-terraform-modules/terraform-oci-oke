@@ -736,6 +736,11 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
+|`calico_version`
+|Version of {uri-calico}[Calico] to install.
+|3.19
+|3.19
+
 |`calico_enabled`
 |Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
 |true/false
