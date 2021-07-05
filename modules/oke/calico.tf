@@ -42,5 +42,5 @@ resource null_resource "install_calico" {
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.calico.install_calico == true ? 1 : 0 ? 1 : 0
+  count = local.post_provisioning_ops == true && var.calico.install_calico == true ? 1 : 0
 }
