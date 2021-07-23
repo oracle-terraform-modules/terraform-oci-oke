@@ -23,6 +23,7 @@ locals {
     internet_gateway_enabled     = true
     lockdown_default_seclist     = var.lockdown_default_seclist
     nat_gateway_enabled          = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
+    nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
     service_gateway_enabled      = true
     tags                         = var.tags["vcn"]
     vcn_cidr                     = var.vcn_cidr
@@ -64,6 +65,7 @@ locals {
     operator_enabled          = var.operator_enabled
     operator_image_id         = var.operator_image_id
     operator_shape            = var.operator_shape
+    operator_state            = var.operator_state
     operating_system_version  = var.operator_version
     operator_upgrade          = var.operator_package_upgrade
     enable_instance_principal = var.operator_instance_principal

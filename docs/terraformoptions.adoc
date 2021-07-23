@@ -200,6 +200,11 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 ]
 |[]
 
+|`nat_gateway_public_ip_id`
+|OCID of reserved IP address for NAT gateway. The reserved public IP address needs to be manually created. When value is "none", no reserved IP address is used and an ephemeral public IP address is selected from the Oracle pool.
+|
+|"none"
+
 |`netnum`
 |0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
 |e.g.
@@ -405,6 +410,11 @@ newbits = {
   memory           = 4,
   boot_volume_size = 50
 }`
+
+|`operator_state`
+|The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)
+| RUNNING/STOPPED
+| RUNNING
 
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*

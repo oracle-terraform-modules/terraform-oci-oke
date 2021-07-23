@@ -74,6 +74,8 @@ nat_gateway_route_rules      = [
     */
 ]
 
+nat_gateway_public_ip_id = "none"
+
 netnum = {
     bastion  = 0
     cp       = 2
@@ -153,6 +155,8 @@ operator_shape = {
   memory           = 4,
   boot_volume_size = 50
 }
+
+operator_state = "RUNNING"
 
 operator_timezone= "Australia/Sydney"
 
