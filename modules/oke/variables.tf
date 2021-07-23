@@ -88,9 +88,12 @@ variable "oke_ocir" {
   })
 }
 
-variable "calico_enabled" {
-  default = false
-  type    = bool
+# calico
+variable "calico" {
+  type = object({
+    calico_version = string
+    install_calico = bool
+  })
 }
 
 #metricserver
