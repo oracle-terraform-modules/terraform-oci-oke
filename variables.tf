@@ -100,6 +100,12 @@ variable "nat_gateway_route_rules" {
   default = null
 }
 
+variable "nat_gateway_public_ip_id" {
+  description = "OCID of reserved IP address for NAT gateway. The reserved public IP address needs to be manually created."
+  default     = "none"
+  type        = string
+}
+
 variable "netnum" {
   description = "0-based index of the subnet when the network is masked with the newbit. Used as netnum parameter for cidrsubnet function."
   default = {
@@ -282,6 +288,12 @@ variable "operator_shape" {
   }
   description = "The shape of operator instance."
   type        = map(any)
+}
+
+variable "operator_state" {
+  description = "The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)"
+  default     = "RUNNING"
+  type        = string
 }
 
 variable "operator_timezone" {
