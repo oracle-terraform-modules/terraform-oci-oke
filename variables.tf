@@ -371,7 +371,7 @@ variable "dashboard_enabled" {
 }
 
 variable "kubernetes_version" {
-  default     = "v1.19.7"
+  default     = "v1.20.8"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
