@@ -210,7 +210,7 @@ check_node_active = "none"
 
 dashboard_enabled = false
 
-kubernetes_version = "v1.19.7"
+kubernetes_version = "v1.20.8"
 
 node_pools = {
   np1 = {shape="VM.Standard.E3.Flex",ocpus=2,memory=20,node_pool_size=2,boot_volume_size=150}
