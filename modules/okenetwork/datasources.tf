@@ -20,4 +20,5 @@ data "oci_core_subnets" "oke_subnets" {
 }
 
 data "oci_waas_edge_subnets" "waf_cidr_blocks" {
+  count = var.waf_enabled ? 1 : 0
 }
