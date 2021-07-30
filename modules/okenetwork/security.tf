@@ -258,7 +258,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
   # allow only from WAF
   dynamic "ingress_security_rules" {
     iterator = waf_iterator
-    for_each = var.waf_enabled == true ? data.oci_waas_edge_subnets.waf_cidr_blocks.edge_subnets : []
+    for_each = var.waf_enabled == true ? data.oci_waas_edge_subnets.waf_cidr_blocks[0].edge_subnets : []
 
     content {
       description = "allow public ingress only from WAF CIDR blocks"
