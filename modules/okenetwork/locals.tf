@@ -143,7 +143,7 @@ locals {
       protocol         = local.tcp_protocol,
       port             = -1,
       stateless        = false
-    }    
+    }
   ]
 
   workers_ingress = [
@@ -160,7 +160,7 @@ locals {
       port        = -1,
       source      = local.cp_subnet,
       stateless   = false
-    },    
+    },
     {
       description = "Allow path discovery from worker nodes"
       protocol    = local.icmp_protocol,

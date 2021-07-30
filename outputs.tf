@@ -3,6 +3,17 @@
 
 # for reuse 
 
+output "cluster_id" {
+  description = "ID of the Kubernetes cluster"
+  value       = module.oke.cluster_id
+}
+
+output "nodepool_ids" {
+  description = "Map of Nodepool names and IDs"
+  value       = module.oke.nodepool_ids
+}
+
+
 output "ig_route_id" {
   description = "id of route table to vcn internet gateway"
   value       = module.base.ig_route_id
@@ -15,7 +26,7 @@ output "nat_route_id" {
 
 output "subnet_ids" {
   description = "map of subnet ids (worker, int_lb, pub_lb) used by OKE."
-  value = module.network.subnet_ids
+  value       = module.network.subnet_ids
 }
 
 output "vcn_id" {

@@ -2,16 +2,16 @@
 
 [uri-repo]: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-[uri-docs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs
+[uri-docs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs
 
-[uri-changelog]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/CHANGELOG.adoc
-[uri-configuration]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/configuration.adoc
+[uri-changelog]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/CHANGELOG.adoc
+[uri-configuration]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/configuration.adoc
 
-[uri-contribute]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/CONTRIBUTING.adoc
-[uri-contributors]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/CONTRIBUTORS.adoc
+[uri-contribute]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/CONTRIBUTING.adoc
+[uri-contributors]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/CONTRIBUTORS.adoc
 
-[uri-instructions]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/instructions.adoc
-[uri-license]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/LICENSE
+[uri-instructions]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/instructions.adoc
+[uri-license]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/LICENSE
 [uri-canonical-license]: https://oss.oracle.com/licenses/upl/
 [uri-kubernetes]: https://kubernetes.io/
 [uri-networks-subnets-cidr]: https://erikberg.com/notes/networks.html
@@ -19,15 +19,15 @@
 [uri-oci-documentation]: https://docs.cloud.oracle.com/iaas/Content/home.htm
 [uri-oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 [uri-oracle]: https://www.oracle.com
-[uri-prereqs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/prerequisites.adoc
-[uri-quickstart]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/quickstart.adoc
+[uri-prereqs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/prerequisites.adoc
+[uri-quickstart]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/quickstart.adoc
 
 [uri-terraform]: https://www.terraform.io
-[uri-terraform-dependencies]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/dependencies.adoc
+[uri-terraform-dependencies]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/dependencies.adoc
 [uri-terraform-cidrsubnet-deconstructed]: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 [uri-terraform-oci]: https://www.terraform.io/docs/providers/oci/index.html
-[uri-terraform-oke-sample]: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
-[uri-terraform-options]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/terraformoptions.adoc
+[uri-terraform-oke-sample]: https://github.com/terraform-providers/terraform-provider-oci/tree/main/examples/container_engine
+[uri-terraform-options]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/terraformoptions.adoc
 [uri-terraform-hashircorp-examples]: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
 [uri-topology]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/topology.adoc
 

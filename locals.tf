@@ -23,6 +23,7 @@ locals {
     internet_gateway_enabled     = true
     lockdown_default_seclist     = var.lockdown_default_seclist
     nat_gateway_enabled          = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
+    nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
     service_gateway_enabled      = true
     tags                         = var.tags["vcn"]
     vcn_cidr                     = var.vcn_cidr
@@ -38,23 +39,25 @@ locals {
   }
 
   oci_base_bastion = {
-    availability_domain   = var.availability_domains["bastion"]
-    bastion_access        = var.bastion_access
-    bastion_enabled       = var.bastion_enabled
-    bastion_image_id      = var.bastion_image_id
-    bastion_shape         = var.bastion_shape
-    bastion_upgrade       = var.bastion_package_upgrade
-    netnum                = var.netnum["bastion"]
-    newbits               = var.newbits["bastion"]
-    notification_enabled  = var.bastion_notification_enabled
-    notification_endpoint = var.bastion_notification_endpoint
-    notification_protocol = var.bastion_notification_protocol
-    notification_topic    = var.bastion_notification_topic
-    ssh_private_key_path  = var.ssh_private_key_path
-    ssh_public_key        = var.ssh_public_key
-    ssh_public_key_path   = var.ssh_public_key_path
-    tags                  = var.tags["bastion"]
-    timezone              = var.bastion_timezone
+    availability_domain              = var.availability_domains["bastion"]
+    bastion_access                   = var.bastion_access
+    bastion_enabled                  = var.bastion_enabled
+    bastion_image_id                 = var.bastion_image_id
+    bastion_operating_system_version = var.bastion_operating_system_version
+    bastion_shape                    = var.bastion_shape
+    bastion_state                    = var.bastion_state
+    bastion_upgrade                  = var.bastion_package_upgrade
+    netnum                           = var.netnum["bastion"]
+    newbits                          = var.newbits["bastion"]
+    notification_enabled             = var.bastion_notification_enabled
+    notification_endpoint            = var.bastion_notification_endpoint
+    notification_protocol            = var.bastion_notification_protocol
+    notification_topic               = var.bastion_notification_topic
+    ssh_private_key_path             = var.ssh_private_key_path
+    ssh_public_key                   = var.ssh_public_key
+    ssh_public_key_path              = var.ssh_public_key_path
+    tags                             = var.tags["bastion"]
+    timezone                         = var.bastion_timezone
   }
 
   oci_base_operator = {
@@ -62,6 +65,7 @@ locals {
     operator_enabled          = var.operator_enabled
     operator_image_id         = var.operator_image_id
     operator_shape            = var.operator_shape
+    operator_state            = var.operator_state
     operating_system_version  = var.operator_version
     operator_upgrade          = var.operator_package_upgrade
     enable_instance_principal = var.operator_instance_principal
@@ -100,6 +104,7 @@ locals {
     operator_enabled            = var.operator_enabled
     operator_instance_principal = var.operator_instance_principal
     operator_version            = var.operator_version
+    bastion_state               = var.bastion_state
   }
 
   oke_cluster = {
@@ -136,6 +141,11 @@ locals {
     secret_id     = var.secret_id
     secret_name   = var.secret_name
     username      = var.username
+  }
+
+  calico = {
+    calico_version = var.calico_version
+    install_calico = var.calico_enabled
   }
 
   oke_kms = {

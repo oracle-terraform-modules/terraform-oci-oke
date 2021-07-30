@@ -41,5 +41,5 @@ resource null_resource "create_service_account" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.operator_enabled == true && var.service_account.create_service_account == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.service_account.create_service_account == true ? 1 : 0
 }

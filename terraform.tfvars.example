@@ -74,6 +74,8 @@ nat_gateway_route_rules      = [
     */
 ]
 
+nat_gateway_public_ip_id = "none"
+
 netnum = {
     bastion  = 0
     cp       = 2
@@ -114,6 +116,8 @@ bastion_notification_protocol = "EMAIL"
 
 bastion_notification_topic= "bastion_server_notification"
 
+bastion_operating_system_version = "7.9"
+
 bastion_package_upgrade = false
 
 bastion_shape = {
@@ -123,6 +127,8 @@ bastion_shape = {
   memory           = 4,
   boot_volume_size = 50
 }
+
+bastion_state = "RUNNING"
 
 bastion_timezone = "Australia/Sydney"
 
@@ -149,6 +155,8 @@ operator_shape = {
   memory           = 4,
   boot_volume_size = 50
 }
+
+operator_state = "RUNNING"
 
 operator_timezone= "Australia/Sydney"
 
@@ -202,7 +210,7 @@ check_node_active = "none"
 
 dashboard_enabled = false
 
-kubernetes_version = "v1.19.7"
+kubernetes_version = "v1.20.8"
 
 node_pools = {
   np1 = {shape="VM.Standard.E3.Flex",ocpus=2,memory=20,node_pool_size=2,boot_volume_size=150}
@@ -252,6 +260,7 @@ username = ""
 
 # calico
 calico_enabled = false
+calico_version = "3.19"
 
 #metrics server
 metricserver_enabled = false

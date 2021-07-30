@@ -6,8 +6,8 @@
 
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
-:uri-rel-file-base: link:{uri-repo}/blob/master
-:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
 :uri-docs: {uri-rel-file-base}/docs
 :uri-instructions: {uri-docs}/instructions.adoc
 :uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
@@ -24,7 +24,7 @@
 
 This section documents how to upgrade the OKE Cluster using this project. At a high level, upgrading the OKE cluster is fairly straightforward:
 
-1. Upgrade the master nodes
+1. Upgrade the control plane nodes
 2. Upgrade the worker nodes using either {uri-upgrade-oke}[in-place or out-of-place] approach
 
 This has to be done in order.
@@ -36,7 +36,7 @@ This project supports only the out-of-place method of upgrading the worker nodes
 . bastion host is created
 . operator host is created
 
-=== Upgrading the master nodes
+=== Upgrading the control plane nodes
 
 . Locate your `kubernetes_version` in your terraform variable file and change:
 
@@ -58,7 +58,7 @@ kubernetes_version = "v1.18.10"
 terraform apply --auto-approve
 ----
 
-This will upgrade the master nodes. You can verify this in the OCI Console.
+This will upgrade the control plane nodes. You can verify this in the OCI Console.
 
 
 === Upgrading the worker nodes using the out-of-place method

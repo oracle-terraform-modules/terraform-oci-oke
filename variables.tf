@@ -100,6 +100,12 @@ variable "nat_gateway_route_rules" {
   default = null
 }
 
+variable "nat_gateway_public_ip_id" {
+  description = "OCID of reserved IP address for NAT gateway. The reserved public IP address needs to be manually created."
+  default     = "none"
+  type        = string
+}
+
 variable "netnum" {
   description = "0-based index of the subnet when the network is masked with the newbit. Used as netnum parameter for cidrsubnet function."
   default = {
@@ -186,6 +192,12 @@ variable "bastion_notification_topic" {
   type        = string
 }
 
+variable "bastion_operating_system_version" {
+  description = "In case Autonomous Linux is used, allow specification of Autonomous version"
+  default     = "7.9"
+  type        = string
+}
+
 variable "bastion_package_upgrade" {
   default     = true
   description = "Whether to upgrade the bastion host packages after provisioning. it’s useful to set this to false during development so the bastion is provisioned faster."
@@ -202,6 +214,12 @@ variable "bastion_shape" {
   }
   description = "The shape of bastion instance."
   type        = map(any)
+}
+
+variable "bastion_state" {
+  description = "The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)"
+  default     = "RUNNING"
+  type        = string
 }
 
 variable "bastion_timezone" {
@@ -270,6 +288,12 @@ variable "operator_shape" {
   }
   description = "The shape of operator instance."
   type        = map(any)
+}
+
+variable "operator_state" {
+  description = "The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)"
+  default     = "RUNNING"
+  type        = string
 }
 
 variable "operator_timezone" {
@@ -347,7 +371,7 @@ variable "dashboard_enabled" {
 }
 
 variable "kubernetes_version" {
-  default     = "v1.19.7"
+  default     = "v1.20.8"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
@@ -402,10 +426,6 @@ variable "node_pool_os_version" {
   default     = "7.9"
   description = "The version of image Operating System to use."
   type        = string
-  validation {
-    condition     = (var.node_pool_os_version >= 7.9)
-    error_message = "Node_pool_os_version should be equal or greater than 7.9."
-  }
 }
 
 variable "pods_cidr" {
@@ -518,6 +538,12 @@ variable "calico_enabled" {
   type        = bool
 }
 
+variable "calico_version" {
+  description = "The version of calico to install"
+  default     = "3.19"
+  type        = string
+}
+
 # metrics server
 variable "metricserver_enabled" {
   description = "whether to install metricserver for collecting metrics and for HPA"
@@ -553,6 +579,7 @@ variable "existing_key_id" {
 variable "image_signing_keys" {
   description = "A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm."
   type        = list(string)
+  default     = []
 }
 
 # serviceaccount

@@ -7,8 +7,8 @@
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
-:uri-rel-file-base: link:{uri-repo}/blob/master
-:uri-rel-tree-base: link:{uri-repo}/tree/master
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
 :uri-docs: {uri-rel-file-base}/docs
 
 :uri-calico: https://www.projectcalico.org/
@@ -28,7 +28,7 @@
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
 :uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
-:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
+:uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/main/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
 :uri-oci-ocir: https://docs.cloud.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
 :uri-oke: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm

@@ -5,7 +5,7 @@ resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
   provider       = oci.home
   compartment_id = var.tenancy_id
   description    = "policy to allow operator host to manage dynamic group"
-  name           = var.label_prefix == "none" ? "operator-instance-principal-dynamic-group-${substr(uuid(),0,8)}" : "${var.label_prefix}-operator-instance-principal-dynamic-group-${substr(uuid(),0,8)}"
+  name           = var.label_prefix == "none" ? "operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}" : "${var.label_prefix}-operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}"
   statements     = ["Allow dynamic-group ${var.dynamic_group} to use dynamic-groups in tenancy"]
   count          = (var.oke_kms.use_encryption == true && var.operator.bastion_enabled == true && var.operator.operator_instance_principal == true) ? 1 : 0
 }

@@ -140,7 +140,7 @@ resource "oci_core_security_list" "workers_seclist" {
       }
     }
   }
-  
+
   # NodePort access - TCP
   dynamic "ingress_security_rules" {
     for_each = var.oke_network_worker.allow_node_port_access == true ? [1] : []
@@ -254,7 +254,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       stateless   = false
     }
   }
-  
+
   # allow only from WAF
   dynamic "ingress_security_rules" {
     iterator = waf_iterator
@@ -267,7 +267,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       stateless   = false
     }
   }
-  
+
   # restrict by ports only
   dynamic "ingress_security_rules" {
     iterator = pub_lb_ingress_iterator

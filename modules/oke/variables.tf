@@ -31,6 +31,7 @@ variable "oke_operator" {
     operator_enabled            = bool
     operator_instance_principal = bool
     operator_version            = string
+    bastion_state               = string
   })
 }
 
@@ -87,9 +88,12 @@ variable "oke_ocir" {
   })
 }
 
-variable "calico_enabled" {
-  default = false
-  type    = bool
+# calico
+variable "calico" {
+  type = object({
+    calico_version = string
+    install_calico = bool
+  })
 }
 
 #metricserver

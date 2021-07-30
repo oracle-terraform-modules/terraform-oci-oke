@@ -8,10 +8,10 @@ data "template_file" "check_active_worker" {
     check_node_active = var.check_node_active
     total_nodes       = local.total_nodes
   }
-  count = var.oke_operator.operator_enabled == true && var.check_node_active != "none" ? 1 : 0
+  count = local.post_provisioning_ops == true && var.check_node_active != "none" ? 1 : 0
 }
 
-resource null_resource "check_worker_active" {  
+resource null_resource "check_worker_active" {
   triggers = {
     node_pools = length(data.oci_containerengine_node_pools.all_node_pools.node_pools)
   }
@@ -43,5 +43,5 @@ resource null_resource "check_worker_active" {
     ]
   }
 
-  count = var.oke_operator.operator_enabled == true && var.check_node_active != "none" ? 1 : 0
+  count = local.post_provisioning_ops == true && var.check_node_active != "none" ? 1 : 0
 }
