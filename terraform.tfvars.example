@@ -202,7 +202,7 @@ allow_worker_ssh_access = false
 
 cluster_access = "public"
 
-cluster_access_source = "0.0.0.0/0"
+cluster_access_source = ["0.0.0.0/0"]
 
 cluster_name = "oke"
 

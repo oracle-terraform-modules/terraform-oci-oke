@@ -1,4 +1,4 @@
-# Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
+# Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # control plane security list
@@ -67,6 +67,29 @@ resource "oci_core_security_list" "control_plane_seclist" {
       }
     }
   }
+
+  dynamic "ingress_security_rules" {
+    iterator = cp_access_iterator
+    for_each = var.cluster_access_source
+
+    content {
+      description = "Allow external access to control plane API endpoint communication"
+      protocol    = local.tcp_protocol
+      source      = cp_access_iterator.value
+      stateless   = false
+
+      tcp_options {
+          min = 6443
+          max = 6443
+      }
+
+      icmp_options {
+          type = 3
+          code = 4
+      }
+    }
+  }
+
   lifecycle {
     ignore_changes = [
       egress_security_rules, ingress_security_rules
