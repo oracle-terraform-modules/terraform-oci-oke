@@ -554,8 +554,8 @@ admission_controller_options = {
 
 |`cluster_access_source`
 |CIDR range from which to allow access.
-|`0.0.0.0/0`
-|`0.0.0.0/0`
+|`[0.0.0.0/0]`
+|`[]`
 
 |`cluster_name`
 |The name of the OKE cluster. This will be appended to the label_prefix. *Required*

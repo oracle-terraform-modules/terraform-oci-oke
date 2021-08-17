@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
+# Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 # Derived and adapted from https://www.ateam-oracle.com/secure-way-of-managing-secrets-in-oci
 

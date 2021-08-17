@@ -1,4 +1,4 @@
-# Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
+# Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
@@ -347,9 +347,9 @@ variable "cluster_access" {
 }
 
 variable "cluster_access_source" {
-  default     = "0.0.0.0/0"
+  default     = []
   description = "CIDR range from which to allow access"
-  type        = string
+  type        = list
 }
 
 variable "cluster_name" {

@@ -1,4 +1,4 @@
-# Copyright 2017, 2019, Oracle Corporation and/or affiliates.  All rights reserved.
+# Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -85,13 +85,14 @@ locals {
       source      = local.worker_subnet,
       stateless   = false
     },
-    {
+/*    {
       description = "Allow external access to control plane API endpoint communication"
       protocol    = local.tcp_protocol,
       port        = 6443,
       source      = var.cluster_access_source,
       stateless   = false
     },
+    */
   ]
 
   # workers
