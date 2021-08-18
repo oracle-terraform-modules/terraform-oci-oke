@@ -1,18 +1,18 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "template_file" "metricserver_enabled" {
+data "template_file" "enable_metric_server" {
   template = file("${path.module}/scripts/install_metricserver.template.sh")
 
   vars = {
-    vpa_enabled = var.vpa_enabled
+    enable_vpa = var.enable_vpa
     vpa_version = var.vpa_version
   }
 
-  count = var.metricserver_enabled == true ? 1 : 0
+  count = var.enable_metric_server == true ? 1 : 0
 }
 
-resource null_resource "metricserver_enabled" {
+resource null_resource "enable_metric_server" {
   connection {
     host        = var.operator_private_ip
     private_key = file(var.ssh_private_key_path)
@@ -28,17 +28,17 @@ resource null_resource "metricserver_enabled" {
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    content     = data.template_file.metricserver_enabled[0].rendered
-    destination = "~/metricserver_enabled.sh"
+    content     = data.template_file.enable_metric_server[0].rendered
+    destination = "~/enable_metric_server.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/metricserver_enabled.sh",
-      "$HOME/metricserver_enabled.sh",
-      "rm -f $HOME/metricserver_enabled.sh"
+      "chmod +x $HOME/enable_metric_server.sh",
+      "$HOME/enable_metric_server.sh",
+      "rm -f $HOME/enable_metric_server.sh"
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.metricserver_enabled == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.enable_metric_server == true ? 1 : 0
 }

@@ -30,14 +30,14 @@ variable "create_operator" {
 variable "operator_instance_principal" {
   type = bool
 }
-variable "operator_version" {}
+variable "operator_os_version" {}
 
 variable "bastion_state" {}
 
 # oke
 variable "cluster_kubernetes_version" {}
 
-variable "cluster_access" {}
+variable "control_plane_access" {}
 
 variable "cluster_name" {}
 
@@ -88,7 +88,7 @@ variable "node_pool_os" {}
 
 variable "node_pool_os_version" {}
 
-variable "preferred_lb_subnets" {}
+variable "preferred_lb_type" {}
 
 
 # ocir
@@ -113,12 +113,12 @@ variable "install_calico" {
 
 #metricserver
 
-variable "metricserver_enabled" {
+variable "enable_metric_server" {
   default = false
   type    = bool
 }
 
-variable "vpa_enabled" {
+variable "enable_vpa" {
   type = bool
 }
 variable "vpa_version" {}

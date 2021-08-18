@@ -29,11 +29,11 @@ variable "vcn_id" {}
 
 # cluster endpoint
 
-variable "cluster_access" {
+variable "control_plane_access" {
   type = string
 }
 
-variable "cluster_access_source" {
+variable "control_plane_access_source" {
   type = list(any)
 }
 
@@ -51,7 +51,7 @@ variable "worker_mode" {}
 
 # load balancers
 
-variable "lb_subnet_type" {
+variable "lb_type" {
   type = string
 }
 
@@ -59,7 +59,7 @@ variable "public_lb_ports" {
   type = list(any)
 }
 
-variable "waf_enabled" {
+variable "enable_waf" {
   type = bool
 }
 

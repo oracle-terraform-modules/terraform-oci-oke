@@ -6,7 +6,7 @@ data "template_file" "install_kubectl" {
   template = file("${path.module}/scripts/install_kubectl.template.sh")
 
   vars = {
-    ol = var.operator_version
+    ol = var.operator_os_version
   }
 }
 

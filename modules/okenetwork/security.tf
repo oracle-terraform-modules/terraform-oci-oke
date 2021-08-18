@@ -70,7 +70,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
 
   dynamic "ingress_security_rules" {
     iterator = cp_access_iterator
-    for_each = var.cluster_access_source
+    for_each = var.control_plane_access_source
 
     content {
       description = "Allow external access to control plane API endpoint communication"
@@ -251,7 +251,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
       egress_security_rules,
     ]
   }
-  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
+  count = var.lb_type == "internal" || var.lb_type == "both" ? 1 : 0
 }
 
 resource "oci_core_security_list" "pub_lb_seclist" {
@@ -268,7 +268,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
 
   dynamic "egress_security_rules" {
     iterator = dual_lb_iterator
-    for_each = var.lb_subnet_type == "both" ? [1] : []
+    for_each = var.lb_type == "both" ? [1] : []
 
     content {
       description = "allow egress from public load balancer to private load balancer"
@@ -281,7 +281,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
   # allow only from WAF
   dynamic "ingress_security_rules" {
     iterator = waf_iterator
-    for_each = var.waf_enabled == true ? data.oci_waas_edge_subnets.waf_cidr_blocks[0].edge_subnets : []
+    for_each = var.enable_waf == true ? data.oci_waas_edge_subnets.waf_cidr_blocks[0].edge_subnets : []
 
     content {
       description = "allow public ingress only from WAF CIDR blocks"
@@ -294,7 +294,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
   # restrict by ports only
   dynamic "ingress_security_rules" {
     iterator = pub_lb_ingress_iterator
-    for_each = var.waf_enabled == false ? var.public_lb_ports : []
+    for_each = var.enable_waf == false ? var.public_lb_ports : []
 
     content {
       description = "allow public ingress from anywhere on specified ports"
@@ -316,5 +316,5 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       egress_security_rules,
     ]
   }
-  count = (var.lb_subnet_type == "public" || var.lb_subnet_type == "both") ? 1 : 0
+  count = (var.lb_type == "public" || var.lb_type == "both") ? 1 : 0
 }

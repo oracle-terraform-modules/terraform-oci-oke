@@ -30,11 +30,11 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 |Creates a service account that can be used for CI/CD. 
 |create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
-|calico_enabled
+|enable_calico
 |Installs calico as network policy engine
 |create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
-|metricserver_enabled
+|enable_metric_server
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling
 |create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
@@ -52,6 +52,6 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |vpa
 |Installs Kubernetes Vertical Pod Autoscaler
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true, metricserver_enabled = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true, enable_metric_server = true
 
 |===

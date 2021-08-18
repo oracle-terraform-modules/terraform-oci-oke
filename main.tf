@@ -13,7 +13,7 @@ module "vcn" {
   drg_display_name             = var.drg_display_name
   internet_gateway_enabled     = true
   lockdown_default_seclist     = var.lockdown_default_seclist
-  nat_gateway_enabled          = var.worker_mode == "private" || var.create_operator == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
+  nat_gateway_enabled          = var.worker_mode == "private" || var.create_operator == true || (var.lb_type == "internal" || var.lb_type == "both") ? true : false
   nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
   service_gateway_enabled      = true
   tags                         = var.tags["vcn"]
@@ -53,7 +53,7 @@ module "bastion" {
 
   ssh_public_key      = var.ssh_public_key
   ssh_public_key_path = var.ssh_public_key_path
-  upgrade_bastion     = var.bastion_package_upgrade
+  upgrade_bastion     = var.upgrade_bastion
 
   # bastion notification
   enable_bastion_notification   = var.enable_bastion_notification
@@ -83,20 +83,20 @@ module "operator" {
   nat_route_id        = module.vcn.nat_route_id
   netnum              = lookup(var.subnets["operator"], "netnum")
   newbits             = lookup(var.subnets["operator"], "newbits")
-  nsg_ids             = var.nsg_ids
+  nsg_ids             = var.operator_nsg_ids
   vcn_id              = module.vcn.vcn_id
 
   # bastion host parameters
   create_operator             = var.create_operator
   operator_image_id           = var.operator_image_id
   operator_instance_principal = var.operator_instance_principal
-  operator_os_version         = var.operator_version
+  operator_os_version         = var.operator_os_version
   operator_shape              = var.operator_shape
   operator_state              = var.operator_state
   operator_timezone           = var.operator_timezone
   ssh_public_key              = var.ssh_public_key
   ssh_public_key_path         = var.ssh_public_key_path
-  upgrade_operator            = var.operator_package_upgrade
+  upgrade_operator            = var.upgrade_operator
 
   # operator notification
   enable_operator_notification   = var.enable_operator_notification
@@ -136,7 +136,7 @@ module "policies" {
   dynamic_group = module.operator.operator_instance_principal_group_name
 
   # kms integration
-  key_id         = var.existing_key_id
+  key_id         = var.kms_key_id
   use_encryption = var.use_encryption
 
   cluster_id = module.oke.cluster_id
@@ -162,8 +162,8 @@ module "network" {
   vcn_id       = module.vcn.vcn_id
 
   # control plane endpoint parameters
-  cluster_access        = var.cluster_access
-  cluster_access_source = var.cluster_access_source
+  control_plane_access        = var.control_plane_access
+  control_plane_access_source = var.control_plane_access_source
 
   # oke worker network parameters
   allow_node_port_access  = var.allow_node_port_access
@@ -171,13 +171,13 @@ module "network" {
   worker_mode             = var.worker_mode
 
   # oke load balancer network parameters
-  lb_subnet_type = var.lb_subnet_type
+  lb_type = var.lb_type
 
   # oke load balancer ports
   public_lb_ports = var.public_lb_ports
 
   # waf integration
-  waf_enabled = var.waf_enabled
+  enable_waf = var.enable_waf
 
 }
 
@@ -206,12 +206,12 @@ module "oke" {
   create_bastion_host         = var.create_bastion_host
   create_operator             = var.create_operator
   operator_instance_principal = var.operator_instance_principal
-  operator_version            = var.operator_version
+  operator_os_version         = var.operator_os_version
   bastion_state               = var.bastion_state
 
   # oke cluster parameters
   cluster_kubernetes_version                              = var.kubernetes_version
-  cluster_access                                          = var.cluster_access
+  control_plane_access                                    = var.control_plane_access
   cluster_name                                            = var.cluster_name
   cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
@@ -219,7 +219,7 @@ module "oke" {
   cluster_subnets                                         = module.network.subnet_ids
   vcn_id                                                  = module.vcn.vcn_id
   use_encryption                                          = var.use_encryption
-  kms_key_id                                              = var.existing_key_id
+  kms_key_id                                              = var.kms_key_id
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
@@ -232,7 +232,7 @@ module "oke" {
   node_pool_os_version  = var.node_pool_os_version
 
   # oke load balancer parameters
-  preferred_lb_subnets = var.preferred_lb_subnets
+  preferred_lb_type = var.preferred_lb_type
 
   # ocir parameters
   email_address = var.email_address
@@ -243,11 +243,11 @@ module "oke" {
 
   # calico parameters
   calico_version = var.calico_version
-  install_calico = var.calico_enabled
+  install_calico = var.enable_calico
 
   # metric server
-  metricserver_enabled = var.metricserver_enabled
-  vpa_enabled          = var.vpa_enabled
+  enable_metric_server = var.enable_metric_server
+  enable_vpa           = var.enable_vpa
   vpa_version          = var.vpa_version
 
   # service account

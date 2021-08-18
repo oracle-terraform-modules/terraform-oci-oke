@@ -1,7 +1,7 @@
 ## Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "template_file" "calico_enabled" {
+data "template_file" "enable_calico" {
   template = file("${path.module}/scripts/install_calico.template.sh")
 
 vars = {
@@ -30,7 +30,7 @@ resource null_resource "install_calico" {
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    content     = data.template_file.calico_enabled[0].rendered
+    content     = data.template_file.enable_calico[0].rendered
     destination = "~/install_sh"
   }
 

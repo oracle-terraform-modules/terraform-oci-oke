@@ -93,7 +93,7 @@ locals {
       description = "Allow external access to control plane API endpoint communication"
       protocol    = local.tcp_protocol,
       port        = 6443,
-      source      = var.cluster_access_source,
+      source      = var.control_plane_access_source,
       stateless   = false
     },
     */

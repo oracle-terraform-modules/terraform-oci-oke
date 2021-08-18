@@ -9,7 +9,7 @@ if [ ! -f .metrics_completed ]; then
 
   sleep 5
 
-  if [ ${vpa_enabled} = true ]; then
+  if [ ${enable_vpa} = true ]; then
     echo "Installing Vertical Pod Autoscaler"
     cd /tmp > /dev/null 2>&1
     git clone -b vpa-release-${vpa_version} https://github.com/kubernetes/autoscaler.git > /dev/null 2>&1

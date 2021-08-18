@@ -153,9 +153,9 @@ image::images/publiccluster.png[align="center"]
 You can set the Kubernetes cluster to be public by using the following parameters:
 
 ```
-cluster_access = "public"
+control_plane_access = "public"
 
-cluster_access_source = "0.0.0.0/0"
+control_plane_access_source = "0.0.0.0/0"
 ```
 
 When deployed in private cluster mode, the Kubernetes endpoint can only be accessed from the operator host.
@@ -169,8 +169,8 @@ The following table maps all possible cluster and workers deployment combination
 [stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
 |===
 |
-|cluster_access=public
-|cluster_access=private
+|control_plane_access=public
+|control_plane_access=private
 
 |worker_mode=public
 |X
@@ -359,18 +359,18 @@ You can also use internal load balancers. Internal load balancers have only priv
 
 The following parameters govern how load balancers are created with:
 
-* lb_subnet_type
+* lb_type
 
-* preferred_lb_subnets
+* preferred_lb_type
 
-The table below shows the valid combinations of preferred_lb_subnets and subnet_type values.
+The table below shows the valid combinations of preferred_lb_type and subnet_type values.
 
 .Public and Internal Load Balancer combinations
 [stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
 |===
 |
-|preferred_lb_subnets=internal
-|preferred_lb_subnets=public
+|preferred_lb_type=internal
+|preferred_lb_type=public
 
 |subnet_type=both
 |X
