@@ -258,6 +258,8 @@ secret_name = "ocirsecret"
 
 username = ""
 
+namespace = "default"
+
 # calico
 calico_enabled = false
 calico_version = "3.19"

@@ -531,6 +531,12 @@ variable "username" {
   type        = string
 }
 
+variable "namespace" {
+  default     = "default"
+  description = "The k8s secret namespace."
+  type        = string
+}
+
 # calico
 variable "calico_enabled" {
   description = "whether to install calico for network pod security policy"
