@@ -4,11 +4,11 @@
 locals {
 
   # subnet cidrs - used by subnets
-  bastion_subnet = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["bastion"], var.oke_network_vcn.netnum["bastion"])
-  cp_subnet      = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["cp"], var.oke_network_vcn.netnum["cp"])
-  int_lb_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.netnum["int_lb"])
-  pub_lb_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.netnum["pub_lb"])
-  worker_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["workers"], var.oke_network_vcn.netnum["workers"])
+  bastion_subnet = cidrsubnet(var.vcn_cidr, var.newbits["bastion"], var.netnum["bastion"])
+  cp_subnet      = cidrsubnet(var.vcn_cidr, var.newbits["cp"], var.netnum["cp"])
+  int_lb_subnet  = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.netnum["int_lb"])
+  pub_lb_subnet  = cidrsubnet(var.vcn_cidr, var.newbits["lb"], var.netnum["pub_lb"])
+  worker_subnet  = cidrsubnet(var.vcn_cidr, var.newbits["workers"], var.netnum["workers"])
 
   anywhere = "0.0.0.0/0"
 
@@ -85,7 +85,7 @@ locals {
       source      = local.worker_subnet,
       stateless   = false
     },
-/*    {
+    /*    {
       description = "Allow external access to control plane API endpoint communication"
       protocol    = local.tcp_protocol,
       port        = 6443,

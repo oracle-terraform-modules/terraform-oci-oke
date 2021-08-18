@@ -5,7 +5,7 @@
 resource "oci_core_security_list" "control_plane_seclist" {
   compartment_id = var.compartment_id
   display_name   = var.label_prefix == "none" ? "control-plane" : "${var.label_prefix}-control-plane"
-  vcn_id         = var.oke_network_vcn.vcn_id
+  vcn_id         = var.vcn_id
 
   dynamic "egress_security_rules" {
     iterator = cp_egress_iterator
@@ -79,13 +79,13 @@ resource "oci_core_security_list" "control_plane_seclist" {
       stateless   = false
 
       tcp_options {
-          min = 6443
-          max = 6443
+        min = 6443
+        max = 6443
       }
 
       icmp_options {
-          type = 3
-          code = 4
+        type = 3
+        code = 4
       }
     }
   }
@@ -101,7 +101,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
 resource "oci_core_security_list" "workers_seclist" {
   compartment_id = var.compartment_id
   display_name   = var.label_prefix == "none" ? "workers" : "${var.label_prefix}-workers"
-  vcn_id         = var.oke_network_vcn.vcn_id
+  vcn_id         = var.vcn_id
 
   dynamic "egress_security_rules" {
     iterator = workers_egress_iterator
@@ -166,7 +166,7 @@ resource "oci_core_security_list" "workers_seclist" {
 
   # NodePort access - TCP
   dynamic "ingress_security_rules" {
-    for_each = var.oke_network_worker.allow_node_port_access == true ? [1] : []
+    for_each = var.allow_node_port_access == true ? [1] : []
 
     content {
       description = "allow tcp NodePorts access to workers"
@@ -183,7 +183,7 @@ resource "oci_core_security_list" "workers_seclist" {
 
   # NodePort access - UDP
   dynamic "ingress_security_rules" {
-    for_each = var.oke_network_worker.allow_node_port_access == true ? [1] : []
+    for_each = var.allow_node_port_access == true ? [1] : []
 
     content {
       description = "allow udp NodePorts access to workers"
@@ -201,7 +201,7 @@ resource "oci_core_security_list" "workers_seclist" {
 
   # ssh access
   dynamic "ingress_security_rules" {
-    for_each = var.oke_network_worker.allow_worker_ssh_access == true ? [1] : []
+    for_each = var.allow_worker_ssh_access == true ? [1] : []
 
     content {
       description = "allow ssh access to worker nodes through bastion"
@@ -227,7 +227,7 @@ resource "oci_core_security_list" "workers_seclist" {
 resource "oci_core_security_list" "int_lb_seclist" {
   compartment_id = var.compartment_id
   display_name   = var.label_prefix == "none" ? "int-lb" : "${var.label_prefix}-int-lb"
-  vcn_id         = var.oke_network_vcn.vcn_id
+  vcn_id         = var.vcn_id
 
   egress_security_rules {
     description = "allow stateful egress to workers. required for NodePorts and load balancer http/tcp health checks"
@@ -239,7 +239,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
   ingress_security_rules {
     description = "allow ingress only from the public lb subnet"
     protocol    = local.tcp_protocol
-    source      = var.oke_network_vcn.vcn_cidr
+    source      = var.vcn_cidr
     stateless   = false
   }
 
@@ -257,7 +257,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
 resource "oci_core_security_list" "pub_lb_seclist" {
   compartment_id = var.compartment_id
   display_name   = var.label_prefix == "none" ? "pub-lb" : "${var.label_prefix}-pub-lb"
-  vcn_id         = var.oke_network_vcn.vcn_id
+  vcn_id         = var.vcn_id
 
   egress_security_rules {
     description = "allow stateful egress to workers. required for NodePorts and load balancer http/tcp health checks"

@@ -151,9 +151,9 @@ variable "vcn_name" {
 
 # bastion
 variable "bastion_access" {
-  default     = "ANYWHERE"
-  description = "The cidr from where the bastion can be ssh'ed into. default is ANYWHERE and equivalent to 0.0.0.0/0."
-  type        = string
+  default     = ["anywhere"]
+  description = "A list of CIDR blocks to which ssh access to the bastion must be restricted to. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
+  type        = list(any)
 }
 
 variable "bastion_enabled" {
@@ -228,7 +228,20 @@ variable "bastion_timezone" {
   type        = string
 }
 
+variable "bastion_type" {
+  description = "Whether to make the bastion host public or private."
+  default     = "public"
+  type        = string
+}
+
 # operator
+
+variable "nsg_ids" {
+  description = "Optional list of network security groups that the operator will be part of"
+  type        = list(string)
+  default     = []
+}
+
 
 variable "operator_enabled" {
   default     = true
@@ -349,7 +362,7 @@ variable "cluster_access" {
 variable "cluster_access_source" {
   default     = []
   description = "CIDR range from which to allow access"
-  type        = list
+  type        = list(any)
 }
 
 variable "cluster_name" {
@@ -551,16 +564,15 @@ variable "metricserver_enabled" {
   type        = bool
 }
 
-variable "vpa" {
+variable "vpa_enabled" {
   description = "whether to install vertical pod autoscaler"
-  default = {
-    enabled = false,
-    version = "0.8"
-  }
-  type = object({
-    enabled = bool
-    version = string
-  })
+  default     = false
+  type        = bool
+}
+
+variable "vpa_version" {
+  description = "version of vertical pod autoscaler to install"
+  default = "0.8"
 }
 
 # kms

@@ -6,21 +6,21 @@ data "template_file" "install_kubectl" {
   template = file("${path.module}/scripts/install_kubectl.template.sh")
 
   vars = {
-    ol = var.oke_operator.operator_version
+    ol = var.operator_version
   }
 }
 
 resource "null_resource" "install_kubectl_operator" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   provisioner "file" {
@@ -36,27 +36,27 @@ resource "null_resource" "install_kubectl_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.bastion_enabled == true && var.bastion_state == "RUNNING" && var.operator_enabled == true ? 1 : 0
 }
 
 # helm
 data "template_file" "install_helm" {
   template = file("${path.module}/scripts/install_helm.template.sh")
 
-  count = var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.operator_enabled == true ? 1 : 0
 }
 
 resource null_resource "install_helm_operator" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
@@ -74,5 +74,5 @@ resource null_resource "install_helm_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.bastion_enabled == true && var.bastion_state == "RUNNING" && var.operator_enabled == true ? 1 : 0
 }

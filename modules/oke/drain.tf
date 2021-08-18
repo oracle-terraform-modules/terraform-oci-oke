@@ -22,15 +22,15 @@ data "template_file" "drainlist" {
 
 resource null_resource "drain_nodes" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   provisioner "file" {

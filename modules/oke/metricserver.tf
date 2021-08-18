@@ -5,8 +5,8 @@ data "template_file" "metricserver_enabled" {
   template = file("${path.module}/scripts/install_metricserver.template.sh")
 
   vars = {
-    vpa_enabled = var.vpa.enabled
-    vpa_version = var.vpa.version
+    vpa_enabled = var.vpa_enabled
+    vpa_version = var.vpa_version
   }
 
   count = var.metricserver_enabled == true ? 1 : 0
@@ -14,15 +14,15 @@ data "template_file" "metricserver_enabled" {
 
 resource null_resource "metricserver_enabled" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]

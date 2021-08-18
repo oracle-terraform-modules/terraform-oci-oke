@@ -1,12 +1,13 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
+# Copyright (c) 2019, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# create a home region provider for identity operations
-provider "oci" {
-  alias            = "home"
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = lookup(data.oci_identity_regions.home_region.regions[0], "name")
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
+terraform {
+  required_providers {
+    oci = {
+      source = "hashicorp/oci"
+      # pass oci home region provider explicitly for identity operations
+      configuration_aliases = [ oci.home ]
+    }    
+  }
+  required_version = ">= 1.0.0"
 }
