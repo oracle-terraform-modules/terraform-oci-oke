@@ -13,7 +13,7 @@ resource "oci_core_subnet" "cp" {
 }
 
 resource "oci_core_subnet" "workers" {
-  cidr_block                 = local.worker_subnet
+  cidr_block                 = local.workers_subnet
   compartment_id             = var.compartment_id
   display_name               = var.label_prefix == "none" ? "workers" : "${var.label_prefix}-workers"
   dns_label                  = "workers"

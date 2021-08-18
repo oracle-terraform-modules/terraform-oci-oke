@@ -118,13 +118,13 @@ Use the parameter *cluster_name* to change the name of the cluster as per your n
 
 === Adding the bastion host
 
-If you want to use bastion host, set the parameter *bastion_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
+If you want to use bastion host, set the parameter *create_bastion_host* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
 
 
 === Using the bastion host
 
 ****
-*Assumption: you have set the bastion_enabled parameter to true in terraform.tfvars*
+*Assumption: you have set the create_bastion_host parameter to true in terraform.tfvars*
 ****
 
 Once the terraform apply is successful you will get the bastion_public_ip as output and also a ssh command. You can also run the below command to get the output:
@@ -139,7 +139,7 @@ You can then copy the ssh_to_bastion command, paste and run it in a terminal.
 
 The operator host is used to minimize local dependencies such as oci-cli, kubectl and so on. 
 
-If you want to use the operator host, set the parameter *operator_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#operator-host[Admin Host] for other available bastion related parameters.
+If you want to use the operator host, set the parameter *create_operator* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#operator-host[Admin Host] for other available bastion related parameters.
 
 ==== Upgrading the operator host
 
@@ -156,7 +156,7 @@ N.B. It is good and recommended practice to upgrade your package host to the lat
 === Using the operator host
 
 ****
-*Assumption: you have set the operator_enabled parameter to true in terraform.tfvars*
+*Assumption: you have set the create_operator parameter to true in terraform.tfvars*
 ****
 
 Once the terraform apply is successful you will get the operator_private_ip as output and also a ssh command. You can also run the below command to get the output:

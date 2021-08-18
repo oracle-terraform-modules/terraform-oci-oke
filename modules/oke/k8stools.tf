@@ -36,14 +36,14 @@ resource "null_resource" "install_kubectl_operator" {
     ]
   }
 
-  count = var.bastion_enabled == true && var.bastion_state == "RUNNING" && var.operator_enabled == true ? 1 : 0
+  count = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true ? 1 : 0
 }
 
 # helm
 data "template_file" "install_helm" {
   template = file("${path.module}/scripts/install_helm.template.sh")
 
-  count = var.operator_enabled == true ? 1 : 0
+  count = var.create_operator == true ? 1 : 0
 }
 
 resource null_resource "install_helm_operator" {
@@ -74,5 +74,5 @@ resource null_resource "install_helm_operator" {
     ]
   }
 
-  count = var.bastion_enabled == true && var.bastion_state == "RUNNING" && var.operator_enabled == true ? 1 : 0
+  count = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true ? 1 : 0
 }

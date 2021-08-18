@@ -30,5 +30,5 @@ locals {
   ## 1. bastion to be enabled and in a running state
   ## 2. operation to be enabled and instance_principal to be enabled
 
-  post_provisioning_ops = var.bastion_enabled == true && var.bastion_state == "RUNNING" && var.operator_enabled == true && var.operator_instance_principal == true ? true : false
+  post_provisioning_ops = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true && var.operator_instance_principal == true ? true : false
 }

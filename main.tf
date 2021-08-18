@@ -13,7 +13,7 @@ module "vcn" {
   drg_display_name             = var.drg_display_name
   internet_gateway_enabled     = true
   lockdown_default_seclist     = var.lockdown_default_seclist
-  nat_gateway_enabled          = var.worker_mode == "private" || var.operator_enabled == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
+  nat_gateway_enabled          = var.worker_mode == "private" || var.create_operator == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
   nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
   service_gateway_enabled      = true
   tags                         = var.tags["vcn"]
@@ -38,14 +38,14 @@ module "bastion" {
   availability_domain = var.availability_domains["bastion"]
   bastion_access      = var.bastion_access
   ig_route_id         = module.vcn.ig_route_id
-  netnum              = var.netnum["bastion"]
-  newbits             = var.newbits["bastion"]
+  netnum              = lookup(var.subnets["bastion"], "netnum")
+  newbits             = lookup(var.subnets["bastion"], "newbits")
   vcn_id              = module.vcn.vcn_id
 
   # bastion host parameters
-  create_bastion_host = var.bastion_enabled
+  create_bastion_host = var.create_bastion_host
   bastion_image_id    = var.bastion_image_id
-  bastion_os_version  = var.bastion_operating_system_version
+  bastion_os_version  = var.bastion_os_version
   bastion_shape       = var.bastion_shape
   bastion_state       = var.bastion_state
   bastion_timezone    = var.bastion_timezone
@@ -56,7 +56,7 @@ module "bastion" {
   upgrade_bastion     = var.bastion_package_upgrade
 
   # bastion notification
-  enable_bastion_notification   = var.bastion_notification_enabled
+  enable_bastion_notification   = var.enable_bastion_notification
   bastion_notification_endpoint = var.bastion_notification_endpoint
   bastion_notification_protocol = var.bastion_notification_protocol
   bastion_notification_topic    = var.bastion_notification_topic
@@ -81,13 +81,13 @@ module "operator" {
   # networking
   availability_domain = var.availability_domains["operator"]
   nat_route_id        = module.vcn.nat_route_id
-  netnum              = var.netnum["operator"]
-  newbits             = var.newbits["operator"]
+  netnum              = lookup(var.subnets["operator"], "netnum")
+  newbits             = lookup(var.subnets["operator"], "newbits")
   nsg_ids             = var.nsg_ids
   vcn_id              = module.vcn.vcn_id
 
   # bastion host parameters
-  create_operator             = var.operator_enabled
+  create_operator             = var.create_operator
   operator_image_id           = var.operator_image_id
   operator_instance_principal = var.operator_instance_principal
   operator_os_version         = var.operator_version
@@ -99,7 +99,7 @@ module "operator" {
   upgrade_operator            = var.operator_package_upgrade
 
   # operator notification
-  enable_operator_notification   = var.operator_notification_enabled
+  enable_operator_notification   = var.enable_operator_notification
   operator_notification_endpoint = var.operator_notification_endpoint
   operator_notification_protocol = var.operator_notification_protocol
   operator_notification_topic    = var.operator_notification_topic
@@ -128,11 +128,10 @@ module "policies" {
   # bastion and operator details
   bastion_public_ip           = module.bastion.bastion_public_ip
   operator_private_ip         = module.operator.operator_private_ip
-  bastion_enabled             = var.bastion_enabled
-  operator_enabled            = var.operator_enabled
+  create_bastion_host         = var.create_bastion_host
+  create_operator             = var.create_operator
   operator_instance_principal = var.operator_instance_principal
   bastion_state               = var.bastion_state
-
 
   dynamic_group = module.operator.operator_instance_principal_group_name
 
@@ -158,8 +157,7 @@ module "network" {
   # oke networking parameters
   ig_route_id  = module.vcn.ig_route_id
   nat_route_id = module.vcn.nat_route_id
-  netnum       = var.netnum
-  newbits      = var.newbits
+  subnets      = var.subnets
   vcn_cidr     = var.vcn_cidr
   vcn_id       = module.vcn.vcn_id
 
@@ -205,8 +203,8 @@ module "oke" {
   # bastion and operator details
   bastion_public_ip           = module.bastion.bastion_public_ip
   operator_private_ip         = module.operator.operator_private_ip
-  bastion_enabled             = var.bastion_enabled
-  operator_enabled            = var.operator_enabled
+  create_bastion_host         = var.create_bastion_host
+  create_operator             = var.create_operator
   operator_instance_principal = var.operator_instance_principal
   operator_version            = var.operator_version
   bastion_state               = var.bastion_state

@@ -24,7 +24,7 @@ data "template_file" "update_dynamic_group_script" {
 
   depends_on = [oci_identity_dynamic_group.oke-kms-cluster]
 
-  count = var.use_encryption == true && var.operator_enabled == true && var.operator_instance_principal == true ? 1 : 0
+  count = var.use_encryption == true && var.create_operator == true && var.operator_instance_principal == true ? 1 : 0
 }
 
 resource null_resource "update_dynamic_group" {
@@ -59,5 +59,5 @@ resource null_resource "update_dynamic_group" {
     ]
   }
 
-  count = (var.use_encryption == true && var.bastion_enabled == true && var.bastion_state == "RUNNING" && var.operator_instance_principal == true) ? 1 : 0
+  count = (var.use_encryption == true && var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.operator_instance_principal == true) ? 1 : 0
 }

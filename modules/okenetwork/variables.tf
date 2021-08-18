@@ -11,13 +11,17 @@ variable "ig_route_id" {}
 
 variable "nat_route_id" {}
 
-variable "netnum" {
+variable "subnets" {
   type = map(any)
 }
 
-variable "newbits" {
-  type = map(any)
-}
+# variable "netnum" {
+#   type = map(any)
+# }
+
+# variable "newbits" {
+#   type = map(any)
+# }
 
 variable "vcn_cidr" {}
 

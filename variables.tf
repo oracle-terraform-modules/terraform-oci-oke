@@ -1,7 +1,7 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Identity and access parameters
+# Provider parameters
 variable "api_fingerprint" {
   description = "Fingerprint of oci api private key."
   type        = string
@@ -106,29 +106,17 @@ variable "nat_gateway_public_ip_id" {
   type        = string
 }
 
-variable "netnum" {
-  description = "0-based index of the subnet when the network is masked with the newbit. Used as netnum parameter for cidrsubnet function."
+variable "subnets" {
+  description = "parameters to cidrsubnet function to calculate subnet masks within the VCN."
   default = {
-    bastion  = 0
-    cp       = 2
-    int_lb   = 16
-    operator = 1
-    pub_lb   = 17
-    workers  = 1
+    bastion  = { netnum = 0, newbits = 14 }
+    operator = { netnum = 1, newbits = 14 }
+    cp       = { netnum = 2, newbits = 14 }
+    int_lb   = { netnum = 16, newbits = 11 }
+    pub_lb   = { netnum = 17, newbits = 11 }
+    workers  = { netnum = 1, newbits = 2 }
   }
-  type = map(any)
-}
-
-variable "newbits" {
-  default = {
-    bastion  = 14
-    cp       = 14
-    lb       = 11
-    operator = 14
-    workers  = 2
-  }
-  description = "The masks for the subnets within the virtual network. Used as newbits parameter for cidrsubnet function."
-  type        = map(any)
+  type = map
 }
 
 variable "vcn_cidr" {
@@ -156,7 +144,7 @@ variable "bastion_access" {
   type        = list(any)
 }
 
-variable "bastion_enabled" {
+variable "create_bastion_host" {
   default     = true
   description = "Whether to create a bastion host."
   type        = bool
@@ -168,7 +156,7 @@ variable "bastion_image_id" {
   type        = string
 }
 
-variable "bastion_notification_enabled" {
+variable "enable_bastion_notification" {
   default     = false
   description = "Whether to enable notification on the bastion host."
   type        = bool
@@ -192,7 +180,7 @@ variable "bastion_notification_topic" {
   type        = string
 }
 
-variable "bastion_operating_system_version" {
+variable "bastion_os_version" {
   description = "In case Autonomous Linux is used, allow specification of Autonomous version"
   default     = "7.9"
   type        = string
@@ -243,7 +231,7 @@ variable "nsg_ids" {
 }
 
 
-variable "operator_enabled" {
+variable "create_operator" {
   default     = true
   description = "Whether to create an operator server in a private subnet."
   type        = bool
@@ -261,7 +249,7 @@ variable "operator_instance_principal" {
   type        = bool
 }
 
-variable "operator_notification_enabled" {
+variable "enable_operator_notification" {
   default     = false
   description = "Whether to enable notification on the operator host."
   type        = bool
@@ -572,7 +560,7 @@ variable "vpa_enabled" {
 
 variable "vpa_version" {
   description = "version of vertical pod autoscaler to install"
-  default = "0.8"
+  default     = "0.8"
 }
 
 # kms

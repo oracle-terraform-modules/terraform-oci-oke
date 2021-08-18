@@ -104,11 +104,11 @@ vcn_name = "oke vcn"
 
 bastion_access = "ANYWHERE"
 
-bastion_enabled = true
+create_bastion_host = true
 
 bastion_image_id = "Autonomous"
 
-bastion_notification_enabled = false
+enable_bastion_notification = false
 
 bastion_notification_endpoint = "<email_address>"
 
@@ -116,7 +116,7 @@ bastion_notification_protocol = "EMAIL"
 
 bastion_notification_topic= "bastion_server_notification"
 
-bastion_operating_system_version = "7.9"
+bastion_os_version = "7.9"
 
 bastion_package_upgrade = false
 
@@ -132,13 +132,13 @@ bastion_state = "RUNNING"
 
 bastion_timezone = "Australia/Sydney"
 
-operator_enabled = true
+create_operator = true
 
 operator_image_id = "Oracle"
 
 operator_instance_principal = true
 
-operator_notification_enabled = false
+enable_operator_notification = false
 
 operator_notification_endpoint = ""
 

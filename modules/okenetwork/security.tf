@@ -232,7 +232,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
   egress_security_rules {
     description = "allow stateful egress to workers. required for NodePorts and load balancer http/tcp health checks"
     protocol    = local.all_protocols
-    destination = local.worker_subnet
+    destination = local.workers_subnet
     stateless   = false
   }
 
@@ -262,7 +262,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
   egress_security_rules {
     description = "allow stateful egress to workers. required for NodePorts and load balancer http/tcp health checks"
     protocol    = local.all_protocols
-    destination = local.worker_subnet
+    destination = local.workers_subnet
     stateless   = false
   }
 

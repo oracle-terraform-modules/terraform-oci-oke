@@ -122,7 +122,7 @@ image::images/bastion.png[align="center"]
 
 {bl}
 
-The bastion host is created in a public regional subnet. You can create or destroy it anytime with no effect on the Kubernetes cluster by setting the *bastion_enabled* = true in your variable file.
+The bastion host is created in a public regional subnet. You can create or destroy it anytime with no effect on the Kubernetes cluster by setting the *create_bastion_host* = true in your variable file.
 
 By default, the bastion host can be accessed from anywhere. However, you can restrict its access to a particular CIDR block using the *bastion_access* parameter.
 

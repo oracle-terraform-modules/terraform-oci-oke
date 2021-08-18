@@ -21,10 +21,10 @@ variable "bastion_public_ip" {}
 
 variable "operator_private_ip" {}
 
-variable "bastion_enabled" {
+variable "create_bastion_host" {
   type = bool
 }
-variable "operator_enabled" {
+variable "create_operator" {
   type = bool
 }
 variable "operator_instance_principal" {
