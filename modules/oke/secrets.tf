@@ -14,7 +14,7 @@ data "template_file" "secret" {
     secret_name       = var.oke_ocir.secret_name
     tenancy_namespace = data.oci_objectstorage_namespace.object_storage_namespace.namespace
     username          = var.oke_ocir.username
-
+    secret_ns         = var.oke_ocir.secret_ns
   }
   count = local.post_provisioning_ops == true && var.oke_ocir.secret_id != "none" ? 1 : 0
 }
