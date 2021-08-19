@@ -258,7 +258,7 @@ secret_name = "ocirsecret"
 
 username = ""
 
-namespace = "default"
+secret_ns = "default"
 
 # calico
 calico_enabled = false

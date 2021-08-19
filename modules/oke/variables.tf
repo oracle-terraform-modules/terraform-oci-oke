@@ -85,7 +85,7 @@ variable "oke_ocir" {
     secret_id     = string
     secret_name   = string
     username      = string
-    namespace     = string
+    secret_ns     = string
   })
 }
 

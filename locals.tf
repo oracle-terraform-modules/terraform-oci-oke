@@ -141,7 +141,7 @@ locals {
     secret_id     = var.secret_id
     secret_name   = var.secret_name
     username      = var.username
-    namespace     = var.namespace
+    secret_ns     = var.secret_ns
   }
 
   calico = {

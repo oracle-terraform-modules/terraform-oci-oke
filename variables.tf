@@ -531,9 +531,9 @@ variable "username" {
   type        = string
 }
 
-variable "namespace" {
+variable "secret_ns" {
   default     = "default"
-  description = "The k8s secret namespace."
+  description = "the k8s namespace for a secret."
   type        = string
 }
 

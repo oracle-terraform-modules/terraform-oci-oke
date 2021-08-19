@@ -15,7 +15,7 @@ secret_id       = '${secret_id}'
 secret_name     = '${secret_name}'
 tenancy_namespace    = '${tenancy_namespace}'
 username        = '${username}'
-namespace       = '${namespace}'
+namespace       = '${secret_ns}'
 
 signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
 
@@ -36,22 +36,21 @@ def read_secret_value(secret_client, secret_id):
 try:
     secret_content = read_secret_value(secret_client, secret_id=secret_id)
     secret_content = re.escape(secret_content)
-    delsecret = "kubectl -n default delete secret ${secret_name}"
+    delsecret = "kubectl -n ${secret_ns} delete secret ${secret_name}"
     os.system(delsecret)
 
+    # TODO: keep an eye on the k8s API changes, make sure
+    #  that a new k8s version has this version, if not - update this template.
     create_namespace = f"""
     cat <<EOF | kubectl apply -f -
     apiVersion: v1
     kind: Namespace
     metadata:
       name: {namespace}
-      labels:
-        app.kubernetes.io/name: {namespace}
-        app.kubernetes.io/instance: {namespace}
     """
     subprocess.call(["/bin/bash" , "-c" , create_namespace])
 
-    crtsecret = ("kubectl create secret docker-registry ${secret_name} --namespace ${namespace} --docker-server=${region_registry} --docker-username=${tenancy_namespace}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
+    crtsecret = ("kubectl create secret docker-registry ${secret_name} --namespace ${secret_ns} --docker-server=${region_registry} --docker-username=${tenancy_namespace}/${username} --docker-email=${email_address} --docker-password=%s" % secret_content)
     subprocess.call(["/bin/bash" , "-c" , crtsecret])
  
 except Exception as e:
