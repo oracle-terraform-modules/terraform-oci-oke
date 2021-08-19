@@ -25,6 +25,7 @@ CONTRIBUTORS
 - @briangustafson
 - @sahitgollapudi
 - @priteshkp
+- @denismakogon
 
 Others:
 

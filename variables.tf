@@ -349,7 +349,7 @@ variable "cluster_access" {
 variable "cluster_access_source" {
   default     = []
   description = "CIDR range from which to allow access"
-  type        = list
+  type        = list(any)
 }
 
 variable "cluster_name" {
@@ -525,6 +525,11 @@ variable "secret_name" {
   default     = "ocirsecret"
 }
 
+variable "secret_ns" {
+  type        = string
+  default     = "default"
+  description = "Namespace where kubernetes secret for docker registry will be created"
+}
 variable "username" {
   default     = "none"
   description = "The username to access OCIR."

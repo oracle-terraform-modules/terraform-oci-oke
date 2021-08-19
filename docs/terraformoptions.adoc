@@ -724,6 +724,16 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |
 |none
 
+|`secret_name`
+|Kubernetes secret name for docker registry
+|
+|ocirsecret
+
+|`secret_ns`
+|Namespace where kubernetes secret for docker registry will be created
+|
+|default
+
 
 |`email_address`
 |The email address to be used when creating the Docker secret. *Required* if secret_id is set.

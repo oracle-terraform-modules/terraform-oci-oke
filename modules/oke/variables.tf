@@ -84,6 +84,7 @@ variable "oke_ocir" {
     ocir_urls     = map(string)
     secret_id     = string
     secret_name   = string
+    secret_ns     = string
     username      = string
   })
 }

@@ -256,6 +256,8 @@ secret_id = "none"
 
 secret_name = "ocirsecret"
 
+secret_ns = "default"
+
 username = ""
 
 # calico

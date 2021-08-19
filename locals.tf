@@ -140,6 +140,7 @@ locals {
     ocir_urls     = var.ocir_urls
     secret_id     = var.secret_id
     secret_name   = var.secret_name
+    secret_ns     = var.secret_ns
     username      = var.username
   }
 

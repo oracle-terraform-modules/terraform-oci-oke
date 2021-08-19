@@ -7,11 +7,17 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-=== Unreleased
-* Changed default Kubernetes version to v1.20.8 and removed v1.16.8, v1.17.9 from docs.
+= 3.3.0 (August 2, 2021)
+
+=== Additions
+
 * Added support for reserved public IP address for NAT gateway
-* Bug fix: Use correct calico file to install calico for networking policy only (#307)
+* Added conditional checks for WAF CIDR block data source
 * Added support for GPU and ARM shapes (#302)
+
+=== Changes
+* Changed default Kubernetes version to v1.20.8 and removed v1.16.8, v1.17.9 from docs.
+* Bug fix: Use correct calico file to install calico for networking policy only (#307)
 
 = 3.2.0 (May 12, 2021)
 

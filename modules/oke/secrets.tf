@@ -2,7 +2,7 @@
 # # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "template_file" "secret" {
-  template = file("${path.module}/scripts/secret.py")
+  template = file("${path.module}/scripts/secret.sh")
 
   vars = {
     compartment_id = var.compartment_id
@@ -12,6 +12,7 @@ data "template_file" "secret" {
     region_registry   = var.oke_ocir.ocir_urls[var.region]
     secret_id         = var.oke_ocir.secret_id
     secret_name       = var.oke_ocir.secret_name
+    secret_ns         = var.oke_ocir.secret_ns
     tenancy_namespace = data.oci_objectstorage_namespace.object_storage_namespace.namespace
     username          = var.oke_ocir.username
 
@@ -19,9 +20,9 @@ data "template_file" "secret" {
   count = local.post_provisioning_ops == true && var.oke_ocir.secret_id != "none" ? 1 : 0
 }
 
-resource null_resource "secret" {
+resource "null_resource" "secret" {
   triggers = {
-    secret_id = var.oke_ocir.secret_id
+    always_run = "${timestamp()}"
   }
   connection {
     host        = var.oke_operator.operator_private_ip
@@ -39,15 +40,15 @@ resource null_resource "secret" {
 
   provisioner "file" {
     content     = data.template_file.secret[0].rendered
-    destination = "~/secret.py"
+    destination = "~/secret.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/secret.py",
-      "$HOME/secret.py",
+      "chmod +x $HOME/secret.sh",
+      "$HOME/secret.sh",
       "sleep 10",
-      "rm -f $HOME/secret.py"
+      "rm -f $HOME/secret.sh"
     ]
   }
 
