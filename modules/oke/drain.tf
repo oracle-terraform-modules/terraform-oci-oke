@@ -1,26 +1,39 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "template_file" "drain" {
-  template = file("${path.module}/scripts/drain.template.sh")
+# data "template_file" "drain" {
+#   template = file("${path.module}/scripts/drain.template.sh")
 
-  count = var.nodepool_drain == true ? 1 : 0
+#   count = var.nodepool_drain == true ? 1 : 0
+# }
+
+# data "template_file" "drainlist" {
+#   template = file("${path.module}/scripts/drainlist.py")
+
+#   vars = {
+#     cluster_id     = oci_containerengine_cluster.k8s_cluster.id
+#     compartment_id = var.compartment_id
+#     region         = var.region
+#     pools_to_drain = var.label_prefix == "none" ? trim(join(",", formatlist("'%s'", var.node_pools_to_drain)), "'") : trim(join(",", formatlist("'%s-%s'", var.label_prefix, var.node_pools_to_drain)), "'")
+#   }
+
+#   count = var.nodepool_drain == true ? 1 : 0
+# }
+
+locals {
+  drain_template = templatefile("${path.module}/scripts/drain.template.sh", {})
+
+  drain_list_template = templatefile("${path.module}/scripts/drainlist.py",
+    {
+      cluster_id     = oci_containerengine_cluster.k8s_cluster.id
+      compartment_id = var.compartment_id
+      region         = var.region
+      pools_to_drain = var.label_prefix == "none" ? trim(join(",", formatlist("'%s'", var.node_pools_to_drain)), "'") : trim(join(",", formatlist("'%s-%s'", var.label_prefix, var.node_pools_to_drain)), "'")
+    }
+  )
 }
 
-data "template_file" "drainlist" {
-  template = file("${path.module}/scripts/drainlist.py")
-
-  vars = {
-    cluster_id     = oci_containerengine_cluster.k8s_cluster.id
-    compartment_id = var.compartment_id
-    region         = var.region
-    pools_to_drain = var.label_prefix == "none" ? trim(join(",", formatlist("'%s'", var.node_pools_to_drain)), "'") : trim(join(",", formatlist("'%s-%s'", var.label_prefix, var.node_pools_to_drain)), "'")
-  }
-
-  count = var.nodepool_drain == true ? 1 : 0
-}
-
-resource null_resource "drain_nodes" {
+resource "null_resource" "drain_nodes" {
   connection {
     host        = var.operator_private_ip
     private_key = file(var.ssh_private_key_path)
@@ -34,12 +47,14 @@ resource null_resource "drain_nodes" {
   }
 
   provisioner "file" {
-    content     = data.template_file.drainlist[0].rendered
+    # content     = data.template_file.drainlist[0].rendered
+    content = local.drain_list_template
     destination = "~/drainlist.py"
   }
 
   provisioner "file" {
-    content     = data.template_file.drain[0].rendered
+    # content     = data.template_file.drain[0].rendered
+    content = local.drain_template
     destination = "~/drain.sh"
   }
 

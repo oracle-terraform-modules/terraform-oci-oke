@@ -88,15 +88,7 @@ locals {
       port        = -1,
       source      = local.workers_subnet,
       stateless   = false
-    },
-    /*    {
-      description = "Allow external access to control plane API endpoint communication"
-      protocol    = local.tcp_protocol,
-      port        = 6443,
-      source      = var.control_plane_access_source,
-      stateless   = false
-    },
-    */
+    }
   ]
 
   # workers

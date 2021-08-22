@@ -2,12 +2,20 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # kubectl
-data "template_file" "install_kubectl" {
-  template = file("${path.module}/scripts/install_kubectl.template.sh")
+# data "template_file" "install_kubectl" {
+#   template = file("${path.module}/scripts/install_kubectl.template.sh")
 
-  vars = {
-    ol = var.operator_os_version
-  }
+#   vars = {
+#     ol = var.operator_os_version
+#   }
+# }
+
+locals {
+  install_kubectl_template = templatefile("${path.module}/scripts/install_kubectl.template.sh",
+    {
+      ol = var.operator_os_version
+    }
+  )
 }
 
 resource "null_resource" "install_kubectl_operator" {
@@ -24,7 +32,8 @@ resource "null_resource" "install_kubectl_operator" {
   }
 
   provisioner "file" {
-    content     = data.template_file.install_kubectl.rendered
+    # content     = data.template_file.install_kubectl.rendered
+    content     = local.install_kubectl_template
     destination = "~/install_kubectl.sh"
   }
 
@@ -46,7 +55,7 @@ data "template_file" "install_helm" {
   count = var.create_operator == true ? 1 : 0
 }
 
-resource null_resource "install_helm_operator" {
+resource "null_resource" "install_helm_operator" {
   connection {
     host        = var.operator_private_ip
     private_key = file(var.ssh_private_key_path)

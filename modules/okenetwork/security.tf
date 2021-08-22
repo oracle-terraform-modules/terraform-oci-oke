@@ -198,7 +198,6 @@ resource "oci_core_security_list" "workers_seclist" {
     }
   }
 
-
   # ssh access
   dynamic "ingress_security_rules" {
     for_each = var.allow_worker_ssh_access == true ? [1] : []

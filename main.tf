@@ -193,7 +193,6 @@ module "oke" {
   label_prefix   = var.label_prefix
 
   # region parameters
-  # ad_names = module.base.ad_names
   region = var.region
 
   # ssh keys

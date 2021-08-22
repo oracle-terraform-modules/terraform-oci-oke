@@ -10,7 +10,7 @@ resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
   count          = (var.use_encryption == true && var.create_bastion_host == true && var.operator_instance_principal == true) ? 1 : 0
 }
 
-resource "oci_identity_policy" "oke-kms" {
+resource "oci_identity_policy" "oke_kms" {
   provider       = oci.home
   compartment_id = var.compartment_id
   description    = "policy to allow instances to allow dynamic group ${var.label_prefix}-oke-kms-cluster to use kms"

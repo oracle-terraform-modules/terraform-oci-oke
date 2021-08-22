@@ -416,7 +416,7 @@ variable "use_encryption" {
 }
 
 variable "kms_key_id" {
-  description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secret encryption."
+  description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
   type        = string
 }
 
