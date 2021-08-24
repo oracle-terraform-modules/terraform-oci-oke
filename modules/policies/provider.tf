@@ -5,7 +5,7 @@
 provider "oci" {
   alias            = "home"
   fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
+  private_key = var.api_private_key
   region           = lookup(data.oci_identity_regions.home_region.regions[0], "name")
   tenancy_ocid     = var.tenancy_id
   user_ocid        = var.user_id
