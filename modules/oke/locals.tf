@@ -3,11 +3,15 @@
 
 locals {
 
-  ad_names = sort(data.template_file.ad_names.*.rendered)
-  
+  # ad_names = sort(data.template_file.ad_names.*.rendered)
+
   # used by cluster
   lb_subnet = var.preferred_lb_type == "public" ? "pub_lb" : "int_lb"
 
+  ad_names = [
+    for ad_name in data.oci_identity_availability_domains.ad_list.availability_domains :
+    ad_name.name
+  ]
   node_pools_size_list = [
     for node_pool in data.oci_containerengine_node_pools.all_node_pools.node_pools :
     node_pool.node_config_details[0].size

@@ -27,15 +27,6 @@ resource "oci_identity_dynamic_group" "oke_kms_cluster" {
 #   count = var.use_encryption == true && var.create_operator == true && var.operator_instance_principal == true ? 1 : 0
 # }
 
-locals {
-  update_dynamic_group_template = templatefile("${path.module}/scripts/update_dynamic_group.template.sh",
-    {
-      dynamic_group_id   = oci_identity_dynamic_group.oke_kms_cluster[0].id
-      dynamic_group_rule = local.dynamic_group_rule_this_cluster
-    }
-  )
-}
-
 resource "null_resource" "update_dynamic_group" {
   triggers = {
     cluster_id = var.cluster_id

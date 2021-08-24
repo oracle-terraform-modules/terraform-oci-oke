@@ -38,22 +38,22 @@ output "vcn_id" {
 
 output "bastion_public_ip" {
   description = "public ip address of bastion host"
-  value       = module.bastion.bastion_public_ip
+  value       = local.bastion_public_ip
 }
 
 output "operator_private_ip" {
   description = "private ip address of operator host"
-  value       = module.operator.operator_private_ip
+  value       = local.operator_private_ip
 }
 
 output "ssh_to_operator" {
   description = "convenient command to ssh to the operator host"
-  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${module.bastion.bastion_public_ip} opc@${module.operator.operator_private_ip}"
+  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${local.bastion_public_ip} opc@${local.operator_private_ip}"
 }
 
 output "ssh_to_bastion" {
   description = "convenient command to ssh to the bastion host"
-  value       = "ssh -i ${var.ssh_private_key_path} opc@${module.bastion.bastion_public_ip}"
+  value       = "ssh -i ${var.ssh_private_key_path} opc@${local.bastion_public_ip}"
 }
 
 output "kubeconfig" {

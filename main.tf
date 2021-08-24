@@ -12,6 +12,7 @@ module "vcn" {
   create_drg                   = var.create_drg
   drg_display_name             = var.drg_display_name
   internet_gateway_enabled     = true
+  local_peering_gateways       = var.local_peering_gateways
   lockdown_default_seclist     = var.lockdown_default_seclist
   nat_gateway_enabled          = var.worker_mode == "private" || var.create_operator == true || (var.lb_type == "internal" || var.lb_type == "both") ? true : false
   nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
@@ -66,6 +67,8 @@ module "bastion" {
   providers = {
     oci.home = oci.home
   }
+
+  count = var.create_bastion_host == true ? 1 : 0
 }
 
 module "operator" {
@@ -109,6 +112,8 @@ module "operator" {
   providers = {
     oci.home = oci.home
   }
+
+  count = var.create_operator == true ? 1 : 0
 }
 
 module "policies" {
@@ -126,14 +131,14 @@ module "policies" {
   ssh_public_key_path  = var.ssh_public_key_path
 
   # bastion and operator details
-  bastion_public_ip           = module.bastion.bastion_public_ip
-  operator_private_ip         = module.operator.operator_private_ip
+  bastion_public_ip           = local.bastion_public_ip
+  operator_private_ip         = local.operator_private_ip
   create_bastion_host         = var.create_bastion_host
   create_operator             = var.create_operator
   operator_instance_principal = var.operator_instance_principal
   bastion_state               = var.bastion_state
 
-  dynamic_group = module.operator.operator_instance_principal_group_name
+  dynamic_group = local.operator_instance_principal_group_name
 
   # kms integration
   key_id         = var.kms_key_id
@@ -200,8 +205,8 @@ module "oke" {
   ssh_public_key_path  = var.ssh_public_key_path
 
   # bastion and operator details
-  bastion_public_ip           = module.bastion.bastion_public_ip
-  operator_private_ip         = module.operator.operator_private_ip
+  bastion_public_ip           = local.bastion_public_ip
+  operator_private_ip         = local.operator_private_ip
   create_bastion_host         = var.create_bastion_host
   create_operator             = var.create_operator
   operator_instance_principal = var.operator_instance_principal

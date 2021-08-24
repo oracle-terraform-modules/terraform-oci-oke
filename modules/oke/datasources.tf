@@ -5,10 +5,10 @@ data "oci_identity_availability_domains" "ad_list" {
   compartment_id = var.tenancy_id
 }
 
-data "template_file" "ad_names" {
-  count    = length(data.oci_identity_availability_domains.ad_list.availability_domains)
-  template = lookup(data.oci_identity_availability_domains.ad_list.availability_domains[count.index], "name")
-}
+# data "template_file" "ad_names" {
+#   count    = length(data.oci_identity_availability_domains.ad_list.availability_domains)
+#   template = lookup(data.oci_identity_availability_domains.ad_list.availability_domains[count.index], "name")
+# }
 
 data "oci_containerengine_node_pools" "all_node_pools" {
   compartment_id = var.compartment_id

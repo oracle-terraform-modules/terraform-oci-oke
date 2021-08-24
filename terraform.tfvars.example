@@ -43,9 +43,27 @@ internet_gateway_route_rules = [
       destination_type = "CIDR_BLOCK"
       network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
       description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
-    }
+    },
+    {
+      destination       = "192.168.1.0/24"
+      destination_type  = "CIDR_BLOCK"
+      network_entity_id = "ocid1.localpeeringgateway." # <-- edit this OCID
+      description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
+    }        
     */
 ]
+
+local_peering_gateways = {
+    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
+      route_table_id = ""
+    }
+    to_spoke2 = { # LPG will be in requestor mode with no route table attached
+      route_table_id = ""
+      peer_id        = ""
+    }
+    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
+  }
+}
 
 lockdown_default_seclist = true
 
@@ -74,7 +92,13 @@ nat_gateway_route_rules = [
       destination_type = "CIDR_BLOCK"
       network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
       description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
-    }
+    },
+    {
+      destination       = "192.168.1.0/24"
+      destination_type  = "CIDR_BLOCK"
+      network_entity_id = "ocid1.localpeeringgateway." # <-- edit this OCID
+      description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
+    }    
     */
 ]
 
