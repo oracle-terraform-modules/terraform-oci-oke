@@ -1,6 +1,30 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+locals {
+  generate_kubeconfig_template = templatefile("${path.module}/scripts/generate_kubeconfig.template.sh",
+    {
+      cluster-id = oci_containerengine_cluster.k8s_cluster.id
+      region     = var.region
+    }
+  )
+
+  token_helper_template = templatefile("${path.module}/scripts/token_helper.template.sh",
+    {
+      cluster-id = oci_containerengine_cluster.k8s_cluster.id
+      region     = var.region
+    }
+  )
+
+  set_credentials_template = templatefile("${path.module}/scripts/kubeconfig_set_credentials.template.sh",
+    {
+      cluster-id    = oci_containerengine_cluster.k8s_cluster.id
+      cluster-id-11 = substr(oci_containerengine_cluster.k8s_cluster.id, (length(oci_containerengine_cluster.k8s_cluster.id) - 11), length(oci_containerengine_cluster.k8s_cluster.id))
+      region        = var.region
+    }
+  )
+}
+
 data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id = oci_containerengine_cluster.k8s_cluster.id
 }
@@ -26,67 +50,70 @@ resource "local_file" "kube_config_file" {
   file_permission = "0600"
 }
 
-data "template_file" "generate_kubeconfig" {
-  template = file("${path.module}/scripts/generate_kubeconfig.template.sh")
+# data "template_file" "generate_kubeconfig" {
+#   template = file("${path.module}/scripts/generate_kubeconfig.template.sh")
 
-  vars = {
-    cluster-id = oci_containerengine_cluster.k8s_cluster.id
-    region     = var.region
-  }
+#   vars = {
+#     cluster-id = oci_containerengine_cluster.k8s_cluster.id
+#     region     = var.region
+#   }
 
-  count = local.post_provisioning_ops == true ? 1 : 0
-}
+#   count = local.post_provisioning_ops == true ? 1 : 0
+# }
 
-data "template_file" "token_helper" {
-  template = file("${path.module}/scripts/token_helper.template.sh")
+# data "template_file" "token_helper" {
+#   template = file("${path.module}/scripts/token_helper.template.sh")
 
-  vars = {
-    cluster-id = oci_containerengine_cluster.k8s_cluster.id
-    region     = var.region
-  }
+#   vars = {
+#     cluster-id = oci_containerengine_cluster.k8s_cluster.id
+#     region     = var.region
+#   }
 
-  count = local.post_provisioning_ops == true ? 1 : 0
-}
+#   count = local.post_provisioning_ops == true ? 1 : 0
+# }
 
-data "template_file" "set_credentials" {
-  template = file("${path.module}/scripts/kubeconfig_set_credentials.template.sh")
+# data "template_file" "set_credentials" {
+#   template = file("${path.module}/scripts/kubeconfig_set_credentials.template.sh")
 
-  vars = {
-    cluster-id    = oci_containerengine_cluster.k8s_cluster.id
-    cluster-id-11 = substr(oci_containerengine_cluster.k8s_cluster.id, (length(oci_containerengine_cluster.k8s_cluster.id) - 11), length(oci_containerengine_cluster.k8s_cluster.id))
-    region        = var.region
-  }
+#   vars = {
+#     cluster-id    = oci_containerengine_cluster.k8s_cluster.id
+#     cluster-id-11 = substr(oci_containerengine_cluster.k8s_cluster.id, (length(oci_containerengine_cluster.k8s_cluster.id) - 11), length(oci_containerengine_cluster.k8s_cluster.id))
+#     region        = var.region
+#   }
 
-  count = local.post_provisioning_ops == true ? 1 : 0
-}
+#   count = local.post_provisioning_ops == true ? 1 : 0
+# }
 
 resource "null_resource" "write_kubeconfig_on_operator" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [oci_containerengine_cluster.k8s_cluster, null_resource.install_kubectl_operator]
 
   provisioner "file" {
-    content     = data.template_file.generate_kubeconfig[0].rendered
+    # content     = data.template_file.generate_kubeconfig[0].rendered
+    content     = local.generate_kubeconfig_template
     destination = "~/generate_kubeconfig.sh"
   }
 
   provisioner "file" {
-    content     = data.template_file.token_helper[0].rendered
+    # content     = data.template_file.token_helper[0].rendered
+    content     = local.token_helper_template
     destination = "~/token_helper.sh"
   }
 
   provisioner "file" {
-    content     = data.template_file.set_credentials[0].rendered
+    # content     = data.template_file.set_credentials[0].rendered
+    content     = local.set_credentials_template
     destination = "~/kubeconfig_set_credentials.sh"
   }
 

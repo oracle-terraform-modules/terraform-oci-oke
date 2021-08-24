@@ -6,21 +6,21 @@ resource "oci_core_subnet" "cp" {
   compartment_id             = var.compartment_id
   display_name               = var.label_prefix == "none" ? "control-plane" : "${var.label_prefix}-control-plane"
   dns_label                  = "cp"
-  prohibit_public_ip_on_vnic = var.cluster_access == "private" ? true : false
-  route_table_id             = var.cluster_access == "private" ? var.oke_network_vcn.nat_route_id : var.oke_network_vcn.ig_route_id
+  prohibit_public_ip_on_vnic = var.control_plane_access == "private" ? true : false
+  route_table_id             = var.control_plane_access == "private" ? var.nat_route_id : var.ig_route_id
   security_list_ids          = [oci_core_security_list.control_plane_seclist.id]
-  vcn_id                     = var.oke_network_vcn.vcn_id
+  vcn_id                     = var.vcn_id
 }
 
 resource "oci_core_subnet" "workers" {
-  cidr_block                 = local.worker_subnet
+  cidr_block                 = local.workers_subnet
   compartment_id             = var.compartment_id
   display_name               = var.label_prefix == "none" ? "workers" : "${var.label_prefix}-workers"
   dns_label                  = "workers"
-  prohibit_public_ip_on_vnic = var.oke_network_worker.worker_mode == "private" ? true : false
-  route_table_id             = var.oke_network_worker.worker_mode == "private" ? var.oke_network_vcn.nat_route_id : var.oke_network_vcn.ig_route_id
+  prohibit_public_ip_on_vnic = var.worker_mode == "private" ? true : false
+  route_table_id             = var.worker_mode == "private" ? var.nat_route_id : var.ig_route_id
   security_list_ids          = [oci_core_security_list.workers_seclist.id]
-  vcn_id                     = var.oke_network_vcn.vcn_id
+  vcn_id                     = var.vcn_id
 }
 
 resource "oci_core_subnet" "int_lb" {
@@ -29,11 +29,11 @@ resource "oci_core_subnet" "int_lb" {
   display_name               = var.label_prefix == "none" ? "int_lb" : "${var.label_prefix}-int_lb"
   dns_label                  = "intlb"
   prohibit_public_ip_on_vnic = true
-  route_table_id             = var.oke_network_vcn.nat_route_id
+  route_table_id             = var.nat_route_id
   security_list_ids          = [oci_core_security_list.int_lb_seclist[0].id]
-  vcn_id                     = var.oke_network_vcn.vcn_id
+  vcn_id                     = var.vcn_id
 
-  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
+  count = var.lb_type == "internal" || var.lb_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "pub_lb" {
@@ -42,9 +42,9 @@ resource "oci_core_subnet" "pub_lb" {
   display_name               = var.label_prefix == "none" ? "pub_lb" : "${var.label_prefix}-pub_lb"
   dns_label                  = "publb"
   prohibit_public_ip_on_vnic = false
-  route_table_id             = var.oke_network_vcn.ig_route_id
+  route_table_id             = var.ig_route_id
   security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
-  vcn_id                     = var.oke_network_vcn.vcn_id
+  vcn_id                     = var.vcn_id
 
-  count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
+  count = var.lb_type == "public" || var.lb_type == "both" ? 1 : 0
 }

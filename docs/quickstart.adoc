@@ -75,7 +75,7 @@ provider "oci" {
 * region
 
 . Optional parameters to override:
-* bastion_enabled
+* create_bastion_host
 * cluster_name
 * ssh_private_key_path (Required if bastion is enabled)
 * ssh_public_key_path (Required if bastion is enabled)

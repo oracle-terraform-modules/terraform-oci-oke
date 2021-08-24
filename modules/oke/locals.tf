@@ -2,9 +2,16 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  # used by cluster
-  lb_subnet = var.lbs.preferred_lb_subnets == "public" ? "pub_lb" : "int_lb"
 
+  # ad_names = sort(data.template_file.ad_names.*.rendered)
+
+  # used by cluster
+  lb_subnet = var.preferred_lb_type == "public" ? "pub_lb" : "int_lb"
+
+  ad_names = [
+    for ad_name in data.oci_identity_availability_domains.ad_list.availability_domains :
+    ad_name.name
+  ]
   node_pools_size_list = [
     for node_pool in data.oci_containerengine_node_pools.all_node_pools.node_pools :
     node_pool.node_config_details[0].size
@@ -15,7 +22,7 @@ locals {
     for nodes in local.node_pools_size_list : range(nodes)
   ]))
 
-  service_account_cluster_role_binding_name = var.service_account.service_account_cluster_role_binding == "" ? "${var.service_account.service_account_name}-crb" : var.service_account.service_account_cluster_role_binding
+  service_account_cluster_role_binding_name = var.service_account_cluster_role_binding == "" ? "${var.service_account_name}-crb" : var.service_account_cluster_role_binding
 
   # 1. get a list of available images for this cluster
   # 2. filter by version
@@ -27,5 +34,5 @@ locals {
   ## 1. bastion to be enabled and in a running state
   ## 2. operation to be enabled and instance_principal to be enabled
 
-  post_provisioning_ops = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" && var.oke_operator.operator_enabled == true && var.oke_operator.operator_instance_principal == true ? true : false
+  post_provisioning_ops = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true && var.operator_instance_principal == true ? true : false
 }

@@ -288,7 +288,7 @@ newbits = {
 |XYZ.XYZ.XYZ.XYZ/YZ
 |ANYWHERE
 
-|`bastion_enabled`
+|`create_bastion_host`
 |Whether to create the bastion host.
 |true/false
 |true
@@ -298,7 +298,7 @@ newbits = {
 |image_id or Autonomous. If the value is set to 'Autonomous', an Oracle Autonomous Linux Platform image will be used instead. If you want to use a custom image, set the image id instead.
 |Autonomous
 
-|`bastion_notification_enabled`
+|`enable_bastion_notification`
 |Whether to enable ONS notification for the bastion host.
 |true/false
 |true
@@ -318,12 +318,12 @@ newbits = {
 |
 |bastion
 
-|`bastion_operating_system_version`
+|`bastion_os_version`
 |In case Autonomous Linux is used, allow specification of Autonomous version.
 |7.9
 |7.9
 
-|`bastion_package_upgrade`
+|`upgrade_bastion`
 |Whether to also upgrade the packages on the bastion host.
 |true/false
 |true
@@ -360,7 +360,7 @@ newbits = {
 |Values
 |Default
 
-|`operator_enabled`
+|`create_operator`
 |Whether to create the operator host.
 |true/false
 |true
@@ -375,7 +375,7 @@ newbits = {
 |true/false
 |true
 
-|`operator_notification_enabled`
+|`enable_operator_notification`
 |Whether to enable ONS notification for the operator host. *Do not enable for now*.
 |true/false
 |false
@@ -395,7 +395,7 @@ newbits = {
 |
 |operator
 
-|`operator_package_upgrade`
+|`upgrade_operator`
 |Whether to also upgrade the packages for the operator host.
 |true/false
 |true
@@ -421,7 +421,7 @@ newbits = {
 |e.g. Australia/Sydney
 |Australia/Sydney
 
-|`operator_version`
+|`operator_os_version`
 |The Oracle Linux version to use for the operator host.
 |e.g. 7.9, 8
 |8
@@ -547,12 +547,12 @@ admission_controller_options = {
 |true/false
 |false
 
-|`cluster_access`
+|`control_plane_access`
 |Whether to allow public or private access to the control plane endpoint.
 |public/private
 |public
 
-|`cluster_access_source`
+|`control_plane_access_source`
 |CIDR range from which to allow access.
 |`[0.0.0.0/0]`
 |`[]`
@@ -679,7 +679,7 @@ node_pools = {
 |Values
 |Default
 
-|`lb_subnet_type`
+|`lb_type`
 |The type of load balancer subnets to create. 
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
@@ -688,8 +688,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
 |public
 
-|`preferred_lb_subnets`
-|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'.
+|`preferred_lb_type`
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_type must be either 'internal' or 'both'.
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
@@ -703,7 +703,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |`e.g.: [80,443,8080]`
 |`[80, 443]`
 
-|`waf_enabled`
+|`enable_waf`
 |Whether to enable WAF monitoring and protection of public load balancers.
 |true/false
 |false
@@ -751,7 +751,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |3.19
 |3.19
 
-|`calico_enabled`
+|`enable_calico`
 |Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
 |true/false
 |false
@@ -766,7 +766,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
-|`metricserver_enabled`
+|`enable_metric_server`
 |Whether to install {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 |true/false
 |false
@@ -797,7 +797,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |true/false
 |false
 
-|`existing_key_id`
+|`kms_key_id`
 |id of existing KMS key. *Required* if _use_encryption_ is set to *true*
 |`ocid1.key.oc1....`
 |
