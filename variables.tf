@@ -12,6 +12,11 @@ variable "api_private_key_path" {
   type        = string
 }
 
+variable "api_private_keyh" {
+  description = "The  api private key."
+  type        = string
+}
+
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "The oci region where resources will be created."
