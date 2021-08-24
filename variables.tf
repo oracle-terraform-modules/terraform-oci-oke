@@ -7,10 +7,10 @@ variable "api_fingerprint" {
   type        = string
 }
 
-variable "api_private_key_path" {
-  description = "The path to oci api private key."
-  type        = string
-}
+#variable "api_private_key_path" {
+#  description = "The path to oci api private key."
+#  type        = string
+#}
 
 variable "api_private_key" {
   description = "The contents of api private key."
