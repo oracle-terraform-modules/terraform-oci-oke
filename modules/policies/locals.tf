@@ -3,9 +3,17 @@
 
 locals {
 
-  dynamic_group_rule_all_clusters = (var.oke_kms.use_encryption == true) ? "ALL {resource.type = 'cluster', resource.compartment.id = '${var.compartment_id}'}" : null
+  dynamic_group_rule_all_clusters = (var.use_encryption == true) ? "ALL {resource.type = 'cluster', resource.compartment.id = '${var.compartment_id}'}" : "null"
 
-  dynamic_group_rule_this_cluster = (var.oke_kms.use_encryption == true) ? "ALL {resource.type = 'cluster', resource.id = '${var.cluster_id}'}" : null
+  dynamic_group_rule_this_cluster = (var.use_encryption == true) ? "ALL {resource.type = 'cluster', resource.id = '${var.cluster_id}'}" : "null"
 
-  policy_statement = (var.oke_kms.use_encryption == true) ? "Allow dynamic-group ${oci_identity_dynamic_group.oke-kms-cluster[0].name} to use keys in compartment id ${var.compartment_id} where target.key.id = '${var.oke_kms.key_id}'" : ""
+  policy_statement = (var.use_encryption == true) ? "Allow dynamic-group ${oci_identity_dynamic_group.oke_kms_cluster[0].name} to use keys in compartment id ${var.compartment_id} where target.key.id = '${var.key_id}'" : ""
+
+  update_dynamic_group_template = templatefile("${path.module}/scripts/update_dynamic_group.template.sh",
+    {
+      dynamic_group_id   = var.use_encryption == true ? oci_identity_dynamic_group.oke_kms_cluster[0].id : "null"
+      dynamic_group_rule = local.dynamic_group_rule_this_cluster
+    }
+  )
+
 }

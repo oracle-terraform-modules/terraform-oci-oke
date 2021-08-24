@@ -1,126 +1,138 @@
 # Copyright 2017, 2019 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+# oci provider
+variable "tenancy_id" {}
+
 # general oci parameters
 variable "compartment_id" {}
 
 variable "label_prefix" {}
 
-# region parameters
-variable "ad_names" {
-  type = list(string)
-}
 variable "region" {}
 
 # ssh keys
+variable "ssh_private_key_path" {}
 
-variable "oke_ssh_keys" {
-  type = object({
-    ssh_private_key_path = string
-    ssh_public_key_path  = string
-  })
-}
+variable "ssh_public_key_path" {}
 
 # bastion
+variable "bastion_public_ip" {}
 
-variable "oke_operator" {
-  type = object({
-    bastion_public_ip           = string
-    operator_private_ip         = string
-    bastion_enabled             = bool
-    operator_enabled            = bool
-    operator_instance_principal = bool
-    operator_version            = string
-    bastion_state               = string
-  })
+variable "operator_private_ip" {}
+
+variable "create_bastion_host" {
+  type = bool
 }
+variable "create_operator" {
+  type = bool
+}
+variable "operator_instance_principal" {
+  type = bool
+}
+variable "operator_os_version" {}
+
+variable "bastion_state" {}
 
 # oke
+variable "cluster_kubernetes_version" {}
 
-variable "oke_cluster" {
-  type = object({
-    cluster_kubernetes_version                              = string
-    cluster_access                                          = string
-    cluster_name                                            = string
-    cluster_options_add_ons_is_kubernetes_dashboard_enabled = bool
-    cluster_options_kubernetes_network_config_pods_cidr     = string
-    cluster_options_kubernetes_network_config_services_cidr = string
-    cluster_subnets                                         = map(string)
-    vcn_id                                                  = string
+variable "control_plane_access" {}
 
-    # encryption
-    use_encryption = bool
-    kms_key_id     = string
+variable "cluster_name" {}
 
-    # signed images
-    use_signed_images  = bool
-    image_signing_keys = list(string)
+variable "cluster_options_add_ons_is_kubernetes_dashboard_enabled" {
+  type = bool
+}
 
-    # admission controller options
-    admission_controller_options = map(bool)
-  })
+variable "cluster_options_kubernetes_network_config_pods_cidr" {}
+
+variable "cluster_options_kubernetes_network_config_services_cidr" {}
+
+variable "cluster_subnets" {
+  type = map(any)
+}
+
+variable "vcn_id" {}
+
+# encryption
+variable "use_encryption" {
+  type = bool
+}
+
+variable "kms_key_id" {}
+
+# signed images
+variable "use_signed_images" {
+  type = bool
+}
+
+variable "image_signing_keys" {
+  type = list(any)
+}
+
+# admission controller options
+variable "admission_controller_options" {
+  type = map(any)
 }
 
 variable "node_pools" {
-  type = object({
-    node_pools            = any
-    node_pool_name_prefix = string
-    node_pool_image_id    = string
-    node_pool_os          = string
-    node_pool_os_version  = string
-  })
+  type = any
 }
 
-variable "lbs" {
-  type = object({
-    preferred_lb_subnets = string
-  })
-}
+variable "node_pool_name_prefix" {}
+
+variable "node_pool_image_id" {}
+
+variable "node_pool_os" {}
+
+variable "node_pool_os_version" {}
+
+variable "preferred_lb_type" {}
+
 
 # ocir
-variable "oke_ocir" {
-  type = object({
-    email_address = string
-    ocir_urls     = map(string)
-    secret_id     = string
-    secret_name   = string
-    username      = string
-    secret_ns     = string
-  })
+variable "email_address" {}
+
+variable "ocir_urls" {
+  type = map(any)
 }
 
+variable "secret_id" {}
+
+variable "secret_name" {}
+
+variable "username" {}
+
 # calico
-variable "calico" {
-  type = object({
-    calico_version = string
-    install_calico = bool
-  })
+variable "calico_version" {}
+
+variable "install_calico" {
+  type = bool
 }
 
 #metricserver
 
-variable "metricserver_enabled" {
+variable "enable_metric_server" {
   default = false
   type    = bool
 }
 
-variable "vpa" {
-  type = object({
-    enabled = bool
-    version = string
-  })
+variable "enable_vpa" {
+  type = bool
 }
+variable "vpa_version" {}
 
 # service account
-
-variable "service_account" {
-  type = object({
-    create_service_account               = bool
-    service_account_name                 = string
-    service_account_namespace            = string
-    service_account_cluster_role_binding = string
-  })
+variable "create_service_account" {
+  type = bool
 }
+
+variable "service_account_name" {}
+
+variable "service_account_namespace" {}
+
+variable "service_account_cluster_role_binding" {}
 
 #check worker node active
 variable "check_node_active" {
