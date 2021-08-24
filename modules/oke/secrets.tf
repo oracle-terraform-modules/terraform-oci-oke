@@ -7,14 +7,12 @@
 #   vars = {
 #     compartment_id = var.compartment_id
 #     region         = var.region
-
 #     email_address     = var.email_address
 #     region_registry   = var.ocir_urls[var.region]
 #     secret_id         = var.secret_id
 #     secret_name       = var.secret_name
 #     tenancy_namespace = data.oci_objectstorage_namespace.object_storage_namespace.namespace
 #     username          = var.username
-
 #   }
 #   count = local.post_provisioning_ops == true && var.secret_id != "none" ? 1 : 0
 # }

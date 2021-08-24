@@ -227,6 +227,8 @@ email_address = ""
 secret_id     = "ocid1.vaultsecret..."
 username      = ""
 
+secret_ns = "default"
+
 # calico
 enable_calico  = false
 calico_version = "3.19"
