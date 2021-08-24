@@ -12,8 +12,8 @@ variable "api_private_key_path" {
   type        = string
 }
 
-variable "api_private_keyh" {
-  description = "The  api private key."
+variable "api_private_key" {
+  description = "The contents of api private key."
   type        = string
 }
 
