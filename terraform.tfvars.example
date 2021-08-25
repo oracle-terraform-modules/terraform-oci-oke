@@ -60,17 +60,16 @@ internet_gateway_route_rules = [
     */
 ]
 
-local_peering_gateways = {
-    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
-      route_table_id = ""
-    }
-    to_spoke2 = { # LPG will be in requestor mode with no route table attached
-      route_table_id = ""
-      peer_id        = ""
-    }
-    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
-  }
-}
+# local_peering_gateways = {
+#    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
+#      route_table_id = ""
+#    }
+#    to_spoke2 = { # LPG will be in requestor mode with no route table attached
+#      route_table_id = ""
+#      peer_id        = ""
+#    }
+#    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
+# }
 
 lockdown_default_seclist = true
 
