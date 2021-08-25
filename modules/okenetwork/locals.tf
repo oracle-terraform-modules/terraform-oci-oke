@@ -10,6 +10,8 @@ locals {
 
   int_lb_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["int_lb"], "newbits"), lookup(var.subnets["int_lb"], "netnum"))
 
+  operator_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["operator"], "newbits"), lookup(var.subnets["operator"], "netnum"))
+
   pub_lb_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["pub_lb"], "newbits"), lookup(var.subnets["pub_lb"], "netnum"))
 
   workers_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["workers"], "newbits"), lookup(var.subnets["workers"], "netnum"))
