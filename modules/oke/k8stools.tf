@@ -4,7 +4,7 @@
 resource "null_resource" "install_kubectl_operator" {
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = var.ssh_private_key != "" ? var.ssh_private_key : file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
