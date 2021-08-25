@@ -1,33 +1,32 @@
 # Identity and access parameters
-
-api_fingerprint = ""
-
-api_private_key_path = ""
-
-region = "us-phoenix-1"
-
-tenancy_id = ""
-
-user_id = ""
+## apaciaas
+api_fingerprint      = "aa:bb:cc:....."
+api_private_key_path = "/path/to/private/api/key"
+region               = "ap-sydney-1"
+tenancy_id           = "ocid1.tenancy.oc1.."
+user_id              = "ocid1.user.oc1.."
 
 # general oci parameters
-compartment_id = ""
-
-label_prefix = "dev"
+compartment_id = "ocid1.compartment.oc1.."
+label_prefix   = "dev"
 
 # ssh keys
-ssh_private_key_path = ""
-
-ssh_public_key_path = ""
+ssh_private_key_path = "~/.ssh/id_rsa"
+ssh_public_key       = ""
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
 
 # networking
-
-create_drg = false
-
+create_drg       = false
 drg_display_name = "drg"
-
+enable_waf       = false
 internet_gateway_route_rules = [
-    /*
+  #   {
+  #   destination = "8.8.8.0/24"
+  #   destination_type = "CIDR_BLOCK"
+  #   network_entity_id = "internet_gateway" // use Internet Gateway created by this module. Requires `internet_gateway_enabled = true`
+  #   description = "route through Internet Gateway"
+  # }
+  /*
     {
       destination = "192.168.1.0/24"
       destination_type = "CIDR_BLOCK"
@@ -45,14 +44,38 @@ internet_gateway_route_rules = [
       destination_type = "CIDR_BLOCK"
       network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
       description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
-    }
-    */ 
+    },
+    {
+      destination       = "192.168.1.0/24"
+      destination_type  = "CIDR_BLOCK"
+      network_entity_id = "ocid1.localpeeringgateway." # <-- edit this OCID
+      description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
+    }        
+    */
 ]
 
-lockdown_default_seclist = false
+local_peering_gateways = {
+    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
+      route_table_id = ""
+    }
+    to_spoke2 = { # LPG will be in requestor mode with no route table attached
+      route_table_id = ""
+      peer_id        = ""
+    }
+    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
+  }
+}
 
-nat_gateway_route_rules      = [
-    /*
+lockdown_default_seclist = true
+
+nat_gateway_route_rules = [
+  #   {
+  #   destination = "192.168.1.0/24"
+  #   destination_type = "CIDR_BLOCK"
+  #   network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
+  #   description = "route through drg"
+  # },
+  /*
     {
       destination = "192.168.1.0/24"
       destination_type = "CIDR_BLOCK"
@@ -70,220 +93,176 @@ nat_gateway_route_rules      = [
       destination_type = "CIDR_BLOCK"
       network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
       description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
-    }
+    },
+    {
+      destination       = "192.168.1.0/24"
+      destination_type  = "CIDR_BLOCK"
+      network_entity_id = "ocid1.localpeeringgateway." # <-- edit this OCID
+      description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
+    }    
     */
 ]
 
 nat_gateway_public_ip_id = "none"
 
-netnum = {
-    bastion  = 0
-    cp       = 2
-    int_lb   = 16
-    operator = 1
-    pub_lb   = 17
-    workers  = 1
+subnets = {
+  bastion  = { netnum = 0, newbits = 13 }
+  operator = { netnum = 1, newbits = 13 }
+  cp       = { netnum = 2, newbits = 13 }
+  int_lb   = { netnum = 16, newbits = 11 }
+  pub_lb   = { netnum = 17, newbits = 11 }
+  workers  = { netnum = 1, newbits = 2 }
 }
 
-newbits = {
-    bastion  = 14
-    cp       = 14
-    lb       = 11
-    operator = 14
-    workers  = 2
-}
-
-vcn_cidr = "10.0.0.0/16"
-
+vcn_cidr      = "10.0.0.0/16"
 vcn_dns_label = "oke"
+vcn_name      = "vcnoke"
 
-vcn_name = "oke vcn"
+# bastion host
+create_bastion_host = true
 
-
-# bastion
-
-bastion_access = "ANYWHERE"
-
-bastion_enabled = true
-
-bastion_image_id = "Autonomous"
-
-bastion_notification_enabled = false
-
-bastion_notification_endpoint = "<email_address>"
-
-bastion_notification_protocol = "EMAIL"
-
-bastion_notification_topic= "bastion_server_notification"
-
-bastion_operating_system_version = "7.9"
-
-bastion_package_upgrade = false
-
+bastion_access     = ["anywhere"]
+bastion_image_id   = "Autonomous"
+bastion_os_version = "7.9"
 bastion_shape = {
-  # shape = "VM.Standard.E2.2"
-  shape            = "VM.Standard.E3.Flex",
+  shape            = "VM.Standard.E4.Flex",
   ocpus            = 1,
   memory           = 4,
   boot_volume_size = 50
 }
-
-bastion_state = "RUNNING"
-
+bastion_state    = "RUNNING"
 bastion_timezone = "Australia/Sydney"
+bastion_type     = "public"
+upgrade_bastion  = false
 
-operator_enabled = true
+## bastion notification
+enable_bastion_notification   = false
+bastion_notification_endpoint = ""
+bastion_notification_protocol = "EMAIL"
+bastion_notification_topic    = ""
 
-operator_image_id = "Oracle"
-
+# operator host
+create_operator             = true
+operator_image_id           = "Oracle"
 operator_instance_principal = true
-
-operator_notification_enabled = false
-
-operator_notification_endpoint = ""
-
-operator_notification_protocol = "EMAIL"
-
-operator_notification_topic= "operator_server_notification"
-
-operator_package_upgrade = true
-
+operator_nsg_ids            = []
+operator_os_version         = "8"
 operator_shape = {
-  # shape = "VM.Standard.E2.2"
-  shape            = "VM.Standard.E3.Flex",
+  shape            = "VM.Standard.E4.Flex",
   ocpus            = 1,
   memory           = 4,
   boot_volume_size = 50
 }
+operator_state    = "RUNNING"
+operator_timezone = "Australia/Sydney"
+upgrade_operator = false
 
-operator_state = "RUNNING"
-
-operator_timezone= "Australia/Sydney"
-
-operator_version = "8"
+## operator notification
+enable_operator_notification   = false
+operator_notification_endpoint = ""
+operator_notification_protocol = "EMAIL"
+operator_notification_topic    = "operator_server_notification"
 
 # availability_domains
-
 availability_domains = {
-  bastion = 1
-  operator  = 1
+  bastion  = 1,
+  operator = 1
 }
 
-# tags
+# oke cluster options
+admission_controller_options = {
+  PodSecurityPolicy = false
+}
+allow_node_port_access      = false
+allow_worker_ssh_access     = true
+cluster_name                = "oke"
+check_node_active           = "none"
+control_plane_access        = "public"
+control_plane_access_source = ["0.0.0.0/0", "8.8.8.8/32"]
+dashboard_enabled           = false
+kubernetes_version          = "v1.20.8"
+pods_cidr                   = "10.244.0.0/16"
+services_cidr               = "10.96.0.0/16"
 
+## oke cluster container image policy and keys
+use_signed_images = false
+image_signing_keys = ["ocid1.key...","ocid1.key.."]
+
+## oke cluster kms integration
+use_encryption = false
+kms_key_id     = "ocid1.key..."
+
+
+# node pools
+node_pools = {
+  np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, autoscale = true, label = { app = "frontend", pool = "np1" } }
+  # np2 = {shape="VM.Standard.E4.Flex",ocpus=4,memory=16,node_pool_size=1,boot_volume_size=150, autoscale=false, label={app="backend",pool="np2"}}
+  # np3 = {shape="VM.Standard.A1.Flex",ocpus=8,memory=16,node_pool_size=1,boot_volume_size=150, autoscale=false, label={pool="np3"}}
+  # np4 = {shape="BM.Standard2.52",node_pool_size=1,boot_volume_size=150}
+  # np5 = {shape="VM.Optimized3.Flex",node_pool_size=6}
+  # np5 = {shape="BM.Standard.A1.160",node_pool_size=6}
+  # np6 = {shape="VM.Standard.E2.2", node_pool_size=5}
+  # np7 = {shape="BM.DenseIO2.52", node_pool_size=5}
+  # np8 = {shape="BM.GPU3.8", node_pool_size=1}
+  # np9 = {shape="BM.GPU4.8", node_pool_size=5}
+  # np10 = {shape="BM.HPC2.36	", node_pool_size=5}
+}
+node_pool_image_id    = "none"
+node_pool_name_prefix = "np"
+node_pool_os          = "Oracle Linux"
+node_pool_os_version  = "7.9"
+
+node_pools_to_drain     = ["np1", "np2", "np3"]
+nodepool_drain          = false
+nodepool_upgrade_method = "out_of_place"
+worker_mode             = "private"
+
+# oke load balancers
+lb_type           = "both"
+preferred_lb_type = "public"
+public_lb_ports   = [80, 443]
+
+
+# ocir
+email_address = ""
+secret_id     = "ocid1.vaultsecret..."
+username      = ""
+
+secret_namespace = "default"
+
+# calico
+enable_calico  = false
+calico_version = "3.19"
+
+# horizontal and vertical pod autoscaling
+enable_metric_server = false
+enable_vpa           = false
+vpa_version          = 0.8
+
+# service account
+create_service_account               = false
+service_account_name                 = "jenkins"
+service_account_namespace            = "default"
+service_account_cluster_role_binding = "jenkins-crb"
+
+# tags
 tags = {
   # vcn, bastion and operator tags are required
   # add more tags in each as desired
   vcn = {
-    # department = "finance"
     environment = "dev"
   }
   bastion = {
-    # department  = "finance"
-    environment = "dev"
-    role        = "bastion"
+    access      = "public",
+    environment = "dev",
+    role        = "bastion",
+    security    = "high"
   }
   operator = {
-    # department = "finance"
-    environment = "dev"
-    role        = "operator"
+    access      = "restricted",
+    environment = "dev",
+    role        = "operator",
+    security    = "high"
   }
 }
 
-# oke
-
-admission_controller_options = {
-  PodSecurityPolicy = false
-}
-
-allow_node_port_access = false
-
-allow_worker_ssh_access = false
-
-cluster_access = "public"
-
-cluster_access_source = ["0.0.0.0/0"]
-
-cluster_name = "oke"
-
-check_node_active = "none"
-
-dashboard_enabled = false
-
-kubernetes_version = "v1.20.8"
-
-node_pools = {
-  np1 = {shape="VM.Standard.E3.Flex",ocpus=2,memory=20,node_pool_size=2,boot_volume_size=150}
-  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
-  np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
-}
-
-node_pools_to_drain = [ "np1", "np2", "np3" ] 
-
-nodepool_drain = false
-
-nodepool_upgrade_method = "out_of_place"
-
-node_pool_name_prefix = "np"
-
-node_pool_image_id = "none"
-
-node_pool_os = "Oracle Linux"
-
-node_pool_os_version = "7.9"
-
-pods_cidr = "10.244.0.0/16"
-
-services_cidr = "10.96.0.0/16"
-
-use_signed_images = false
-
-worker_mode = "private"
-
-# oke load balancers
-lb_subnet_type = "public"
-
-preferred_lb_subnets = "public"
-
-public_lb_ports = [80, 443]
-
-waf_enabled = false
-
-# ocir
-email_address = ""
-
-secret_id = "none"
-
-secret_name = "ocirsecret"
-
-username = ""
-
-secret_ns = "default"
-
-# calico
-calico_enabled = false
-calico_version = "3.19"
-
-#metrics server
-metricserver_enabled = false
-
-vpa = {
-  enabled = false,
-  version = 0.8
-}
-
-# kms
-use_encryption = false
-
-existing_key_id = ""
-
-image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
-
-# service account
-create_service_account = true
-
-service_account_name = "kubeconfigsa"
-
-service_account_namespace = "kube-system"
-
-service_account_cluster_role_binding = "cluster-admin"

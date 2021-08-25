@@ -13,6 +13,7 @@
 :uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
 :uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
 :uri-oci-okepolicy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
+:uri-oci-provider: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformproviderconfiguration.htm
 :uri-terraform: https://www.terraform.io
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
@@ -34,7 +35,7 @@
 
 1. git is installed
 2. ssh client is installed
-3. Terraform 0.12.16+ is installed
+3. Terraform 1.0.0+ is installed
 
 === Provisioning using this git repo
 
@@ -49,20 +50,31 @@ cd tfoke
 cp terraform.tfvars.example terraform.tfvars
 ----
 
-. Create a provider.tf file and add the following:
+. Create a provider.tf file add 2 providers ({uri-oci-provider}[see different examples of creating providers]):
+.. 1 provider for the region where your OKE cluster and other resources will be created
+.. 1 provider for the home region. This is required for conducting identity operations. *Note that your home region may not necessarily be the same as your current region.*
 
 +
 ----
 provider "oci" {
-  fingerprint          = var.api_fingerprint
-  private_key_path     = var.api_private_key_path
-  region               = var.region
-  tenancy_ocid         = var.tenancy_id
-  user_ocid            = var.user_id
+  fingerprint      = "aa:bb:cc:dd:11"
+  private_key_path = "/path/to/oci_rsa.pem"
+  region           = "ap-sydney-1"
+  tenancy_ocid     = "ocid1.tenancy...."
+  user_ocid        = "ocid1.user.oc1.."
+}
+
+provider "oci" {
+  fingerprint      = "aa:bb:cc:dd:11"
+  private_key_path = "/path/to/oci_rsa.pem"
+  region           = "us-phoenix-1"
+  tenancy_ocid     = "ocid1.tenancy...."
+  user_ocid        = "ocid1.user.oc1.."
+  alias            = "home"
 }
 ----
 
-. Set mandatory parameters:
+. Set mandatory parameters in the provider depending on your method of initializing your provider:
 
 * api_fingerprint
 * api_private_key_path
@@ -70,18 +82,9 @@ provider "oci" {
 * tenancy_id
 * user_id
 
-. Override other parameters:
+. Override other parameters e.g.:
 
-* region
-
-. Optional parameters to override:
-* bastion_enabled
-* cluster_name
-* ssh_private_key_path (Required if bastion is enabled)
-* ssh_public_key_path (Required if bastion is enabled)
-* vcn_dns_label
-* vcn_name
-* worker_mode
+* region (where your resources will be created)
 
 . Run Terraform:
 
@@ -106,6 +109,15 @@ provider "oci" {
   tenancy_ocid         = var.tenancy_id
   user_ocid            = var.user_id
 }
+
+provider "oci" {
+  fingerprint          = var.api_fingerprint
+  private_key_path     = var.api_private_key_path
+  region               = "us-phoenix-1"
+  tenancy_ocid         = var.tenancy_id
+  user_ocid            = var.user_id
+  alias                = "home"
+}
 ----
 
 . In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the oke module root.
@@ -116,7 +128,7 @@ provider "oci" {
 ----
 module "oke" {
   source  = "oracle-terraform-modules/oke/oci"
-  version = "2.3.2"
+  version = "4.0.0"
   # insert the 9 required variables here
 }
 ----
@@ -127,7 +139,7 @@ module "oke" {
 ----
 module "oke" {
   source                                =   "oracle-terraform-modules/oke/oci"
-  version                               =   "2.1.5"
+  version                               =   "4.0.0"
 
   compartment_id                        =   var.compartment_id
   tenancy_id                            =   var.tenancy_id
@@ -142,11 +154,9 @@ module "oke" {
   vcn_dns_label                         =   var.vcn_dns_label
   vcn_name                              =   var.vcn_name
 
-  bastion_shape                         =   var.bastion_shape
-  bastion_timezone                      =   var.bastion_timezone
-
-  operator_shape                           =   var.operator_shape
-  operator_timezone                        =   var.operator_timezone
+  create_bastion_host                   =   var.create_bastion_host
+ 
+  create_operator                       =   var.create_operator
 
   # add additional parameters for availability_domains, oke etc as you need
 
