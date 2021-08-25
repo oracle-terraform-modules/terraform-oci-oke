@@ -1,26 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# data "template_file" "enable_metric_server" {
-#   template = file("${path.module}/scripts/install_metricserver.template.sh")
-
-#   vars = {
-#     enable_vpa  = var.enable_vpa
-#     vpa_version = var.vpa_version
-#   }
-
-#   count = var.enable_metric_server == true ? 1 : 0
-# }
-
-locals {
-  metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
-    {
-      enable_vpa  = var.enable_vpa
-      vpa_version = var.vpa_version
-    }
-  )
-}
-
 resource "null_resource" "enable_metric_server" {
   connection {
     host        = var.operator_private_ip
@@ -37,7 +17,6 @@ resource "null_resource" "enable_metric_server" {
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    # content     = data.template_file.enable_metric_server[0].rendered
     content     = local.metric_server_template
     destination = "~/enable_metric_server.sh"
   }

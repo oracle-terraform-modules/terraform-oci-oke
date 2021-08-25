@@ -1,25 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# data "template_file" "check_active_worker" {
-#   template = file("${path.module}/scripts/check_worker_active.template.sh")
-
-#   vars = {
-#     check_node_active = var.check_node_active
-#     total_nodes       = local.total_nodes
-#   }
-#   count = local.post_provisioning_ops == true && var.check_node_active != "none" ? 1 : 0
-# }
-
-locals {
-  check_active_worker_template = templatefile("${path.module}/scripts/check_worker_active.template.sh",
-    {
-      check_node_active = var.check_node_active
-      total_nodes       = local.total_nodes
-    }
-  )
-}
-
 resource "null_resource" "check_worker_active" {
   triggers = {
     node_pools = length(data.oci_containerengine_node_pools.all_node_pools.node_pools)
@@ -40,7 +21,6 @@ resource "null_resource" "check_worker_active" {
   depends_on = [null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    # content     = data.template_file.check_active_worker[0].rendered
     content     = local.check_active_worker_template
     destination = "~/check_active_worker.sh"
   }

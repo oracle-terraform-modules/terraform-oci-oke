@@ -14,19 +14,6 @@ resource "oci_identity_dynamic_group" "oke_kms_cluster" {
   }
 }
 
-# data "template_file" "update_dynamic_group_script" {
-#   template = file("${path.module}/scripts/update_dynamic_group.template.sh")
-
-#   vars = {
-#     dynamic_group_id   = oci_identity_dynamic_group.oke-kms-cluster[0].id
-#     dynamic_group_rule = local.dynamic_group_rule_this_cluster
-#   }
-
-#   depends_on = [oci_identity_dynamic_group.oke-kms-cluster]
-
-#   count = var.use_encryption == true && var.create_operator == true && var.operator_instance_principal == true ? 1 : 0
-# }
-
 resource "null_resource" "update_dynamic_group" {
   triggers = {
     cluster_id = var.cluster_id
@@ -47,7 +34,6 @@ resource "null_resource" "update_dynamic_group" {
   depends_on = [oci_identity_dynamic_group.oke_kms_cluster, oci_identity_policy.operator_instance_principal_dynamic_group]
 
   provisioner "file" {
-    # content     = data.template_file.update_dynamic_group_script[0].rendered
     content     = local.update_dynamic_group_template
     destination = "~/update_dynamic_group.sh"
   }

@@ -1,30 +1,6 @@
 ## Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 ## Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# data "template_file" "enable_calico" {
-#   template = file("${path.module}/scripts/install_calico.template.sh")
-
-# vars = {
-#     calico_version     = var.calico_version
-#     number_of_nodes    = local.total_nodes
-#     pod_cidr           = var.cluster_options_kubernetes_network_config_pods_cidr
-#     number_of_replicas = min(20, max((local.total_nodes) / 200, 3))
-#   }  
-
-#   count = var.install_calico == true ? 1 : 0
-# }
-
-locals {
-  install_calico_template = templatefile("${path.module}/scripts/install_calico.template.sh",
-    {
-      calico_version     = var.calico_version
-      number_of_nodes    = local.total_nodes
-      pod_cidr           = var.cluster_options_kubernetes_network_config_pods_cidr
-      number_of_replicas = min(20, max((local.total_nodes) / 200, 3))
-    }
-  )
-}
-
 resource "null_resource" "install_calico" {
   connection {
     host        = var.operator_private_ip
@@ -41,7 +17,6 @@ resource "null_resource" "install_calico" {
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    # content     = data.template_file.enable_calico[0].rendered
     content     = local.install_calico_template
     destination = "~/install_sh"
   }

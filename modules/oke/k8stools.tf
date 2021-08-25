@@ -1,23 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# kubectl
-# data "template_file" "install_kubectl" {
-#   template = file("${path.module}/scripts/install_kubectl.template.sh")
-
-#   vars = {
-#     ol = var.operator_os_version
-#   }
-# }
-
-locals {
-  install_kubectl_template = templatefile("${path.module}/scripts/install_kubectl.template.sh",
-    {
-      ol = var.operator_os_version
-    }
-  )
-}
-
 resource "null_resource" "install_kubectl_operator" {
   connection {
     host        = var.operator_private_ip
@@ -32,7 +15,6 @@ resource "null_resource" "install_kubectl_operator" {
   }
 
   provisioner "file" {
-    # content     = data.template_file.install_kubectl.rendered
     content     = local.install_kubectl_template
     destination = "~/install_kubectl.sh"
   }
@@ -49,12 +31,6 @@ resource "null_resource" "install_kubectl_operator" {
 }
 
 # helm
-data "template_file" "install_helm" {
-  template = file("${path.module}/scripts/install_helm.template.sh")
-
-  count = var.create_operator == true ? 1 : 0
-}
-
 resource "null_resource" "install_helm_operator" {
   connection {
     host        = var.operator_private_ip
@@ -71,7 +47,7 @@ resource "null_resource" "install_helm_operator" {
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    content     = data.template_file.install_helm[0].rendered
+    content     = local.install_helm_template
     destination = "~/install_helm.sh"
   }
 
