@@ -166,6 +166,13 @@ locals {
       port        = -1,
       source      = local.anywhere,
       stateless   = false
+    },
+    {
+      description = "Allow bastion to contact worker nodes",
+      protocol    = local.local.all_protocols,
+      port        = -1,
+      source      = local.bastion_subnet,
+      stateless   = false
     }
   ]
 }
