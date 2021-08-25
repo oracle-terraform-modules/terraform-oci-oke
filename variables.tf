@@ -416,12 +416,13 @@ variable "image_signing_keys" {
 # oke cluster kms integration
 
 variable "use_encryption" {
-  description = "whether to use OCI KMS to encrypt Kubernetes secrets."
+  description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
   default     = false
   type        = bool
 }
 
 variable "kms_key_id" {
+  default     = ""
   description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
   type        = string
 }

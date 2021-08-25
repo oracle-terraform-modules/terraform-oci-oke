@@ -54,7 +54,7 @@ Start by installing Terraform and configuring your path.
 
 === Download Terraform
 
-1. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 0.12.16+.
+1. Open your browser and navigate to the {uri-terraform-download}[Terraform download page]. You need version 1.0.0+.
 
 2. Download the appropriate version for your operating system
 
@@ -88,7 +88,7 @@ Follow the steps below to configure your path on Windows:
 [source,bash]
 ----
 terraform -v
-Terraform v0.12.24
+Terraform v1.0.3
 ----
 
 == Generate API keys
