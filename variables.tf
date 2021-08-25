@@ -559,15 +559,15 @@ variable "secret_name" {
   default     = "ocirsecret"
 }
 
-variable "username" {
-  default     = "none"
-  description = "The username to access OCIR."
+variable "secret_namespace" {
+  default     = "default"
+  description = "the k8s namespace for a secret."
   type        = string
 }
 
-variable "secret_ns" {
-  default     = "default"
-  description = "the k8s namespace for a secret."
+variable "username" {
+  default     = "none"
+  description = "The username to access OCIR."
   type        = string
 }
 

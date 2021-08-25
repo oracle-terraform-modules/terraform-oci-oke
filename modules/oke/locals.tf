@@ -3,8 +3,6 @@
 
 locals {
 
-  # ad_names = sort(data.template_file.ad_names.*.rendered)
-
   # used by cluster
   lb_subnet = var.preferred_lb_type == "public" ? "pub_lb" : "int_lb"
 
@@ -35,4 +33,70 @@ locals {
   ## 2. operation to be enabled and instance_principal to be enabled
 
   post_provisioning_ops = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true && var.operator_instance_principal == true ? true : false
+
+  # scripting templates
+    check_active_worker_template = templatefile("${path.module}/scripts/check_worker_active.template.sh",
+    {
+      check_node_active = var.check_node_active
+      total_nodes       = local.total_nodes
+    }
+  )
+
+  install_calico_template = templatefile("${path.module}/scripts/install_calico.template.sh",
+    {
+      calico_version     = var.calico_version
+      number_of_nodes    = local.total_nodes
+      pod_cidr           = var.cluster_options_kubernetes_network_config_pods_cidr
+      number_of_replicas = min(20, max((local.total_nodes) / 200, 3))
+    }
+  )
+
+  drain_template = templatefile("${path.module}/scripts/drain.template.sh", {})
+
+  drain_list_template = templatefile("${path.module}/scripts/drainlist.py",
+    {
+      cluster_id     = oci_containerengine_cluster.k8s_cluster.id
+      compartment_id = var.compartment_id
+      region         = var.region
+      pools_to_drain = var.label_prefix == "none" ? trim(join(",", formatlist("'%s'", var.node_pools_to_drain)), "'") : trim(join(",", formatlist("'%s-%s'", var.label_prefix, var.node_pools_to_drain)), "'")
+    }
+  )
+
+  install_kubectl_template = templatefile("${path.module}/scripts/install_kubectl.template.sh",
+    {
+      ol = var.operator_os_version
+    }
+  )
+
+  install_helm_template = templatefile("${path.module}/scripts/install_helm.template.sh", {})
+
+  metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
+    {
+      enable_vpa  = var.enable_vpa
+      vpa_version = var.vpa_version
+    }
+  )
+
+  secret_template = templatefile("${path.module}/scripts/secret.py",
+    {
+      compartment_id = var.compartment_id
+      region         = var.region
+
+      email_address     = var.email_address
+      region_registry   = var.ocir_urls[var.region]
+      secret_id         = var.secret_id
+      secret_name       = var.secret_name
+      secret_namespace  = var.secret_namespace
+      tenancy_namespace = data.oci_objectstorage_namespace.object_storage_namespace.namespace
+      username          = var.username
+    }
+  )
+
+  create_service_account_template = templatefile("${path.module}/scripts/create_service_account.template.sh",
+    {
+      service_account_name                 = var.service_account_name
+      service_account_namespace            = var.service_account_namespace
+      service_account_cluster_role_binding = local.service_account_cluster_role_binding_name
+    }
+  )
 }

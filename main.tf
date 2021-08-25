@@ -239,11 +239,12 @@ module "oke" {
   preferred_lb_type = var.preferred_lb_type
 
   # ocir parameters
-  email_address = var.email_address
-  ocir_urls     = var.ocir_urls
-  secret_id     = var.secret_id
-  secret_name   = var.secret_name
-  username      = var.username
+  email_address    = var.email_address
+  ocir_urls        = var.ocir_urls
+  secret_id        = var.secret_id
+  secret_name      = var.secret_name
+  secret_namespace = var.secret_namespace
+  username         = var.username
 
   # calico parameters
   calico_version = var.calico_version

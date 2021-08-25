@@ -102,6 +102,8 @@ variable "secret_id" {}
 
 variable "secret_name" {}
 
+variable "secret_namespace" {}
+
 variable "username" {}
 
 # calico

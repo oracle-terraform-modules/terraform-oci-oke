@@ -50,40 +50,6 @@ resource "local_file" "kube_config_file" {
   file_permission = "0600"
 }
 
-# data "template_file" "generate_kubeconfig" {
-#   template = file("${path.module}/scripts/generate_kubeconfig.template.sh")
-
-#   vars = {
-#     cluster-id = oci_containerengine_cluster.k8s_cluster.id
-#     region     = var.region
-#   }
-
-#   count = local.post_provisioning_ops == true ? 1 : 0
-# }
-
-# data "template_file" "token_helper" {
-#   template = file("${path.module}/scripts/token_helper.template.sh")
-
-#   vars = {
-#     cluster-id = oci_containerengine_cluster.k8s_cluster.id
-#     region     = var.region
-#   }
-
-#   count = local.post_provisioning_ops == true ? 1 : 0
-# }
-
-# data "template_file" "set_credentials" {
-#   template = file("${path.module}/scripts/kubeconfig_set_credentials.template.sh")
-
-#   vars = {
-#     cluster-id    = oci_containerengine_cluster.k8s_cluster.id
-#     cluster-id-11 = substr(oci_containerengine_cluster.k8s_cluster.id, (length(oci_containerengine_cluster.k8s_cluster.id) - 11), length(oci_containerengine_cluster.k8s_cluster.id))
-#     region        = var.region
-#   }
-
-#   count = local.post_provisioning_ops == true ? 1 : 0
-# }
-
 resource "null_resource" "write_kubeconfig_on_operator" {
   connection {
     host        = var.operator_private_ip
@@ -100,19 +66,16 @@ resource "null_resource" "write_kubeconfig_on_operator" {
   depends_on = [oci_containerengine_cluster.k8s_cluster, null_resource.install_kubectl_operator]
 
   provisioner "file" {
-    # content     = data.template_file.generate_kubeconfig[0].rendered
     content     = local.generate_kubeconfig_template
     destination = "~/generate_kubeconfig.sh"
   }
 
   provisioner "file" {
-    # content     = data.template_file.token_helper[0].rendered
     content     = local.token_helper_template
     destination = "~/token_helper.sh"
   }
 
   provisioner "file" {
-    # content     = data.template_file.set_credentials[0].rendered
     content     = local.set_credentials_template
     destination = "~/kubeconfig_set_credentials.sh"
   }

@@ -227,7 +227,7 @@ email_address = ""
 secret_id     = "ocid1.vaultsecret..."
 username      = ""
 
-secret_ns = "default"
+secret_namespace = "default"
 
 # calico
 enable_calico  = false
