@@ -348,7 +348,7 @@ variable "allow_node_port_access" {
 
 variable "allow_worker_ssh_access" {
   default     = false
-  description = "Whether to allow ssh access to worker nodes when worker nodes are deployed in public mode."
+  description = "Whether to allow ssh access to worker nodes."
   type        = bool
 }
 
