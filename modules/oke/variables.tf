@@ -16,6 +16,8 @@ variable "ssh_private_key_path" {}
 
 variable "ssh_public_key_path" {}
 
+# In order to support TF Cloud, these could be passed in as strings, using TF Sensitive variables
+variable "ssh_private_key" {}
 variable "ssh_public_key" {}
 
 # bastion

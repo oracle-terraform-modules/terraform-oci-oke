@@ -127,6 +127,7 @@ module "policies" {
   tenancy_id = var.tenancy_id
 
   # ssh keys
+  ssh_private_key = var.ssh_private_key
   ssh_private_key_path = var.ssh_private_key_path
   ssh_public_key_path  = var.ssh_public_key_path
 
@@ -201,6 +202,7 @@ module "oke" {
   region = var.region
 
   # ssh keys
+  ssh_private_key = var.ssh_private_key
   ssh_private_key_path = var.ssh_private_key_path
   ssh_public_key_path  = var.ssh_public_key_path
   ssh_public_key = var.ssh_public_key

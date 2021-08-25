@@ -18,6 +18,7 @@ variable "api_private_key" {
   default     = ""
   description = "The contents of api private key."
   type        = string
+  sensitive   = true
 }
 
 variable "region" {
@@ -49,7 +50,14 @@ variable "label_prefix" {
   type        = string
 }
 
-# ssh keys
+# ssh keys - could pass in as TF Strings
+variable "ssh_private_key" {
+  default     = "none"
+  description = "The contents of the SSH private key."
+  type        = string
+  sensitive   = true
+}
+
 variable "ssh_private_key_path" {
   default     = "none"
   description = "The path to ssh private key."

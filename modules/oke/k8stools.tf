@@ -11,7 +11,7 @@ resource "null_resource" "install_kubectl_operator" {
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.ssh_private_key_path)
+    bastion_private_key = var.ssh_private_key != "" ? var.ssh_private_key : file(var.ssh_private_key_path)
   }
 
   provisioner "file" {
@@ -34,7 +34,7 @@ resource "null_resource" "install_kubectl_operator" {
 resource "null_resource" "install_helm_operator" {
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = var.ssh_private_key != "" ? var.ssh_private_key : file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
