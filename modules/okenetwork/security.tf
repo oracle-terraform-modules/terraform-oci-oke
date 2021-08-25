@@ -203,7 +203,7 @@ resource "oci_core_security_list" "workers_seclist" {
     for_each = var.allow_worker_ssh_access == true ? [1] : []
 
     content {
-      description = "allow ssh access to worker nodes through bastion"
+      description = "allow ssh access to worker nodes through bastion host"
       protocol    = local.tcp_protocol
       source      = local.bastion_subnet
       stateless   = false
