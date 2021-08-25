@@ -53,14 +53,14 @@ resource "local_file" "kube_config_file" {
 resource "null_resource" "write_kubeconfig_on_operator" {
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = var.ssh_private_key != "" ? var.ssh_private_key : file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.ssh_private_key_path)
+    bastion_private_key = var.ssh_private_key != "" ? var.ssh_private_key : file(var.ssh_private_key_path)
   }
 
   depends_on = [oci_containerengine_cluster.k8s_cluster, null_resource.install_kubectl_operator]
