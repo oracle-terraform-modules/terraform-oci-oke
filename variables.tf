@@ -132,7 +132,7 @@ variable "subnets" {
     pub_lb   = { netnum = 17, newbits = 11 }
     workers  = { netnum = 1, newbits = 2 }
   }
-  type = map
+  type = map(any)
 }
 
 variable "vcn_cidr" {
@@ -346,6 +346,12 @@ variable "admission_controller_options" {
 variable "allow_node_port_access" {
   default     = false
   description = "Whether to allow access to NodePorts when worker nodes are deployed in public mode."
+  type        = bool
+}
+
+variable "allow_worker_internet_access" {
+  default     = true
+  description = "Allow worker nodes to egress to internet. Required if container images are in a registry other than OCIR."
   type        = bool
 }
 

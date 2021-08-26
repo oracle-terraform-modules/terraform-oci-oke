@@ -134,14 +134,6 @@ locals {
       protocol         = local.tcp_protocol,
       port             = 12250,
       stateless        = false
-    },
-    {
-      description      = "Allow worker nodes access to Internet. Required for getting container images or using external services",
-      destination      = local.anywhere,
-      destination_type = "CIDR_BLOCK",
-      protocol         = local.tcp_protocol,
-      port             = -1,
-      stateless        = false
     }
   ]
 
