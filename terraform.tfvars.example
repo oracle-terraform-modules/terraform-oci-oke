@@ -11,9 +11,15 @@ compartment_id = "ocid1.compartment.oc1.."
 label_prefix   = "dev"
 
 # ssh keys
+
 ssh_private_key_path = "~/.ssh/id_rsa"
-ssh_public_key       = ""
-ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+
+# Set corresponding public key either using the path (ssh_public_key_path) or using the key itself (ssh_public_key).
+# Set the other to "".
+# ssh_public_key       = "ssh-rsa AAAAB....."
+# ssh_public_key       = ""
+# ssh_public_key_path  = "none"
+# ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 # networking
 create_drg       = false
@@ -54,17 +60,16 @@ internet_gateway_route_rules = [
     */
 ]
 
-local_peering_gateways = {
-    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
-      route_table_id = ""
-    }
-    to_spoke2 = { # LPG will be in requestor mode with no route table attached
-      route_table_id = ""
-      peer_id        = ""
-    }
-    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
-  }
-}
+# local_peering_gateways = {
+#    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
+#      route_table_id = ""
+#    }
+#    to_spoke2 = { # LPG will be in requestor mode with no route table attached
+#      route_table_id = ""
+#      peer_id        = ""
+#    }
+#    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
+# }
 
 lockdown_default_seclist = true
 
