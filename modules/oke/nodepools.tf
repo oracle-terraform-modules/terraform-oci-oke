@@ -39,7 +39,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
   node_shape = lookup(each.value, "shape", "VM.Standard.E4.Flex")
 
-  ssh_public_key = file(var.ssh_public_key_path)
+  ssh_public_key = (var.ssh_public_key != "") ? var.ssh_public_key : (var.ssh_public_key_path != "none") ? file(var.ssh_public_key_path) : ""
 
   # do not destroy the node pool if the kubernetes version has changed as part of the upgrade
   lifecycle {
