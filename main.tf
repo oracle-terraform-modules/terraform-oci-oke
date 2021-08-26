@@ -171,9 +171,10 @@ module "network" {
   control_plane_access_source = var.control_plane_access_source
 
   # oke worker network parameters
-  allow_node_port_access  = var.allow_node_port_access
-  allow_worker_ssh_access = var.allow_worker_ssh_access
-  worker_mode             = var.worker_mode
+  allow_node_port_access       = var.allow_node_port_access
+  allow_worker_internet_access = var.allow_worker_internet_access
+  allow_worker_ssh_access      = var.allow_worker_ssh_access
+  worker_mode                  = var.worker_mode
 
   # oke load balancer network parameters
   lb_type = var.lb_type

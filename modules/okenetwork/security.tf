@@ -134,6 +134,18 @@ resource "oci_core_security_list" "workers_seclist" {
     }
   }
 
+  dynamic "egress_security_rules" {
+    for_each = var.allow_worker_internet_access == true ? [1] : []
+
+    content {
+      description      = "Allow worker nodes access to Internet. Required for getting container images or using external services."
+      destination      = local.anywhere
+      destination_type = "CIDR_BLOCK"
+      protocol         = local.tcp_protocol
+      stateless        = false
+    }
+  }
+
   dynamic "ingress_security_rules" {
     iterator = workers_ingress_iterator
     for_each = local.workers_ingress
@@ -212,7 +224,7 @@ resource "oci_core_security_list" "workers_seclist" {
         max = local.ssh_port
         min = local.ssh_port
       }
-    }    
+    }
   }
 
   dynamic "ingress_security_rules" {
@@ -228,7 +240,7 @@ resource "oci_core_security_list" "workers_seclist" {
         max = local.ssh_port
         min = local.ssh_port
       }
-    }    
+    }
   }
 
   lifecycle {

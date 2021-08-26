@@ -43,6 +43,10 @@ variable "allow_node_port_access" {
   type = bool
 }
 
+variable "allow_worker_internet_access" {
+  type = bool
+}
+
 variable "allow_worker_ssh_access" {
   type = bool
 }
