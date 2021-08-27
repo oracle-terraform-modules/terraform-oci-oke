@@ -385,6 +385,12 @@ variable "control_plane_access_source" {
   type        = list(any)
 }
 
+variable "control_plane_nsgs" {
+  default     = []
+  description = "A list of the network security groups (NSGs) ids to apply to the cluster endpoint."
+  type        = list(any)
+}
+
 variable "dashboard_enabled" {
   default     = false
   description = "Whether to enable kubernetes dashboard."

@@ -41,6 +41,10 @@ variable "cluster_kubernetes_version" {}
 
 variable "control_plane_access" {}
 
+variable "control_plane_nsgs" {
+  type = list(any)
+}
+
 variable "cluster_name" {}
 
 variable "cluster_options_add_ons_is_kubernetes_dashboard_enabled" {
