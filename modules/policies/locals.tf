@@ -13,6 +13,7 @@ locals {
     {
       dynamic_group_id   = var.use_encryption == true ? oci_identity_dynamic_group.oke_kms_cluster[0].id : "null"
       dynamic_group_rule = local.dynamic_group_rule_this_cluster
+      home_region        = data.oci_identity_regions.home_region.regions[0].name
     }
   )
 
