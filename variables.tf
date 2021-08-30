@@ -163,7 +163,7 @@ variable "create_bastion_host" {
 variable "bastion_access" {
   default     = ["anywhere"]
   description = "A list of CIDR blocks to which ssh access to the bastion must be restricted to. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
-  type        = list(any)
+  type        = list(string)
 }
 
 variable "bastion_image_id" {
@@ -382,7 +382,13 @@ variable "control_plane_access" {
 variable "control_plane_access_source" {
   default     = []
   description = "The list of CIDR blocks from which the control plane can be accessed."
-  type        = list(any)
+  type        = list(string)
+}
+
+variable "control_plane_nsgs" {
+  default     = []
+  description = "A list of the network security groups (NSGs) ids to apply to the cluster endpoint."
+  type        = list(string)
 }
 
 variable "dashboard_enabled" {

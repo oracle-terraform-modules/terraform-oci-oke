@@ -15,14 +15,6 @@ variable "subnets" {
   type = map(any)
 }
 
-# variable "netnum" {
-#   type = map(any)
-# }
-
-# variable "newbits" {
-#   type = map(any)
-# }
-
 variable "vcn_cidr" {}
 
 variable "vcn_id" {}
@@ -34,7 +26,7 @@ variable "control_plane_access" {
 }
 
 variable "control_plane_access_source" {
-  type = list(any)
+  type = list(string)
 }
 
 # oke workers
@@ -60,7 +52,7 @@ variable "lb_type" {
 }
 
 variable "public_lb_ports" {
-  type = list(any)
+  type = list(number)
 }
 
 variable "enable_waf" {
