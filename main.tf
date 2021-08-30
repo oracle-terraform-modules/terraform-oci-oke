@@ -218,6 +218,7 @@ module "oke" {
   # oke cluster parameters
   cluster_kubernetes_version                              = var.kubernetes_version
   control_plane_access                                    = var.control_plane_access
+  control_plane_nsgs                                      = var.control_plane_nsgs
   cluster_name                                            = var.cluster_name
   cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
