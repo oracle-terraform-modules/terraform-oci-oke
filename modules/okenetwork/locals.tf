@@ -90,7 +90,14 @@ locals {
       port        = -1,
       source      = local.workers_subnet,
       stateless   = false
-    }
+    },
+    {
+      description = "Allow operator host access to control plane. Required for kubectl/helm."
+      protocol    = local.tcp_protocol,
+      port        = 6443,
+      source      = local.operator_subnet,
+      stateless   = false
+    },    
   ]
 
   # workers
