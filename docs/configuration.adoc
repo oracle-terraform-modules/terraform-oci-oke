@@ -97,8 +97,15 @@ If you intend to use the bastion host, you must supply the ssh keys:
 
 ----
 ssh_private_key_path = "~/.ssh/id_rsa"
-
 ssh_public_key_path = "~/.ssh/id_rsa.pub"
+
+Or if you are passing the key contents directly (as Terraform Cloud would), enter the following as "Sensitive" variables in a Terraform Cloud Workspace:
+
+ssh_private_key 
+ssh_public_key 
+
+(Use the contents of the actual files)
+
 ----
 
 {uri-terraform-options}#ssh-keys[Reference]

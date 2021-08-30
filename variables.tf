@@ -14,6 +14,13 @@ variable "api_private_key_path" {
   type        = string
 }
 
+variable "api_private_key" {
+  default     = ""
+  description = "The oci api private key."
+  type        = string
+  sensitive   = "true"
+}
+
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "The oci region where resources will be created."
@@ -48,6 +55,13 @@ variable "ssh_private_key_path" {
   default     = "none"
   description = "The path to ssh private key."
   type        = string
+}
+
+variable "ssh_private_key" {
+  default     = "none"
+  description = "The path to ssh private key."
+  type        = string
+  sensitive   = "true"
 }
 
 variable "ssh_public_key" {

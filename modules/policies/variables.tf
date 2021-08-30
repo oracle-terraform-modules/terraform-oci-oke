@@ -12,8 +12,7 @@ variable "tenancy_id" {}
 
 # ssh keys
 variable "ssh_private_key_path" {}
-
-variable "ssh_public_key_path" {}
+variable "ssh_private_key" {}
 
 # bastion and operator details
 variable "bastion_public_ip" {}

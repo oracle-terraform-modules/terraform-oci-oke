@@ -21,14 +21,14 @@ resource "null_resource" "update_dynamic_group" {
 
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = var.ssh_private_key == "" ? file(var.ssh_private_key_path) : var.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.ssh_private_key_path)
+    bastion_private_key = var.ssh_private_key == "" ? file(var.ssh_private_key_path) : var.ssh_private_key
   }
 
   depends_on = [oci_identity_dynamic_group.oke_kms_cluster, oci_identity_policy.operator_instance_principal_dynamic_group]
