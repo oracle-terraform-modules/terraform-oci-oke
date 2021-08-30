@@ -1,30 +1,21 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# kubectl
-data "template_file" "install_kubectl" {
-  template = file("${path.module}/scripts/install_kubectl.template.sh")
-
-  vars = {
-    ol = var.oke_operator.operator_version
-  }
-}
-
 resource "null_resource" "install_kubectl_operator" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   provisioner "file" {
-    content     = data.template_file.install_kubectl.rendered
+    content     = local.install_kubectl_template
     destination = "~/install_kubectl.sh"
   }
 
@@ -36,33 +27,27 @@ resource "null_resource" "install_kubectl_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true ? 1 : 0
 }
 
 # helm
-data "template_file" "install_helm" {
-  template = file("${path.module}/scripts/install_helm.template.sh")
-
-  count = var.oke_operator.operator_enabled == true ? 1 : 0
-}
-
-resource null_resource "install_helm_operator" {
+resource "null_resource" "install_helm_operator" {
   connection {
-    host        = var.oke_operator.operator_private_ip
-    private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    host        = var.operator_private_ip
+    private_key = file(var.ssh_private_key_path)
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
-    bastion_host        = var.oke_operator.bastion_public_ip
+    bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.oke_ssh_keys.ssh_private_key_path)
+    bastion_private_key = file(var.ssh_private_key_path)
   }
 
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    content     = data.template_file.install_helm[0].rendered
+    content     = local.install_helm_template
     destination = "~/install_helm.sh"
   }
 
@@ -74,5 +59,5 @@ resource null_resource "install_helm_operator" {
     ]
   }
 
-  count = var.oke_operator.bastion_enabled == true && var.oke_operator.bastion_state == "RUNNING" && var.oke_operator.operator_enabled == true ? 1 : 0
+  count = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true ? 1 : 0
 }

@@ -4,11 +4,17 @@
 locals {
 
   # subnet cidrs - used by subnets
-  bastion_subnet = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["bastion"], var.oke_network_vcn.netnum["bastion"])
-  cp_subnet      = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["cp"], var.oke_network_vcn.netnum["cp"])
-  int_lb_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.netnum["int_lb"])
-  pub_lb_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.netnum["pub_lb"])
-  worker_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["workers"], var.oke_network_vcn.netnum["workers"])
+  bastion_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["bastion"], "newbits"), lookup(var.subnets["bastion"], "netnum"))
+
+  cp_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["cp"], "newbits"), lookup(var.subnets["cp"], "netnum"))
+
+  int_lb_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["int_lb"], "newbits"), lookup(var.subnets["int_lb"], "netnum"))
+
+  operator_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["operator"], "newbits"), lookup(var.subnets["operator"], "netnum"))
+
+  pub_lb_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["pub_lb"], "newbits"), lookup(var.subnets["pub_lb"], "netnum"))
+
+  workers_subnet = cidrsubnet(var.vcn_cidr, lookup(var.subnets["workers"], "newbits"), lookup(var.subnets["workers"], "netnum"))
 
   anywhere = "0.0.0.0/0"
 
@@ -38,6 +44,14 @@ locals {
   # control plane
   cp_egress = [
     {
+      description      = "Allow OCI Bastion service to communicate with the OKE control plane",
+      destination      = local.cp_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 6443,
+      stateless        = false
+    },
+    {
       description      = "Allow Kubernetes control plane to communicate with OKE",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
@@ -47,7 +61,7 @@ locals {
     },
     {
       description      = "Allow all traffic to worker nodes",
-      destination      = local.worker_subnet,
+      destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
       port             = -1,
@@ -55,7 +69,7 @@ locals {
     },
     {
       description      = "Allow path discovery to worker nodes",
-      destination      = local.worker_subnet,
+      destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
       port             = -1,
@@ -68,38 +82,37 @@ locals {
       description = "Allow worker nodes to control plane API endpoint communication"
       protocol    = local.tcp_protocol,
       port        = 6443,
-      source      = local.worker_subnet,
+      source      = local.workers_subnet,
       stateless   = false
     },
     {
       description = "Allow worker nodes to control plane communication"
       protocol    = local.tcp_protocol,
       port        = 12250,
-      source      = local.worker_subnet,
+      source      = local.workers_subnet,
       stateless   = false
     },
     {
       description = "Allow path discovery from worker nodes"
       protocol    = local.icmp_protocol,
       port        = -1,
-      source      = local.worker_subnet,
+      source      = local.workers_subnet,
       stateless   = false
     },
-/*    {
-      description = "Allow external access to control plane API endpoint communication"
+    {
+      description = "Allow operator host access to control plane. Required for kubectl/helm."
       protocol    = local.tcp_protocol,
       port        = 6443,
-      source      = var.cluster_access_source,
+      source      = local.operator_subnet,
       stateless   = false
     },
-    */
   ]
 
   # workers
   workers_egress = [
     {
       description      = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
-      destination      = local.worker_subnet,
+      destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.all_protocols,
       port             = -1,
@@ -136,14 +149,6 @@ locals {
       protocol         = local.tcp_protocol,
       port             = 12250,
       stateless        = false
-    },
-    {
-      description      = "Allow worker nodes access to Internet. Required for getting container images or using external services",
-      destination      = local.anywhere,
-      destination_type = "CIDR_BLOCK",
-      protocol         = local.tcp_protocol,
-      port             = -1,
-      stateless        = false
     }
   ]
 
@@ -152,7 +157,7 @@ locals {
       description = "Allow ingress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
       protocol    = local.all_protocols,
       port        = -1,
-      source      = local.worker_subnet,
+      source      = local.workers_subnet,
       stateless   = false
     },
     {

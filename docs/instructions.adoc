@@ -95,7 +95,7 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the fol
 * link:#adding-the-bastion-host[bastion must be enabled]
 * link:#enabling-instance_principal-on-the-operator-host[operator instance_principal must be enabled]
 * use_encryption must be set to _true_
-* existing_key_id must be provided
+* kms_key_id must be provided
 
 === Creating the OKE Cluster
 
@@ -118,13 +118,13 @@ Use the parameter *cluster_name* to change the name of the cluster as per your n
 
 === Adding the bastion host
 
-If you want to use bastion host, set the parameter *bastion_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
+If you want to use bastion host, set the parameter *create_bastion_host* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
 
 
 === Using the bastion host
 
 ****
-*Assumption: you have set the bastion_enabled parameter to true in terraform.tfvars*
+*Assumption: you have set the create_bastion_host parameter to true in terraform.tfvars*
 ****
 
 Once the terraform apply is successful you will get the bastion_public_ip as output and also a ssh command. You can also run the below command to get the output:
@@ -139,15 +139,15 @@ You can then copy the ssh_to_bastion command, paste and run it in a terminal.
 
 The operator host is used to minimize local dependencies such as oci-cli, kubectl and so on. 
 
-If you want to use the operator host, set the parameter *operator_enabled* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#operator-host[Admin Host] for other available bastion related parameters.
+If you want to use the operator host, set the parameter *create_operator* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#operator-host[Admin Host] for other available bastion related parameters.
 
 ==== Upgrading the operator host
 
 There is 1 additional parameter for the operator:
 
-* operator_package_upgrade
+* upgrade_operator
 
-_operator_package_upgrade_ will upgrade the operator compute packages on first boot. 
+_upgrade_operator_ will upgrade the operator compute packages on first boot. 
 
 ****
 N.B. It is good and recommended practice to upgrade your package host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the package host is available.
@@ -156,7 +156,7 @@ N.B. It is good and recommended practice to upgrade your package host to the lat
 === Using the operator host
 
 ****
-*Assumption: you have set the operator_enabled parameter to true in terraform.tfvars*
+*Assumption: you have set the create_operator parameter to true in terraform.tfvars*
 ****
 
 Once the terraform apply is successful you will get the operator_private_ip as output and also a ssh command. You can also run the below command to get the output:
@@ -247,11 +247,11 @@ Finally, assign the Secret OCID to *secret_id* in terraform.tfvars. Refer to {ur
 
 === Installing Calico 
 
-Calico enables network policy in Kubernetes clusters. To install calico set the parameter *calico_enabled = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
+Calico enables network policy in Kubernetes clusters. To install calico set the parameter *enable_calico = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
 
 === Installing Kubernetes Metrics Server
 
-{uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *metricserver_enabled = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
+{uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *enable_metric_server = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
 
 === Installing Vertical Pod Autoscaler
 

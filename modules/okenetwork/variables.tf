@@ -7,41 +7,47 @@ variable "compartment_id" {}
 variable "label_prefix" {}
 
 # networking parameters
+variable "ig_route_id" {}
 
-variable "oke_network_vcn" {
-  type = object({
-    ig_route_id  = string
-    nat_route_id = string
-    netnum       = map(number)
-    newbits      = map(number)
-    vcn_cidr     = string
-    vcn_id       = string
-  })
+variable "nat_route_id" {}
+
+variable "subnets" {
+  type = map(any)
 }
+
+variable "vcn_cidr" {}
+
+variable "vcn_id" {}
 
 # cluster endpoint
 
-variable "cluster_access" {
+variable "control_plane_access" {
   type = string
 }
 
-variable "cluster_access_source" {
-  type = list
+variable "control_plane_access_source" {
+  type = list(string)
 }
 
 # oke workers
 
-variable "oke_network_worker" {
-  type = object({
-    allow_node_port_access  = bool
-    allow_worker_ssh_access = bool
-    worker_mode             = string
-  })
+variable "allow_node_port_access" {
+  type = bool
 }
+
+variable "allow_worker_internet_access" {
+  type = bool
+}
+
+variable "allow_worker_ssh_access" {
+  type = bool
+}
+
+variable "worker_mode" {}
 
 # load balancers
 
-variable "lb_subnet_type" {
+variable "lb_type" {
   type = string
 }
 
@@ -49,7 +55,7 @@ variable "public_lb_ports" {
   type = list(number)
 }
 
-variable "waf_enabled" {
+variable "enable_waf" {
   type = bool
 }
 

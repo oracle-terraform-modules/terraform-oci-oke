@@ -24,34 +24,34 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |allow_worker_ssh_access
 |Allows ssh access to worker node via the bastion host
-|bastion_enabled = true
+|create_bastion_host = true
 
 |create_service_account
 |Creates a service account that can be used for CI/CD. 
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
-|calico_enabled
+|enable_calico
 |Installs calico as network policy engine
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
-|metricserver_enabled
+|enable_metric_server
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
 |node_pools_to_drain
 |Drains existing node pools before upgrading
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
 |ocir secret
 |Whether to create an authentication secret for OCIR
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true, secret_id = secret ocid
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true, secret_id = secret ocid
 
 |use_encryption
 |Uses OCI KMS to encrypt data in OKE's underlying etcd
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true
 
 |vpa
 |Installs Kubernetes Vertical Pod Autoscaler
-|bastion_enabled = true, operator_enabled = true, admin_instance_principal = true, metricserver_enabled = true
+|create_bastion_host = true, create_operator = true, admin_instance_principal = true, enable_metric_server = true
 
 |===
