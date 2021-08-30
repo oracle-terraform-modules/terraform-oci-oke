@@ -44,6 +44,14 @@ locals {
   # control plane
   cp_egress = [
     {
+      description      = "Allow OCI Bastion service to communicate with the OKE control plane",
+      destination      = local.cp_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 6443,
+      stateless        = false
+    },
+    {
       description      = "Allow Kubernetes control plane to communicate with OKE",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
@@ -90,7 +98,14 @@ locals {
       port        = -1,
       source      = local.workers_subnet,
       stateless   = false
-    }
+    },
+    {
+      description = "Allow operator host access to control plane. Required for kubectl/helm."
+      protocol    = local.tcp_protocol,
+      port        = 6443,
+      source      = local.operator_subnet,
+      stateless   = false
+    },
   ]
 
   # workers
