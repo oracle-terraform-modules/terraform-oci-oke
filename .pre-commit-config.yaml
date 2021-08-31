@@ -1,0 +1,20 @@
+# Copyright (c) 2019, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# pre-commit config file for OCI Terraform modules
+# To use this file, you will need to install pre-commit and the related git hook scripts.
+# For more help, see https://pre-commit.com/#installation and https://pre-commit.com/#3-install-the-git-hook-scripts
+
+# Last update: 2021-09-01
+
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.0.1 # Get the latest from: https://github.com/pre-commit/pre-commit-hooks/releases
+  hooks:
+    - id: trailing-whitespace
+      args: [--markdown-linebreak-ext=md]
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.50.0 # Get the latest from: https://github.com/antonbabenko/pre-commit-terraform/releases
+  hooks:
+    - id: terraform_fmt #* this hook run 'terraform fmt' and fix files. You have to add the linted files back to the index.
+    - id: terraform_validate #* validates all Terraform configuration files, including subfolders.
