@@ -151,6 +151,22 @@ module "policies" {
   }
 }
 
+module "bastionsvc" {
+  source = "./modules/bastionsvc"
+
+  # general oci parameters
+  compartment_id = var.compartment_id
+  label_prefix   = var.label_prefix
+
+  # bastion service parameters
+  bastion_service_access        = var.bastion_service_access
+  bastion_service_name          = var.bastion_service_name
+  bastion_service_target_subnet = var.bastion_service_target_subnet
+  vcn_id                        = module.vcn.vcn_id
+
+  count = var.create_bastion_service == true ? 1 : 0
+}
+
 # additional networking for oke
 module "network" {
   source = "./modules/okenetwork"
