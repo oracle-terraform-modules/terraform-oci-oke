@@ -246,7 +246,7 @@ variable "create_bastion_service" {
 }
 
 variable "bastion_service_access" {
-  default     = ["anywhere"]
+  default     = ["0.0.0.0/0"]
   description = "A list of CIDR blocks to which ssh access to the bastion service must be restricted. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
   type        = list(string)
 }
