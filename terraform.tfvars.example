@@ -146,6 +146,12 @@ bastion_notification_endpoint = ""
 bastion_notification_protocol = "EMAIL"
 bastion_notification_topic    = ""
 
+# bastion service
+create_bastion_service        = true
+bastion_service_access        = ["0.0.0.0/0"]
+bastion_service_name          = "bastion"
+bastion_service_target_subnet = "operator"
+
 # operator host
 create_operator             = true
 operator_image_id           = "Oracle"

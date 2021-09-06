@@ -162,7 +162,7 @@ variable "create_bastion_host" {
 
 variable "bastion_access" {
   default     = ["anywhere"]
-  description = "A list of CIDR blocks to which ssh access to the bastion must be restricted to. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
+  description = "A list of CIDR blocks to which ssh access to the bastion host must be restricted. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
   type        = list(string)
 }
 
@@ -235,6 +235,31 @@ variable "bastion_notification_protocol" {
 variable "bastion_notification_topic" {
   default     = "bastion"
   description = "The name of the notification topic."
+  type        = string
+}
+
+# bastion service parameters
+variable "create_bastion_service" {
+  default     = true
+  description = "Whether to create a bastion service that allows access to private hosts."
+  type        = bool
+}
+
+variable "bastion_service_access" {
+  default     = ["0.0.0.0/0"]
+  description = "A list of CIDR blocks to which ssh access to the bastion service must be restricted. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
+  type        = list(string)
+}
+
+variable "bastion_service_name" {
+  default     = ""
+  description = "The name of the bastion service."
+  type        = string
+}
+
+variable "bastion_service_target_subnet" {
+  default     = "operator"
+  description = "The name of the subnet that the bastion service can connect to."
   type        = string
 }
 

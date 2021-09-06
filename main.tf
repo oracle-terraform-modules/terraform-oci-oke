@@ -73,7 +73,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.0-RC1"
+  version = "3.0.0-RC5"
 
   tenancy_id = var.tenancy_id
 
@@ -90,7 +90,6 @@ module "operator" {
   vcn_id              = module.vcn.vcn_id
 
   # bastion host parameters
-  create_operator             = var.create_operator
   operator_image_id           = var.operator_image_id
   operator_instance_principal = var.operator_instance_principal
   operator_os_version         = var.operator_os_version
@@ -149,6 +148,25 @@ module "policies" {
   providers = {
     oci.home = oci.home
   }
+}
+
+module "bastionsvc" {
+  source = "./modules/bastionsvc"
+
+  depends_on = [
+    module.operator, module.oke
+  ]
+  # general oci parameters
+  compartment_id = var.compartment_id
+  label_prefix   = var.label_prefix
+
+  # bastion service parameters
+  bastion_service_access        = var.bastion_service_access
+  bastion_service_name          = var.bastion_service_name
+  bastion_service_target_subnet = var.bastion_service_target_subnet
+  vcn_id                        = module.vcn.vcn_id
+
+  count = var.create_bastion_service == true ? 1 : 0
 }
 
 # additional networking for oke
