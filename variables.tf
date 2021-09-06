@@ -135,10 +135,10 @@ variable "subnets" {
   type = map(any)
 }
 
-variable "vcn_cidr" {
-  default     = "10.0.0.0/16"
-  description = "The cidr block of VCN."
-  type        = string
+variable "vcn_cidrs" {
+  default     =  ["10.0.0.0/16"]
+  description = "The list of IPv4 CIDR blocks the VCN will use."
+  type        = list(string)
 }
 
 variable "vcn_dns_label" {
