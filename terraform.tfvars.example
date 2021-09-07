@@ -103,7 +103,7 @@ subnets = {
   workers  = { netnum = 1, newbits = 2 }
 }
 
-vcn_cidr      = ["10.0.0.0/16"]
+vcn_cidrs      = ["10.0.0.0/16"]
 vcn_dns_label = "oke"
 vcn_name      = "vcnoke"
 
