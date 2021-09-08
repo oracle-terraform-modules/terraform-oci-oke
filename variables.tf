@@ -84,13 +84,8 @@ variable "enable_waf" {
 
 variable "internet_gateway_route_rules" {
   description = "(Updatable) List of routing rules to add to Internet Gateway Route Table"
-  type = list(object({
-    destination       = string
-    destination_type  = string
-    network_entity_id = string
-    description       = string
-  }))
-  default = null
+  type        = list(map(string))
+  default     = null
 }
 
 variable "local_peering_gateways" {
@@ -107,13 +102,8 @@ variable "lockdown_default_seclist" {
 
 variable "nat_gateway_route_rules" {
   description = "(Updatable) List of routing rules to add to NAT Gateway Route Table"
-  type = list(object({
-    destination       = string
-    destination_type  = string
-    network_entity_id = string
-    description       = string
-  }))
-  default = null
+  type        = list(map(string))
+  default     = null
 }
 
 variable "nat_gateway_public_ip_id" {
@@ -136,7 +126,7 @@ variable "subnets" {
 }
 
 variable "vcn_cidrs" {
-  default     =  ["10.0.0.0/16"]
+  default     = ["10.0.0.0/16"]
   description = "The list of IPv4 CIDR blocks the VCN will use."
   type        = list(string)
 }

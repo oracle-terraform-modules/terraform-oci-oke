@@ -37,7 +37,7 @@ module "vcn" {
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.0.0-RC2"
+  version = "3.0.0-RC3"
 
   tenancy_id     = var.tenancy_id
   compartment_id = var.compartment_id
@@ -53,12 +53,12 @@ module "bastion" {
   vcn_id              = module.vcn.vcn_id
 
   # bastion host parameters
-  bastion_image_id    = var.bastion_image_id
-  bastion_os_version  = var.bastion_os_version
-  bastion_shape       = var.bastion_shape
-  bastion_state       = var.bastion_state
-  bastion_timezone    = var.bastion_timezone
-  bastion_type        = var.bastion_type
+  bastion_image_id   = var.bastion_image_id
+  bastion_os_version = var.bastion_os_version
+  bastion_shape      = var.bastion_shape
+  bastion_state      = var.bastion_state
+  bastion_timezone   = var.bastion_timezone
+  bastion_type       = var.bastion_type
 
   ssh_public_key      = var.ssh_public_key
   ssh_public_key_path = var.ssh_public_key_path
@@ -189,7 +189,6 @@ module "network" {
   ig_route_id  = module.vcn.ig_route_id
   nat_route_id = module.vcn.nat_route_id
   subnets      = var.subnets
-  # vcn_cidr     = var.vcn_cidr
   vcn_id       = module.vcn.vcn_id
 
   # control plane endpoint parameters
@@ -293,10 +292,9 @@ module "oke" {
   #check worker nodes are active
   check_node_active = var.check_node_active
 
-  nodepool_drain = var.nodepool_drain
-
+  # oke upgrade
+  nodepool_drain          = var.nodepool_drain
   nodepool_upgrade_method = var.nodepool_upgrade_method
-
-  node_pools_to_drain = var.node_pools_to_drain
+  node_pools_to_drain     = var.node_pools_to_drain
 
 }
