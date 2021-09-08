@@ -15,7 +15,7 @@ variable "subnets" {
   type = map(any)
 }
 
-variable "vcn_cidr" {}
+# variable "vcn_cidr" {}
 
 variable "vcn_id" {}
 
