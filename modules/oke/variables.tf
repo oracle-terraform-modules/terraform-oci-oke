@@ -9,32 +9,11 @@ variable "compartment_id" {}
 
 variable "label_prefix" {}
 
-variable "region" {}
-
 # ssh keys
-variable "ssh_private_key_path" {}
 
 variable "ssh_public_key" {}
 
 variable "ssh_public_key_path" {}
-
-# bastion
-variable "bastion_public_ip" {}
-
-variable "operator_private_ip" {}
-
-variable "create_bastion_host" {
-  type = bool
-}
-variable "create_operator" {
-  type = bool
-}
-variable "operator_instance_principal" {
-  type = bool
-}
-variable "operator_os_version" {}
-
-variable "bastion_state" {}
 
 # oke
 variable "cluster_kubernetes_version" {}
@@ -95,67 +74,3 @@ variable "node_pool_os" {}
 variable "node_pool_os_version" {}
 
 variable "preferred_lb_type" {}
-
-
-# ocir
-variable "email_address" {}
-
-variable "ocir_urls" {
-  type = map(any)
-}
-
-variable "secret_id" {}
-
-variable "secret_name" {}
-
-variable "secret_namespace" {}
-
-variable "username" {}
-
-# calico
-variable "calico_version" {}
-
-variable "install_calico" {
-  type = bool
-}
-
-#metricserver
-
-variable "enable_metric_server" {
-  default = false
-  type    = bool
-}
-
-variable "enable_vpa" {
-  type = bool
-}
-variable "vpa_version" {}
-
-# service account
-variable "create_service_account" {
-  type = bool
-}
-
-variable "service_account_name" {}
-
-variable "service_account_namespace" {}
-
-variable "service_account_cluster_role_binding" {}
-
-#check worker node active
-variable "check_node_active" {
-  type = string
-}
-
-# upgrade
-variable "nodepool_drain" {
-  type = bool
-}
-
-variable "nodepool_upgrade_method" {
-  type = string
-}
-
-variable "node_pools_to_drain" {
-  type = list(string)
-}
