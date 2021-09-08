@@ -266,7 +266,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
   ingress_security_rules {
     description = "allow ingress only from the public lb subnet"
     protocol    = local.tcp_protocol
-    source      = var.vcn_cidr
+    source      = local.pub_lb_subnet
     stateless   = false
   }
 

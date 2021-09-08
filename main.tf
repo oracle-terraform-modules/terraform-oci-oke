@@ -3,24 +3,33 @@
 
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
-  version = "3.0.0-RC1"
+  version = "3.0.0"
 
+  # general oci parameters
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
 
   # gateways
-  create_drg                   = var.create_drg
-  drg_display_name             = var.drg_display_name
-  internet_gateway_enabled     = true
-  local_peering_gateways       = var.local_peering_gateways
-  lockdown_default_seclist     = var.lockdown_default_seclist
-  nat_gateway_enabled          = var.worker_mode == "private" || var.create_operator == true || (var.lb_type == "internal" || var.lb_type == "both") ? true : false
-  nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
-  service_gateway_enabled      = true
-  tags                         = var.tags["vcn"]
-  vcn_cidr                     = var.vcn_cidr
+  create_internet_gateway  = true
+  create_nat_gateway       = var.worker_mode == "private" || var.create_operator == true || (var.lb_type == "internal" || var.lb_type == "both") ? true : false
+  create_service_gateway   = true
+  nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
+
+  # drg
+  create_drg       = var.create_drg
+  drg_display_name = var.drg_display_name
+
+  # lpgs
+  local_peering_gateways = var.local_peering_gateways
+
+  # tags
+  freeform_tags = var.tags["vcn"]
+
+  # vcn
+  vcn_cidrs                    = var.vcn_cidrs
   vcn_dns_label                = var.vcn_dns_label
   vcn_name                     = var.vcn_name
+  lockdown_default_seclist     = var.lockdown_default_seclist
   internet_gateway_route_rules = var.internet_gateway_route_rules
   nat_gateway_route_rules      = var.nat_gateway_route_rules
 
@@ -28,7 +37,7 @@ module "vcn" {
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.0.0-RC1"
+  version = "3.0.0-RC3"
 
   tenancy_id     = var.tenancy_id
   compartment_id = var.compartment_id
@@ -44,13 +53,12 @@ module "bastion" {
   vcn_id              = module.vcn.vcn_id
 
   # bastion host parameters
-  create_bastion_host = var.create_bastion_host
-  bastion_image_id    = var.bastion_image_id
-  bastion_os_version  = var.bastion_os_version
-  bastion_shape       = var.bastion_shape
-  bastion_state       = var.bastion_state
-  bastion_timezone    = var.bastion_timezone
-  bastion_type        = var.bastion_type
+  bastion_image_id   = var.bastion_image_id
+  bastion_os_version = var.bastion_os_version
+  bastion_shape      = var.bastion_shape
+  bastion_state      = var.bastion_state
+  bastion_timezone   = var.bastion_timezone
+  bastion_type       = var.bastion_type
 
   ssh_public_key      = var.ssh_public_key
   ssh_public_key_path = var.ssh_public_key_path
@@ -62,7 +70,7 @@ module "bastion" {
   bastion_notification_protocol = var.bastion_notification_protocol
   bastion_notification_topic    = var.bastion_notification_topic
 
-  bastion_tags = var.tags["bastion"]
+  freeform_tags = var.tags["bastion"]
 
   providers = {
     oci.home = oci.home
@@ -73,7 +81,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.0-RC5"
+  version = "3.0.0-RC6"
 
   tenancy_id = var.tenancy_id
 
@@ -106,7 +114,7 @@ module "operator" {
   operator_notification_protocol = var.operator_notification_protocol
   operator_notification_topic    = var.operator_notification_topic
 
-  tags = var.tags["operator"]
+  freeform_tags = var.tags["operator"]
 
   providers = {
     oci.home = oci.home
@@ -181,7 +189,6 @@ module "network" {
   ig_route_id  = module.vcn.ig_route_id
   nat_route_id = module.vcn.nat_route_id
   subnets      = var.subnets
-  vcn_cidr     = var.vcn_cidr
   vcn_id       = module.vcn.vcn_id
 
   # control plane endpoint parameters
@@ -285,10 +292,9 @@ module "oke" {
   #check worker nodes are active
   check_node_active = var.check_node_active
 
-  nodepool_drain = var.nodepool_drain
-
+  # oke upgrade
+  nodepool_drain          = var.nodepool_drain
   nodepool_upgrade_method = var.nodepool_upgrade_method
-
-  node_pools_to_drain = var.node_pools_to_drain
+  node_pools_to_drain     = var.node_pools_to_drain
 
 }
