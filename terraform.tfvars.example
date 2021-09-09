@@ -26,7 +26,7 @@ create_drg       = false
 drg_display_name = "drg"
 enable_waf       = false
 internet_gateway_route_rules = [ # this input shows how to pass routing information
-  {
+/*  {
     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
     network_entity_id = "drg"            # for internet_gateway_route_rules input variable, you can use special strings "drg", "internet_gateway" or pass a valid OCID using string or any Named Values
@@ -44,12 +44,12 @@ internet_gateway_route_rules = [ # this input shows how to pass routing informat
     network_entity_id = "internet_gateway"
     description       = "Terraformed - User added Routing Rule: To Internet Gateway created by this module. internet_gateway_id is automatically retrieved with keyword internet_gateway"
   },
-  # {
-  #   destination       = "192.168.1.0/24"
-  #   destination_type  = "CIDR_BLOCK"
-  #   network_entity_id = "ocid1.localpeeringgateway.oc1.aaaaaa" # <-- edit this OCID
-  #   description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
-  # },
+  {
+    destination       = "192.168.1.0/24"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = "ocid1.localpeeringgateway.oc1.aaaaaa" # <-- edit this OCID
+    description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
+  },*/
 ]
 
 # local_peering_gateways = {
@@ -66,7 +66,7 @@ internet_gateway_route_rules = [ # this input shows how to pass routing informat
 lockdown_default_seclist = true
 
 nat_gateway_route_rules = [ # this module input shows how to pass routing information
-  {
+/*  {
     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
     network_entity_id = "drg"            # for nat_gateway_route_rules input variable, you can use special strings "drg", "nat_gateway" or pass a valid OCID using string or any Named Values
@@ -84,12 +84,12 @@ nat_gateway_route_rules = [ # this module input shows how to pass routing inform
     network_entity_id = "nat_gateway"
     description       = "Terraformed - User added Routing Rule: To NAT Gateway created by this module. nat_gateway_id is automatically retrieved with keyword nat_gateway"
   },
-  # {
-  #   destination       = "192.168.1.0/24"
-  #   destination_type  = "CIDR_BLOCK"
-  #   network_entity_id = "ocid1.localpeeringgateway.oc1.aaaaaa" # <-- edit this OCID
-  #   description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
-  # },
+  {
+    destination       = "192.168.1.0/24"
+    destination_type  = "CIDR_BLOCK"
+    network_entity_id = "ocid1.localpeeringgateway.oc1.aaaaaa" # <-- edit this OCID
+    description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
+  },*/
 ]
 
 nat_gateway_public_ip_id = "none"
