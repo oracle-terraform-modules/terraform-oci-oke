@@ -4,29 +4,29 @@
 locals {
   generate_kubeconfig_template = templatefile("${path.module}/scripts/generate_kubeconfig.template.sh",
     {
-      cluster-id = oci_containerengine_cluster.k8s_cluster.id
+      cluster-id = var.cluster_id
       region     = var.region
     }
   )
 
   token_helper_template = templatefile("${path.module}/scripts/token_helper.template.sh",
     {
-      cluster-id = oci_containerengine_cluster.k8s_cluster.id
+      cluster-id = var.cluster_id
       region     = var.region
     }
   )
 
   set_credentials_template = templatefile("${path.module}/scripts/kubeconfig_set_credentials.template.sh",
     {
-      cluster-id    = oci_containerengine_cluster.k8s_cluster.id
-      cluster-id-11 = substr(oci_containerengine_cluster.k8s_cluster.id, (length(oci_containerengine_cluster.k8s_cluster.id) - 11), length(oci_containerengine_cluster.k8s_cluster.id))
+      cluster-id    = var.cluster_id
+      cluster-id-11 = substr(var.cluster_id, (length(var.cluster_id) - 11), length(var.cluster_id))
       region        = var.region
     }
   )
 }
 
 data "oci_containerengine_cluster_kube_config" "kube_config" {
-  cluster_id = oci_containerengine_cluster.k8s_cluster.id
+  cluster_id = var.cluster_id
 }
 
 resource "null_resource" "create_local_kubeconfig" {
@@ -45,7 +45,7 @@ resource "null_resource" "create_local_kubeconfig" {
 
 resource "local_file" "kube_config_file" {
   content         = data.oci_containerengine_cluster_kube_config.kube_config.content
-  depends_on      = [null_resource.create_local_kubeconfig, oci_containerengine_cluster.k8s_cluster]
+  depends_on      = [null_resource.create_local_kubeconfig]
   filename        = "${path.root}/generated/kubeconfig"
   file_permission = "0600"
 }
@@ -63,7 +63,7 @@ resource "null_resource" "write_kubeconfig_on_operator" {
     bastion_private_key = file(var.ssh_private_key_path)
   }
 
-  depends_on = [oci_containerengine_cluster.k8s_cluster, null_resource.install_kubectl_operator]
+  depends_on = [null_resource.install_kubectl_operator]
 
   provisioner "file" {
     content     = local.generate_kubeconfig_template
