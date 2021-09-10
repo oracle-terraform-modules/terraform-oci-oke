@@ -76,6 +76,10 @@ module "bastion" {
     oci.home = oci.home
   }
 
+  depends_on = [
+    module.vcn
+  ]
+
   count = var.create_bastion_host == true ? 1 : 0
 }
 
@@ -120,50 +124,16 @@ module "operator" {
     oci.home = oci.home
   }
 
+  depends_on = [
+    module.vcn
+  ]
+
   count = var.create_operator == true ? 1 : 0
-}
-
-module "policies" {
-  source = "./modules/policies"
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = var.label_prefix
-
-  # provider
-  tenancy_id = var.tenancy_id
-
-  # ssh keys
-  ssh_private_key_path = var.ssh_private_key_path
-  ssh_public_key_path  = var.ssh_public_key_path
-
-  # bastion and operator details
-  bastion_public_ip           = local.bastion_public_ip
-  operator_private_ip         = local.operator_private_ip
-  create_bastion_host         = var.create_bastion_host
-  create_operator             = var.create_operator
-  operator_instance_principal = var.operator_instance_principal
-  bastion_state               = var.bastion_state
-
-  dynamic_group = local.operator_instance_principal_group_name
-
-  # kms integration
-  key_id         = var.kms_key_id
-  use_encryption = var.use_encryption
-
-  cluster_id = module.oke.cluster_id
-
-  providers = {
-    oci.home = oci.home
-  }
 }
 
 module "bastionsvc" {
   source = "./modules/bastionsvc"
 
-  depends_on = [
-    module.operator, module.oke
-  ]
   # general oci parameters
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
@@ -174,12 +144,16 @@ module "bastionsvc" {
   bastion_service_target_subnet = var.bastion_service_target_subnet
   vcn_id                        = module.vcn.vcn_id
 
+  depends_on = [
+    module.operator
+  ]
+
   count = var.create_bastion_service == true ? 1 : 0
 }
 
 # additional networking for oke
 module "network" {
-  source = "./modules/okenetwork"
+  source = "./modules/network"
 
   # general oci parameters
   compartment_id = var.compartment_id
@@ -210,6 +184,9 @@ module "network" {
   # waf integration
   enable_waf = var.enable_waf
 
+  depends_on = [
+    module.vcn
+  ]
 }
 
 # cluster creation for oke
@@ -223,22 +200,9 @@ module "oke" {
   compartment_id = var.compartment_id
   label_prefix   = var.label_prefix
 
-  # region parameters
-  region = var.region
-
   # ssh keys
-  ssh_private_key_path = var.ssh_private_key_path
-  ssh_public_key       = var.ssh_public_key
-  ssh_public_key_path  = var.ssh_public_key_path
-
-  # bastion and operator details
-  bastion_public_ip           = local.bastion_public_ip
-  operator_private_ip         = local.operator_private_ip
-  create_bastion_host         = var.create_bastion_host
-  create_operator             = var.create_operator
-  operator_instance_principal = var.operator_instance_principal
-  operator_os_version         = var.operator_os_version
-  bastion_state               = var.bastion_state
+  ssh_public_key      = var.ssh_public_key
+  ssh_public_key_path = var.ssh_public_key_path
 
   # oke cluster parameters
   cluster_kubernetes_version                              = var.kubernetes_version
@@ -265,6 +229,53 @@ module "oke" {
 
   # oke load balancer parameters
   preferred_lb_type = var.preferred_lb_type
+
+  depends_on = [
+    module.network
+  ]
+
+  providers = {
+    oci.home = oci.home
+  }
+}
+
+# extensions to oke
+module "extensions" {
+  source = "./modules/extensions"
+
+  # provider
+  tenancy_id = var.tenancy_id
+
+  # general oci parameters
+  compartment_id = var.compartment_id
+  label_prefix   = var.label_prefix
+
+  # region parameters
+  region = var.region
+
+  # ssh keys
+  ssh_private_key_path = var.ssh_private_key_path
+  ssh_public_key       = var.ssh_public_key
+  ssh_public_key_path  = var.ssh_public_key_path
+
+  # bastion
+  create_bastion_host = var.create_bastion_host
+  bastion_public_ip   = local.bastion_public_ip
+  bastion_state       = var.bastion_state
+
+  # operator details
+  create_operator             = var.create_operator
+  operator_private_ip         = local.operator_private_ip
+  operator_dynamic_group      = local.operator_instance_principal_group_name
+  operator_instance_principal = var.operator_instance_principal
+  operator_os_version         = var.operator_os_version
+
+  # oke cluster parameters
+  cluster_id           = module.oke.cluster_id
+  pods_cidr            = var.pods_cidr
+  use_encryption       = var.use_encryption
+  kms_key_id           = var.kms_key_id
+  kms_dynamic_group_id = module.oke.kms_dynamic_group_id
 
   # ocir parameters
   email_address    = var.email_address
@@ -297,4 +308,14 @@ module "oke" {
   nodepool_upgrade_method = var.nodepool_upgrade_method
   node_pools_to_drain     = var.node_pools_to_drain
 
+  depends_on = [
+    module.bastion,
+    module.network,
+    module.operator,
+    module.oke
+  ]
+
+  providers = {
+    oci.home = oci.home
+  }
 }

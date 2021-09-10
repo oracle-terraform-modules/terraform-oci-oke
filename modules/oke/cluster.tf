@@ -1,11 +1,20 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+# 30s delay to allow policies to take effect globally
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [oci_identity_policy.oke_kms]
+
+  create_duration = "30s"
+}
+
 resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = var.compartment_id
   kubernetes_version = var.cluster_kubernetes_version
-  kms_key_id         = local.post_provisioning_ops == true && var.use_encryption == true ? var.kms_key_id : null
+  kms_key_id         = var.use_encryption == true ? var.kms_key_id : null
   name               = var.label_prefix == "none" ? var.cluster_name : "${var.label_prefix}-${var.cluster_name}"
+
+  depends_on = [time_sleep.wait_30_seconds]
 
   endpoint_config {
     is_public_ip_enabled = var.control_plane_access == "public" ? true : false
