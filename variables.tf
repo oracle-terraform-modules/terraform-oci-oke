@@ -660,10 +660,10 @@ variable "service_account_cluster_role_binding" {
 }
 
 # tagging
-variable "tags" {
+variable "freeform_tags" {
   default = {
-    # vcn, bastion and operator tags are required
-    # add more tags in each as desired
+    # vcn, bastion and operator freeform_tags are required
+    # add more freeform_tags in each as desired
     vcn = {
       environment = "dev"
     }
@@ -676,6 +676,6 @@ variable "tags" {
       role        = "operator"
     }
   }
-  description = "Tags to apply to different resources."
+  description = "freeform_tags to apply to different resources."
   type        = map(any)
 }
