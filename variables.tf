@@ -549,7 +549,7 @@ variable "worker_mode" {
   validation {
     condition     = contains(["public", "private"], var.worker_mode)
     error_message = "Accepted values are public or private."
-  }  
+  }
 }
 
 # oke load balancers
@@ -563,7 +563,7 @@ variable "lb_type" {
   validation {
     condition     = contains(["public", "internal", "both"], var.lb_type)
     error_message = "Accepted values are public, internal or both."
-  }  
+  }
 }
 
 variable "preferred_lb_type" {
@@ -576,7 +576,7 @@ variable "preferred_lb_type" {
   validation {
     condition     = contains(["public", "internal"], var.preferred_lb_type)
     error_message = "Accepted values are public or internal."
-  }  
+  }
 }
 
 variable "public_lb_ports" {
@@ -614,7 +614,7 @@ variable "ocir_urls" {
     me-jeddah-1    = "jed.ocir.io"
     sa-saopaulo-1  = "gru.ocir.io"
     sa-santiago-1  = "scl.ocir.io"
-    sa-vinhedo-1	 = "vcp.ocir.io"
+    sa-vinhedo-1   = "vcp.ocir.io"
     uk-cardiff-1   = "cwl.ocir.io"
     uk-london-1    = "lhr.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
