@@ -241,10 +241,10 @@ service_account_name                 = "jenkins"
 service_account_namespace            = "default"
 service_account_cluster_role_binding = "jenkins-crb"
 
-# tags
-tags = {
-  # vcn, bastion and operator tags are required
-  # add more tags in each as desired
+# freeform_tags
+freeform_tags = {
+  # vcn, bastion and operator freeform_tags are required
+  # add more freeform_tags in each as desired
   vcn = {
     environment = "dev"
   }

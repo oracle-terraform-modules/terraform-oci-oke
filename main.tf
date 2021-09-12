@@ -22,8 +22,8 @@ module "vcn" {
   # lpgs
   local_peering_gateways = var.local_peering_gateways
 
-  # tags
-  freeform_tags = var.tags["vcn"]
+  # freeform_tags
+  freeform_tags = var.freeform_tags["vcn"]
 
   # vcn
   vcn_cidrs                    = var.vcn_cidrs
@@ -70,7 +70,7 @@ module "bastion" {
   bastion_notification_protocol = var.bastion_notification_protocol
   bastion_notification_topic    = var.bastion_notification_topic
 
-  freeform_tags = var.tags["bastion"]
+  freeform_tags = var.freeform_tags["bastion"]
 
   providers = {
     oci.home = oci.home
@@ -118,7 +118,7 @@ module "operator" {
   operator_notification_protocol = var.operator_notification_protocol
   operator_notification_topic    = var.operator_notification_topic
 
-  freeform_tags = var.tags["operator"]
+  freeform_tags = var.freeform_tags["operator"]
 
   providers = {
     oci.home = oci.home
