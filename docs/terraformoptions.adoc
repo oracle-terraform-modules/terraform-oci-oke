@@ -465,14 +465,14 @@ availability_domains = {
 |Values
 |Default
 
-|`tags`
+|`freeform_tags`
 |Tagging on the base module resources. This is specified in the form of a map of maps.
 | e.g.
 [source]
 ----
-tags = {
-  # vcn, bastion and operator tags are required
-  # add more tags in each as desired
+freeform_tags = {
+  # vcn, bastion and operator freeform_tags are required
+  # add more freeform_tags in each as desired
   vcn = {
     # department = "finance"
     environment = "dev"
@@ -492,9 +492,9 @@ tags = {
 |
 [source]
 ----
-tags = {
-  # vcn, bastion and operator tags are required
-  # add more tags in each as desired
+freeform_tags = {
+  # vcn, bastion and operator freeform_tags are required
+  # add more freeform_tags in each as desired
   vcn = {
     # department = "finance"
     environment = "dev"
