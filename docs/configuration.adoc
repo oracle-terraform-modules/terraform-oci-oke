@@ -91,7 +91,7 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 ssh_public_key_path = "~/.ssh/id_rsa.pub"
 ----
 
-If your private ssh key has a different name or path than the default "~/.ssh/id_rsa" e.g "~/.ssh/dev_rsa", you will need to add the private key to your ssh agent:
+If your private ssh key has a different name or path than the default "~/.ssh/id_*" e.g "~/.ssh/dev_rsa", you will need to add the private key to your ssh agent:
 
 ----
 eval $(ssh-agent -s)
