@@ -34,6 +34,8 @@ variable "create_operator" {
 
 variable "operator_private_ip" {}
 
+variable "operator_state" {}
+
 variable "operator_dynamic_group" {
   description = "name of dynamic group to allow updating dynamic-groups"
   type        = string

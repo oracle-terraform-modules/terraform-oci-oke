@@ -45,7 +45,7 @@ variable "worker_mode" {}
 
 # load balancers
 
-variable "lb_type" {
+variable "lb_subnet_type" {
   type = string
 }
 

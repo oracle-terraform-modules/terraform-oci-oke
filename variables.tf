@@ -532,18 +532,18 @@ variable "nodepool_upgrade_method" {
 
 # oke load balancers
 
-variable "lb_type" {
+variable "lb_subnet_type" {
   # values: both, internal, public
   default     = "public"
   description = "The type of load balancer subnets to create."
   type        = string
 }
 
-variable "preferred_lb_type" {
+variable "preferred_lb_subnet_type" {
   # values: public, internal. 
   # When creating an internal load balancer, the internal annotation must still be specified regardless 
   default     = "public"
-  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_type must be either 'internal' or 'both'."
+  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'."
   type        = string
 }
 

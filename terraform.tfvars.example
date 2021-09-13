@@ -159,8 +159,8 @@ node_pools_to_drain     = ["np1", "np2"]
 nodepool_upgrade_method = "out_of_place"
 
 # oke load balancers
-lb_type           = "both"
-preferred_lb_type = "public"
+lb_subnet_type           = "both"
+preferred_lb_subnet_type = "public"
 public_lb_ports   = [80, 443]
 
 

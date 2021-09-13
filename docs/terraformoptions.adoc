@@ -683,7 +683,7 @@ node_pools = {
 |Values
 |Default
 
-|lb_type
+|lb_subnet_type
 |The type of load balancer subnets to create. 
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
@@ -692,8 +692,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
 |public
 
-|preferred_lb_type
-|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_type must be either 'internal' or 'both'.
+|preferred_lb_subnet_type
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'.
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 

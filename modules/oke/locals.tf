@@ -4,7 +4,7 @@
 locals {
 
   # used by cluster
-  lb_subnet = var.preferred_lb_type == "public" ? "pub_lb" : "int_lb"
+  lb_subnet = var.preferred_lb_subnet_type == "public" ? "pub_lb" : "int_lb"
 
   ad_names = [
     for ad_name in data.oci_identity_availability_domains.ad_list.availability_domains :

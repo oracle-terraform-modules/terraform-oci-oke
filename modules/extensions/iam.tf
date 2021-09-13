@@ -21,10 +21,14 @@ resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
   count          = (var.use_encryption == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true) ? 1 : 0
 }
 
+# 30s delay to allow policies to take effect globally
+resource "time_sleep" "wait_30_seconds" {
+  depends_on = [oci_identity_policy.operator_instance_principal_dynamic_group]
+
+  create_duration = "30s"
+}
+
 resource "null_resource" "update_dynamic_group" {
-  triggers = {
-    cluster_id = var.cluster_id
-  }
 
   connection {
     host        = var.operator_private_ip
@@ -38,7 +42,7 @@ resource "null_resource" "update_dynamic_group" {
     bastion_private_key = file(var.ssh_private_key_path)
   }
 
-  depends_on = [oci_identity_policy.operator_instance_principal_dynamic_group]
+  depends_on = [time_sleep.wait_30_seconds]
 
   provisioner "file" {
     content     = local.update_dynamic_group_template

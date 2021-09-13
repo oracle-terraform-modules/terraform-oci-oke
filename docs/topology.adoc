@@ -71,7 +71,7 @@ The following resources are created:
 * 1 public regional bastion subnet
 * 1 private regional operator subnet
 
-The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of 10.0.0.0/29 giving a maximum possible of 1 IP address.
+The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of 10.0.0.0/29 giving a maximum possible of 5 assignable IP addresses in the bastion subnet.
 
 The workers subnet has a CIDR of 10.0.64.0/18 assigned by default. This gives the subnet a maximum possible of 16381 IP addresses and therefore number of hosts per subnet. This is enough to scale the cluster to the maximum number of worker nodes (1000) currently allowed by Oracle Container Engine.
 
@@ -356,18 +356,18 @@ You can also use internal load balancers. Internal load balancers have only priv
 
 The following parameters govern how load balancers are created with:
 
-* lb_type
+* lb_subnet_type
 
-* preferred_lb_type
+* preferred_lb_subnet_type
 
-The table below shows the valid combinations of preferred_lb_type and subnet_type values.
+The table below shows the valid combinations of preferred_lb_subnet_type and subnet_type values.
 
 .Public and Internal Load Balancer combinations
 [stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
 |===
 |
-|preferred_lb_type=internal
-|preferred_lb_type=public
+|preferred_lb_subnet_type=internal
+|preferred_lb_subnet_type=public
 
 |subnet_type=both
 |X

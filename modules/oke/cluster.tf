@@ -54,7 +54,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       services_cidr = var.cluster_options_kubernetes_network_config_services_cidr
     }
 
-    service_lb_subnet_ids = var.preferred_lb_type == "public" ? [var.cluster_subnets["pub_lb"]] : [var.cluster_subnets["int_lb"]]
+    service_lb_subnet_ids = var.preferred_lb_subnet_type == "public" ? [var.cluster_subnets["pub_lb"]] : [var.cluster_subnets["int_lb"]]
   }
 
   vcn_id = var.vcn_id

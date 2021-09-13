@@ -11,7 +11,7 @@ module "vcn" {
 
   # gateways
   create_internet_gateway  = true
-  create_nat_gateway       = var.worker_mode == "private" || var.create_operator == true || (var.lb_type == "internal" || var.lb_type == "both") ? true : false
+  create_nat_gateway       = var.worker_mode == "private" || var.create_operator == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
 
@@ -176,7 +176,7 @@ module "network" {
   worker_mode                  = var.worker_mode
 
   # oke load balancer network parameters
-  lb_type = var.lb_type
+  lb_subnet_type = var.lb_subnet_type
 
   # oke load balancer ports
   public_lb_ports = var.public_lb_ports
@@ -228,7 +228,7 @@ module "oke" {
   node_pool_os_version  = var.node_pool_os_version
 
   # oke load balancer parameters
-  preferred_lb_type = var.preferred_lb_type
+  preferred_lb_subnet_type = var.preferred_lb_subnet_type
 
   depends_on = [
     module.network
@@ -266,6 +266,7 @@ module "extensions" {
   # operator details
   create_operator                    = var.create_operator
   operator_private_ip                = local.operator_private_ip
+  operator_state                     = var.operator_state
   operator_dynamic_group             = local.operator_instance_principal_group_name
   enable_operator_instance_principal = var.enable_operator_instance_principal
   operator_os_version                = var.operator_os_version
