@@ -1,5 +1,11 @@
 # Identity and access parameters
 api_fingerprint      = ""
+# api_private_key      = <<EOT
+#-----BEGIN RSA PRIVATE KEY-----
+#content+of+api+key
+#-----END RSA PRIVATE KEY-----
+#EOT
+
 api_private_key_path = ""
 region               = ""
 tenancy_id           = ""
