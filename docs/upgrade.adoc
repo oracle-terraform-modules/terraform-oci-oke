@@ -1,8 +1,9 @@
 = Upgrading
-
 :idprefix:
 :idseparator: -
 :sectlinks:
+:sectnums:
+:toc: auto
 
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
@@ -20,8 +21,6 @@
 :uri-upgrade-oke: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengupgradingk8sworkernode.htm
 :uri-variables: {uri-rel-file-base}/variables.tf
 
-. link:#pre-requisites[Pre-requisites]
-
 This section documents how to upgrade the OKE Cluster using this project. At a high level, upgrading the OKE cluster is fairly straightforward:
 
 1. Upgrade the control plane nodes
@@ -29,12 +28,13 @@ This section documents how to upgrade the OKE Cluster using this project. At a h
 
 This has to be done in order.
 
-This project supports only the out-of-place method of upgrading the worker nodes at the moment.
+This project supports *only* the out-of-place method of upgrading the cluster and worker nodes at the moment.
 
 === Pre-requisites
 
 . bastion host is created
 . operator host is created
+. instance_principal is enabled on operator
 
 === Upgrading the control plane nodes
 
@@ -42,27 +42,35 @@ This project supports only the out-of-place method of upgrading the worker nodes
 
 +
 ----
-kubernetes_version = "v1.16.8" 
+kubernetes_version = "v1.19.12" 
 ----
 to 
 
 +
 ----
-kubernetes_version = "v1.18.10"
+kubernetes_version = "v1.20.8"
 ----
 
 . Run terraform:
 
 +
 ----
-terraform apply --auto-approve
+terraform apply
 ----
 
 This will upgrade the control plane nodes. You can verify this in the OCI Console.
 
+****
+If you have modified the default resources e.g. security lists, you will need to use a targeted apply:
+
+----
+terraform apply --target=module.oke.k8s_cluster
+----
+****
 
 === Upgrading the worker nodes using the out-of-place method
 
+==== Add new node pools
 1. Add a new node pool in your list of node pools e.g. change
 +
 [source,bash]
@@ -84,9 +92,12 @@ node_pools = {
 }
 ----
 
-When node pools 3 and 4 are created, they will be created with the cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.18.10`, node pools 3 and 4 will be running Kubernetes v1.18.10
+and run terraform apply again. (See note above about targeted apply). If you are using Kubernetes labels for your existing applications, you will need to ensure the new node pools also have the same labels. Refer to the `terraform.tfvars.example` file for the format to specify the labels.
 
-. Set `nodepool_drain=true`. This will instruct the OKE cluster that some node pools will be drained.
+When node pools 3 and 4 are created, they will be created with the newer cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.20.8`, node pools 3 and 4 will be running Kubernetes v1.20.8
+
+==== Drain older nodepools
+. Set `upgrade_nodepool=true`. This will instruct the OKE cluster that some node pools will be drained.
 
 . Provide the list of node pools to drain. This should usually be only the old node pools. You don't need to upgrade all the node pools at once.
 
@@ -95,20 +106,19 @@ When node pools 3 and 4 are created, they will be created with the cluster versi
 node_pools_to_drain = [ "np1", "np2"] 
 ----
 
-. Run terraform apply:
+. Run terraform apply (see note above about targeted apply):
 
 +
 ----
-terraform apply --auto-approve
+terraform apply
 ----
 
-. Finally delete the old node pools by removing them from the list of node pools:
+==== Delete node pools with older Kuberntes version
+When you are ready, you can now delete the old node pools by them from the list of node pools:
 
 +
 ----
 node_pools = {
-#  np1 = ["VM.Standard.E2.2", 7, 50]
-#  np2 = ["VM.Standard2.8", 5, 50]
   np3 = ["VM.Standard.E2.2", 7, 50]
   np4 = ["VM.Standard2.8", 5, 50]
 }
@@ -118,7 +128,7 @@ node_pools = {
 
 +
 ----
-terraform apply --auto-approve
+terraform apply
 ----
 
-. This completes the upgrade process. Now, set ```nodepool_drain = false``` to prevent draining from current nodes.
+. This completes the upgrade process. Now, set ```upgrade_nodepool = false``` to prevent draining from current nodes by mistake.

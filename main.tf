@@ -103,7 +103,7 @@ module "operator" {
 
   # bastion host parameters
   operator_image_id           = var.operator_image_id
-  operator_instance_principal = var.operator_instance_principal
+  operator_instance_principal = var.enable_operator_instance_principal
   operator_os_version         = var.operator_os_version
   operator_shape              = var.operator_shape
   operator_state              = var.operator_state
@@ -264,11 +264,11 @@ module "extensions" {
   bastion_state       = var.bastion_state
 
   # operator details
-  create_operator             = var.create_operator
-  operator_private_ip         = local.operator_private_ip
-  operator_dynamic_group      = local.operator_instance_principal_group_name
-  operator_instance_principal = var.operator_instance_principal
-  operator_os_version         = var.operator_os_version
+  create_operator                    = var.create_operator
+  operator_private_ip                = local.operator_private_ip
+  operator_dynamic_group             = local.operator_instance_principal_group_name
+  enable_operator_instance_principal = var.enable_operator_instance_principal
+  operator_os_version                = var.operator_os_version
 
   # oke cluster parameters
   cluster_id           = module.oke.cluster_id
@@ -304,7 +304,7 @@ module "extensions" {
   check_node_active = var.check_node_active
 
   # oke upgrade
-  nodepool_drain          = var.nodepool_drain
+  upgrade_nodepool        = var.upgrade_nodepool
   nodepool_upgrade_method = var.nodepool_upgrade_method
   node_pools_to_drain     = var.node_pools_to_drain
 

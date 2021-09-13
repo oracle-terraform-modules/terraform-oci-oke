@@ -6,8 +6,8 @@ terraform {
     oci = {
       source = "hashicorp/oci"
       # pass oci home region provider explicitly for identity operations
-      configuration_aliases = [ oci.home ]
-    }    
+      configuration_aliases = [oci.home]
+    }
   }
   required_version = ">= 1.0.0"
 }
@@ -18,7 +18,7 @@ resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
   description    = "policy to allow operator host to manage dynamic group"
   name           = var.label_prefix == "none" ? "operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}" : "${var.label_prefix}-operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}"
   statements     = ["Allow dynamic-group ${var.operator_dynamic_group} to use dynamic-groups in tenancy"]
-  count          = (var.use_encryption == true && var.create_bastion_host == true && var.operator_instance_principal == true) ? 1 : 0
+  count          = (var.use_encryption == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true) ? 1 : 0
 }
 
 resource "null_resource" "update_dynamic_group" {
@@ -53,5 +53,5 @@ resource "null_resource" "update_dynamic_group" {
     ]
   }
 
-  count = (var.use_encryption == true && var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.operator_instance_principal == true) ? 1 : 0
+  count = (var.use_encryption == true && var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.enable_operator_instance_principal == true) ? 1 : 0
 }

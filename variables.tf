@@ -1,16 +1,29 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Provider parameters
+# OCI Provider parameters
 variable "api_fingerprint" {
   default     = ""
-  description = "Fingerprint of oci api private key."
+  description = "Fingerprint of the API private key to use with OCI API."
+  type        = string
+}
+
+variable "api_private_key" {
+  default     = ""
+  description = "The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider."
+  type        = string
+}
+
+variable "api_private_key_password" {
+  default     = ""
+  description = "The corresponding private key password to use with the api private key if it is encrypted."
+  sensitive   = true
   type        = string
 }
 
 variable "api_private_key_path" {
   default     = ""
-  description = "The path to oci api private key."
+  description = "The path to the OCI API private key."
   type        = string
 }
 
@@ -21,7 +34,7 @@ variable "region" {
 }
 
 variable "tenancy_id" {
-  description = "The tenancy id in which to create the resources."
+  description = "The tenancy id of the OCI Cloud Account in which to create the resources."
   type        = string
 }
 
@@ -31,7 +44,7 @@ variable "user_id" {
   default     = ""
 }
 
-# general oci parameters
+# General OCI parameters
 variable "compartment_id" {
   description = "The compartment id where to create all resources."
   type        = string
@@ -52,7 +65,7 @@ variable "ssh_private_key_path" {
 
 variable "ssh_public_key" {
   default     = ""
-  description = "The ssh public key."
+  description = "The contents of the ssh public key."
   type        = string
 }
 
@@ -77,7 +90,7 @@ variable "drg_display_name" {
 
 ## waf
 variable "enable_waf" {
-  description = "whether to enable WAF monitoring of load balancers"
+  description = "Whether to enable WAF monitoring of load balancers"
   type        = bool
   default     = false
 }
@@ -183,11 +196,6 @@ variable "bastion_state" {
   description = "The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)"
   default     = "RUNNING"
   type        = string
-
-  validation {
-    condition     = contains(["RUNNING", "STOPPED"], var.bastion_state)
-    error_message = "Accepted values are RUNNING or STOPPED."
-  }
 }
 
 variable "bastion_timezone" {
@@ -200,11 +208,6 @@ variable "bastion_type" {
   description = "Whether to make the bastion host public or private."
   default     = "public"
   type        = string
-
-  validation {
-    condition     = contains(["public", "private"], var.bastion_type)
-    error_message = "Accepted values are public or private."
-  }
 }
 
 variable "upgrade_bastion" {
@@ -277,7 +280,7 @@ variable "operator_image_id" {
   type        = string
 }
 
-variable "operator_instance_principal" {
+variable "enable_operator_instance_principal" {
   default     = true
   description = "Whether to enable the operator to call OCI API services without requiring api key."
   type        = bool
@@ -310,11 +313,6 @@ variable "operator_state" {
   description = "The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)"
   default     = "RUNNING"
   type        = string
-
-  validation {
-    condition     = contains(["RUNNING", "STOPPED"], var.operator_state)
-    error_message = "Accepted values are RUNNING or STOPPED."
-  }
 }
 
 variable "operator_timezone" {
@@ -397,26 +395,10 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "check_node_active" {
-  description = "check worker node is active"
-  type        = string
-  default     = "none"
-
-  validation {
-    condition     = contains(["none", "one", "all"], var.check_node_active)
-    error_message = "Accepted values are none, one or all."
-  }
-}
-
 variable "control_plane_access" {
   default     = "public"
   description = "Whether to allow public or private access to the control plane endpoint"
   type        = string
-
-  validation {
-    condition     = contains(["public", "private"], var.control_plane_access)
-    error_message = "Accepted values are public, or private."
-  }
 }
 
 variable "control_plane_access_source" {
@@ -441,11 +423,6 @@ variable "kubernetes_version" {
   default     = "v1.20.8"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
-
-  validation {
-    condition     = contains(["v1.18.10", "v1.19.7", "v1.19.12", "v1.20.8"], var.kubernetes_version)
-    error_message = "Accepted values are v1.18.10, v1.19.7, v1.19.12, v1.20.8."
-  }
 }
 
 variable "pods_cidr" {
@@ -457,6 +434,20 @@ variable "pods_cidr" {
 variable "services_cidr" {
   default     = "10.96.0.0/16"
   description = "The CIDR range used by exposed Kubernetes services (ClusterIPs). This CIDR should not overlap with the VCN CIDR range."
+  type        = string
+}
+
+## oke cluster kms integration
+
+variable "use_encryption" {
+  description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
+  default     = false
+  type        = bool
+}
+
+variable "kms_key_id" {
+  default     = ""
+  description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
   type        = string
 }
 
@@ -473,24 +464,16 @@ variable "image_signing_keys" {
   default     = []
 }
 
-# oke cluster kms integration
-
-variable "use_encryption" {
-  description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
-  default     = false
-  type        = bool
-}
-
-variable "kms_key_id" {
-  default     = ""
-  description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
-  type        = string
-}
-
 # node pools
+variable "check_node_active" {
+  description = "check worker node is active"
+  type        = string
+  default     = "none"
+}
+
 variable "node_pools" {
   default = {
-    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, node_pool_size = 2, boot_volume_size = 150 }
+    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
     np2 = { shape = "VM.Standard.E2.2", node_pool_size = 2, boot_volume_size = 150 }
     np3 = { shape = "VM.Standard.E2.2", node_pool_size = 1 }
   }
@@ -522,34 +505,29 @@ variable "node_pool_os_version" {
   type        = string
 }
 
+variable "worker_mode" {
+  default     = "private"
+  description = "Whether to provision public or private workers."
+  type        = string
+}
+
 # upgrade of existing node pools
+variable "upgrade_nodepool" {
+  default     = false
+  description = "Whether to upgrade the Kubernetes version of the node pools."
+  type        = bool
+}
+
 variable "node_pools_to_drain" {
   default     = ["none"]
   description = "List of node pool names to drain during an upgrade. This list is used to determine the worker nodes to drain."
   type        = list(string)
 }
 
-variable "nodepool_drain" {
-  default     = false
-  description = "Whether to upgrade the Kubernetes version of the node pools."
-  type        = bool
-}
-
 variable "nodepool_upgrade_method" {
   default     = "out_of_place"
   description = "The upgrade method to use when upgrading to a new version. Only out-of-place supported at the moment."
   type        = string
-}
-
-variable "worker_mode" {
-  default     = "private"
-  description = "Whether to provision public or private workers."
-  type        = string
-
-  validation {
-    condition     = contains(["public", "private"], var.worker_mode)
-    error_message = "Accepted values are public or private."
-  }
 }
 
 # oke load balancers
@@ -559,11 +537,6 @@ variable "lb_type" {
   default     = "public"
   description = "The type of load balancer subnets to create."
   type        = string
-
-  validation {
-    condition     = contains(["public", "internal", "both"], var.lb_type)
-    error_message = "Accepted values are public, internal or both."
-  }
 }
 
 variable "preferred_lb_type" {
@@ -572,11 +545,6 @@ variable "preferred_lb_type" {
   default     = "public"
   description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_type must be either 'internal' or 'both'."
   type        = string
-
-  validation {
-    condition     = contains(["public", "internal"], var.preferred_lb_type)
-    error_message = "Accepted values are public or internal."
-  }
 }
 
 variable "public_lb_ports" {
@@ -614,7 +582,6 @@ variable "ocir_urls" {
     me-jeddah-1    = "jed.ocir.io"
     sa-saopaulo-1  = "gru.ocir.io"
     sa-santiago-1  = "scl.ocir.io"
-    sa-vinhedo-1   = "vcp.ocir.io"
     uk-cardiff-1   = "cwl.ocir.io"
     uk-london-1    = "lhr.ocir.io"
     us-ashburn-1   = "iad.ocir.io"
@@ -638,13 +605,13 @@ variable "secret_name" {
 
 variable "secret_namespace" {
   default     = "default"
-  description = "the k8s namespace for a secret."
+  description = "The Kubernetes namespace for where the OCIR secret will be created."
   type        = string
 }
 
 variable "username" {
   default     = "none"
-  description = "The username to access OCIR."
+  description = "The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if secret_id is set."
   type        = string
 }
 
@@ -708,8 +675,8 @@ variable "service_account_cluster_role_binding" {
 # tagging
 variable "freeform_tags" {
   default = {
-    # vcn, bastion and operator freeform_tags are required
-    # add more freeform_tags in each as desired
+    # vcn, bastion and operator tags are required
+    # add more tags in each as desired
     vcn = {
       environment = "dev"
     }
@@ -722,6 +689,6 @@ variable "freeform_tags" {
       role        = "operator"
     }
   }
-  description = "freeform_tags to apply to different resources."
+  description = "Tags to apply to different resources."
   type        = map(any)
 }

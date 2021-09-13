@@ -1,96 +1,32 @@
 # Identity and access parameters
-## apaciaas
-api_fingerprint      = "aa:bb:cc:....."
-api_private_key_path = "/path/to/private/api/key"
-region               = "ap-sydney-1"
-tenancy_id           = "ocid1.tenancy.oc1.."
-user_id              = "ocid1.user.oc1.."
+api_fingerprint      = ""
+api_private_key_path = ""
+region               = ""
+tenancy_id           = ""
+user_id              = ""
 
 # general oci parameters
-compartment_id = "ocid1.compartment.oc1.."
+compartment_id = ""
 label_prefix   = "dev"
 
 # ssh keys
-
 ssh_private_key_path = "~/.ssh/id_rsa"
-
-# Set corresponding public key either using the path (ssh_public_key_path) or using the key itself (ssh_public_key).
-# Set the other to "".
-# ssh_public_key       = "ssh-rsa AAAAB....."
+# ssh_public_key       = ""
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 # networking
-create_drg       = false
-drg_display_name = "drg"
-enable_waf       = false
-internet_gateway_route_rules = [ # this input shows how to pass routing information
-/*  {
-    destination       = "192.168.0.0/16" # Route Rule Destination CIDR
-    destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
-    network_entity_id = "drg"            # for internet_gateway_route_rules input variable, you can use special strings "drg", "internet_gateway" or pass a valid OCID using string or any Named Values
-    description       = "Terraformed - User added Routing Rule: To drg created by this module. drg_id is automatically retrieved with keyword drg"
-  },
-  {
-    destination       = "172.16.0.0/16"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = "drg"
-    description       = "Terraformed - User added Routing Rule: To drg created by this module. drg_id is automatically retrieved with keyword drg"
-  },
-  {
-    destination       = "203.0.113.0/24" # rfc5737 (TEST-NET-3)
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = "internet_gateway"
-    description       = "Terraformed - User added Routing Rule: To Internet Gateway created by this module. internet_gateway_id is automatically retrieved with keyword internet_gateway"
-  },
-  {
-    destination       = "192.168.1.0/24"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = "ocid1.localpeeringgateway.oc1.aaaaaa" # <-- edit this OCID
-    description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
-  },*/
-]
+create_drg                   = false
+drg_display_name             = "drg"
+enable_waf                   = false
+internet_gateway_route_rules = []
 
-# local_peering_gateways = {
-#    to_spoke1 = { # LPG will be in acceptor mode with a route table attached
-#      route_table_id = ""
-#    }
-#    to_spoke2 = { # LPG will be in requestor mode with no route table attached
-#      route_table_id = ""
-#      peer_id        = ""
-#    }
-#    to_spoke3 = {} # LPG will be in acceptor mode with no route table attached
-# }
+local_peering_gateways = {}
 
 lockdown_default_seclist = true
 
-nat_gateway_route_rules = [ # this module input shows how to pass routing information
-/*  {
-    destination       = "192.168.0.0/16" # Route Rule Destination CIDR
-    destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
-    network_entity_id = "drg"            # for nat_gateway_route_rules input variable, you can use special strings "drg", "nat_gateway" or pass a valid OCID using string or any Named Values
-    description       = "Terraformed - User added Routing Rule: To drg created by this module. drg_id is automatically retrieved with keyword drg"
-  },
-  {
-    destination       = "172.16.0.0/16"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = "drg"
-    description       = "Terraformed - User added Routing Rule: To drg created by this module. drg_id is automatically retrieved with keyword drg"
-  },
-  {
-    destination       = "203.0.113.0/24" # rfc5737 (TEST-NET-3)
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = "nat_gateway"
-    description       = "Terraformed - User added Routing Rule: To NAT Gateway created by this module. nat_gateway_id is automatically retrieved with keyword nat_gateway"
-  },
-  {
-    destination       = "192.168.1.0/24"
-    destination_type  = "CIDR_BLOCK"
-    network_entity_id = "ocid1.localpeeringgateway.oc1.aaaaaa" # <-- edit this OCID
-    description       = "Terraformed - User added Routing Rule: To lpg with lpg_id directly passed by user. Useful for gateways created outside of vcn module"
-  },*/
-]
+nat_gateway_route_rules = []
 
 nat_gateway_public_ip_id = "none"
 
@@ -103,16 +39,15 @@ subnets = {
   workers  = { netnum = 1, newbits = 2 }
 }
 
-vcn_cidrs      = ["10.0.0.0/16"]
+vcn_cidrs     = ["10.0.0.0/16"]
 vcn_dns_label = "oke"
 vcn_name      = "vcnoke"
 
 # bastion host
 create_bastion_host = true
-
-bastion_access     = ["anywhere"]
-bastion_image_id   = "Autonomous"
-bastion_os_version = "7.9"
+bastion_access      = ["anywhere"]
+bastion_image_id    = "Autonomous"
+bastion_os_version  = "7.9"
 bastion_shape = {
   shape            = "VM.Standard.E4.Flex",
   ocpus            = 1,
@@ -128,20 +63,20 @@ upgrade_bastion  = false
 enable_bastion_notification   = false
 bastion_notification_endpoint = ""
 bastion_notification_protocol = "EMAIL"
-bastion_notification_topic    = ""
+bastion_notification_topic    = "bastion_server_notification"
 
 # bastion service
-create_bastion_service        = true
+create_bastion_service        = false
 bastion_service_access        = ["0.0.0.0/0"]
 bastion_service_name          = "bastion"
 bastion_service_target_subnet = "operator"
 
 # operator host
-create_operator             = true
-operator_image_id           = "Oracle"
-operator_instance_principal = true
-operator_nsg_ids            = []
-operator_os_version         = "8"
+create_operator                    = true
+operator_image_id                  = "Oracle"
+enable_operator_instance_principal = true
+operator_nsg_ids                   = []
+operator_os_version                = "8"
 operator_shape = {
   shape            = "VM.Standard.E4.Flex",
   ocpus            = 1,
@@ -150,13 +85,13 @@ operator_shape = {
 }
 operator_state    = "RUNNING"
 operator_timezone = "Australia/Sydney"
-upgrade_operator = false
+upgrade_operator  = false
 
 ## operator notification
 enable_operator_notification   = false
-operator_notification_endpoint = ""
+operator_notification_endpoint = "ali.mukadam@oracle.com"
 operator_notification_protocol = "EMAIL"
-operator_notification_topic    = "operator_server_notification"
+operator_notification_topic    = ""
 
 # availability_domains
 availability_domains = {
@@ -170,28 +105,31 @@ admission_controller_options = {
 }
 allow_node_port_access       = false
 allow_worker_internet_access = true
-allow_worker_ssh_access      = true
+allow_worker_ssh_access      = false
 cluster_name                 = "oke"
-check_node_active            = "none"
-control_plane_access         = "public"
-control_plane_access_source  = ["0.0.0.0/0", "8.8.8.8/32"]
+control_plane_access         = "private"
+control_plane_access_source  = ["0.0.0.0/0"]
+control_plane_nsgs           = []
 dashboard_enabled            = false
 kubernetes_version           = "v1.20.8"
 pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
 
-## oke cluster container image policy and keys
-use_signed_images = false
-image_signing_keys = ["ocid1.key...","ocid1.key.."]
-
 ## oke cluster kms integration
 use_encryption = false
-kms_key_id     = "ocid1.key..."
+kms_key_id     = ""
 
+## oke cluster container image policy and keys
+use_signed_images = false
+image_signing_keys = []
 
 # node pools
+check_node_active = "all"
 node_pools = {
   np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, autoscale = true, label = { app = "frontend", pool = "np1" } }
+  np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, autoscale = true, label = { app = "frontend", pool = "np1" } }
+  # np3 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, autoscale = true, label = { app = "frontend", pool = "np1" } }
+  # np4 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, autoscale = true, label = { app = "frontend", pool = "np1" } }
   # np2 = {shape="VM.Standard.E4.Flex",ocpus=4,memory=16,node_pool_size=1,boot_volume_size=150, autoscale=false, label={app="backend",pool="np2"}}
   # np3 = {shape="VM.Standard.A1.Flex",ocpus=8,memory=16,node_pool_size=1,boot_volume_size=150, autoscale=false, label={pool="np3"}}
   # np4 = {shape="BM.Standard2.52",node_pool_size=1,boot_volume_size=150}
@@ -207,11 +145,12 @@ node_pool_image_id    = "none"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
 node_pool_os_version  = "7.9"
+worker_mode           = "private"
 
-node_pools_to_drain     = ["np1", "np2", "np3"]
-nodepool_drain          = false
+# upgrade of existing node pools
+upgrade_nodepool        = false
+node_pools_to_drain     = ["np1", "np2"]
 nodepool_upgrade_method = "out_of_place"
-worker_mode             = "private"
 
 # oke load balancers
 lb_type           = "both"
@@ -220,11 +159,11 @@ public_lb_ports   = [80, 443]
 
 
 # ocir
-email_address = ""
-secret_id     = "ocid1.vaultsecret..."
-username      = ""
-
+email_address    = ""
+secret_id        = ""
+secret_name      = "ocirsecret"
 secret_namespace = "default"
+username         = ""
 
 # calico
 enable_calico  = false
@@ -237,9 +176,9 @@ vpa_version          = 0.8
 
 # service account
 create_service_account               = false
-service_account_name                 = "jenkins"
-service_account_namespace            = "default"
-service_account_cluster_role_binding = "jenkins-crb"
+service_account_name                 = ""
+service_account_namespace            = ""
+service_account_cluster_role_binding = ""
 
 # freeform_tags
 freeform_tags = {
@@ -261,4 +200,3 @@ freeform_tags = {
     security    = "high"
   }
 }
-

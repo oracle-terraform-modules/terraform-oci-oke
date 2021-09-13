@@ -39,7 +39,7 @@ variable "operator_dynamic_group" {
   type        = string
 }
 
-variable "operator_instance_principal" {
+variable "enable_operator_instance_principal" {
   type = bool
 }
 variable "operator_os_version" {}
@@ -109,7 +109,7 @@ variable "check_node_active" {
 }
 
 # upgrade
-variable "nodepool_drain" {
+variable "upgrade_nodepool" {
   type = bool
 }
 
