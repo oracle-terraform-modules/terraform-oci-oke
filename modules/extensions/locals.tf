@@ -80,7 +80,7 @@ locals {
     }
   )
 
-  secret_template = templatefile("${path.module}/scripts/secret.py",
+  secret_template = templatefile("${path.module}/scripts/secret.sh",
     {
       compartment_id = var.compartment_id
       region         = var.region
