@@ -3,7 +3,7 @@
 
 resource "null_resource" "secret" {
   triggers = {
-    secret_id = var.secret_id
+    always_run = "${timestamp()}"
   }
   connection {
     host        = var.operator_private_ip
@@ -21,15 +21,15 @@ resource "null_resource" "secret" {
 
   provisioner "file" {
     content     = local.secret_template
-    destination = "~/secret.py"
+    destination = "~/secret.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/secret.py",
-      "$HOME/secret.py",
+      "chmod +x $HOME/secret.sh",
+      "$HOME/secret.sh",
       "sleep 10",
-      "rm -f $HOME/secret.py"
+      "rm -f $HOME/secret.sh"
     ]
   }
 
