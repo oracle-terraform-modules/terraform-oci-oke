@@ -3,8 +3,9 @@
 :idseparator: -
 :sectlinks:
 :sectnums:
-:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+:toc: auto
 
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 :uri-rel-file-base: link:{uri-repo}/blob/main
 :uri-rel-tree-base: link:{uri-repo}/tree/main
 :uri-calico: https://www.projectcalico.org/
@@ -25,75 +26,49 @@
 
 Configuration Terraform Options:
 
-. link:#identity-and-access[Identity and Access]
-. link:#ssh-keys[SSH Keys]
-. link:#general-oci[General OCI]
-. link:#oci-networking[OCI Networking]
-. link:#bastion-host[Bastion Host]
-. link:#operator-host[Operator Host]
-. link:#oke[OKE]
-. link:#oke-load-balancers[OKE Load Balancers]
-. link:#ocir[OCIR]
-. link:#calico[Calico]
-. link:#kubernetes-metrics-server[Kubernetes Metrics Server]
-. link:#kms-integration[KMS integration]
-. link:#service-account[Service Account]
-
 Ensure you review the {uri-terraform-dependencies}[dependencies].
 
-== Identity and access
+== OCI Provider parameters
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`api_fingerprint`
-|ssl fingerprint of api public key. *Required*
+|api_fingerprint
+|ssl fingerprint of api public key. *Maybe required depending on your authentication method.*
 |
 |none
 
-|`api_private_key_path`
-|path to api private key. *Required*
+|api_private_key
+|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.*
 |
 |none
 
-|`compartment_id`
-|Compartment id where the OKE Cluster will be provisioned. *Required*
+|api_private_key_password
+|The corresponding private key password to use with the api private key if it is encrypted. *Maybe required depending on your authentication method.*
 |
 |none
 
-|`tenancy_id`
-|Tenancy id of the user. *Required*
+|api_private_key_path
+|The path to the OCI API private key. *Maybe required depending on your authentication method.*
 |
 |none
 
-|`user_id`
-|User's id. *Required*
+|region
+|Region where to provision the OKE cluster. {uri-oci-region}[List of regions]. *Required*
+|
+|
+
+|tenancy_id
+|The tenancy id of the OCI Cloud Account in which to create the resources. *Required*
 |
 |none
 
-|===
-
-== SSH Keys
-
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
-|===
-|Parameter
-|Description
-|Values
-|Default
-
-|`ssh_private_key_path`
-|path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
-
-|
-|none
-
-|`ssh_public_key_path`
-|path to ssh public key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
+|user_id
+|The id of the user that terraform will use to create the resources. *Maybe required depending on your authentication method.*
 |
 |none
 
@@ -101,164 +76,145 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 
 == General OCI
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`label_prefix`
+|compartment_id
+|Compartment id where the OKE Cluster will be provisioned. *Required*
+|
+|none
+
+|label_prefix
 |a string to be prepended to the name of resources. *Required*
 |
 |none
 
-|`region`
-|Region where to provision the OKE cluster. {uri-oci-region}[List of regions]. *Required*
+|===
+
+== SSH Keys
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|ssh_private_key_path
+|path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
+
 |
-|us-phoenix-1
+|none
+
+|ssh_public_key_path
+|path to ssh public key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
+|
+|none
+
+|ssh_public_key
+|The contents of the ssh public key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
+|
+|none
 
 |===
 
 == OCI Networking
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`create_drg`
+|create_drg
 |Whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN.
 |`true/false`
 |`false`
 
-|`drg_display_name`
+|drg_display_name
 |(Updatable) Name of Dynamic Routing Gateway. Does not have to be unique.
 |""
 |drg
 
-|`internet_gateway_route_rules`
+|enable_waf
+|Whether to enable WAF monitoring of load balancers
+|`true/false`
+|false
+
+|internet_gateway_route_rules
 |(Updatable) List of routing rules to add to Internet Gateway Route Table.
 |
-[source]
-[
-    /*
-    {
-      destination = "192.168.1.0/24"
-      destination_type = "CIDR_BLOCK"
-      network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
-      description = "route through drg"
-    },
-    {
-      destination = "8.8.8.0/24"
-      destination_type = "CIDR_BLOCK"
-      network_entity_id = "internet_gateway" // use Internet Gateway created by this module. Requires `internet_gateway_enabled = true`
-      description = "route through Internet Gateway"
-    },
-    {
-      destination = "8.8.8.0/24"
-      destination_type = "CIDR_BLOCK"
-      network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
-      description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
-    }
-    */ 
+[ 
+  {
+    destination       = "192.168.0.0/16"
+    destination_type  = "CIDR_BLOCK"     
+    network_entity_id = "drg"
+    description       = "Terraformed"
+  },
 ]
 |[]
 
-|`lockdown_default_seclist`
+|local_peering_gateways
+|Map of Local Peering Gateways to attach to the VCN.
+|
+    to_spoke2 = { 
+      route_table_id = ""
+      peer_id        = ""
+    }
+|{}
+
+|lockdown_default_seclist
 |Whether to remove all default security rules from the VCN Default Security List.
 |`true/false`
 |`true`
 
-|`nat_gateway_route_rules`
+|nat_gateway_route_rules
 |(Updatable) List of routing rules to add to Internet Gateway Route Table.
 |
-[source]
-[
-    /*
-    {
-      destination = "192.168.1.0/24"
-      destination_type = "CIDR_BLOCK"
-      network_entity_id = "drg" // use drg created by this module. Requires `create_drg = true`
-      description = "route through drg"
-    },
-    {
-      destination = "8.8.8.0/24"
-      destination_type = "CIDR_BLOCK"
-      network_entity_id = "nat_gateway" // use NAT gateway created by this module. Requires `nat_gateway_enabled = true`
-      description = "route through NAT gateway"
-    },
-    {
-      destination = "8.8.8.0/24"
-      destination_type = "CIDR_BLOCK"
-      network_entity_id = "ocid1.drg." // use an externally created resource or a resource that was not available at the time of the 1st run`
-      description = "route through an externally created resource or a resource that was not available at the time of the 1st run"
-    }
-    */
+[ 
+  {
+    destination       = "192.168.0.0/16"
+    destination_type  = "CIDR_BLOCK"     
+    network_entity_id = "drg"
+    description       = "Terraformed"
+  },
 ]
 |[]
 
-|`nat_gateway_public_ip_id`
+|nat_gateway_public_ip_id
 |OCID of reserved IP address for NAT gateway. The reserved public IP address needs to be manually created. When value is "none", no reserved IP address is used and an ephemeral public IP address is selected from the Oracle pool.
 |
 |"none"
 
-|`netnum`
-|0-based index of the subnets when the VCN's CIDR is masked with the corresponding newbit value and specified in the form of a map. Used to define the boundaries of the subnets. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
+|subnets
+|parameters to cidrsubnet function to calculate subnet masks within the VCN. The values of the map are used as the netnum parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
 |e.g.
-[source]
-----
-netnum = {
-    bastion  = 0
-    cp       = 2
-    int_lb   = 16
-    operator = 1
-    pub_lb   = 17
-    workers  = 1
-}
-----
+  subnets = {
+    bastion  = { netnum = 0, newbits = 13 }
+    operator = { netnum = 1, newbits = 13 }
+    cp       = { netnum = 2, newbits = 13 }
+    int_lb   = { netnum = 16, newbits = 11 }
+    pub_lb   = { netnum = 17, newbits = 11 }
+    workers  = { netnum = 1, newbits = 2 }
+  }
 |
-[source]
-----
-netnum = {
-    bastion  = 0
-    cp       = 2
-    int_lb   = 16
-    operator = 1
-    pub_lb   = 17
-    workers  = 1
-}
-----
+  subnets = {
+    bastion  = { netnum = 0, newbits = 13 }
+    operator = { netnum = 1, newbits = 13 }
+    cp       = { netnum = 2, newbits = 13 }
+    int_lb   = { netnum = 16, newbits = 11 }
+    pub_lb   = { netnum = 17, newbits = 11 }
+    workers  = { netnum = 1, newbits = 2 }
+  }
 
-|`newbits`
-|The difference between the VCN's netmask and the desired subnets' masks specified in the form of a map. The values of the map are used as the newbits parameter in the {uri-terraform-cidrsubnet}[cidrsubnet] Terraform function to calculate each subnet's mask. CIDR blocks for workers and load balancer subnets must not overlap with the CIDR blocks for Kubernetes pods (specified with _pods_cidr_ parameter).
-|e.g.
-[source]
-----
-newbits = {
-    bastion  = 14
-    cp       = 14
-    lb       = 11
-    operator = 14
-    workers  = 2
-}
-----
-|
-[source]
-----
-newbits = {
-    bastion  = 14
-    cp       = 14
-    lb       = 11
-    operator = 14
-    workers  = 2
-}
-----
 
-|`vcn_cidr`
-|The VCN's CIDR block. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter).
+|vcn_cidrs
+|The list of IPv4 CIDR blocks the VCN will use. The CIDR block specified for the VCN must not overlap with the CIDR block specified for the Kubernetes services (specified with _services_cidr_ parameter). The first CIDR block will be used for all the network resources created by this module e.g.  bastion, operator, worker subnets.
 |
 |`10.0.0.0/16`
 
@@ -268,7 +224,7 @@ newbits = {
 |oke
 
 |vcn_name
-|The name of the VCN that will be appended to the label_prefix. *Required*
+|The name of the VCN that will be appended to the label_prefix.
 |
 |oke-vcn
 
@@ -276,37 +232,72 @@ newbits = {
 
 == Bastion Host
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`bastion_access`
-|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
-|XYZ.XYZ.XYZ.XYZ/YZ
-|ANYWHERE
-
-|`create_bastion_host`
+|create_bastion_host
 |Whether to create the bastion host.
 |true/false
 |true
 
-|`bastion_image_id`
+|bastion_access
+|CIDR block in the form of a string to which ssh access to the bastion must be restricted to. *_ANYWHERE_* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
+|XYZ.XYZ.XYZ.XYZ/YZ
+|ANYWHERE
+
+|bastion_image_id
 |Custom image id for the bastion host
 |image_id or Autonomous. If the value is set to 'Autonomous', an Oracle Autonomous Linux Platform image will be used instead. If you want to use a custom image, set the image id instead.
 |Autonomous
 
-|`enable_bastion_notification`
-|Whether to enable ONS notification for the bastion host.
+|bastion_os_version
+|In case Autonomous Linux is used, allow specification of Autonomous version.
+|7.9
+|7.9
+
+|bastion_shape
+|The shape of bastion instance. *Required*
+|
+|`bastion_shape = {
+  shape            = "VM.Standard.E3.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}`
+
+|bastion_state
+|The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)
+| RUNNING/STOPPED
+| RUNNING
+
+|bastion_timezone
+|The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
+|
+|Australia/Sydney
+
+|bastion_type
+|Whether to make the bastion host public or private.
+|public/private
+|public
+
+|`upgrade_bastion`
+|Whether to also upgrade the packages on the bastion host.
 |true/false
 |true
 
+|`enable_bastion_notification`
+|Whether to enable ONS notification for the bastion host.
+|true/false
+|false
+
 |`bastion_notification_endpoint`
-|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others. *Required*
+|The subscription notification endpoint. Email address to be notified. Only email is currently supported although ONS can also support Slack, Pagerduty among others.
 |
-|
+|"none"
 
 |`bastion_notification_protocol`
 |The notification protocol used.
@@ -317,21 +308,71 @@ newbits = {
 |The name of the notification topic
 |
 |bastion
+|===
 
-|`bastion_os_version`
-|In case Autonomous Linux is used, allow specification of Autonomous version.
-|7.9
-|7.9
+== OCI Bastion Service
 
-|`upgrade_bastion`
-|Whether to also upgrade the packages on the bastion host.
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_bastion_service
+|Whether to create a bastion service that allows access to private hosts.
 |true/false
 |true
 
-|`bastion_shape`
-|The shape of bastion instance. *Required*
+|bastion_service_access
+|A list of CIDR blocks to which ssh access to the bastion service must be restricted. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere.
+|["0.0.0.0/0"]
+|["0.0.0.0/0"]
+
+|bastion_service_name
+|The name of the bastion service.
 |
-|`bastion_shape = {
+|
+
+|bastion_service_target_subnet
+|The name of the subnet that the bastion service can connect to.
+|"operator"
+|"operator"
+|===
+
+== Operator Host
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_operator
+|Whether to create the operator host.
+|true/false
+|true
+
+|operator_image_id
+|Custom image id for the operator host
+|image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
+|Oracle
+
+|`operator_nsg_ids`
+|An optional and updatable list of network security groups that the operator will be part of.
+|[]
+|[]
+
+|`operator_os_version`
+|The Oracle Linux version to use for the operator host.
+|e.g. 7.9, 8
+|8
+
+|`operator_shape`
+|The shape of operator instance. *Required*
+|
+|`operator_shape = {
   # shape = "VM.Standard.E2.2"
   shape            = "VM.Standard.E3.Flex",
   ocpus            = 1,
@@ -339,39 +380,18 @@ newbits = {
   boot_volume_size = 50
 }`
 
-|`bastion_state`
-|The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)
+|`operator_state`
+|The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)
 | RUNNING/STOPPED
 | RUNNING
 
-|`bastion_timezone`
-|The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
-|
+|`operator_timezone`
+|The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
+|e.g. Australia/Sydney
 |Australia/Sydney
 
-|===
-
-== Operator Host
-
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
-|===
-|Parameter
-|Description
-|Values
-|Default
-
-|`create_operator`
-|Whether to create the operator host.
-|true/false
-|true
-
-|`operator_image_id`
-|Custom image id for the operator host
-|image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
-|Oracle
-
-|`operator_instance_principal`
-|Whether to enable instance_principal on the operator host. Refer to {uri-docs}/instructions.adoc/#enabling-instance_principal-on-the-operator-host[instance_principal]
+|`upgrade_operator`
+|Whether to also upgrade the packages for the operator host.
 |true/false
 |true
 
@@ -395,177 +415,127 @@ newbits = {
 |
 |operator
 
-|`upgrade_operator`
-|Whether to also upgrade the packages for the operator host.
-|true/false
-|true
-
-|`operator_shape`
-|The shape of operator instance. *Required*
-|
-|`operator_shape = {
-  # shape = "VM.Standard.E2.2"
-  shape            = "VM.Standard.E3.Flex",
-  ocpus            = 1,
-  memory           = 4,
-  boot_volume_size = 50
-}`
-
-|`operator_state`
-|The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)
-| RUNNING/STOPPED
-| RUNNING
-
-|`operator_timezone`
-|The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
-|e.g. Australia/Sydney
-|Australia/Sydney
-
-|`operator_os_version`
-|The Oracle Linux version to use for the operator host.
-|e.g. 7.9, 8
-|8
-
 |===
 
 == Availability Domain
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`availability_domains`
+|availability_domains
 |The Availability Domain where to provision non-OKE resources e.g. bastion host. This is specified in the form of a map.
 | e.g.
-[source]
-----
-availability_domains = {
+`availability_domains = {
   bastion     = 1
   operator    = 1
-}
-----
+}`
 |
-[source]
-----
+`availability_domains = {
   bastion     = 1
   operator    = 1
-----
+}`
 
 |===
 
 == Tagging
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`freeform_tags`
-|Tagging on the base module resources. This is specified in the form of a map of maps.
+|freeform_tags
+|Tagging on the . This is specified in the form of a map of maps.
 | e.g.
-[source]
-----
-freeform_tags = {
-  # vcn, bastion and operator freeform_tags are required
-  # add more freeform_tags in each as desired
+`freeform_tags = {
   vcn = {
-    # department = "finance"
     environment = "dev"
   }
   bastion = {
-    department  = "finance"
     environment = "dev"
     role        = "bastion"
   }
   operator = {
-    department = "finance"
     environment = "dev"
     role        = "operator"
   }
-}
-----
+}`
 |
-[source]
-----
-freeform_tags = {
-  # vcn, bastion and operator freeform_tags are required
-  # add more freeform_tags in each as desired
+`freeform_tags = {
   vcn = {
-    # department = "finance"
     environment = "dev"
   }
   bastion = {
-    department  = "finance"
     environment = "dev"
     role        = "bastion"
   }
   operator = {
-    department = "finance"
     environment = "dev"
     role        = "operator"
   }
-}
-----
-
+}`
 |===
 
 == OKE
 
-[stripes=odd,cols="1d,3d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`admission_controller_options`
+|admission_controller_options
 |Various Admission Controller options
 |e.g.
-[source]
-admission_controller_options = {
+`admission_controller_options = {
   PodSecurityPolicy = true
-}
+}`
 |
-[source]
-admission_controller_options = {
-  PodSecurityPolicy = false
-}
+`admission_controller_options = {
+  PodSecurityPolicy = true
+}`
 
-|`allow_node_port_access`
+|allow_node_port_access
 |Whether to allow access to NodePort services when worker nodes are deployed in public mode.
 |true/false
 |false
 
+|allow_worker_internet_access
+|Whether to allow access to NodePorts when worker nodes are deployed in public mode..
+|true/false
+|false
 
-|`allow_worker_ssh_access`
+|allow_worker_ssh_access
 |Whether to allow ssh access to worker nodes. Even if worker nodes are deployed in public mode, ssh access to worker nodes requires going through the bastion host.
 |true/false
 |false
 
-|`control_plane_access`
+|cluster_name
+|The name of the OKE cluster. This will be appended to the label_prefix.
+|
+|oke
+
+|control_plane_access
 |Whether to allow public or private access to the control plane endpoint.
 |public/private
 |public
 
-|`control_plane_access_source`
-|CIDR range from which to allow access.
+|control_plane_access_source
+|The list of CIDR blocks from which the control plane can be accessed.
 |`[0.0.0.0/0]`
 |`[]`
 
-|`cluster_name`
-|The name of the OKE cluster. This will be appended to the label_prefix. *Required*
-|
-|oke
-
-|`check_node_active`
-|Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*none* means no check.
-|one,all,none
-|none
+|control_plane_nsgs
+|A list of the network security groups (NSGs) ids to apply to the cluster endpoint.
+|[]
+|[]
 
 |`dashboard_enabled`
 |Whether to create the default Kubernetes dashboard.
@@ -577,109 +547,143 @@ admission_controller_options = {
 |v1.18.10, v1.19.7, v1.19.12, v1.20.8
 |v1.20.8
 
-|`node_pools`
-a|The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
-
-* shape defines the worker node shape to use for each pool
-* ocpus defines the number of OCPUs that will be used if VM.Standard.E3.Flex shape is used
-* memory defines the amount of memory in GBs that will be used if VM.Standard.E3.Flex shape is used
-* node_pool_size defines the number of worker nodes in each nodepool
-* boot_volume_size defines the custom boot volume size in GBs for the worker nodes.
-* label defines the initial node labels to use for the nodepool
-
-If an empty nodepool like np3 = {} is specified, then a nodepool will have the following default values: 
-
-* shape=VM.Standard.E3.Flex
-* ocpus=1
-* memory=16
-* node_pool_size=1
-* boot_volume_size=50
-
-Refer to {uri-topology}[topology] for more thorough examples.
-|e.g.
-[source]
-node_pools = {
-  np1 = {shape="VM.Standard.E3.Flex",ocpus=2,memory=20,node_pool_size=2,boot_volume_size=150}
-  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
-  np3 = {shape="VM.Standard.E2.2",node_pool_size=1} 
-}
- 
-|
-[source]
-node_pools = {
-  np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
-  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
-  np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
-}
-
-|`node_pools_to_drain`
-|The list of node pools to drain. Only takes effect when `nodepool_drain` is `true`.
-|["np1", "np2"]
-|
-
-|`nodepool_drain`
-|Whether to drain a node pool.
-|true/false
-|false
-
-|`nodepool_upgrade_method`
-|The nodepool upgrade method. Can be either in-place or out-of-place. *Only out-of-place currently supported in this release*.
-|in-place/out-of-place
-|out-of-place
-
-|`node_pool_name_prefix`
-|A string prefixed to the node pool name.
-|
-|np
-
-|`node_pool_image_id`
-|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_os and node_pool_os_version to identify an image to provision the worker nodes.
-|
-|none
-
-|`node_pool_os`
-|The name of the Operating System image to use to provision the worker nodes.
-|
-|Oracle Linux
-
-|`node_pool_os_version`
-|The corresponding version of the Operating System image to use to provision the worker nodes.
-|
-|7.9
-
-|`pods_cidr`
+|pods_cidr
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
 |
 |`10.244.0.0/16`
 
-|`services_cidr`
+|services_cidr
 |The CIDR for the Kubernetes services network. The CIDR block specified for the Kubernetes services must not overlap with the CIDR block specified for the VCN CIDR.
 |
 |`10.96.0.0/16`
-
-|`use_signed_images`
-|Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys.
-|true/false
-|false
-
-|`worker_mode`
-|Whether the worker nodes should be public or private. Private requires NAT gateway.
-|private/public
-|private
-
-
 |===
 
-== OKE Load Balancers
+== KMS integration
 
-[stripes=odd,cols="1d,3d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`lb_type`
+|use_encryption
+|Whether to use {uri-oci-kms}[OCI KMS] to encrypt secrets.
+|true/false
+|false
+
+|kms_key_id
+|The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption.. *Required* if _use_encryption_ is set to *true*
+|`ocid1.key.oc1....`
+|
+
+|`use_signed_images`
+|Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys.
+|true/false
+|false
+
+|`image_signing_keys`
+|A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm. *Required* if _use_signed_images_ is set to *true* 
+|
+`["ocid1.key.oc1....", "ocid1.key.oc1...."]`
+|[]
+|===
+
+== Node pools
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|check_node_active
+|Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*none* means no check.
+|one,all,none
+|none
+
+|node_pools
+|The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
+
+Refer to {uri-topology}[topology] for more thorough examples.
+|e.g.
+
+node_pools = {
+np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
+  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
+  np3 = {shape="VM.Standard.E2.2",node_pool_size=1} 
+} 
+|
+node_pools = {
+  np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
+  np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
+  np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
+}
+
+|node_pool_image_id
+|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_os and node_pool_os_version to identify an image to provision the worker nodes.
+|
+|"none"
+
+|node_pool_os
+|The name of the Operating System image to use to provision the worker nodes.
+|
+|Oracle Linux
+
+|node_pool_os_version
+|The corresponding version of the Operating System image to use to provision the worker nodes.
+|
+|7.9
+
+|`worker_mode`
+|Whether the worker nodes should be public or private. Private requires NAT gateway.
+|private/public
+|private
+
+|===
+
+== Upgrade cluster
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|upgrade_nodepool
+|Whether to drain a node pool.
+|true/false
+|false
+
+|node_pools_to_drain
+|The list of node pools to drain. Only takes effect when `upgrade_nodepool` is `true`.
+|["np1", "np2"]
+|
+
+|nodepool_upgrade_method
+|The nodepool upgrade method. Can be either in-place or out-of-place. *Only out-of-place currently supported in this release*.
+|in-place/out-of-place
+|out-of-place
+
+|node_pool_name_prefix
+|A string prefixed to the node pool name.
+|
+|np
+
+|===
+
+== OKE Load Balancers
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|lb_subnet_type
 |The type of load balancer subnets to create. 
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
@@ -688,8 +692,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
 |public
 
-|`preferred_lb_type`
-|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_type must be either 'internal' or 'both'.
+|preferred_lb_subnet_type
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'.
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
@@ -698,39 +702,43 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |internal/public
 |public
 
-|`public_lb_ports`
+|public_lb_ports
 |The list of destination ports to allow for public ingress.
 |`e.g.: [80,443,8080]`
 |`[80, 443]`
-
-|`enable_waf`
-|Whether to enable WAF monitoring and protection of public load balancers.
-|true/false
-|false
 
 |===
 
 == OCIR
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`secret_id`
-|The id of the Secret in Vault where the Auth Token is stored.
-|
-|none
-
-
-|`email_address`
+|email_address
 |The email address to be used when creating the Docker secret. *Required* if secret_id is set.
 |
 |none
 
-|`username`
+|secret_id
+|The id of the Secret in Vault where the Auth Token is stored.
+|
+|none
+
+|secret_name
+|Secret name in Kubernetes that will hold the authentication token
+|
+|ocirsecret
+
+|secret_namespace
+|The Kubernetes namespace for where the OCIR secret will be created
+|
+|default
+
+|username
 |The username that can login to the selected tenancy. This is different from tenancy_id. *Required* if secret_id is set.
 |
 |none
@@ -739,101 +747,76 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Calico
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`calico_version`
+|enable_calico
+|Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
+|true/false
+|false
+
+|calico_version
 |Version of {uri-calico}[Calico] to install.
 |3.19
 |3.19
 
-|`enable_calico`
-|Whether to install {uri-calico}[Calico] as {uri-calico-policy}[pod network policy].
-|true/false
-|false
 |===
 
 == Kubernetes Metrics Server
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`enable_metric_server`
+|enable_metric_server
 |Whether to install {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 |true/false
 |false
 
-|`vpa`
-|Whether to install {uri-kubernetes-vpa}[Vertical Pod Autoscaler] and the version to install. *Requires*  {uri-metrics-server}[Kubernetes Metrics Server].
-|`vpa = {
-  enabled = true,
-  version = 0.8
-}`
-|`vpa = {
-  enabled = false,
-  version = 0.8
-}`
-|===
-
-== KMS integration
-
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
-|===
-|Parameter
-|Description
-|Values
-|Default
-
-|`use_encryption`
-|Whether to use {uri-oci-kms}[OCI KMS] to encrypt secrets.
+|vpa
+|Whether to install {uri-kubernetes-vpa}[Vertical Pod Autoscaler]. *Requires*  {uri-metrics-server}[Kubernetes Metrics Server].
 |true/false
 |false
 
-|`kms_key_id`
-|id of existing KMS key. *Required* if _use_encryption_ is set to *true*
-|`ocid1.key.oc1....`
-|
+|vpa_version
+|version of {uri-kubernetes-vpa}[Vertical Pod Autoscaler]. *Requires*  {uri-metrics-server}[Kubernetes Metrics Server].
+|true/false
+|false
 
-|`image_signing_keys`
-|A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm. *Required* if _use_signed_images_ is set to *true* 
-|
-`["ocid1.key.oc1....", "ocid1.key.oc1...."]`
-|
 |===
 
 == Service Account
 
-[stripes=odd,cols="1d,4d,3a,3a", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
 |Parameter
 |Description
 |Values
 |Default
 
-|`create_service_account`
+|create_service_account
 |Whether to create a service account. A service account is required for CI/CD. See https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm
 |true/false
 |false
 
-|`service_account_name`
+|service_account_name
 |The name of service account to create
 |
 |kubeconfigsa
 
-|`service_account_namespace`
+|service_account_namespace
 |The Kubernetes namespace where to create the service account
 |
 |kube-system
 
-|`service_account_cluster_role_binding`
+|service_account_cluster_role_binding
 |The name of the cluster role binding for the service account
 |
 |

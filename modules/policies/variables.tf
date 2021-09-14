@@ -26,7 +26,7 @@ variable "create_bastion_host" {
 variable "create_operator" {
   type = bool
 }
-variable "operator_instance_principal" {
+variable "enable_operator_instance_principal" {
   type = bool
 }
 

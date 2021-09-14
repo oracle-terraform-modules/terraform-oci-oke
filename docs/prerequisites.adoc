@@ -1,9 +1,10 @@
 = Pre-requisites
-
 :idprefix:
 :idseparator: -
 :sectlinks:
 :sectnums:
+:toc: auto
+
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
 :uri-rel-file-base: link:{uri-repo}/blob/main
@@ -30,14 +31,6 @@
 This section will guide you through the pre-requisites before you can use this project.
 
 You can proceed to {uri-instructions}[creating the cluster] if you have already done these.
-
-. link:#identity-and-access-management-rights[Identity and Access Management Rights]
-. link:#install-terraform[Install Terraform]
-. link:#generate-api-keys[Generate API Keys]
-. link:#upload-your-api-keys[Upload API Keys]
-. link:#create-an-oci-compartment[Create an OCI Compartment]
-. link:#obtain-the-necessary-ocids[Obtain the necessary OCIDs]
-. link:#configure-oci-policy-for-oke[Configure OCI Policy for OKE]
 
 == Identity and Access Management Rights
 

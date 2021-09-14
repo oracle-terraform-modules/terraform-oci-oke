@@ -33,7 +33,7 @@ resource "oci_core_subnet" "int_lb" {
   security_list_ids          = [oci_core_security_list.int_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.lb_type == "internal" || var.lb_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_subnet" "pub_lb" {
@@ -46,5 +46,5 @@ resource "oci_core_subnet" "pub_lb" {
   security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
   vcn_id                     = var.vcn_id
 
-  count = var.lb_type == "public" || var.lb_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
 }
