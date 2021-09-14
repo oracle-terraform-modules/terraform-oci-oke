@@ -3,27 +3,12 @@
 
 # OCI Provider parameters
 variable "api_fingerprint" {
-  default     = ""
-  description = "Fingerprint of the API private key to use with OCI API."
-  type        = string
-}
-
-variable "api_private_key" {
-  default     = ""
-  description = "The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider."
-  type        = string
-}
-
-variable "api_private_key_password" {
-  default     = ""
-  description = "The corresponding private key password to use with the api private key if it is encrypted."
-  sensitive   = true
+  description = "Fingerprint of oci api private key."
   type        = string
 }
 
 variable "api_private_key_path" {
-  default     = ""
-  description = "The path to the OCI API private key."
+  description = "The path to oci api private key."
   type        = string
 }
 
@@ -34,14 +19,13 @@ variable "region" {
 }
 
 variable "tenancy_id" {
-  description = "The tenancy id of the OCI Cloud Account in which to create the resources."
+  description = "The tenancy id in which to create the resources."
   type        = string
 }
 
 variable "user_id" {
   description = "The id of the user that terraform will use to create the resources."
   type        = string
-  default     = ""
 }
 
 # General OCI parameters
@@ -196,6 +180,10 @@ variable "bastion_state" {
   description = "The target state for the bastion instance. Could be set to RUNNING or STOPPED. (Updatable)"
   default     = "RUNNING"
   type        = string
+  validation {
+    condition     = contains(["RUNNING", "STOPPED"], var.bastion_state)
+    error_message = "Accepted values are RUNNING or STOPPED."
+  }
 }
 
 variable "bastion_timezone" {
@@ -208,6 +196,11 @@ variable "bastion_type" {
   description = "Whether to make the bastion host public or private."
   default     = "public"
   type        = string
+
+  validation {
+    condition     = contains(["public", "private"], var.bastion_type)
+    error_message = "Accepted values are public or private."
+  }
 }
 
 variable "upgrade_bastion" {
@@ -313,6 +306,11 @@ variable "operator_state" {
   description = "The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)"
   default     = "RUNNING"
   type        = string
+  validation {
+    condition     = contains(["RUNNING", "STOPPED"], var.operator_state)
+    error_message = "Accepted values are RUNNING or STOPPED."
+  }
+
 }
 
 variable "operator_timezone" {
@@ -399,6 +397,11 @@ variable "control_plane_access" {
   default     = "public"
   description = "Whether to allow public or private access to the control plane endpoint"
   type        = string
+
+  validation {
+    condition     = contains(["public", "private"], var.control_plane_access)
+    error_message = "Accepted values are public, or private."
+  }
 }
 
 variable "control_plane_access_source" {
@@ -469,6 +472,10 @@ variable "check_node_active" {
   description = "check worker node is active"
   type        = string
   default     = "none"
+  validation {
+    condition     = contains(["none", "one", "all"], var.check_node_active)
+    error_message = "Accepted values are none, one or all."
+  }
 }
 
 variable "node_pools" {
@@ -509,6 +516,10 @@ variable "worker_mode" {
   default     = "private"
   description = "Whether to provision public or private workers."
   type        = string
+  validation {
+    condition     = contains(["public", "private"], var.worker_mode)
+    error_message = "Accepted values are public or private."
+  }
 }
 
 # upgrade of existing node pools
@@ -537,6 +548,10 @@ variable "lb_subnet_type" {
   default     = "public"
   description = "The type of load balancer subnets to create."
   type        = string
+  validation {
+    condition     = contains(["public", "internal", "both"], var.lb_subnet_type)
+    error_message = "Accepted values are public, internal or both."
+  }
 }
 
 variable "preferred_lb_subnet_type" {
@@ -545,6 +560,10 @@ variable "preferred_lb_subnet_type" {
   default     = "public"
   description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'."
   type        = string
+  validation {
+    condition     = contains(["public", "internal"], var.preferred_lb_subnet_type)
+    error_message = "Accepted values are public or internal."
+  }
 }
 
 variable "public_lb_ports" {
