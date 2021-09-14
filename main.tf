@@ -85,7 +85,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.0-RC6"
+  version = "3.0.0-RC8"
 
   tenancy_id = var.tenancy_id
 
@@ -101,16 +101,16 @@ module "operator" {
   nsg_ids             = var.operator_nsg_ids
   vcn_id              = module.vcn.vcn_id
 
-  # bastion host parameters
-  operator_image_id           = var.operator_image_id
-  operator_instance_principal = var.enable_operator_instance_principal
-  operator_os_version         = var.operator_os_version
-  operator_shape              = var.operator_shape
-  operator_state              = var.operator_state
-  operator_timezone           = var.operator_timezone
-  ssh_public_key              = var.ssh_public_key
-  ssh_public_key_path         = var.ssh_public_key_path
-  upgrade_operator            = var.upgrade_operator
+  # operator host parameters
+  operator_image_id                  = var.operator_image_id
+  enable_operator_instance_principal = var.enable_operator_instance_principal
+  operator_os_version                = var.operator_os_version
+  operator_shape                     = var.operator_shape
+  operator_state                     = var.operator_state
+  operator_timezone                  = var.operator_timezone
+  ssh_public_key                     = var.ssh_public_key
+  ssh_public_key_path                = var.ssh_public_key_path
+  upgrade_operator                   = var.upgrade_operator
 
   # operator notification
   enable_operator_notification   = var.enable_operator_notification
