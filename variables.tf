@@ -57,8 +57,14 @@ variable "label_prefix" {
 }
 
 # ssh keys
+variable "ssh_private_key" {
+  default     = ""
+  description = "The content of the private ssh key."
+  type        = string
+}
+
 variable "ssh_private_key_path" {
-  default     = "none"
+  default     = ""
   description = "The path to ssh private key."
   type        = string
 }

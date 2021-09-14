@@ -12,6 +12,7 @@ variable "label_prefix" {}
 variable "region" {}
 
 # ssh keys
+variable "ssh_private_key" {}
 variable "ssh_private_key_path" {}
 
 variable "ssh_public_key" {}

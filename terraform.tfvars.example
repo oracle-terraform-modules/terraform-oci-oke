@@ -16,7 +16,8 @@ compartment_id = ""
 label_prefix   = "dev"
 
 # ssh keys
-ssh_private_key_path = "~/.ssh/id_rsa"
+ssh_private_key        = ""
+ssh_private_key_path   = "~/.ssh/id_rsa"
 # ssh_public_key       = ""
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"

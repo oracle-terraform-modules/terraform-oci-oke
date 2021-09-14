@@ -105,6 +105,12 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Default
 
 |ssh_private_key_path
+|The contents of the private key file to ssh to the bastion.
+
+|
+|
+
+|ssh_private_key_path
 |path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
 
 |

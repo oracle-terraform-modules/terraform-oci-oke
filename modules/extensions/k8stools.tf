@@ -4,14 +4,14 @@
 resource "null_resource" "install_kubectl_operator" {
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = (var.ssh_private_key != "") ? var.ssh_private_key : (var.ssh_private_key_path != "none") ? file(var.ssh_private_key_path) : null
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.ssh_private_key_path)
+    bastion_private_key = (var.ssh_private_key != "") ? var.ssh_private_key : (var.ssh_private_key_path != "none") ? file(var.ssh_private_key_path) : null
   }
 
   provisioner "file" {
@@ -34,14 +34,14 @@ resource "null_resource" "install_kubectl_operator" {
 resource "null_resource" "install_helm_operator" {
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = (var.ssh_private_key != "") ? var.ssh_private_key : (var.ssh_private_key_path != "none") ? file(var.ssh_private_key_path) : null
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.ssh_private_key_path)
+    bastion_private_key = (var.ssh_private_key != "") ? var.ssh_private_key : (var.ssh_private_key_path != "none") ? file(var.ssh_private_key_path) : null
   }
 
   depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
