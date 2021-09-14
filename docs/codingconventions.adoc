@@ -1,0 +1,118 @@
+= Coding conventions
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:sectnums:
+:toc:
+
+:uri-terraform-standard-module-structure: https://www.terraform.io/docs/language/modules/develop/structure.html
+
+This is a list of coding conventions you should observe when contributing code for this project.
+
+Current conventions:
+
+- module structure
+- adopting the right case type
+- good names for files and terraform objects (resources, variables, outputs)
+
+It is not an exhaustive list and it will be updated as we go. In the mean time, your PR reviewer may suggest conventions that are not listed here.
+
+Use PR comments and the GitHub suggestion feature to agree on the final result.
+
+== Module Structure
+
+- We adhere to the {uri-terraform-standard-module-structure}[Terraform Standard Module Structure]
+- Any nested module calls should be in the main file: `main.tf` is the primary entrypoint of the module
+- All variables and ouputs declarations should be in `variables.tf` and `outputs.tf`
+- All variables and outputs should have descriptions
+- Nested modules should exist under the `modules/` folder
+- Examples of using the module should exist under the `examples/` folder and have a README to explain the goal and usage of the example
+
+== Documentation format
+
+We use https://asciidoc.org/[AsciiDoc] with the `*.adoc` file extension. The only exception is for the README files that need to be displayed on the Terraform Registry: as the Terraform Registry does not support AsciiDoc, the `README` and certain other documentation must be available in Markdown format.
+
+[NOTE]
+====
+As GitHub renders AsciiDoc files using https://asciidoctor.org/[AsciiDoctor], it is the current reference regarding AsciiDoc syntax we use in the documentation.
+====
+
+=== Internal links
+
+For internal links to AsciiDoc file (repo documentation content), we use relative links with the `xref:` macro.
+
+```
+xref:CONTRIBUTING.adoc[CONTRIBUTING]
+```
+
+For internal links to non-AsciiDoc file (e.g: README files), we use relative links with the `link:` macro.
+
+```
+link:examples/README.md[examples README]
+```
+
+=== External links
+
+For external links, we use https://docs.asciidoctor.org/asciidoc/latest/macros/autolinks/[autolinks].
+
+[TIP]
+====
+Links that are used multiple times must be defined in the header using the `:uri-xxx:` reference format. This makes any future updates to the URI much simpler.
+
+. Defining a link in the document header
+. Calling the reference
+
+----
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-vcn
+
+{uri-repo}[link caption]
+----
+
+====
+
+===  Terraform registry requirements
+
+- README files must be in Markdown format
+- All links must use absolute path, relative links are not supported
+
+== Terraform code
+
+=== Case type, Files, Names
+
+- Use `snake_case` when naming Terraform files, variables and resources
+- If you need a new .tf file for better clarity, use this naming scheme: `<resources_group>`: e.g. `subnets.tf`, `nsgs.tf`
+- If your variable is controlling a behaviour, use imperative style to name it: e.g. `create_internet_gateway`, `use_encryption`
+
+=== Variable blocks
+
+Variables should always be in the format below:
+
+----
+variable "xyz" {
+  default = "A default value"
+  description:  "Add (Updatable) at the begining of the description if this value do not triggers a resource recreate"
+  type: string
+----
+
+When defining variables:
+
+. do not hesitate to insert a brief comment in the variable block if it helps to clarify your intention.
+. the type should always be specified. We prefer:
+.. string
+.. boolean
+.. number
+.. collection (list, set, map, tuples) of the above
+. if you specify a default value, it should:
+.. reflect a sensible default
+.. match the type specified
+.. be reflected in terraform.tfvars.example
+
+WARNING: No default value for `compartment_id` or any other variables related to provider authentication in module or examples files. The user will have to explicitly set these values.
+
+=== Examples
+
+Examples should promote good practices as much as possible e.g. avoid creating resources in the tenancy root compartment.

@@ -25,7 +25,7 @@ locals {
   ## 1. bastion to be enabled and in a running state
   ## 2. operation to be enabled and instance_principal to be enabled
 
-  post_provisioning_ops = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true && var.operator_instance_principal == true ? true : false
+  post_provisioning_ops = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true && var.operator_state == "RUNNING" && var.enable_operator_instance_principal == true ? true : false
 
   dynamic_group_rule_this_cluster = (var.use_encryption == true) ? "ALL {resource.type = 'cluster', resource.id = '${var.cluster_id}'}" : "null"
 
@@ -37,7 +37,7 @@ locals {
       home_region        = data.oci_identity_regions.home_region.regions[0].name
     }
   )
-  
+
   check_active_worker_template = templatefile("${path.module}/scripts/check_worker_active.template.sh",
     {
       check_node_active = var.check_node_active

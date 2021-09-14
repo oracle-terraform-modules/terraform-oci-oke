@@ -1,8 +1,8 @@
 = Instructions
-
 :idprefix:
 :idseparator: -
 :sectlinks:
+:toc: auto
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
@@ -32,7 +32,7 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |enable_calico
 |Installs calico as network policy engine
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
 |enable_metric_server
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling

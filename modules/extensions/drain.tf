@@ -15,12 +15,12 @@ resource "null_resource" "drain_nodes" {
   }
 
   provisioner "file" {
-    content = local.drain_list_template
+    content     = local.drain_list_template
     destination = "~/drainlist.py"
   }
 
   provisioner "file" {
-    content = local.drain_template
+    content     = local.drain_template
     destination = "~/drain.sh"
   }
 
@@ -34,5 +34,5 @@ resource "null_resource" "drain_nodes" {
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.nodepool_drain == true ? 1 : 0
+  count = local.post_provisioning_ops == true && var.upgrade_nodepool == true ? 1 : 0
 }

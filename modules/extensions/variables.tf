@@ -34,12 +34,14 @@ variable "create_operator" {
 
 variable "operator_private_ip" {}
 
+variable "operator_state" {}
+
 variable "operator_dynamic_group" {
   description = "name of dynamic group to allow updating dynamic-groups"
   type        = string
 }
 
-variable "operator_instance_principal" {
+variable "enable_operator_instance_principal" {
   type = bool
 }
 variable "operator_os_version" {}
@@ -109,7 +111,7 @@ variable "check_node_active" {
 }
 
 # upgrade
-variable "nodepool_drain" {
+variable "upgrade_nodepool" {
   type = bool
 }
 

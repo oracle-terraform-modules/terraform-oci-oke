@@ -1,9 +1,9 @@
 = Quickstart
-
 :idprefix:
 :idseparator: -
 :sectlinks:
-
+:sectnums:
+:toc: auto
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 :uri-rel-file-base: link:{uri-repo}/blob/main
@@ -14,16 +14,12 @@
 :uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
 :uri-oci-okepolicy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
 :uri-oci-provider: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformproviderconfiguration.htm
+:uri-oci-provider-precedence: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformproviderconfiguration.htm#terraformproviderconfiguration_topic-Order_of_Precedence
 :uri-terraform: https://www.terraform.io
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
-:uri-topology: {uri-docs}/topology.adoc
+:uri-terraform-precedence: https://www.terraform.io/docs/language/values/variables.html#variable-definition-precedence
 :uri-variables: {uri-rel-file-base}/variables.tf
-
-. link:#assumptions[Assumptions]
-. link:#pre-requisites[Pre-requisites]
-. link:#instructions[Instructions]
-. link:#related-documentation[Related documentation]
 
 === Assumptions
 
@@ -50,41 +46,76 @@ cd tfoke
 cp terraform.tfvars.example terraform.tfvars
 ----
 
-. Create a provider.tf file add 2 providers ({uri-oci-provider}[see different examples of creating providers]):
+=== Creating Providers
+
+You need to create 2 providers:
 .. 1 provider for the region where your OKE cluster and other resources will be created
 .. 1 provider for the home region. This is required for conducting identity operations. *Note that your home region may not necessarily be the same as your current region.*
 
+. Create a provider.tf file in root add 2 providers:
 +
 ----
 provider "oci" {
-  fingerprint      = "aa:bb:cc:dd:11"
-  private_key_path = "/path/to/oci_rsa.pem"
-  region           = "ap-sydney-1"
-  tenancy_ocid     = "ocid1.tenancy...."
-  user_ocid        = "ocid1.user.oc1.."
+  fingerprint      = var.api_fingerprint
+  private_key_path = var.api_private_key_path
+  region           = var.region
+  tenancy_ocid     = var.tenancy_id
+  user_ocid        = var.user_id
 }
 
 provider "oci" {
-  fingerprint      = "aa:bb:cc:dd:11"
-  private_key_path = "/path/to/oci_rsa.pem"
-  region           = "us-phoenix-1"
-  tenancy_ocid     = "ocid1.tenancy...."
-  user_ocid        = "ocid1.user.oc1.."
+  fingerprint      = var.api_fingerprint
+  private_key_path = var.api_private_key_path
+  region           = "us-phoenix-1" //example
+  tenancy_ocid     = var.tenancy_id
+  user_ocid        = var.user_id
   alias            = "home"
 }
 ----
 
-. Set mandatory parameters in the provider depending on your method of initializing your provider:
+. Alternatively, you can also specify the key directly:
++
+----
+provider "oci" {
+  fingerprint      = var.api_fingerprint
+  private_key      = var.api_private_key
+  region           = var.region
+  tenancy_ocid     = var.tenancy_id
+  user_ocid        = var.user_id
+}
+
+provider "oci" {
+  fingerprint      = var.api_fingerprint
+  private_key      = var.api_private_key
+  region           = "us-phoenix-1" //example
+  tenancy_ocid     = var.tenancy_id
+  user_ocid        = var.user_id
+  alias            = "home"
+}
+----
+
+. You can also create use providers ({uri-oci-provider}[using differerent methods]) such as:
+
+.. config file profile
+.. auth token
+.. instance principal
+
+
+. Set mandatory parameters in the provider depending on your {uri-oci-provider}[method of initializing your provider]:
 
 * api_fingerprint
 * api_private_key_path
 * compartment_id
 * tenancy_id
 * user_id
+* region
 
-. Override other parameters e.g.:
+You can set those parameters using: 
 
-* region (where your resources will be created)
+1. environment variables (e.g. TF_api_fingerprint)
+2. the terraform.tfvars
+
+Please ensure you understand the {uri-terraform-precedence}[Terraform variable definition order of precedence] and {uri-oci-provider-precedence}[that of OCI].
 
 . Run Terraform:
 
@@ -98,29 +129,9 @@ terraform apply
 
 === Provisioning using the HashiCorp registry module
 
-. In your project root, create a provider.tf file and add the following:
+. In your project root, create a provider.tf file and repeat the steps for creating providers as above.
 
-+
-----
-provider "oci" {
-  fingerprint          = var.api_fingerprint
-  private_key_path     = var.api_private_key_path
-  region               = var.region
-  tenancy_ocid         = var.tenancy_id
-  user_ocid            = var.user_id
-}
-
-provider "oci" {
-  fingerprint          = var.api_fingerprint
-  private_key_path     = var.api_private_key_path
-  region               = "us-phoenix-1"
-  tenancy_ocid         = var.tenancy_id
-  user_ocid            = var.user_id
-  alias                = "home"
-}
-----
-
-. In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the oke module root.
+. In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the OKE module root.
 
 . In your project root, create a main.tf file and add the following:
 
@@ -133,7 +144,7 @@ module "oke" {
 }
 ----
 
-. Edit your oke module definition and pass the required variables:
+. Edit your OKE module definition and pass the required variables:
 
 +
 ----
@@ -143,7 +154,6 @@ module "oke" {
 
   compartment_id                        =   var.compartment_id
   tenancy_id                            =   var.tenancy_id
-  user_id                               =   var.user_id
 
   ssh_private_key_path                  =   var.ssh_private_key_path
   ssh_public_key_path                   =   var.ssh_public_key_path
@@ -173,7 +183,7 @@ terraform plan
 terraform apply
 ----
 
-=== Related documentation:
+=== Related documentation
 
 * {uri-instructions}[Detailed Instructions]
 

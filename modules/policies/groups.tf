@@ -46,5 +46,5 @@ resource "null_resource" "update_dynamic_group" {
     ]
   }
 
-  count = (var.use_encryption == true && var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.operator_instance_principal == true) ? 1 : 0
+  count = (var.use_encryption == true && var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.enable_operator_instance_principal == true) ? 1 : 0
 }

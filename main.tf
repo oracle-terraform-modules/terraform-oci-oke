@@ -11,7 +11,7 @@ module "vcn" {
 
   # gateways
   create_internet_gateway  = true
-  create_nat_gateway       = var.worker_mode == "private" || var.create_operator == true || (var.lb_type == "internal" || var.lb_type == "both") ? true : false
+  create_nat_gateway       = var.worker_mode == "private" || var.create_operator == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
 
@@ -85,7 +85,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.0-RC6"
+  version = "3.0.0-RC8"
 
   tenancy_id = var.tenancy_id
 
@@ -101,16 +101,16 @@ module "operator" {
   nsg_ids             = var.operator_nsg_ids
   vcn_id              = module.vcn.vcn_id
 
-  # bastion host parameters
-  operator_image_id           = var.operator_image_id
-  operator_instance_principal = var.operator_instance_principal
-  operator_os_version         = var.operator_os_version
-  operator_shape              = var.operator_shape
-  operator_state              = var.operator_state
-  operator_timezone           = var.operator_timezone
-  ssh_public_key              = var.ssh_public_key
-  ssh_public_key_path         = var.ssh_public_key_path
-  upgrade_operator            = var.upgrade_operator
+  # operator host parameters
+  operator_image_id                  = var.operator_image_id
+  enable_operator_instance_principal = var.enable_operator_instance_principal
+  operator_os_version                = var.operator_os_version
+  operator_shape                     = var.operator_shape
+  operator_state                     = var.operator_state
+  operator_timezone                  = var.operator_timezone
+  ssh_public_key                     = var.ssh_public_key
+  ssh_public_key_path                = var.ssh_public_key_path
+  upgrade_operator                   = var.upgrade_operator
 
   # operator notification
   enable_operator_notification   = var.enable_operator_notification
@@ -176,7 +176,7 @@ module "network" {
   worker_mode                  = var.worker_mode
 
   # oke load balancer network parameters
-  lb_type = var.lb_type
+  lb_subnet_type = var.lb_subnet_type
 
   # oke load balancer ports
   public_lb_ports = var.public_lb_ports
@@ -228,7 +228,7 @@ module "oke" {
   node_pool_os_version  = var.node_pool_os_version
 
   # oke load balancer parameters
-  preferred_lb_type = var.preferred_lb_type
+  preferred_lb_subnet_type = var.preferred_lb_subnet_type
 
   depends_on = [
     module.network
@@ -264,11 +264,12 @@ module "extensions" {
   bastion_state       = var.bastion_state
 
   # operator details
-  create_operator             = var.create_operator
-  operator_private_ip         = local.operator_private_ip
-  operator_dynamic_group      = local.operator_instance_principal_group_name
-  operator_instance_principal = var.operator_instance_principal
-  operator_os_version         = var.operator_os_version
+  create_operator                    = var.create_operator
+  operator_private_ip                = local.operator_private_ip
+  operator_state                     = var.operator_state
+  operator_dynamic_group             = local.operator_instance_principal_group_name
+  enable_operator_instance_principal = var.enable_operator_instance_principal
+  operator_os_version                = var.operator_os_version
 
   # oke cluster parameters
   cluster_id           = module.oke.cluster_id
@@ -304,7 +305,7 @@ module "extensions" {
   check_node_active = var.check_node_active
 
   # oke upgrade
-  nodepool_drain          = var.nodepool_drain
+  upgrade_nodepool        = var.upgrade_nodepool
   nodepool_upgrade_method = var.nodepool_upgrade_method
   node_pools_to_drain     = var.node_pools_to_drain
 

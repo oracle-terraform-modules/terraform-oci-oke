@@ -278,7 +278,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
       egress_security_rules,
     ]
   }
-  count = var.lb_type == "internal" || var.lb_type == "both" ? 1 : 0
+  count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
 }
 
 resource "oci_core_security_list" "pub_lb_seclist" {
@@ -295,7 +295,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
 
   dynamic "egress_security_rules" {
     iterator = dual_lb_iterator
-    for_each = var.lb_type == "both" ? [1] : []
+    for_each = var.lb_subnet_type == "both" ? [1] : []
 
     content {
       description = "allow egress from public load balancer to private load balancer"
@@ -343,5 +343,5 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       egress_security_rules,
     ]
   }
-  count = (var.lb_type == "public" || var.lb_type == "both") ? 1 : 0
+  count = (var.lb_subnet_type == "public" || var.lb_subnet_type == "both") ? 1 : 0
 }

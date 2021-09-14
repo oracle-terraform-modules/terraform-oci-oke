@@ -1,9 +1,10 @@
 = Instructions
-
 :idprefix:
 :idseparator: -
 :sectlinks:
 :sectnums:
+:toc: auto
+
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
@@ -53,30 +54,6 @@
 :uri-k8s-dashboard: http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/
 :uri-psp: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingpspswithoke.htm#Using_Pod_Security_Polices_with_Container_Engine_for_Kubernetes
 :uri-kubernetes-vpa: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
-
-. link:#assumptions[Assumptions]
-. link:#kms-integration[KMS Integration]
-. link:#creating-the-oke-cluster[Creating the OKE Cluster]
-. link:#adding-the-bastion-host[Adding the bastion host]
-. link:#using-the-bastion-host[Using the bastion host]
-. link:#adding-the-operator-host[Adding the operator host]
-.. link:#upgrading-the-operator-host[Upgrading the operator host]
-. link:#using-the-operator-host[Using the operator host]
-.. link:#enabling-instance_principal-on-the-operator-host[Enabling instance_principal on the operator host]
-.. link:#disabling-instance_principal-on-the-operator-host[Disabling instance_principal on the operator host]
-.. link:#recommendations-for-using-instance_principal[Recommendations for using instance_principal]
-. link:#interacting-with-the-oke-cluster[Interacting with the OKE Cluster locally]
-. link:#creating-a-secret-for-ocir[Creating a Secret for OCIR]
-. link:#installing-calico[Installing Calico]
-. link:#installing-kubernetes-metrics-server[Installing Kubernetes Metrics Server]
-. link:#installing-vertical-pod-autoscaler[Installing Vertical Pod Autoscaler]
-. link:#scaling-the-number-of-node-pools[Scaling the number of node pools]
-. link:#accessing-the-kubernetes-dashboard[Accessing the Kubernetes dashboard]
-. link:#destroying-the-cluster[Destroying the cluster]
-. link:#creating-a-service-account-for-cicd-tools[Creating a service account for CI/CD tools]
-. link:#enabling-waf[Monitor and Protect your application using OCI WAF]
-. link:#enabling-podsecuritypolicy[Enabling PodSecurityPolicy Admissions Controller]
-. link:#using-dynamic-and-flexible-load-balancers[Using Dynamic and Flexible Load Balancers]
 
 === Assumptions
 
@@ -178,10 +155,10 @@ When you enable this feature, by default, the operator host will have privileges
 
 You can also turn on and off the feature at any time without impact on the operator or the cluster.
 
-To enable, set operator_instance_principal to true:
+To enable, set enable_operator_instance_principal to true:
 
 ----
-operator_instance_principal = "true"
+enable_operator_instance_principal = "true"
 ----
 
 and verify:
@@ -192,11 +169,11 @@ oci network vcn list --compartment-id <compartment-id>
 
 ==== Disabling instance_principal on the operator host
 
-. Set operator_instance_principal to false in terraform.tfvars
+. Set enable_operator_instance_principal to false in terraform.tfvars
 
 +
 ----
-operator_instance_principal = false
+enable_operator_instance_principal = false
 ----
 
 . Run terraform apply again:
