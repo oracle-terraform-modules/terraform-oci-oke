@@ -38,6 +38,7 @@ The format is based on {uri-changelog}[Keep a Changelog].
 * Allow access to operator via OCI Bastion service (#352)
 * Added support for using NSGs for cluster endpoint (#343 )
 * Added option to disable worker node access to Internet. Users can only pull images from OCIR (#331 )
+* Allow private ssh to be passed directly.
 
 # Bug fixes
 * Added home region to update dynamic group script for cases when actual region is different from tenancy home region (#347)
