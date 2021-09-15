@@ -16,6 +16,12 @@ compartment_id = ""
 label_prefix   = "dev"
 
 # ssh keys
+api_fingerprint      = ""
+# ssh_private_key    = <<EOT
+#-----BEGIN RSA PRIVATE KEY-----
+#content+of+api+key
+#-----END RSA PRIVATE KEY-----
+#EOT
 ssh_private_key_path = "~/.ssh/id_rsa"
 # ssh_public_key       = ""
 # ssh_public_key       = ""

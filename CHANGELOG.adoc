@@ -9,12 +9,12 @@ The format is based on {uri-changelog}[Keep a Changelog].
 
 === Unreleased
 # Breaking changes
+* Set minimum version to Terraform 1.0.0
 * Removed base module and use vcn, bastion and operator modules directly
 * Renamed and standardized all control variables
 * Removed deprecated template provider dependencies
 * Made bastion and operator modules conditional
 * Added LPGs for hub and spoke deployment model
-* Set minimum version to Terraform 1.0.0
 * Removed identity parameters in between modules
 * Renamed okenetwork submodule to network
 * Created a new submodule (extensions) and moved all scripts and extra things there
@@ -27,9 +27,9 @@ The format is based on {uri-changelog}[Keep a Changelog].
 * Added support for reserved public IP address for NAT gateway
 * Bug fix: Use correct calico file to install calico for networking policy only (#307)
 * Added support for GPU and ARM shapes (#302)
-* VCN module upgraded to VCN 3.0.0. This allows supporting multiple cidr blocks (#360 )
-* kubeconfig on operator always uses PRIVATE_ENDPOINT (#358 )
-* Documented providers in quickstart (#355 )
+* VCN module upgraded to VCN 3.0.0. This allows supporting multiple cidr blocks (#360)
+* kubeconfig on operator always uses PRIVATE_ENDPOINT (#358)
+* Documented providers in quickstart (#355)
 * Renamed tags to freeform_tags in line with other modules
 * Added validation on some variables
 
@@ -37,7 +37,8 @@ The format is based on {uri-changelog}[Keep a Changelog].
 
 * Allow access to operator via OCI Bastion service (#352)
 * Added support for using NSGs for cluster endpoint (#343 )
-* Added option to disable worker node access to Internet. Users can only pull images from OCIR (#331 )
+* Added option to disable worker node access to Internet. Users can only pull images from OCIR (#331)
+* Added ability to specify api and private ssh keys using heredoc format with a variable (#375)
 
 # Bug fixes
 * Added home region to update dynamic group script for cases when actual region is different from tenancy home region (#347)
