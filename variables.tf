@@ -11,6 +11,7 @@ variable "api_fingerprint" {
 variable "api_private_key" {
   default     = ""
   description = "The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider."
+  sensitive   = true
   type        = string
 }
 
@@ -60,6 +61,7 @@ variable "label_prefix" {
 variable "ssh_private_key" {
   default     = ""
   description = "The content of the private ssh key."
+  sensitive   = true
   type        = string
 }
 
@@ -411,7 +413,7 @@ variable "allow_worker_ssh_access" {
 
 variable "cluster_name" {
   default     = "oke"
-  description = "The name of oke cluster."
+  description = "The name of OKE cluster."
   type        = string
 }
 
@@ -440,13 +442,13 @@ variable "control_plane_nsgs" {
 
 variable "dashboard_enabled" {
   default     = false
-  description = "Whether to enable kubernetes dashboard."
+  description = "Whether to enable Kubernetes dashboard."
   type        = bool
 }
 
 variable "kubernetes_version" {
   default     = "v1.20.8"
-  description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
+  description = "The version of Kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
 
@@ -702,7 +704,7 @@ variable "service_account_name" {
 }
 
 variable "service_account_namespace" {
-  description = "kubernetes namespace where to create the service account"
+  description = "Kubernetes namespace where to create the service account"
   default     = "kube-system"
   type        = string
 }

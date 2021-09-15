@@ -9,12 +9,12 @@ The format is based on {uri-changelog}[Keep a Changelog].
 
 === Unreleased
 # Breaking changes
+* Set minimum version to Terraform 1.0.0
 * Removed base module and use vcn, bastion and operator modules directly
 * Renamed and standardized all control variables
 * Removed deprecated template provider dependencies
 * Made bastion and operator modules conditional
 * Added LPGs for hub and spoke deployment model
-* Set minimum version to Terraform 1.0.0
 * Removed identity parameters in between modules
 * Renamed okenetwork submodule to network
 * Created a new submodule (extensions) and moved all scripts and extra things there
@@ -43,6 +43,9 @@ The format is based on {uri-changelog}[Keep a Changelog].
 # Bug fixes
 * Added home region to update dynamic group script for cases when actual region is different from tenancy home region (#347)
 * Added 1 missing rule for operator to access control plane (#349 )
+
+# Experimental
+* Added an OCI Bastion service module
 
 = 3.2.0 (May 12, 2021)
 
