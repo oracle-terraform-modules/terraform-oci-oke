@@ -32,14 +32,14 @@ resource "null_resource" "update_dynamic_group" {
 
   connection {
     host        = var.operator_private_ip
-    private_key = file(var.ssh_private_key_path)
+    private_key = local.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
     user        = "opc"
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = "opc"
-    bastion_private_key = file(var.ssh_private_key_path)
+    bastion_private_key = local.ssh_private_key
   }
 
   depends_on = [time_sleep.wait_30_seconds]

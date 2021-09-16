@@ -43,8 +43,12 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |none
 
 |api_private_key
-|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.*
-|
+|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.* Use the heredoc format if you are specifying the key with this variable.
+|<<EOT
+-----BEGIN RSA PRIVATE KEY-----
+content+of+api+key
+-----END RSA PRIVATE KEY-----
+EOT
 |none
 
 |api_private_key_password
@@ -103,6 +107,16 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Description
 |Values
 |Default
+
+|ssh_private_key
+|The contents of the private ssh key file. Use the heredoc format if you are specifying the private key.
+|
+<<EOT
+-----BEGIN RSA PRIVATE KEY-----
+content+of+api+key
+-----END RSA PRIVATE KEY-----
+EOT
+|
 
 |ssh_private_key_path
 |path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
