@@ -11,6 +11,7 @@ variable "api_fingerprint" {
 variable "api_private_key" {
   default     = ""
   description = "The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider."
+  sensitive   = true
   type        = string
 }
 
@@ -57,6 +58,13 @@ variable "label_prefix" {
 }
 
 # ssh keys
+variable "ssh_private_key" {
+  default     = ""
+  description = "The contents of the private ssh key file."
+  sensitive   = true
+  type        = string
+}
+
 variable "ssh_private_key_path" {
   default     = "none"
   description = "The path to ssh private key."
