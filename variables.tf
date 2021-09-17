@@ -28,10 +28,10 @@ variable "api_private_key_path" {
   type        = string
 }
 
-variable "region" {
+variable "regions" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
-  description = "The oci region where resources will be created."
-  type        = string
+  description = "A map of OCI regions where resources will be created. The map must have 2 keys: 1) oke is where OKE will be created 2) home is the tenancy's home region."
+  type        = map
 }
 
 variable "tenancy_id" {

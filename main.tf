@@ -251,7 +251,7 @@ module "extensions" {
   label_prefix   = var.label_prefix
 
   # region parameters
-  region = var.region
+  region = var.regions["oke"]
 
   # ssh keys
   ssh_private_key      = var.ssh_private_key
