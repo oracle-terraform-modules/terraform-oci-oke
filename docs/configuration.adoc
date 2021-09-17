@@ -104,9 +104,9 @@ ssh-add ~/.ssh/dev_rsa
 
 The 3 OCI parameters here mainly concern:
 
-* compartment_id: is the compartment where all the resources will be created in
-* the label_prefix: this will prepend a string to the name of every resource created
-* the region: this allows you to select the region where you want the OKE cluster deployed
+* `compartment_id`: is the compartment where all the resources will be created in
+* `label_prefix`: this will prepend a string to the name of every resource created
+* `regions`: this allows you to select the region where you want the OKE cluster deployed
 
 
 e.g.
@@ -114,8 +114,16 @@ e.g.
 ----
 compartment_id = "compartment_id = "ocid1.compartment...."
 label_prefix   = "dev"
-region         = "us-phoenix-1"
+regions = {
+  home    = "us-phoenix-1"
+  oke     = "ap-sydney-1"
+}
 ----
+
+Regions must have exactly 2 entries as above:
+
+* home: is the tenancy's home region
+* oke: is the region where the oke cluster will be created
 
 The list of regions can be found {uri-oci-region}[here].
 

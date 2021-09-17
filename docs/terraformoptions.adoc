@@ -61,9 +61,13 @@ EOT
 |
 |none
 
-|region
-|Region where to provision the OKE cluster. {uri-oci-region}[List of regions]. *Required*
+|regions
+|A map of OCI regions where resources will be created. The map must have 2 keys: 1) oke is where OKE will be created 2) home is the tenancy's home region.. {uri-oci-region}[List of regions]. *Required*
 |
+regions = {
+  home    = "us-phoenix-1"
+  oke     = "ap-sydney-1"
+}
 |
 
 |tenancy_id

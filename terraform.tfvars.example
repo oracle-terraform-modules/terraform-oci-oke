@@ -7,7 +7,12 @@ api_fingerprint      = ""
 #EOT
 
 api_private_key_path = ""
-region               = ""
+
+regions = {
+  home    = "us-phoenix-1"
+  oke     = "ap-sydney-1"
+}
+
 tenancy_id           = ""
 user_id              = ""
 
@@ -23,7 +28,6 @@ ssh_private_key      = ""
 #-----END RSA PRIVATE KEY-----
 #EOT
 ssh_private_key_path = "~/.ssh/id_rsa"
-# ssh_public_key       = ""
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
