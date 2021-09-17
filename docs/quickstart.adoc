@@ -58,7 +58,7 @@ You need to create 2 providers:
 provider "oci" {
   fingerprint      = var.api_fingerprint
   private_key_path = var.api_private_key_path
-  region           = var.region
+  region           = var.regions["oke"]
   tenancy_ocid     = var.tenancy_id
   user_ocid        = var.user_id
 }
@@ -66,7 +66,7 @@ provider "oci" {
 provider "oci" {
   fingerprint      = var.api_fingerprint
   private_key_path = var.api_private_key_path
-  region           = "us-phoenix-1" //example
+  region           = var.regions["home"]
   tenancy_ocid     = var.tenancy_id
   user_ocid        = var.user_id
   alias            = "home"
@@ -79,7 +79,7 @@ provider "oci" {
 provider "oci" {
   fingerprint      = var.api_fingerprint
   private_key      = var.api_private_key
-  region           = var.region
+  region           = var.regions["oke"]
   tenancy_ocid     = var.tenancy_id
   user_ocid        = var.user_id
 }
@@ -87,7 +87,7 @@ provider "oci" {
 provider "oci" {
   fingerprint      = var.api_fingerprint
   private_key      = var.api_private_key
-  region           = "us-phoenix-1" //example
+  region           = var.regions["home"]
   tenancy_ocid     = var.tenancy_id
   user_ocid        = var.user_id
   alias            = "home"
@@ -108,7 +108,7 @@ provider "oci" {
 * compartment_id
 * tenancy_id
 * user_id
-* region
+* regions
 
 You can set those parameters using: 
 
@@ -159,7 +159,7 @@ module "oke" {
   ssh_public_key_path                   =   var.ssh_public_key_path
 
   label_prefix                          =   var.label_prefix
-  region                                =   var.region
+  regions                               =   var.regions
 
   vcn_dns_label                         =   var.vcn_dns_label
   vcn_name                              =   var.vcn_name
