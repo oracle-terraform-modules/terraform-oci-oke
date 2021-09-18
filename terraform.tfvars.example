@@ -7,7 +7,12 @@ api_fingerprint      = ""
 #EOT
 
 api_private_key_path = ""
-region               = ""
+
+regions = {
+  home    = "us-phoenix-1"
+  oke     = "ap-sydney-1"
+}
+
 tenancy_id           = ""
 user_id              = ""
 
@@ -16,8 +21,13 @@ compartment_id = ""
 label_prefix   = "dev"
 
 # ssh keys
+ssh_private_key      = ""
+# ssh_private_key    = <<EOT
+#-----BEGIN RSA PRIVATE KEY-----
+#content+of+api+key
+#-----END RSA PRIVATE KEY-----
+#EOT
 ssh_private_key_path = "~/.ssh/id_rsa"
-# ssh_public_key       = ""
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
@@ -133,7 +143,7 @@ image_signing_keys = []
 check_node_active = "all"
 node_pools = {
   np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
-  np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
+  np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np2" } }
   # np3 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   # np4 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   # np2 = {shape="VM.Standard.E4.Flex",ocpus=4,memory=16,node_pool_size=1,boot_volume_size=150, label={app="backend",pool="np2"}}

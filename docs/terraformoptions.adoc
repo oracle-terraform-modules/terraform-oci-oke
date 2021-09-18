@@ -43,8 +43,12 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |none
 
 |api_private_key
-|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.*
-|
+|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.* Use the heredoc format if you are specifying the key with this variable.
+|<<EOT
+-----BEGIN RSA PRIVATE KEY-----
+content+of+api+key
+-----END RSA PRIVATE KEY-----
+EOT
 |none
 
 |api_private_key_password
@@ -57,9 +61,13 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |
 |none
 
-|region
-|Region where to provision the OKE cluster. {uri-oci-region}[List of regions]. *Required*
+|regions
+|A map of OCI regions where resources will be created. The map must have 2 keys: 1) oke is where OKE will be created 2) home is the tenancy's home region.. {uri-oci-region}[List of regions]. *Required*
 |
+regions = {
+  home    = "us-phoenix-1"
+  oke     = "ap-sydney-1"
+}
 |
 
 |tenancy_id
@@ -103,6 +111,16 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 |Description
 |Values
 |Default
+
+|ssh_private_key
+|The contents of the private ssh key file. Use the heredoc format if you are specifying the private key.
+|
+<<EOT
+-----BEGIN RSA PRIVATE KEY-----
+content+of+api+key
+-----END RSA PRIVATE KEY-----
+EOT
+|
 
 |ssh_private_key_path
 |path to ssh private key. The same key will be used to access worker nodes using SSH. *Required* if bastion is enabled.
