@@ -106,7 +106,7 @@ The 3 OCI parameters here mainly concern:
 
 * `compartment_id`: is the compartment where all the resources will be created in
 * `label_prefix`: this will prepend a string to the name of every resource created
-* `regions`: this allows you to select the region where you want the OKE cluster deployed
+* `region`: this allows you to select the region where you want the OKE cluster deployed
 
 
 e.g.
@@ -114,16 +114,14 @@ e.g.
 ----
 compartment_id = "compartment_id = "ocid1.compartment...."
 label_prefix   = "dev"
-regions = {
-  home    = "us-phoenix-1"
-  oke     = "ap-sydney-1"
-}
+home_region = "us-phoenix-1"
+region = "ap-sydney-1"
 ----
 
 Regions must have exactly 2 entries as above:
 
-* home: is the tenancy's home region
-* oke: is the region where the oke cluster will be created
+* home_region: is the tenancy's home region. This may be different from the region where you want to create OKE.
+* region: is the actual region where you want to create the OKE cluster.
 
 The list of regions can be found {uri-oci-region}[here].
 

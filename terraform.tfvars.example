@@ -8,10 +8,8 @@ api_fingerprint      = ""
 
 api_private_key_path = ""
 
-regions = {
-  home    = "us-phoenix-1"
-  oke     = "ap-sydney-1"
-}
+home_region = "us-ashburn-1"
+region = "us-phoenix-1"
 
 tenancy_id           = ""
 user_id              = ""
