@@ -61,13 +61,16 @@ EOT
 |
 |none
 
-|regions
-|A map of OCI regions where resources will be created. The map must have 2 keys: 1) oke is where OKE will be created 2) home is the tenancy's home region.. {uri-oci-region}[List of regions]. *Required*
+|home_region
+|The tenancy's home region. Required to perform identity operations. *Required*
 |
-regions = {
-  home    = "us-phoenix-1"
-  oke     = "ap-sydney-1"
-}
+region = "us-ashburn-1"
+|
+
+|region
+|The OCI region where OKE resources will be created. Please select from {uri-oci-region}[list of regions]. *Required*
+|
+region = "ap-sydney-1"
 |
 
 |tenancy_id
