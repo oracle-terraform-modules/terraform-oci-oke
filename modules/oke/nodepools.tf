@@ -3,7 +3,6 @@
 
 resource "oci_containerengine_node_pool" "nodepools" {
   for_each       = var.node_pools
-  node_metadata = var.node_metadata
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
   compartment_id = var.compartment_id
   depends_on     = [oci_containerengine_cluster.k8s_cluster]
@@ -38,6 +37,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
     source_type             = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
   }
 
+  node_metadata = var.node_metadata
   node_shape = lookup(each.value, "shape", "VM.Standard.E4.Flex")
 
   ssh_public_key = (var.ssh_public_key != "") ? var.ssh_public_key : (var.ssh_public_key_path != "none") ? file(var.ssh_public_key_path) : ""
