@@ -74,3 +74,7 @@ variable "node_pool_os" {}
 variable "node_pool_os_version" {}
 
 variable "preferred_lb_subnet_type" {}
+
+variable "node_metadata" {
+  type = map(string)
+}

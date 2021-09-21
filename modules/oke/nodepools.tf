@@ -3,6 +3,7 @@
 
 resource "oci_containerengine_node_pool" "nodepools" {
   for_each       = var.node_pools
+  node_metadata = var.node_metadata
   cluster_id     = oci_containerengine_cluster.k8s_cluster.id
   compartment_id = var.compartment_id
   depends_on     = [oci_containerengine_cluster.k8s_cluster]
