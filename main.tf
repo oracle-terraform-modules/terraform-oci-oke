@@ -226,6 +226,7 @@ module "oke" {
   node_pool_image_id    = var.node_pool_image_id
   node_pool_os          = var.node_pool_os
   node_pool_os_version  = var.node_pool_os_version
+  node_metadata         = var.node_pool_node_metadata
 
   # oke load balancer parameters
   preferred_lb_subnet_type = var.preferred_lb_subnet_type

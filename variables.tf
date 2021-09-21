@@ -552,7 +552,7 @@ variable "worker_mode" {
   }
 }
 
-variable "nodepool_node_metadata" {
+variable "node_pool_node_metadata" {
   default = {}
   description = "A list of key/value pairs to add to each underlying Oracle Cloud Infrastructure instance in the node pool on launch."
   type = map(string)
