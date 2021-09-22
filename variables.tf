@@ -31,7 +31,7 @@ variable "api_private_key_path" {
 variable "home_region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "The tenancy's home region. Required to perform identity operations."
-  type        = string  
+  type        = string
 }
 
 variable "region" {
@@ -518,6 +518,10 @@ variable "node_pools" {
   type        = any
 }
 
+variable "node_pool_node_metadata" {
+  type        = map(any)
+  description = "Node pool node metadata"
+}
 variable "node_pool_image_id" {
   default     = "none"
   description = "The ocid of a custom image to use for worker node."

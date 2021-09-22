@@ -642,6 +642,11 @@ node_pools = {
   np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
 }
 
+|node_pool_node_metadata
+|key/value pairs to add to each underlying Oracle Cloud Infrastructure instance in the node pool on launch
+|
+|
+
 |node_pool_image_id
 |The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_os and node_pool_os_version to identify an image to provision the worker nodes.
 |

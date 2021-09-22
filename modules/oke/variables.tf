@@ -65,6 +65,10 @@ variable "node_pools" {
   type = any
 }
 
+variable "node_pool_node_metadata" {
+  type = map(any)
+}
+
 variable "node_pool_name_prefix" {}
 
 variable "node_pool_image_id" {}

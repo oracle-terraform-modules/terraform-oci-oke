@@ -155,6 +155,9 @@ node_pools = {
   # np9 = {shape="BM.GPU4.8", node_pool_size=5}
   # np10 = {shape="BM.HPC2.36	", node_pool_size=5}
 }
+node_pool_node_metadata = {
+  np1 = { user_data = ""}
+  }
 node_pool_image_id    = "none"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
