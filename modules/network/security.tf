@@ -291,7 +291,6 @@ resource "oci_core_security_list" "int_lb_seclist" {
     }
   }
 
-
   lifecycle {
     ignore_changes = [
       # Ignore changes to egress_security_rules,
@@ -337,6 +336,27 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       protocol    = local.tcp_protocol
       source      = waf_iterator.value.cidr
       stateless   = false
+    }
+  }
+
+  dynamic "ingress_security_rules" {
+    iterator = pub_lb_ingress_iterator
+    for_each = local.permitted_ports_for_ingress
+
+    content {
+      description = pub_lb_ingress_iterator.value["description"]
+      protocol    = pub_lb_ingress_iterator.value["protocol"]
+      source      = pub_lb_ingress_iterator.value["source"]
+      stateless   = pub_lb_ingress_iterator.value["stateless"]
+
+      dynamic "tcp_options" {
+        for_each = pub_lb_ingress_iterator.value["protocol"] == local.tcp_protocol && pub_lb_ingress_iterator.value["min_port"] != -1 ? [1] : []
+
+        content {
+          min = pub_lb_ingress_iterator.value["min_port"]
+          max = pub_lb_ingress_iterator.value["max_port"]
+        }
+      }
     }
   }
 
