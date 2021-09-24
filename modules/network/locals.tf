@@ -156,15 +156,7 @@ locals {
     }
   ]
 
-  workers_ingress = [
-    {
-      description = "Allow ingress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
-      protocol    = local.all_protocols,
-      min_port        = -1,
-      max_port        = -1,
-      source      = local.workers_subnet,
-      stateless   = false
-    },
+  permitted_ports_for_ingress = [
     {
       description = "Allow control plane to communicate with worker nodes on ports 1-10",
       protocol    = local.tcp_protocol,
@@ -399,6 +391,17 @@ locals {
       source      = local.cp_subnet,
       stateless   = false
     },
+  ]
+
+  extend_workers_ingress = [
+    {
+      description = "Allow ingress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
+      protocol    = local.all_protocols,
+      min_port        = -1,
+      max_port        = -1,
+      source      = local.workers_subnet,
+      stateless   = false
+    },
     {
       description = "Allow path discovery from worker nodes"
       protocol    = local.icmp_protocol,
@@ -408,4 +411,7 @@ locals {
       stateless   = false
     },
   ]
+
+  workers_ingress = concat(permitted_ports_for_ingress, extend_workers_ingress)
+
 }

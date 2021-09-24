@@ -270,6 +270,28 @@ resource "oci_core_security_list" "int_lb_seclist" {
     stateless   = false
   }
 
+  dynamic "ingress_security_rules" {
+    iterator = int_lb_ingress_iterator
+    for_each = local.permitted_ports_for_ingress
+
+    content {
+      description = int_lb_ingress_iterator.value["description"]
+      protocol    = int_lb_ingress_iterator.value["protocol"]
+      source      = int_lb_ingress_iterator.value["source"]
+      stateless   = int_lb_ingress_iterator.value["stateless"]
+
+      dynamic "tcp_options" {
+        for_each = int_lb_ingress_iterator.value["protocol"] == local.tcp_protocol && int_lb_ingress_iterator.value["min_port"] != -1 ? [1] : []
+
+        content {
+          min = int_lb_ingress_iterator.value["min_port"]
+          max = int_lb_ingress_iterator.value["max_port"]
+        }
+      }
+    }
+  }
+
+
   lifecycle {
     ignore_changes = [
       # Ignore changes to egress_security_rules,
