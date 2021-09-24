@@ -160,23 +160,288 @@ locals {
     {
       description = "Allow ingress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
       protocol    = local.all_protocols,
-      port        = -1,
+      min_port        = -1,
+      max_port        = -1,
       source      = local.workers_subnet,
       stateless   = false
     },
     {
-      description = "Allow control plane to communicate with worker nodes",
+      description = "Allow control plane to communicate with worker nodes on ports 1-10",
       protocol    = local.tcp_protocol,
-      port        = -1,
+      min_port        = 1,
+      max_port        = 10,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 12-16",
+      protocol    = local.tcp_protocol,
+      min_port        = 12,
+      max_port        = 16,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 12-16",
+      protocol    = local.tcp_protocol,
+      min_port    = 22,
+      max_port    = 22,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 22",
+      protocol    = local.tcp_protocol,
+      min_port    = 22,
+      max_port    = 22,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 26-42",
+      protocol    = local.tcp_protocol,
+      min_port    = 26,
+      max_port    = 42,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 26-42",
+      protocol    = local.tcp_protocol,
+      min_port    = 26,
+      max_port    = 42,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 44-48",
+      protocol    = local.tcp_protocol,
+      min_port    = 44,
+      max_port    = 48,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 50-52",
+      protocol    = local.tcp_protocol,
+      min_port    = 50,
+      max_port    = 52,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 54-69",
+      protocol    = local.tcp_protocol,
+      min_port    = 54,
+      max_port    = 69,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 75-78",
+      protocol    = local.tcp_protocol,
+      min_port    = 75,
+      max_port    = 78,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      # exceptional rule!
+      description = "Allow control plane to communicate with worker nodes on port(s) 80",
+      protocol    = local.tcp_protocol,
+      min_port    = 80,
+      max_port    = 80,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 82-87",
+      protocol    = local.tcp_protocol,
+      min_port    = 82,
+      max_port    = 87,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 89-110",
+      protocol    = local.tcp_protocol,
+      min_port    = 89,
+      max_port    = 110,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 112-122",
+      protocol    = local.tcp_protocol,
+      min_port    = 112,
+      max_port    = 122,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 124-388",
+      protocol    = local.tcp_protocol,
+      min_port    = 124,
+      max_port    = 388,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 390-444",
+      protocol    = local.tcp_protocol,
+      min_port    = 390,
+      max_port    = 444,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 446-499",
+      protocol    = local.tcp_protocol,
+      min_port    = 446,
+      max_port    = 499,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 501-635",
+      protocol    = local.tcp_protocol,
+      min_port    = 501,
+      max_port    = 635,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 637-3305",
+      protocol    = local.tcp_protocol,
+      min_port    = 637,
+      max_port    = 3305,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 637-3305",
+      protocol    = local.tcp_protocol,
+      min_port    = 637,
+      max_port    = 3305,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 3307-3388",
+      protocol    = local.tcp_protocol,
+      min_port    = 3307,
+      max_port    = 3388,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 3390-5900",
+      protocol    = local.tcp_protocol,
+      min_port    = 3390,
+      max_port    = 5900,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 5902-5984",
+      protocol    = local.tcp_protocol,
+      min_port    = 5902,
+      max_port    = 5984,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 5987-7000",
+      protocol    = local.tcp_protocol,
+      min_port    = 5987,
+      max_port    = 7000,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 7002-7999",
+      protocol    = local.tcp_protocol,
+      min_port    = 7002,
+      max_port    = 7999,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      # exceptional rule!
+      description = "Allow control plane to communicate with worker nodes on port(s) 8000",
+      protocol    = local.tcp_protocol,
+      min_port    = 8000,
+      max_port    = 8000,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 8001-8079",
+      protocol    = local.tcp_protocol,
+      min_port    = 8001,
+      max_port    = 8079,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      # exceptional rule!
+      description = "Allow control plane to communicate with worker nodes on port(s) 8080",
+      protocol    = local.tcp_protocol,
+      min_port    = 8080,
+      max_port    = 8080,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 8081-8442",
+      protocol    = local.tcp_protocol,
+      min_port    = 8081,
+      max_port    = 8442,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow control plane to communicate with worker nodes on port(s) 8444-8888",
+      protocol    = local.tcp_protocol,
+      min_port    = 8444,
+      max_port    = 8887,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      # exceptional rule!
+      description = "Allow control plane to communicate with worker nodes on port(s) 8888",
+      protocol    = local.tcp_protocol,
+      min_port    = 8888,
+      max_port    = 8888,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      # registered ports
+      description = "Allow control plane to communicate with worker nodes on port(s) 8889-49151",
+      protocol    = local.tcp_protocol,
+      min_port    = 8889,
+      max_port    = 49151,
+      source      = local.cp_subnet,
+      stateless   = false
+    },
+    {
+      # dynamic ports
+      description = "Allow control plane to communicate with worker nodes on port(s) 8889-49151",
+      protocol    = local.tcp_protocol,
+      min_port    = 49151,
+      max_port    = 65535,
       source      = local.cp_subnet,
       stateless   = false
     },
     {
       description = "Allow path discovery from worker nodes"
       protocol    = local.icmp_protocol,
-      port        = -1,
+      min_port    = -1,
+      max_port    = -1,
       source      = local.anywhere,
       stateless   = false
-    }
+    },
   ]
 }

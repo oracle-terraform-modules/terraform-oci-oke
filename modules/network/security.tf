@@ -157,11 +157,11 @@ resource "oci_core_security_list" "workers_seclist" {
       stateless   = workers_ingress_iterator.value["stateless"]
 
       dynamic "tcp_options" {
-        for_each = workers_ingress_iterator.value["protocol"] == local.tcp_protocol && workers_ingress_iterator.value["port"] != -1 ? [1] : []
+        for_each = workers_ingress_iterator.value["protocol"] == local.tcp_protocol && workers_ingress_iterator.value["min_port"] != -1 ? [1] : []
 
         content {
-          min = workers_ingress_iterator.value["port"]
-          max = workers_ingress_iterator.value["port"]
+          min = workers_ingress_iterator.value["min_port"]
+          max = workers_ingress_iterator.value["max_port"]
         }
       }
 
