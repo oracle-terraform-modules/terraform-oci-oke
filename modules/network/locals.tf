@@ -428,7 +428,7 @@ locals {
     },
     {
       # dynamic ports
-      description = "Allow control plane to communicate with worker nodes on port(s) 8889-49151",
+      description = "Allow control plane to communicate with worker nodes on port(s) 49151-65535",
       protocol    = local.tcp_protocol,
       min_port    = 49151,
       max_port    = 65535,
