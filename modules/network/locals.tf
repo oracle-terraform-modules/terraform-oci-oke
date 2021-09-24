@@ -246,15 +246,6 @@ locals {
       stateless   = false
     },
     {
-      # exceptional rule!
-      description = "Allow control plane to communicate with worker nodes on port(s) 80",
-      protocol    = local.tcp_protocol,
-      min_port    = 80,
-      max_port    = 80,
-      source      = local.cp_subnet,
-      stateless   = false
-    },
-    {
       description = "Allow control plane to communicate with worker nodes on port(s) 82-87",
       protocol    = local.tcp_protocol,
       min_port    = 82,
@@ -367,28 +358,10 @@ locals {
       stateless   = false
     },
     {
-      # exceptional rule!
-      description = "Allow control plane to communicate with worker nodes on port(s) 8000",
-      protocol    = local.tcp_protocol,
-      min_port    = 8000,
-      max_port    = 8000,
-      source      = local.cp_subnet,
-      stateless   = false
-    },
-    {
       description = "Allow control plane to communicate with worker nodes on port(s) 8001-8079",
       protocol    = local.tcp_protocol,
       min_port    = 8001,
       max_port    = 8079,
-      source      = local.cp_subnet,
-      stateless   = false
-    },
-    {
-      # exceptional rule!
-      description = "Allow control plane to communicate with worker nodes on port(s) 8080",
-      protocol    = local.tcp_protocol,
-      min_port    = 8080,
-      max_port    = 8080,
       source      = local.cp_subnet,
       stateless   = false
     },
@@ -405,15 +378,6 @@ locals {
       protocol    = local.tcp_protocol,
       min_port    = 8444,
       max_port    = 8887,
-      source      = local.cp_subnet,
-      stateless   = false
-    },
-    {
-      # exceptional rule!
-      description = "Allow control plane to communicate with worker nodes on port(s) 8888",
-      protocol    = local.tcp_protocol,
-      min_port    = 8888,
-      max_port    = 8888,
       source      = local.cp_subnet,
       stateless   = false
     },
