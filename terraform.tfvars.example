@@ -214,3 +214,5 @@ freeform_tags = {
     security    = "high"
   }
 }
+
+debug_mode = false

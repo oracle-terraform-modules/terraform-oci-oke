@@ -124,3 +124,7 @@ variable "nodepool_upgrade_method" {
 variable "node_pools_to_drain" {
   type = list(string)
 }
+
+variable "debug_mode" {
+  type        = bool
+}

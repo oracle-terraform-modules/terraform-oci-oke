@@ -31,7 +31,7 @@ variable "api_private_key_path" {
 variable "home_region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "The tenancy's home region. Required to perform identity operations."
-  type        = string  
+  type        = string
 }
 
 variable "region" {
@@ -740,4 +740,10 @@ variable "freeform_tags" {
   }
   description = "Tags to apply to different resources."
   type        = map(any)
+}
+
+variable "debug_mode" {
+  default     = false
+  description = "Whether to turn on debug mode."
+  type        = bool
 }
