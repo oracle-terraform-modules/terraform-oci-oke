@@ -50,7 +50,7 @@ variable "lb_subnet_type" {
 }
 
 variable "public_lb_ports" {
-  type = list(number)
+  type = list
 }
 
 variable "enable_waf" {
