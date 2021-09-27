@@ -1,30 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-locals {
-  generate_kubeconfig_template = templatefile("${path.module}/scripts/generate_kubeconfig.template.sh",
-    {
-      cluster-id = var.cluster_id
-      region     = var.region
-    }
-  )
-
-  token_helper_template = templatefile("${path.module}/scripts/token_helper.template.sh",
-    {
-      cluster-id = var.cluster_id
-      region     = var.region
-    }
-  )
-
-  set_credentials_template = templatefile("${path.module}/scripts/kubeconfig_set_credentials.template.sh",
-    {
-      cluster-id    = var.cluster_id
-      cluster-id-11 = substr(var.cluster_id, (length(var.cluster_id) - 11), length(var.cluster_id))
-      region        = var.region
-    }
-  )
-}
-
 data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id = var.cluster_id
 }
