@@ -170,7 +170,8 @@ nodepool_upgrade_method = "out_of_place"
 lb_subnet_type           = "both"
 preferred_lb_subnet_type = "public"
 public_lb_ports   = [80, 443]
-
+# use a string to specify a range e.g.
+# public_lb_ports   = [80, 443, "9000-9010"] 
 
 # ocir
 email_address    = ""

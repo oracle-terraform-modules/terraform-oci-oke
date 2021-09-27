@@ -724,8 +724,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |public
 
 |public_lb_ports
-|The list of destination ports to allow for public ingress.
-|`e.g.: [80,443,8080]`
+|The List of allowed ports for public load balancers. Use a string if specifying a range.
+|`e.g.: [80,443,8080]` or [80,443, "7001-7010"]
 |`[80, 443]`
 
 |===

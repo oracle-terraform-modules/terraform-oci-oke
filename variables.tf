@@ -598,8 +598,8 @@ variable "preferred_lb_subnet_type" {
 
 variable "public_lb_ports" {
   default     = [80, 443]
-  description = "List of destination ports for public LB security list."
-  type        = list(number)
+  description = "List of allowed ports for public load balancers."
+  type        = list
 }
 
 # ocir
