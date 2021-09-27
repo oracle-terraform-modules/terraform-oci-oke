@@ -320,7 +320,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
 
   # restrict by ports only
   dynamic "ingress_security_rules" {
-    iterator = pub_lb_ingress_iterator
+    iterator = port_ingress_iterator
     for_each = var.enable_waf == false ? var.public_lb_ports : []
 
     content {
@@ -328,8 +328,8 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       protocol    = local.tcp_protocol
       source      = local.anywhere
       tcp_options {
-        min = pub_lb_ingress_iterator.value
-        max = pub_lb_ingress_iterator.value
+        min = element(split("-",port_ingress_iterator.value),0)
+        max = element(split("-",port_ingress_iterator.value),1)
       }
       stateless = false
     }
