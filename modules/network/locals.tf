@@ -131,7 +131,7 @@ locals {
       stateless        = false
     },
     {
-      description      = "Allow worker nodes to communicate with OKE",
+      description      = "Allow worker nodes to communicate with OSN so applications can use OCI Streaming, Object Storage, Autonomous",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
       protocol         = local.tcp_protocol,
