@@ -149,9 +149,9 @@ image::images/publiccluster.png[align="center"]
 You can set the Kubernetes cluster to be public and restrict its access to the CIDR blocks A.B.C.D/A and X.Y.Z.X/Z by using the following parameters:
 
 ```
-control_plane_access = "public"
+control_plane_type = "public"
 
-control_plane_access_source = ["A.B.C.D/A","X.Y.Z.X/Z"]
+control_plane_allowed_list = ["A.B.C.D/A","X.Y.Z.X/Z"]
 ```
 
 When deployed in private mode, the Kubernetes endpoint can only be accessed from the operator host.
@@ -166,14 +166,14 @@ The following table maps all possible cluster and workers deployment combination
 [stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
 |===
 |
-|control_plane_access=public
-|control_plane_access=private
+|control_plane_type=public
+|control_plane_type=private
 
-|worker_mode=public
+|worker_type=public
 |X
 |X
 
-|worker_mode=private
+|worker_type=private
 |X
 |X
 
@@ -356,18 +356,18 @@ You can also use internal load balancers. Internal load balancers have only priv
 
 The following parameters govern how load balancers are created with:
 
-* lb_subnet_type
+* load_balancers
 
-* preferred_lb_subnet_type
+* preferred_load_balancer
 
-The table below shows the valid combinations of preferred_lb_subnet_type and subnet_type values.
+The table below shows the valid combinations of preferred_load_balancer and subnet_type values.
 
 .Public and Internal Load Balancer combinations
 [stripes=odd,cols="<.2d,^.2d,^.2d", width="100%"] 
 |===
 |
-|preferred_lb_subnet_type=internal
-|preferred_lb_subnet_type=public
+|preferred_load_balancer=internal
+|preferred_load_balancer=public
 
 |subnet_type=both
 |X

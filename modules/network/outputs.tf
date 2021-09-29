@@ -9,3 +9,11 @@ output "subnet_ids" {
     "pub_lb"  = join(",", oci_core_subnet.pub_lb[*].id)
   }
 }
+
+output "control_plane_nsg_id" {
+  value = oci_core_network_security_group.cp.id
+}
+
+output "worker_nsg_id" {
+  value = oci_core_network_security_group.workers.id
+}

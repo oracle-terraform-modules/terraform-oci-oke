@@ -5,7 +5,7 @@ locals {
 
   # first vcn cidr
   # pick the first cidr block in the list as this is where we will create the oke subnets
-  vcn_cidr = element(data.oci_core_vcn.vcn.cidr_blocks,0)
+  vcn_cidr = element(data.oci_core_vcn.vcn.cidr_blocks, 0)
 
   # subnet cidrs - used by subnets
   bastion_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["bastion"], "newbits"), lookup(var.subnets["bastion"], "netnum"))
@@ -87,6 +87,7 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 6443,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -94,6 +95,7 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 12250,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -101,6 +103,7 @@ locals {
       protocol    = local.icmp_protocol,
       port        = -1,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -108,6 +111,7 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 6443,
       source      = local.operator_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
   ]
@@ -162,6 +166,7 @@ locals {
       protocol    = local.all_protocols,
       port        = -1,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -169,6 +174,7 @@ locals {
       protocol    = local.tcp_protocol,
       port        = -1,
       source      = local.cp_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -176,7 +182,69 @@ locals {
       protocol    = local.icmp_protocol,
       port        = -1,
       source      = local.anywhere,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     }
   ]
+
+  int_lb_egress = [
+    {
+      description      = "Allow stateful egress to workers. Required for NodePorts and load balancer http/tcp health checks",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "30000-32767",
+      stateless        = false
+    },
+    {
+      description      = "Allow path discovery to worker nodes",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.icmp_protocol,
+      port             = -1,
+      stateless        = false
+    },
+  ]
+
+  # Allow ingress from the supplied allow list and the public load balancer subnet
+  internal_lb_allowed_list = concat(var.internal_lb_allowed_list, tolist([local.pub_lb_subnet]))
+
+  internal_lb_allowed_list_and_ports = setproduct(local.internal_lb_allowed_list, var.internal_lb_allowed_ports)
+
+  pub_lb_egress = [
+    {
+      description      = "Allow stateful egress to internal load balancers subnet.",
+      destination      = local.int_lb_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 80
+      stateless        = false
+    },
+    {
+      description      = "Allow stateful egress to internal load balancers subnet.",
+      destination      = local.int_lb_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 443
+      stateless        = false
+    },
+    {
+      description      = "Allow stateful egress to workers. Required for NodePorts and load balancer http/tcp health checks",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "30000-32767",
+      stateless        = false
+    },
+    {
+      description      = "Allow path discovery to worker nodes",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.icmp_protocol,
+      port             = -1,
+      stateless        = false
+    },
+  ]
+
+  public_lb_allowed_list_and_ports = setproduct(var.public_lb_allowed_list, var.public_lb_allowed_ports)
 }

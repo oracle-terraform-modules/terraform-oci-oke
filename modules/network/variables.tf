@@ -19,11 +19,11 @@ variable "vcn_id" {}
 
 # cluster endpoint
 
-variable "control_plane_access" {
+variable "control_plane_type" {
   type = string
 }
 
-variable "control_plane_access_source" {
+variable "control_plane_allowed_list" {
   type = list(string)
 }
 
@@ -41,16 +41,30 @@ variable "allow_worker_ssh_access" {
   type = bool
 }
 
-variable "worker_mode" {}
+variable "worker_type" {}
 
 # load balancers
 
-variable "lb_subnet_type" {
+variable "load_balancers" {
   type = string
 }
 
-variable "public_lb_ports" {
-  type = list
+# internal load balancers
+variable "internal_lb_allowed_list" {
+  type = list(any)
+}
+
+variable "internal_lb_allowed_ports" {
+  type = list(any)
+}
+
+# public load balancers
+variable "public_lb_allowed_list" {
+  type = list(any)
+}
+
+variable "public_lb_allowed_ports" {
+  type = list(any)
 }
 
 variable "enable_waf" {

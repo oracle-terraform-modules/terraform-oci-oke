@@ -423,18 +423,18 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "control_plane_access" {
+variable "control_plane_type" {
   default     = "public"
   description = "Whether to allow public or private access to the control plane endpoint"
   type        = string
 
   validation {
-    condition     = contains(["public", "private"], var.control_plane_access)
+    condition     = contains(["public", "private"], var.control_plane_type)
     error_message = "Accepted values are public, or private."
   }
 }
 
-variable "control_plane_access_source" {
+variable "control_plane_allowed_list" {
   default     = []
   description = "The list of CIDR blocks from which the control plane can be accessed."
   type        = list(string)
@@ -442,7 +442,7 @@ variable "control_plane_access_source" {
 
 variable "control_plane_nsgs" {
   default     = []
-  description = "A list of the network security groups (NSGs) ids to apply to the cluster endpoint."
+  description = "An additional list of network security groups (NSG) ids for the cluster endpoint that can be created subsequently."
   type        = list(string)
 }
 
@@ -542,12 +542,18 @@ variable "node_pool_os_version" {
   type        = string
 }
 
-variable "worker_mode" {
+variable "worker_nsgs" {
+  default     = []
+  description = "An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently."
+  type        = list(any)
+}
+
+variable "worker_type" {
   default     = "private"
   description = "Whether to provision public or private workers."
   type        = string
   validation {
-    condition     = contains(["public", "private"], var.worker_mode)
+    condition     = contains(["public", "private"], var.worker_type)
     error_message = "Accepted values are public or private."
   }
 }
@@ -573,33 +579,52 @@ variable "nodepool_upgrade_method" {
 
 # oke load balancers
 
-variable "lb_subnet_type" {
+variable "load_balancers" {
   # values: both, internal, public
   default     = "public"
-  description = "The type of load balancer subnets to create."
+  description = "The type of subnets to create for load balancers."
   type        = string
   validation {
-    condition     = contains(["public", "internal", "both"], var.lb_subnet_type)
+    condition     = contains(["public", "internal", "both"], var.load_balancers)
     error_message = "Accepted values are public, internal or both."
   }
 }
 
-variable "preferred_lb_subnet_type" {
+variable "preferred_load_balancer" {
   # values: public, internal. 
   # When creating an internal load balancer, the internal annotation must still be specified regardless 
   default     = "public"
-  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'."
+  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'."
   type        = string
   validation {
-    condition     = contains(["public", "internal"], var.preferred_lb_subnet_type)
+    condition     = contains(["public", "internal"], var.preferred_load_balancer)
     error_message = "Accepted values are public or internal."
   }
 }
 
-variable "public_lb_ports" {
+## Allowed cidrs and ports for load balancers
+variable "internal_lb_allowed_list" {
+  default     = ["0.0.0.0/0"]
+  description = "The list of CIDR blocks from which the internal load balancer can be accessed."
+  type        = list(string)
+}
+
+variable "internal_lb_allowed_ports" {
   default     = [80, 443]
+  description = "List of allowed ports for internal load balancers."
+  type        = list(any)
+}
+
+variable "public_lb_allowed_list" {
+  default     = ["0.0.0.0/0"]
+  description = "The list of CIDR blocks from which the public load balancer can be accessed."
+  type        = list(string)
+}
+
+variable "public_lb_allowed_ports" {
+  default     = [443]
   description = "List of allowed ports for public load balancers."
-  type        = list
+  type        = list(any)
 }
 
 # ocir

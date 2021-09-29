@@ -11,7 +11,7 @@ module "vcn" {
 
   # gateways
   create_internet_gateway  = true
-  create_nat_gateway       = var.worker_mode == "private" || var.create_operator == true || (var.lb_subnet_type == "internal" || var.lb_subnet_type == "both") ? true : false
+  create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
 
@@ -166,20 +166,25 @@ module "network" {
   vcn_id       = module.vcn.vcn_id
 
   # control plane endpoint parameters
-  control_plane_access        = var.control_plane_access
-  control_plane_access_source = var.control_plane_access_source
+  control_plane_type         = var.control_plane_type
+  control_plane_allowed_list = var.control_plane_allowed_list
 
   # oke worker network parameters
   allow_node_port_access       = var.allow_node_port_access
   allow_worker_internet_access = var.allow_worker_internet_access
   allow_worker_ssh_access      = var.allow_worker_ssh_access
-  worker_mode                  = var.worker_mode
+  worker_type                  = var.worker_type
 
   # oke load balancer network parameters
-  lb_subnet_type = var.lb_subnet_type
+  load_balancers = var.load_balancers
 
-  # oke load balancer ports
-  public_lb_ports = var.public_lb_ports
+  # oke internal load balancer
+  internal_lb_allowed_list  = var.internal_lb_allowed_list
+  internal_lb_allowed_ports = var.internal_lb_allowed_ports
+
+  # oke public load balancer
+  public_lb_allowed_list  = var.public_lb_allowed_list
+  public_lb_allowed_ports = var.public_lb_allowed_ports
 
   # waf integration
   enable_waf = var.enable_waf
@@ -206,8 +211,8 @@ module "oke" {
 
   # oke cluster parameters
   cluster_kubernetes_version                              = var.kubernetes_version
-  control_plane_access                                    = var.control_plane_access
-  control_plane_nsgs                                      = var.control_plane_nsgs
+  control_plane_type                                      = var.control_plane_type
+  control_plane_nsgs                                      = concat(var.control_plane_nsgs, [module.network.control_plane_nsg_id])
   cluster_name                                            = var.cluster_name
   cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
@@ -228,7 +233,10 @@ module "oke" {
   node_pool_os_version  = var.node_pool_os_version
 
   # oke load balancer parameters
-  preferred_lb_subnet_type = var.preferred_lb_subnet_type
+  preferred_load_balancer = var.preferred_load_balancer
+
+  # worker nsgs
+  worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
   depends_on = [
     module.network
@@ -311,7 +319,7 @@ module "extensions" {
   node_pools_to_drain     = var.node_pools_to_drain
 
   debug_mode = var.debug_mode
-  
+
   depends_on = [
     module.bastion,
     module.network,

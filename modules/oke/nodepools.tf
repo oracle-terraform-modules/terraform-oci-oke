@@ -21,8 +21,10 @@ resource "oci_containerengine_node_pool" "nodepools" {
       }
     }
     # set quantity to a minimum of 1 to allow small clusters. 
-    size = max(1, lookup(each.value, "node_pool_size", 1))
+    size    = max(1, lookup(each.value, "node_pool_size", 1))
+    nsg_ids = var.worker_nsgs
   }
+
   dynamic "node_shape_config" {
     for_each = length(regexall("Flex", lookup(each.value, "shape", "VM.Standard.E4.Flex"))) > 0 ? [1] : []
     content {
@@ -33,8 +35,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
   node_source_details {
     boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
     #check is done for GPU,A1 and other shapes.In future if some other shapes or images added we need to modify
-    image_id                = (var.node_pool_image_id == "none" && length(regexall("GPU|A1",lookup(each.value,"shape"))) == 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-20[0-9]*.*", source.source_name)) > 0], 0)) : (var.node_pool_image_id == "none" && length(regexall("GPU",lookup(each.value,"shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-Gen[0-9]-GPU-20[0-9]*.*", source.source_name)) > 0], 0)) : (var.node_pool_image_id == "none" && length(regexall("A1",lookup(each.value,"shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-aarch64-20[0-9]*.*", source.source_name)) > 0], 0)) : var.node_pool_image_id
-    source_type             = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+    image_id    = (var.node_pool_image_id == "none" && length(regexall("GPU|A1", lookup(each.value, "shape"))) == 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-20[0-9]*.*", source.source_name)) > 0], 0)) : (var.node_pool_image_id == "none" && length(regexall("GPU", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-Gen[0-9]-GPU-20[0-9]*.*", source.source_name)) > 0], 0)) : (var.node_pool_image_id == "none" && length(regexall("A1", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-aarch64-20[0-9]*.*", source.source_name)) > 0], 0)) : var.node_pool_image_id
+    source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
   }
 
   node_shape = lookup(each.value, "shape", "VM.Standard.E4.Flex")
