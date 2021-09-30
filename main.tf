@@ -166,8 +166,8 @@ module "network" {
   vcn_id       = module.vcn.vcn_id
 
   # control plane endpoint parameters
-  control_plane_type         = var.control_plane_type
-  control_plane_allowed_list = var.control_plane_allowed_list
+  control_plane_type          = var.control_plane_type
+  control_plane_allowed_cidrs = var.control_plane_allowed_cidrs
 
   # oke worker network parameters
   allow_node_port_access       = var.allow_node_port_access
@@ -179,11 +179,11 @@ module "network" {
   load_balancers = var.load_balancers
 
   # oke internal load balancer
-  internal_lb_allowed_list  = var.internal_lb_allowed_list
+  internal_lb_allowed_cidrs = var.internal_lb_allowed_cidrs
   internal_lb_allowed_ports = var.internal_lb_allowed_ports
 
   # oke public load balancer
-  public_lb_allowed_list  = var.public_lb_allowed_list
+  public_lb_allowed_cidrs = var.public_lb_allowed_cidrs
   public_lb_allowed_ports = var.public_lb_allowed_ports
 
   # waf integration

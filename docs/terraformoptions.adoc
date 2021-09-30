@@ -548,7 +548,7 @@ EOT
 |public/private
 |public
 
-|control_plane_allowed_list
+|control_plane_allowed_cidrs
 |The list of CIDR blocks from which the control plane can be accessed.
 |`[0.0.0.0/0]`
 |`[]`
@@ -728,7 +728,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |internal/public
 |public
 
-|internal_lb_allowed_list
+|internal_lb_allowed_cidrs
 |The list of CIDR blocks from which the internal load balancer can be accessed.
 |`e.g.: ["0.0.0.0/0"]
 |`["0.0.0.0/0"]`
@@ -738,7 +738,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |e.g.: `[80, 443]`
 |`[80, 443]`
 
-|public_lb_allowed_list
+|public_lb_allowed_cidrs
 |The list of CIDR blocks from which the public load balancer can be accessed.
 |e.g.: `["0.0.0.0/0"]`
 |`["0.0.0.0/0"]`

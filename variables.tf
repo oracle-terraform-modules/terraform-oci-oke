@@ -266,7 +266,7 @@ variable "bastion_notification_topic" {
 
 # bastion service parameters
 variable "create_bastion_service" {
-  default     = true
+  default     = false
   description = "Whether to create a bastion service that allows access to private hosts."
   type        = bool
 }
@@ -434,7 +434,7 @@ variable "control_plane_type" {
   }
 }
 
-variable "control_plane_allowed_list" {
+variable "control_plane_allowed_cidrs" {
   default     = []
   description = "The list of CIDR blocks from which the control plane can be accessed."
   type        = list(string)
@@ -502,6 +502,7 @@ variable "check_node_active" {
   description = "check worker node is active"
   type        = string
   default     = "none"
+  
   validation {
     condition     = contains(["none", "one", "all"], var.check_node_active)
     error_message = "Accepted values are none, one or all."
@@ -603,28 +604,48 @@ variable "preferred_load_balancer" {
 }
 
 ## Allowed cidrs and ports for load balancers
-variable "internal_lb_allowed_list" {
+variable "internal_lb_allowed_cidrs" {
   default     = ["0.0.0.0/0"]
   description = "The list of CIDR blocks from which the internal load balancer can be accessed."
   type        = list(string)
+
+  validation {
+    condition     = length(var.internal_lb_allowed_cidrs) > 0
+    error_message = "At least 1 CIDR block is required."
+  } 
 }
 
 variable "internal_lb_allowed_ports" {
   default     = [80, 443]
   description = "List of allowed ports for internal load balancers."
   type        = list(any)
+
+  validation {
+    condition     = length(var.internal_lb_allowed_ports) > 0
+    error_message = "At least 1 port is required."
+  }
 }
 
-variable "public_lb_allowed_list" {
+variable "public_lb_allowed_cidrs" {
   default     = ["0.0.0.0/0"]
   description = "The list of CIDR blocks from which the public load balancer can be accessed."
   type        = list(string)
+
+  validation {
+    condition     = length(var.public_lb_allowed_cidrs) > 0
+    error_message = "At least 1 CIDR block is required."
+  }  
 }
 
 variable "public_lb_allowed_ports" {
   default     = [443]
   description = "List of allowed ports for public load balancers."
   type        = list(any)
+
+  validation {
+    condition     = length(var.public_lb_allowed_ports) > 0
+    error_message = "At least 1 port is required."
+  }
 }
 
 # ocir
@@ -666,13 +687,13 @@ variable "ocir_urls" {
 }
 
 variable "secret_id" {
-  description = "OCID of Oracle Vault Secret which holds the auth token."
+  description = "The OCID of the Secret on OCI Vault which holds the authentication token."
   type        = string
   default     = "none"
 }
 
 variable "secret_name" {
-  description = "Secret name in Kubernetes that will hold the authentication token"
+  description = "The name of the Kubernetes secret that will hold the authentication token"
   type        = string
   default     = "ocirsecret"
 }
@@ -691,7 +712,7 @@ variable "username" {
 
 # calico
 variable "enable_calico" {
-  description = "whether to install calico for network pod security policy"
+  description = "Whether to install calico for network pod security policy"
   default     = false
   type        = bool
 }
@@ -704,44 +725,44 @@ variable "calico_version" {
 
 # horizontal and vertical pod autoscaling
 variable "enable_metric_server" {
-  description = "whether to install metricserver for collecting metrics and for HPA"
+  description = "Whether to install metricserver for collecting metrics and for HPA"
   default     = false
   type        = bool
 }
 
 variable "enable_vpa" {
-  description = "whether to install vertical pod autoscaler"
+  description = "Whether to install vertical pod autoscaler"
   default     = false
   type        = bool
 }
 
 variable "vpa_version" {
-  description = "version of vertical pod autoscaler to install"
+  description = "The version of vertical pod autoscaler to install"
   default     = "0.8"
 }
 
 # serviceaccount
 
 variable "create_service_account" {
-  description = "whether to create a service account. A service account is required for CI/CD. see https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
+  description = "Whether to create a service account. A service account is required for CI/CD. see https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
   default     = false
   type        = bool
 }
 
 variable "service_account_name" {
-  description = "name of service account to create"
+  description = "The name of service account to create"
   default     = "kubeconfigsa"
   type        = string
 }
 
 variable "service_account_namespace" {
-  description = "kubernetes namespace where to create the service account"
+  description = "The Kubernetes namespace where to create the service account"
   default     = "kube-system"
   type        = string
 }
 
 variable "service_account_cluster_role_binding" {
-  description = "cluster role binding name"
+  description = "The cluster role binding name"
   default     = "cluster-admin"
   type        = string
 }
@@ -767,6 +788,7 @@ variable "freeform_tags" {
   type        = map(any)
 }
 
+# placeholder variable for debugging scripts. To be implemented in future
 variable "debug_mode" {
   default     = false
   description = "Whether to turn on debug mode."

@@ -24,5 +24,5 @@ data "oci_core_vcn" "vcn" {
 }
 
 data "oci_waas_edge_subnets" "waf_cidr_blocks" {
-  count = var.enable_waf ? 1 : 0
+  # count = var.enable_waf ? 1 : 0
 }

@@ -23,7 +23,7 @@ variable "control_plane_type" {
   type = string
 }
 
-variable "control_plane_allowed_list" {
+variable "control_plane_allowed_cidrs" {
   type = list(string)
 }
 
@@ -45,12 +45,16 @@ variable "worker_type" {}
 
 # load balancers
 
+variable "enable_waf" {
+  type = bool
+}
+
 variable "load_balancers" {
   type = string
 }
 
 # internal load balancers
-variable "internal_lb_allowed_list" {
+variable "internal_lb_allowed_cidrs" {
   type = list(any)
 }
 
@@ -59,7 +63,7 @@ variable "internal_lb_allowed_ports" {
 }
 
 # public load balancers
-variable "public_lb_allowed_list" {
+variable "public_lb_allowed_cidrs" {
   type = list(any)
 }
 
@@ -67,7 +71,5 @@ variable "public_lb_allowed_ports" {
   type = list(any)
 }
 
-variable "enable_waf" {
-  type = bool
-}
+
 

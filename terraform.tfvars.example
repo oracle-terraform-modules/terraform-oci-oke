@@ -33,7 +33,7 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 # networking
 create_drg                   = false
 drg_display_name             = "drg"
-enable_waf                   = false
+
 internet_gateway_route_rules = []
 
 local_peering_gateways = {}
@@ -122,7 +122,7 @@ allow_worker_internet_access = true
 allow_worker_ssh_access      = false
 cluster_name                 = "oke"
 control_plane_type         = "private"
-control_plane_allowed_list  = ["0.0.0.0/0"]
+control_plane_allowed_cidrs  = ["0.0.0.0/0"]
 control_plane_nsgs           = []
 dashboard_enabled            = false
 kubernetes_version           = "v1.20.8"
@@ -167,12 +167,13 @@ node_pools_to_drain     = ["np1", "np2"]
 nodepool_upgrade_method = "out_of_place"
 
 # oke load balancers
-load_balancers            = "both"
-preferred_load_balancer   = "public"
-internal_lb_allowed_list  = ["172.16.1.0/24", "172.16.2.0/24"]
-internal_lb_allowed_ports = [81, 443, "7001-7005"]
-public_lb_allowed_list    = ["0.0.0.0/0"]
-public_lb_allowed_ports   = [443,"9001-9002"]
+enable_waf                   = false
+load_balancers               = "both"
+preferred_load_balancer      = "public"
+internal_lb_allowed_cidrs    = ["172.16.1.0/24", "172.16.2.0/24"]
+internal_lb_allowed_ports    = [80, 443, "7001-7005"]
+public_lb_allowed_cidrs      = ["0.0.0.0/0"]
+public_lb_allowed_ports      = [443,"9001-9002"]
 
 # ocir
 email_address    = ""
@@ -217,4 +218,5 @@ freeform_tags = {
   }
 }
 
+# placeholder variable for debugging scripts. To be implemented in future
 debug_mode = false

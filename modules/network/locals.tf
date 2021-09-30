@@ -43,6 +43,11 @@ locals {
   # oracle services network
   osn = lookup(data.oci_core_services.all_oci_services.services[0], "cidr_block")
 
+  waf_cidr_list = [
+    for waf_subnet in data.oci_waas_edge_subnets.waf_cidr_blocks.edge_subnets :
+    waf_subnet.cidr
+  ]
+
   # if port = -1, allow all ports
 
   # control plane
@@ -207,9 +212,10 @@ locals {
   ]
 
   # Allow ingress from the supplied allow list and the public load balancer subnet
-  internal_lb_allowed_list = concat(var.internal_lb_allowed_list, tolist([local.pub_lb_subnet]))
+  internal_lb_allowed_cidrs = concat(var.internal_lb_allowed_cidrs, tolist([local.pub_lb_subnet]))
 
-  internal_lb_allowed_list_and_ports = setproduct(local.internal_lb_allowed_list, var.internal_lb_allowed_ports)
+  # Create a Cartesian product of allowed cidrs and ports
+  internal_lb_allowed_cidrs_and_ports = setproduct(local.internal_lb_allowed_cidrs, var.internal_lb_allowed_ports)
 
   pub_lb_egress = [
     {
@@ -246,5 +252,6 @@ locals {
     },
   ]
 
-  public_lb_allowed_list_and_ports = setproduct(var.public_lb_allowed_list, var.public_lb_allowed_ports)
+  public_lb_allowed_cidrs = var.public_lb_allowed_cidrs
+  public_lb_allowed_cidrs_and_ports = setproduct(local.public_lb_allowed_cidrs, var.public_lb_allowed_ports)
 }
