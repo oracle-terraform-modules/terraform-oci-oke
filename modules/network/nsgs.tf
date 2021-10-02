@@ -120,6 +120,7 @@ resource "oci_core_network_security_group_security_rule" "workers_egress" {
   }
 }
 
+# add this rule separately so it can be controlled independently
 resource "oci_core_network_security_group_security_rule" "workers_egress_internet" {
   network_security_group_id = oci_core_network_security_group.workers.id
   description               = "Allow worker nodes access to Internet. Required for getting container images or using external services"
@@ -172,6 +173,113 @@ resource "oci_core_network_security_group_security_rule" "workers_ingress" {
   }
 }
 
+# add the next 4 rules separately so it can be controlled independently based on which lbs are created
+resource "oci_core_network_security_group_security_rule" "workers_ingress_from_int_lb" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow internal load balancers traffic to workers"
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = local.int_lb_subnet
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = local.node_port_min
+      max = local.node_port_max
+    }
+  }
+
+  icmp_options {
+    type = 3
+    code = 4
+  }
+
+  count = var.load_balancers == "internal" || var.load_balancers == "both" ? 1 : 0
+
+  lifecycle {
+    ignore_changes = [source, source_type, direction, protocol, tcp_options]
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "workers_healthcheck_ingress_from_int_lb" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow internal load balancers health check to workers"
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = local.int_lb_subnet
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = local.health_check_port
+      max = local.health_check_port
+    }
+  }
+
+  count = var.load_balancers == "internal" || var.load_balancers == "both" ? 1 : 0
+
+  lifecycle {
+    ignore_changes = [source, source_type, direction, protocol, tcp_options]
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "workers_ingress_from_pub_lb" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow public load balancers traffic to workers"
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = local.pub_lb_subnet
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = local.node_port_min
+      max = local.node_port_max
+    }
+  }
+
+  icmp_options {
+    type = 3
+    code = 4
+  }
+
+  count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
+
+  lifecycle {
+    ignore_changes = [source, source_type, direction, protocol, tcp_options]
+  }
+}
+
+resource "oci_core_network_security_group_security_rule" "workers_healthcheck_ingress_from_pub_lb" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow public load balancers health check to workers"
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = local.pub_lb_subnet
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = local.health_check_port
+      max = local.health_check_port
+    }
+  }
+
+  count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
+
+  lifecycle {
+    ignore_changes = [source, source_type, direction, protocol, tcp_options]
+  }
+}
+
 # internal lb nsg and rules
 resource "oci_core_network_security_group" "int_lb" {
   compartment_id = var.compartment_id
@@ -216,33 +324,29 @@ resource "oci_core_network_security_group_security_rule" "int_lb_egress" {
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.int_lb_egress) : 0
 }
 
-resource "oci_core_network_security_group_security_rule" "int_lb_ingress" {
+# add this rule separately so it can be controlled independently
+resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ingress_from_pub_lb" {
   network_security_group_id = oci_core_network_security_group.int_lb[0].id
-  description               = "Allow stateful ingress from ${element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 0)} on port ${element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)}"
+  description               = "Allow healthchecks from public load balancers"
   direction                 = "INGRESS"
   protocol                  = local.tcp_protocol
-  source                    = element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 0)
+  source                    = local.pub_lb_subnet
   source_type               = "CIDR_BLOCK"
 
   stateless = false
 
   tcp_options {
     destination_port_range {
-      min = length(regexall("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1))) > 0 ? element(split("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)), 0) : element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)
-      max = length(regexall("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1))) > 0 ? element(split("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)), 1) : element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)
+      min = 10256
+      max = 10256
     }
-  }
-
-  icmp_options {
-    type = 3
-    code = 4
   }
 
   lifecycle {
     ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
 
-  count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.internal_lb_allowed_cidrs_and_ports) : 0
+  count = var.load_balancers == "both" ? 1 : 0
 }
 
 # public lb nsg and rules
@@ -289,6 +393,30 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_egress" {
   count = var.load_balancers == "public" || var.load_balancers == "both" ? length(local.pub_lb_egress) : 0
 }
 
+resource "oci_core_network_security_group_security_rule" "pub_lb_egress_health_check_to_workers" {
+  network_security_group_id = oci_core_network_security_group.pub_lb[0].id
+  description               = "Allow public load balancer health checks to workers"
+  destination               = local.workers_subnet
+  destination_type          = "CIDR_BLOCK"
+  direction                 = "EGRESS"
+  protocol                  = local.tcp_protocol
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = local.health_check_port
+      max = local.health_check_port
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
+  }
+
+  count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
+}
+
 resource "oci_core_network_security_group_security_rule" "pub_lb_ingress" {
   network_security_group_id = oci_core_network_security_group.pub_lb[0].id
   description               = "Allow stateful ingress from ${element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 0)} on port ${element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1)}"
@@ -315,7 +443,7 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_ingress" {
     ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
 
-  count = var.load_balancers == "public" || var.load_balancers == "both" ? length(local.pub_lb_egress) : 0
+  count = var.load_balancers == "public" || var.load_balancers == "both" ? length(local.public_lb_allowed_cidrs_and_ports) : 0
 }
 
 # waf lb nsg and rules

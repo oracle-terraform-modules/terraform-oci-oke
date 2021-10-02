@@ -23,8 +23,8 @@ locals {
   anywhere = "0.0.0.0/0"
 
   # port numbers
+  health_check_port = 10256
   node_port_min = 30000
-
   node_port_max = 32767
 
   ssh_port = 22
@@ -42,11 +42,14 @@ locals {
 
   # oracle services network
   osn = lookup(data.oci_core_services.all_oci_services.services[0], "cidr_block")
-
-  waf_cidr_list = [
-    for waf_subnet in data.oci_waas_edge_subnets.waf_cidr_blocks.edge_subnets :
+  
+  # if waf is enabled, construct a list of WAF cidrs
+  # else return an empty list
+  waf_cidr_list = var.enable_waf == true ? [
+    for waf_subnet in data.oci_waas_edge_subnets.waf_cidr_blocks[0].edge_subnets :
     waf_subnet.cidr
-  ]
+  ] : []
+
 
   # if port = -1, allow all ports
 
@@ -219,7 +222,7 @@ locals {
 
   pub_lb_egress = [
     {
-      description      = "Allow stateful egress to internal load balancers subnet.",
+      description      = "Allow stateful egress to internal load balancers subnet on port 80",
       destination      = local.int_lb_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -227,7 +230,7 @@ locals {
       stateless        = false
     },
     {
-      description      = "Allow stateful egress to internal load balancers subnet.",
+      description      = "Allow stateful egress to internal load balancers subnet on port 443",
       destination      = local.int_lb_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -235,7 +238,7 @@ locals {
       stateless        = false
     },
     {
-      description      = "Allow stateful egress to workers. Required for NodePorts and load balancer http/tcp health checks",
+      description      = "Allow stateful egress to workers. Required for NodePorts",
       destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,

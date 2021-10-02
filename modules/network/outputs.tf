@@ -14,6 +14,15 @@ output "control_plane_nsg_id" {
   value = oci_core_network_security_group.cp.id
 }
 
+output "int_lb" {
+  value = var.load_balancers == "internal" || var.load_balancers == "both" ? oci_core_network_security_group.int_lb[0].id : ""
+}
+
+output "pub_lb" {
+  value = var.load_balancers == "public" || var.load_balancers == "both" ? oci_core_network_security_group.pub_lb[0].id :""
+}
+
 output "worker_nsg_id" {
   value = oci_core_network_security_group.workers.id
 }
+
