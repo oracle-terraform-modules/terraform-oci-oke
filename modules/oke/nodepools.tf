@@ -20,7 +20,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.cluster_subnets["workers"]
       }
     }
-    # We do not enforce consumer to create a node pool with the actual workers in it,
+    # We do not enforce consumers to create a node pool with a single worker node in it if no pool size was defined,
     # but instead we allow zero-sized node pool allowed by OKE API.
     size = max(0, lookup(each.value, "node_pool_size", 0))
   }
