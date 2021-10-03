@@ -380,7 +380,7 @@ The table below shows the valid combinations of preferred_load_balancer and subn
 
 ==== Using Public Load Balancers
 
-When creating a public load balancer, you must specify the list of NSGs using annotations e.g.
+When creating a public load balancer, you *_must_* specify the list of NSGs using annotations e.g.
 
 ----
 apiVersion: v1
@@ -395,7 +395,7 @@ spec:
   ....
 ----
 
-Note that since we have already added the NodePort range to the NSG, you can also disable the security list management and set its value to `"None"`.
+Note that since we have already added the NodePort range to the public load balancer NSG, you can also disable the security list management and set its value to `"None"`.
 
 ==== Using Internal Load Balancers
 

@@ -191,11 +191,6 @@ resource "oci_core_network_security_group_security_rule" "workers_ingress_from_i
     }
   }
 
-  icmp_options {
-    type = 3
-    code = 4
-  }
-
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? 1 : 0
 
   lifecycle {
@@ -242,11 +237,6 @@ resource "oci_core_network_security_group_security_rule" "workers_ingress_from_p
       min = local.node_port_min
       max = local.node_port_max
     }
-  }
-
-  icmp_options {
-    type = 3
-    code = 4
   }
 
   count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
@@ -434,11 +424,6 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_ingress" {
     }
   }
 
-  icmp_options {
-    type = 3
-    code = 4
-  }
-
   lifecycle {
     ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
@@ -456,11 +441,12 @@ resource "oci_core_network_security_group" "waf" {
 }
 
 resource "oci_core_network_security_group_security_rule" "waf_ingress" {
+  for_each                  = var.enable_waf == true ? toset(local.waf_cidr_list): toset([])
   network_security_group_id = oci_core_network_security_group.waf[0].id
   description               = "Allow stateful ingress from WAF"
   direction                 = "INGRESS"
   protocol                  = local.tcp_protocol
-  source                    = element(local.waf_cidr_list, count.index)
+  source                    = each.key
   source_type               = "CIDR_BLOCK"
 
   stateless = false
@@ -475,6 +461,4 @@ resource "oci_core_network_security_group_security_rule" "waf_ingress" {
   lifecycle {
     ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
-
-  count = var.enable_waf == true ? length(local.waf_cidr_list) : 0
 }
