@@ -20,8 +20,9 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.cluster_subnets["workers"]
       }
     }
-    # set quantity to a minimum of 1 to allow small clusters. 
-    size = max(1, lookup(each.value, "node_pool_size", 1))
+    # We do not enforce consumers to create a node pool with a single worker node in it if no pool size was defined,
+    # but instead we allow zero-sized node pool allowed by OKE API.
+    size = max(0, lookup(each.value, "node_pool_size", 0))
   }
   dynamic "node_shape_config" {
     for_each = length(regexall("Flex", lookup(each.value, "shape", "VM.Standard.E4.Flex"))) > 0 ? [1] : []
