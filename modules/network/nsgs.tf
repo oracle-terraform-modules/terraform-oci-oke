@@ -327,8 +327,8 @@ resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ing
 
   tcp_options {
     destination_port_range {
-      min = 10256
-      max = 10256
+      min = element(var.internal_lb_allowed_ports, count.index)
+      max = element(var.internal_lb_allowed_ports, count.index)
     }
   }
 
@@ -336,7 +336,7 @@ resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ing
     ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
 
-  count = var.load_balancers == "both" ? 1 : 0
+  count = var.load_balancers == "both" ? length(var.internal_lb_allowed_ports) : 0
 }
 
 # public lb nsg and rules
@@ -407,6 +407,30 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_egress_health_c
   count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
 }
 
+resource "oci_core_network_security_group_security_rule" "pub_lb_egress_health_check_to_int_lb" {
+  network_security_group_id = oci_core_network_security_group.pub_lb[0].id
+  description               = "Allow public load balancer health checks to internal load balancers"
+  destination               = local.int_lb_subnet
+  destination_type          = "CIDR_BLOCK"
+  direction                 = "EGRESS"
+  protocol                  = local.tcp_protocol
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = element(var.internal_lb_allowed_ports,count.index)
+      max = element(var.internal_lb_allowed_ports,count.index)
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
+  }
+
+  count = var.load_balancers == "both" ? length(var.internal_lb_allowed_ports) : 0
+}
+
 resource "oci_core_network_security_group_security_rule" "pub_lb_ingress" {
   network_security_group_id = oci_core_network_security_group.pub_lb[0].id
   description               = "Allow stateful ingress from ${element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 0)} on port ${element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1)}"
@@ -441,7 +465,7 @@ resource "oci_core_network_security_group" "waf" {
 }
 
 resource "oci_core_network_security_group_security_rule" "waf_ingress" {
-  for_each                  = var.enable_waf == true ? toset(local.waf_cidr_list): toset([])
+  for_each                  = var.enable_waf == true ? toset(local.waf_cidr_list) : toset([])
   network_security_group_id = oci_core_network_security_group.waf[0].id
   description               = "Allow stateful ingress from WAF"
   direction                 = "INGRESS"
