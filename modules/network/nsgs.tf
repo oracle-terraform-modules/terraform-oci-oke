@@ -327,8 +327,8 @@ resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ing
 
   tcp_options {
     destination_port_range {
-      min = element(var.internal_lb_allowed_ports, count.index)
-      max = element(var.internal_lb_allowed_ports, count.index)
+      min = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 0)) : element(var.internal_lb_allowed_ports, count.index)
+      max = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 1)) : element(var.internal_lb_allowed_ports, count.index)
     }
   }
 
@@ -419,8 +419,8 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_egress_health_c
 
   tcp_options {
     destination_port_range {
-      min = element(var.internal_lb_allowed_ports,count.index)
-      max = element(var.internal_lb_allowed_ports,count.index)
+      min = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 0)) : element(var.internal_lb_allowed_ports, count.index)
+      max = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 1)) : element(var.internal_lb_allowed_ports, count.index)
     }
   }
 
