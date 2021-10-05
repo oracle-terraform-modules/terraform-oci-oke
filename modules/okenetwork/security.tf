@@ -69,7 +69,7 @@ resource "oci_core_security_list" "control_plane_seclist" {
   }
   lifecycle {
     ignore_changes = [
-      egress_security_rules, ingress_security_rules
+      egress_security_rules, ingress_security_rules, defined_tags
     ]
   }
 }
@@ -195,7 +195,7 @@ resource "oci_core_security_list" "workers_seclist" {
 
   lifecycle {
     ignore_changes = [
-      egress_security_rules, ingress_security_rules
+      egress_security_rules, ingress_security_rules, defined_tags
     ]
   }
 }
@@ -225,7 +225,7 @@ resource "oci_core_security_list" "int_lb_seclist" {
       # Ignore changes to egress_security_rules,
       # because Kubernetes will dynamically add new ones based on
       # LoadBalancer requirements
-      egress_security_rules,
+      egress_security_rules, defined_tags
     ]
   }
   count = var.lb_subnet_type == "internal" || var.lb_subnet_type == "both" ? 1 : 0
@@ -290,7 +290,7 @@ resource "oci_core_security_list" "pub_lb_seclist" {
       # Ignore changes to egress_security_rules,
       # because Kubernetes will dynamically add new ones based on
       # LoadBalancer requirements
-      egress_security_rules,
+      egress_security_rules, defined_tags
     ]
   }
   count = (var.lb_subnet_type == "public" || var.lb_subnet_type == "both") ? 1 : 0
