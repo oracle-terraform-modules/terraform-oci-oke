@@ -20,9 +20,10 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.cluster_subnets["workers"]
       }
     }
-    # set quantity to a minimum of 1 to allow small clusters. 
-    size    = max(1, lookup(each.value, "node_pool_size", 1))
     nsg_ids = var.worker_nsgs
+    
+    # allow zero-sized node pools 
+    size = max(0, lookup(each.value, "node_pool_size", 0))    
   }
 
   dynamic "node_shape_config" {
