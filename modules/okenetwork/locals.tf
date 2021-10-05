@@ -38,6 +38,14 @@ locals {
   # control plane
   cp_egress = [
     {
+      description      = "Allow Kubernetes control plane to communicate with other services on this subnet (bastion service)",
+      destination      = local.cp_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = -1,
+      stateless        = false
+    },
+    {
       description      = "Allow Kubernetes control plane to communicate with OKE",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
