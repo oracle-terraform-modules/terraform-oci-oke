@@ -61,6 +61,6 @@ output "kubeconfig" {
   value       = "export KUBECONFIG=generated/kubeconfig"
 }
 
-output "bastion_service_id" {
+output "bastion_service_instance_id" {
   value = var.create_bastion_service == true ? module.bastionsvc[0].id: "null"
 }
