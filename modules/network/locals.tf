@@ -55,6 +55,14 @@ locals {
   # control plane
   cp_egress = [
     {
+      description      = "Allow Kubernetes Control plane to communicate to the control plane subnet. Required for when using OCI Bastion service.",
+      destination      = local.cp_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 6443,
+      stateless        = false
+    },
+    {
       description      = "Allow Kubernetes control plane to communicate with OKE",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
@@ -126,7 +134,7 @@ locals {
       stateless        = false
     },
     {
-      description = "Allow ICMP traffic for path discovery",
+      description      = "Allow ICMP traffic for path discovery",
       destination      = local.workers_subnet
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
