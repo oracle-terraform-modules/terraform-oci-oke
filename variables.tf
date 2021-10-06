@@ -102,13 +102,6 @@ variable "drg_display_name" {
   default     = "drg"
 }
 
-## waf
-variable "enable_waf" {
-  description = "Whether to enable WAF monitoring of load balancers"
-  type        = bool
-  default     = false
-}
-
 variable "internet_gateway_route_rules" {
   description = "(Updatable) List of routing rules to add to Internet Gateway Route Table"
   type        = list(map(string))
@@ -502,7 +495,7 @@ variable "check_node_active" {
   description = "check worker node is active"
   type        = string
   default     = "none"
-  
+
   validation {
     condition     = contains(["none", "one", "all"], var.check_node_active)
     error_message = "Accepted values are none, one or all."
@@ -580,6 +573,13 @@ variable "nodepool_upgrade_method" {
 
 # oke load balancers
 
+## waf
+variable "enable_waf" {
+  description = "Whether to enable WAF monitoring of load balancers"
+  type        = bool
+  default     = false
+}
+
 variable "load_balancers" {
   # values: both, internal, public
   default     = "public"
@@ -612,7 +612,7 @@ variable "internal_lb_allowed_cidrs" {
   validation {
     condition     = length(var.internal_lb_allowed_cidrs) > 0
     error_message = "At least 1 CIDR block is required."
-  } 
+  }
 }
 
 variable "internal_lb_allowed_ports" {
@@ -634,7 +634,7 @@ variable "public_lb_allowed_cidrs" {
   validation {
     condition     = length(var.public_lb_allowed_cidrs) > 0
     error_message = "At least 1 CIDR block is required."
-  }  
+  }
 }
 
 variable "public_lb_allowed_ports" {
