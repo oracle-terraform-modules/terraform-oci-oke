@@ -299,10 +299,11 @@ service_account_cluster_role_binding = ""
 
 You can monitor and protect the load balancers created by OKE using {uri-oci-waf}[OCI Web Application Firewall].
 
-If you would like to monitor and protect your application with OCI Web Application firewall, set *_enable_waf = true_*.
+If you would like to monitor and protect your application with OCI Web Application firewall, set `enable_waf = true` *_after_* the cluster has been created. In other words, you need to run `terraform apply` twice. In the first `terraform apply`, `enable_waf` should be set to `false` while the VCN and other resources are created. You can then set `enable_waf=true` and run `terraform apply` again.
 
-You'll then need to:
+You will then need to:
 
+. add the WAF NSG to the load balancer. Refer to the example in {uri-topology}#using-public-load-balancers[Topology - Using Public Load Balancers] for an example
 . {uri-oci-waf-policy}[create a WAF Policy]
 . {uri-oci-waf-dns}[Update your DNS records to enable WAF]
 
