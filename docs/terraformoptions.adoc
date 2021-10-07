@@ -543,19 +543,19 @@ EOT
 |
 |oke
 
-|control_plane_access
+|control_plane_type
 |Whether to allow public or private access to the control plane endpoint.
 |public/private
 |public
 
-|control_plane_access_source
+|control_plane_allowed_cidrs
 |The list of CIDR blocks from which the control plane can be accessed.
 |`[0.0.0.0/0]`
 |`[]`
 
 |control_plane_nsgs
-|A list of the network security groups (NSGs) ids to apply to the cluster endpoint.
-|[]
+|An additional list of network security groups (NSG) ids for the cluster endpoint that can be created subsequently.
+|["ocid1.networksecuritygroup.oc1....","ocid1.networksecuritygroup.oc1...."]
 |[]
 
 |`dashboard_enabled`
@@ -657,7 +657,12 @@ node_pools = {
 |
 |7.9
 
-|`worker_mode`
+|`worker_nsgs`
+|An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently.
+|["ocid1.networksecuritygroup.oc1....","ocid1.networksecuritygroup.oc1...."]
+|[]
+
+|`worker_type`
 |Whether the worker nodes should be public or private. Private requires NAT gateway.
 |private/public
 |private
@@ -704,17 +709,17 @@ node_pools = {
 |Values
 |Default
 
-|lb_subnet_type
+|load_balancers
 |The type of load balancer subnets to create. 
 
-Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
+Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting this value to internal is *_not_* sufficient.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 |both, internal, public
 |public
 
-|preferred_lb_subnet_type
-|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'.
+|preferred_load_balancer
+|The preferred load balancer subnets that OKE will automatically choose when creating load balancers. If 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'.
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient.
 
@@ -723,10 +728,25 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |internal/public
 |public
 
-|public_lb_ports
-|The List of allowed ports for public load balancers. Use a string if specifying a range.
-|`e.g.: [80,443,8080]` or [80,443, "7001-7010"]
+|internal_lb_allowed_cidrs
+|The list of CIDR blocks from which the internal load balancer can be accessed.
+|`e.g.: ["0.0.0.0/0"]
+|`["0.0.0.0/0"]`
+
+|internal_lb_allowed_ports
+|List of allowed ports for internal load balancers.
+|e.g.: `[80, 443]`
 |`[80, 443]`
+
+|public_lb_allowed_cidrs
+|The list of CIDR blocks from which the public load balancer can be accessed.
+|e.g.: `["0.0.0.0/0"]`
+|`["0.0.0.0/0"]`
+
+|public_lb_allowed_ports
+|List of allowed ports for public load balancers.
+|e.g.: `[443]`
+|`[443]`
 
 |===
 

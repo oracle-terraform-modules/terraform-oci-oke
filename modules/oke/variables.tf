@@ -18,7 +18,7 @@ variable "ssh_public_key_path" {}
 # oke
 variable "cluster_kubernetes_version" {}
 
-variable "control_plane_access" {}
+variable "control_plane_type" {}
 
 variable "control_plane_nsgs" {
   type = list(string)
@@ -73,4 +73,8 @@ variable "node_pool_os" {}
 
 variable "node_pool_os_version" {}
 
-variable "preferred_lb_subnet_type" {}
+variable "preferred_load_balancer" {}
+
+variable "worker_nsgs" {
+  type = list(any)
+}

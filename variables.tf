@@ -102,13 +102,6 @@ variable "drg_display_name" {
   default     = "drg"
 }
 
-## waf
-variable "enable_waf" {
-  description = "Whether to enable WAF monitoring of load balancers"
-  type        = bool
-  default     = false
-}
-
 variable "internet_gateway_route_rules" {
   description = "(Updatable) List of routing rules to add to Internet Gateway Route Table"
   type        = list(map(string))
@@ -266,7 +259,7 @@ variable "bastion_notification_topic" {
 
 # bastion service parameters
 variable "create_bastion_service" {
-  default     = true
+  default     = false
   description = "Whether to create a bastion service that allows access to private hosts."
   type        = bool
 }
@@ -423,18 +416,18 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "control_plane_access" {
+variable "control_plane_type" {
   default     = "public"
   description = "Whether to allow public or private access to the control plane endpoint"
   type        = string
 
   validation {
-    condition     = contains(["public", "private"], var.control_plane_access)
+    condition     = contains(["public", "private"], var.control_plane_type)
     error_message = "Accepted values are public, or private."
   }
 }
 
-variable "control_plane_access_source" {
+variable "control_plane_allowed_cidrs" {
   default     = []
   description = "The list of CIDR blocks from which the control plane can be accessed."
   type        = list(string)
@@ -442,7 +435,7 @@ variable "control_plane_access_source" {
 
 variable "control_plane_nsgs" {
   default     = []
-  description = "A list of the network security groups (NSGs) ids to apply to the cluster endpoint."
+  description = "An additional list of network security groups (NSG) ids for the cluster endpoint that can be created subsequently."
   type        = list(string)
 }
 
@@ -502,6 +495,7 @@ variable "check_node_active" {
   description = "check worker node is active"
   type        = string
   default     = "none"
+
   validation {
     condition     = contains(["none", "one", "all"], var.check_node_active)
     error_message = "Accepted values are none, one or all."
@@ -542,12 +536,18 @@ variable "node_pool_os_version" {
   type        = string
 }
 
-variable "worker_mode" {
+variable "worker_nsgs" {
+  default     = []
+  description = "An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently."
+  type        = list(any)
+}
+
+variable "worker_type" {
   default     = "private"
   description = "Whether to provision public or private workers."
   type        = string
   validation {
-    condition     = contains(["public", "private"], var.worker_mode)
+    condition     = contains(["public", "private"], var.worker_type)
     error_message = "Accepted values are public or private."
   }
 }
@@ -573,33 +573,79 @@ variable "nodepool_upgrade_method" {
 
 # oke load balancers
 
-variable "lb_subnet_type" {
+## waf
+variable "enable_waf" {
+  description = "Whether to enable WAF monitoring of load balancers"
+  type        = bool
+  default     = false
+}
+
+variable "load_balancers" {
   # values: both, internal, public
   default     = "public"
-  description = "The type of load balancer subnets to create."
+  description = "The type of subnets to create for load balancers."
   type        = string
   validation {
-    condition     = contains(["public", "internal", "both"], var.lb_subnet_type)
+    condition     = contains(["public", "internal", "both"], var.load_balancers)
     error_message = "Accepted values are public, internal or both."
   }
 }
 
-variable "preferred_lb_subnet_type" {
+variable "preferred_load_balancer" {
   # values: public, internal. 
   # When creating an internal load balancer, the internal annotation must still be specified regardless 
   default     = "public"
-  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for lb_subnet_type must be either 'public' or 'both'. If 'private' is chosen, the value for lb_subnet_type must be either 'internal' or 'both'."
+  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'."
   type        = string
   validation {
-    condition     = contains(["public", "internal"], var.preferred_lb_subnet_type)
+    condition     = contains(["public", "internal"], var.preferred_load_balancer)
     error_message = "Accepted values are public or internal."
   }
 }
 
-variable "public_lb_ports" {
+## Allowed cidrs and ports for load balancers
+variable "internal_lb_allowed_cidrs" {
+  default     = ["0.0.0.0/0"]
+  description = "The list of CIDR blocks from which the internal load balancer can be accessed."
+  type        = list(string)
+
+  validation {
+    condition     = length(var.internal_lb_allowed_cidrs) > 0
+    error_message = "At least 1 CIDR block is required."
+  }
+}
+
+variable "internal_lb_allowed_ports" {
   default     = [80, 443]
+  description = "List of allowed ports for internal load balancers."
+  type        = list(any)
+
+  validation {
+    condition     = length(var.internal_lb_allowed_ports) > 0
+    error_message = "At least 1 port is required."
+  }
+}
+
+variable "public_lb_allowed_cidrs" {
+  default     = ["0.0.0.0/0"]
+  description = "The list of CIDR blocks from which the public load balancer can be accessed."
+  type        = list(string)
+
+  validation {
+    condition     = length(var.public_lb_allowed_cidrs) > 0
+    error_message = "At least 1 CIDR block is required."
+  }
+}
+
+variable "public_lb_allowed_ports" {
+  default     = [443]
   description = "List of allowed ports for public load balancers."
-  type        = list
+  type        = list(any)
+
+  validation {
+    condition     = length(var.public_lb_allowed_ports) > 0
+    error_message = "At least 1 port is required."
+  }
 }
 
 # ocir
@@ -641,13 +687,13 @@ variable "ocir_urls" {
 }
 
 variable "secret_id" {
-  description = "OCID of Oracle Vault Secret which holds the auth token."
+  description = "The OCID of the Secret on OCI Vault which holds the authentication token."
   type        = string
   default     = "none"
 }
 
 variable "secret_name" {
-  description = "Secret name in Kubernetes that will hold the authentication token"
+  description = "The name of the Kubernetes secret that will hold the authentication token"
   type        = string
   default     = "ocirsecret"
 }
@@ -666,7 +712,7 @@ variable "username" {
 
 # calico
 variable "enable_calico" {
-  description = "whether to install calico for network pod security policy"
+  description = "Whether to install calico for network pod security policy"
   default     = false
   type        = bool
 }
@@ -679,44 +725,44 @@ variable "calico_version" {
 
 # horizontal and vertical pod autoscaling
 variable "enable_metric_server" {
-  description = "whether to install metricserver for collecting metrics and for HPA"
+  description = "Whether to install metricserver for collecting metrics and for HPA"
   default     = false
   type        = bool
 }
 
 variable "enable_vpa" {
-  description = "whether to install vertical pod autoscaler"
+  description = "Whether to install vertical pod autoscaler"
   default     = false
   type        = bool
 }
 
 variable "vpa_version" {
-  description = "version of vertical pod autoscaler to install"
+  description = "The version of vertical pod autoscaler to install"
   default     = "0.8"
 }
 
 # serviceaccount
 
 variable "create_service_account" {
-  description = "whether to create a service account. A service account is required for CI/CD. see https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
+  description = "Whether to create a service account. A service account is required for CI/CD. see https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengaddingserviceaccttoken.htm"
   default     = false
   type        = bool
 }
 
 variable "service_account_name" {
-  description = "name of service account to create"
+  description = "The name of service account to create"
   default     = "kubeconfigsa"
   type        = string
 }
 
 variable "service_account_namespace" {
-  description = "kubernetes namespace where to create the service account"
+  description = "The Kubernetes namespace where to create the service account"
   default     = "kube-system"
   type        = string
 }
 
 variable "service_account_cluster_role_binding" {
-  description = "cluster role binding name"
+  description = "The cluster role binding name"
   default     = "cluster-admin"
   type        = string
 }
@@ -742,6 +788,7 @@ variable "freeform_tags" {
   type        = map(any)
 }
 
+# placeholder variable for debugging scripts. To be implemented in future
 variable "debug_mode" {
   default     = false
   description = "Whether to turn on debug mode."

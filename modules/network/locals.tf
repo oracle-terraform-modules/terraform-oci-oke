@@ -5,7 +5,7 @@ locals {
 
   # first vcn cidr
   # pick the first cidr block in the list as this is where we will create the oke subnets
-  vcn_cidr = element(data.oci_core_vcn.vcn.cidr_blocks,0)
+  vcn_cidr = element(data.oci_core_vcn.vcn.cidr_blocks, 0)
 
   # subnet cidrs - used by subnets
   bastion_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["bastion"], "newbits"), lookup(var.subnets["bastion"], "netnum"))
@@ -23,9 +23,9 @@ locals {
   anywhere = "0.0.0.0/0"
 
   # port numbers
-  node_port_min = 30000
-
-  node_port_max = 32767
+  health_check_port = 10256
+  node_port_min     = 30000
+  node_port_max     = 32767
 
   ssh_port = 22
 
@@ -43,12 +43,19 @@ locals {
   # oracle services network
   osn = lookup(data.oci_core_services.all_oci_services.services[0], "cidr_block")
 
+  # if waf is enabled, construct a list of WAF cidrs
+  # else return an empty list
+  waf_cidr_list = var.enable_waf == true ? [
+    for waf_subnet in data.oci_waas_edge_subnets.waf_cidr_blocks[0].edge_subnets :
+    waf_subnet.cidr
+  ] : []
+
   # if port = -1, allow all ports
 
   # control plane
   cp_egress = [
     {
-      description      = "Allow OCI Bastion service to communicate with the OKE control plane",
+      description      = "Allow Kubernetes Control plane to communicate to the control plane subnet. Required for when using OCI Bastion service.",
       destination      = local.cp_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -64,7 +71,7 @@ locals {
       stateless        = false
     },
     {
-      description      = "Allow all traffic to worker nodes",
+      description      = "Allow all TCP traffic from control plane to worker nodes",
       destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -72,7 +79,7 @@ locals {
       stateless        = false
     },
     {
-      description      = "Allow path discovery to worker nodes",
+      description      = "Allow ICMP traffic for path discovery to worker nodes",
       destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
@@ -87,6 +94,7 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 6443,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -94,13 +102,15 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 12250,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
-      description = "Allow path discovery from worker nodes"
+      description = "Allow ICMP traffic for path discovery from worker nodes"
       protocol    = local.icmp_protocol,
       port        = -1,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -108,6 +118,7 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 6443,
       source      = local.operator_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
   ]
@@ -123,15 +134,15 @@ locals {
       stateless        = false
     },
     {
-      description      = "Allow path discovery",
-      destination      = local.anywhere,
+      description      = "Allow ICMP traffic for path discovery",
+      destination      = local.workers_subnet
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
       port             = -1,
       stateless        = false
     },
     {
-      description      = "Allow worker nodes to communicate with OSN so applications can use OCI Streaming, Object Storage, Autonomous",
+      description      = "Allow worker nodes to communicate with OKE",
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -162,6 +173,7 @@ locals {
       protocol    = local.all_protocols,
       port        = -1,
       source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
@@ -169,14 +181,80 @@ locals {
       protocol    = local.tcp_protocol,
       port        = -1,
       source      = local.cp_subnet,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     },
     {
       description = "Allow path discovery from worker nodes"
       protocol    = local.icmp_protocol,
       port        = -1,
+      //this should be local.worker_subnet?
       source      = local.anywhere,
+      source_type = "CIDR_BLOCK",
       stateless   = false
     }
   ]
+
+  int_lb_egress = [
+    {
+      description      = "Allow stateful egress to workers. Required for NodePorts and load balancer http/tcp health checks",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "30000-32767",
+      stateless        = false
+    },
+    {
+      description      = "Allow ICMP traffic for path discovery to worker nodes",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.icmp_protocol,
+      port             = -1,
+      stateless        = false
+    },
+  ]
+
+  # Combine supplied allow list and the public load balancer subnet
+  internal_lb_allowed_cidrs = concat(var.internal_lb_allowed_cidrs, tolist([local.pub_lb_subnet]))
+
+  # Create a Cartesian product of allowed cidrs and ports
+  internal_lb_allowed_cidrs_and_ports = setproduct(local.internal_lb_allowed_cidrs, var.internal_lb_allowed_ports)
+
+  pub_lb_egress = [
+    {
+      description      = "Allow stateful egress to internal load balancers subnet on port 80",
+      destination      = local.int_lb_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 80
+      stateless        = false
+    },
+    {
+      description      = "Allow stateful egress to internal load balancers subnet on port 443",
+      destination      = local.int_lb_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 443
+      stateless        = false
+    },
+    {
+      description      = "Allow stateful egress to workers. Required for NodePorts",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "30000-32767",
+      stateless        = false
+    },
+    {
+      description      = "Allow ICMP traffic for path discovery to worker nodes",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.icmp_protocol,
+      port             = -1,
+      stateless        = false
+    },
+  ]
+
+  public_lb_allowed_cidrs           = var.public_lb_allowed_cidrs
+  public_lb_allowed_cidrs_and_ports = setproduct(local.public_lb_allowed_cidrs, var.public_lb_allowed_ports)
 }
