@@ -70,3 +70,7 @@ output "kubeconfig" {
   description = "convenient command to set KUBECONFIG environment variable before running kubectl locally"
   value       = "export KUBECONFIG=generated/kubeconfig"
 }
+
+output "bastion_service_instance_id" {
+  value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id: "null"
+}
