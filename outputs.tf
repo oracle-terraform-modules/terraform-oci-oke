@@ -62,5 +62,5 @@ output "kubeconfig" {
 }
 
 output "bastion_service_instance_id" {
-  value = var.create_bastion_service == true ? module.bastionsvc[0].instance_id: "null"
+  value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id: "null"
 }
