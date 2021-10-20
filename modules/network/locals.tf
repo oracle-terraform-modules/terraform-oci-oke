@@ -62,18 +62,18 @@ locals {
       port             = 6443,
       stateless        = false
     }
-    ]
+  ]
 
-    cp_ingress_seclist = [
+  cp_ingress_seclist = [
     {
-      description      = "Allow Bastion service to communicate to the control plane endpoint. Required for when using OCI Bastion service.",
-      destination      = local.cp_subnet,
-      destination_type = "CIDR_BLOCK",
-      protocol         = local.tcp_protocol,
-      port             = 6443,
-      stateless        = false
+      description = "Allow Bastion service to communicate to the control plane endpoint. Required for when using OCI Bastion service.",
+      source      = local.cp_subnet,
+      source_type = "CIDR_BLOCK",
+      protocol    = local.tcp_protocol,
+      port        = 6443,
+      stateless   = false
     }
-    ]
+  ]
   # control plane
   cp_egress = [
     {
