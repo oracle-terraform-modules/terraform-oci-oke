@@ -34,8 +34,9 @@ resource "oci_core_security_list" "control_plane_seclist" {
     content {
       description = cp_ingress_iterator.value["description"]
       protocol    = cp_ingress_iterator.value["protocol"]
-      source      = local.cp_subnet
+      source      = cp_ingress_iterator.value["source"]
       stateless   = cp_ingress_iterator.value["stateless"]
+      source_type = cp_ingress_iterator.value["source_type"]
 
       dynamic "tcp_options" {
         for_each = cp_ingress_iterator.value["protocol"] == local.tcp_protocol && cp_ingress_iterator.value["port"] != -1 ? [1] : []
