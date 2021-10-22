@@ -7,7 +7,7 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-= Unreleased
+= 4.0.0
 === Breaking changes
 * Set minimum version to Terraform 1.0.0
 * Removed base module and use vcn, bastion and operator modules directly
@@ -20,7 +20,7 @@ The format is based on {uri-changelog}[Keep a Changelog].
 * Moved dynamic group and policy for kms into oke module
 * Added a 30s delay between policy creation for kms and cluster creation to allow for global propagation
 * Added a home provider in oke module for dynamic group and policy creation
-* Changed from security list to NSGs for better flexibility
+* Changed from security list to NSGs for better flexibility and security (#398)
 
 === Changes
 * Changed default Kubernetes version to v1.20.8 and removed v1.16.8, v1.17.9 from docs.
@@ -33,17 +33,20 @@ The format is based on {uri-changelog}[Keep a Changelog].
 * Added validation on some variables (#370)
 
 === New Features
-* Added OCI Bastion Service as option to access operator or control plane
+* Added OCI Bastion Service as option to access operator or control plane 
 * Added support for reserved public IP address for NAT gateway (#311)
 * Added LPGs for hub and spoke deployment model (#295)
 * Allow access to operator via OCI Bastion service (#352)
 * Added support for using NSGs for cluster endpoint (#343)
 * Added option to disable worker node access to Internet. Users can only pull images from OCIR (#331)
-* Added ability to specify api and private ssh keys using heredoc format with a variable (#375) 
+* Added ability to specify api and private ssh keys using heredoc format with a variable (#375)
 
 === Bug fixes
 * Added home region to update dynamic group script for cases when actual region is different from tenancy home region (#347)
 * Added 1 missing rule for operator to access control plane (#349)
+* Added security list for OCI Bastion service to access the control plane (#408)
+* Updated topology diagrams to show correct traffic flow (#412)
+* Changed bastion type to STANDARD to avoid destruction (#409)
 
 === Known issues
 * Enabling WAF has to be done in 2 stages:
