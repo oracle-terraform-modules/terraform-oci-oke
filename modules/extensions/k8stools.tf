@@ -22,7 +22,7 @@ resource "null_resource" "install_kubectl_operator" {
   provisioner "remote-exec" {
     inline = [
       "chmod +x $HOME/install_kubectl.sh",
-      "bash $HOME/install_kubectl.sh",
+      "$HOME/install_kubectl.sh",
       "rm -f $HOME/install_kubectl.sh"
     ]
   }
