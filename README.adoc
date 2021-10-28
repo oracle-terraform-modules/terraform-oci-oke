@@ -44,7 +44,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 == {uri-docs}[Documentation]
 
-* {uri-prereqs}[Pre-requisites]
+* {uri-prereqs}[Prerequisites]
 
 * {uri-quickstart}[Quick Start]
 

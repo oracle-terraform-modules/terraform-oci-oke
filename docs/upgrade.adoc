@@ -30,7 +30,7 @@ This has to be done in order.
 
 NOTE: The out-of-place method is currently the _only_ supported method of upgrading a cluster and worker nodes.
 
-== Pre-requisites
+== Prerequisites
 
 . bastion host is created
 . operator host is created

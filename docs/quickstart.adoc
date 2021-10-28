@@ -21,19 +21,19 @@
 :uri-terraform-precedence: https://www.terraform.io/docs/language/values/variables.html#variable-definition-precedence
 :uri-variables: {uri-rel-file-base}/variables.tf
 
-=== Assumptions
+== Assumptions
 
 1. You have setup the {uri-oci-keys}[required keys]
 2. You know the {uri-oci-ocids}[required OCIDs]
 3. You have set the {uri-oci-okepolicy}[necessary OKE policy]
 
-=== Pre-requisites
+== Prerequisites
 
 1. git is installed
 2. ssh client is installed
 3. Terraform 1.0.0+ is installed
 
-=== Provisioning using this git repo
+== Provision using this git repo
 
 . Clone the repo:
 
@@ -127,7 +127,7 @@ terraform plan
 terraform apply
 ----
 
-=== Provisioning using the HashiCorp registry module
+== Provision using the HashiCorp registry module
 
 . In your project root, create a provider.tf file and repeat the steps for creating providers as above.
 
@@ -170,6 +170,9 @@ module "oke" {
 
   # add additional parameters for availability_domains, oke etc as you need
 
+  providers = {
+    oci.home = oci.home
+  }
 }
 ----
 
@@ -183,7 +186,7 @@ terraform plan
 terraform apply
 ----
 
-=== Related documentation
+== Related documentation
 
 * {uri-instructions}[Detailed Instructions]
 

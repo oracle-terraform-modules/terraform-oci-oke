@@ -59,7 +59,7 @@
 
 This section assumes you have completed the following:
 
-. all the {uri-prereqs}[pre-requisites]
+. all the {uri-prereqs}[prerequisites]
 . all the required {uri-configuration}[configuration]
 
 === KMS Integration

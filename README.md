@@ -38,7 +38,7 @@ This [Terraform OKE Installer][uri-repo] for [Oracle Cloud Infrastructure][uri-o
 
 ## [Documentation][uri-docs]
 
-* [Pre-requisites][uri-prereqs]
+* [Prerequisites][uri-prereqs]
 
 * [Quick Start][uri-quickstart]
 
