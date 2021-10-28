@@ -1,4 +1,4 @@
-= Pre-requisites
+= Prerequisites
 :idprefix:
 :idseparator: -
 :sectlinks:
@@ -28,7 +28,7 @@
 :uri-terraform: https://www.terraform.io
 :uri-terraform-download: https://www.terraform.io/downloads.html
 
-This section will guide you through the pre-requisites before you can use this project.
+This section will guide you through the prerequisites before you can use this project.
 
 You can proceed to {uri-instructions}[creating the cluster] if you have already done these.
 

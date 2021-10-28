@@ -43,11 +43,11 @@
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 :uri-topology: {uri-docs}/topology.adoc
 
-=== Assumptions
+== Assumptions
 
-This section assumes you have completed all the {uri-prereqs}[pre-requisites].
+This section assumes you have completed all the {uri-prereqs}[Prerequisites].
 
-=== Configure the variable file
+== Configure the variable file
 
 A sample variable file (terraform.tfvars.example) with all the configuration options is available. Create a terraform variable file by copying the terraform.tfvars.example:
 
@@ -55,7 +55,7 @@ A sample variable file (terraform.tfvars.example) with all the configuration opt
 cp terraform.tfvars.example terraform.tfvars
 ----
 
-=== Configure identity parameters
+== Configure identity parameters
 
 Enter the values for the following parameters in the terraform.tfvars file:
 
@@ -77,11 +77,11 @@ Alternatively, you can also specify these using Terraform environment variables 
 export TF_api_fingerprint = "1a:bc:23:45:6d:78:e9:f0:gh:ij:kl:m1:23:no:4p:5q"
 ----
 
-You would have obtained your values when doing the {uri-prereqs}[pre-requisites]. 
+You would have obtained your values when doing the {uri-prereqs}[Prerequisites]. 
 
 {uri-terraform-options}#identity-and-access[Reference]
 
-=== Configure ssh keys
+== Configure ssh keys
 
 If you intend to use the bastion host, you must supply the ssh keys:
 
@@ -100,7 +100,7 @@ ssh-add ~/.ssh/dev_rsa
 
 {uri-terraform-options}#ssh-keys[Reference]
 
-=== Configure OCI parameters
+== Configure OCI parameters
 
 The 3 OCI parameters here mainly concern:
 
@@ -127,7 +127,7 @@ The list of regions can be found {uri-oci-region}[here].
 
 {uri-terraform-options}#general-oci[Reference]
 
-=== Configure OCI Networking parameters
+== Configure OCI Networking parameters
 
 The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT Gateway. 
 
@@ -145,7 +145,7 @@ If you need to change the default VCN's CIDR, note the following:
 
 {uri-terraform-options}#oci-networking[Reference]
 
-=== Configure bastion host parameters
+== Configure bastion host parameters
 
 The bastion host parameters concern:
 
@@ -155,7 +155,7 @@ The bastion host parameters concern:
 
 Please note that the bastion host is different from the OCI Bastion service.
 
-=== Configure operator host parameters
+== Configure operator host parameters
 
 The operator host parameters concern:
 
@@ -169,7 +169,7 @@ Read {uri-instructions}#enabling-instance_principal-on-the-operator-host[more] a
 
 {uri-terraform-options}#operator-host[Reference]
 
-=== Configure OKE parameters
+== Configure OKE parameters
 
 The OKE parameters concern mainly the following:
 
@@ -192,7 +192,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 {uri-terraform-options}#oke[Reference]
 
-=== Configure OKE Node Pool parameters
+== Configure OKE Node Pool parameters
 
 The OKE Node Pool parameters control the following:
 
@@ -209,7 +209,7 @@ An empty value for boot volume size will default the boot volume to 50GB. This v
 
 Refer to {uri-topology}[topology] for more thorough examples.
 
-=== Configure OKE Load Balancer parameters
+== Configure OKE Load Balancer parameters
 
 The OKE Load Balancer parameters concern mainly the following:
 
@@ -222,7 +222,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 {uri-terraform-options}#oke-load-balancers[Reference]
 
-=== Configure OCIR parameters
+== Configure OCIR parameters
 
 The {uri-oci-authtoken}#[Auth Token] must first be manually created and stored in {uri-oci-secret}#[OCI Secret in Vault]. It will subsequently be used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment. If you do not need to use private OCIR repositories, then leave the *secret_id* parameter empty. Refer to the {uri-instructions}#creating-a-secret-for-ocir[instructions] for how to create the Auth Token and the Secret in Vault.
 
@@ -234,19 +234,19 @@ kubectl --namespace=default get secret ocirsecret --export -o yaml | kubectl app
 
 {uri-terraform-options}#ocir[Reference]
 
-=== Configure Calico parameters
+== Configure Calico parameters
 
 The calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
 
 {uri-terraform-options}#calico[Reference]
 
-=== Configure Kubernetes Metrics Server parameters
+== Configure Kubernetes Metrics Server parameters
 
 The Kubernetes Metrics Server parameter controls the installation of {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
 
 {uri-terraform-options}#kubernetes-metrics-server[Reference]
 
-=== Configure KMS Integration parameters
+== Configure KMS Integration parameters
 
 The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets. Additionally, the bastion and operator hosts must be enabled as well as instance_principal on the operator.
 
