@@ -520,6 +520,12 @@ variable "waf_enabled" {
   default     = false
 }
 
+variable "fss_enabled" {
+  description = "whether to enable FSS for OKE"
+  type        = bool
+  default     = false
+}
+
 # tagging
 variable "tags" {
   default = {

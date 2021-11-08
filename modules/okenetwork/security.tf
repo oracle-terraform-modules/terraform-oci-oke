@@ -35,7 +35,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
     protocol    = local.all_protocols
     stateless   = false
   }
-  
+
   dynamic "ingress_security_rules" {
     iterator = public_worker_ingress_iterator
     for_each = local.public_worker_ingress
@@ -131,7 +131,7 @@ resource "oci_core_security_list" "public_workers_seclist" {
 # private worker security checklist
 resource "oci_core_security_list" "private_workers_seclist" {
   compartment_id = var.compartment_id
-  display_name   = var.label_prefix == "none" ? "private-workers" :"${var.label_prefix}-private-workers"
+  display_name   = var.label_prefix == "none" ? "private-workers" : "${var.label_prefix}-private-workers"
   vcn_id         = var.oke_network_vcn.vcn_id
 
   dynamic "egress_security_rules" {
@@ -267,7 +267,7 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
       destination = local.int_lb_subnet
       stateless   = false
     }
-  }  
+  }
 
   dynamic "ingress_security_rules" {
     iterator = pub_lb_ingress_iterator
@@ -281,7 +281,7 @@ resource "oci_core_security_list" "pub_lb_seclist_wo_waf" {
         min = pub_lb_ingress_iterator.value
         max = pub_lb_ingress_iterator.value
       }
-      stateless   = false
+      stateless = false
     }
   }
 
@@ -318,7 +318,7 @@ resource "oci_core_security_list" "pub_lb_seclist_with_waf" {
       destination = local.int_lb_subnet
       stateless   = false
     }
-  }  
+  }
 
   dynamic "ingress_security_rules" {
     iterator = waf_iterator
@@ -342,3 +342,200 @@ resource "oci_core_security_list" "pub_lb_seclist_with_waf" {
   }
   count = ((var.lb_subnet_type == "public" || var.lb_subnet_type == "both") && var.waf_enabled == true) ? 1 : 0
 }
+
+# FSS Security Rules for Mount Target subnet
+resource "oci_core_security_list" "fss_mt_seclist" {
+  compartment_id = var.compartment_id
+  display_name   = var.label_prefix == "none" ? "fss" : "${var.label_prefix}-fss-mt-seclist"
+  vcn_id         = var.oke_network_vcn.vcn_id
+
+  # egress rules - tcp protocol
+  dynamic "egress_security_rules" {
+    iterator = fss_egress_tcp_iterator
+    for_each = local.fss_mt_tcp_egress
+
+    content {
+      description      = fss_egress_tcp_iterator.value["description"]
+      destination      = fss_egress_tcp_iterator.value["destination"]
+      destination_type = fss_egress_tcp_iterator.value["destination_type"]
+      protocol         = fss_egress_tcp_iterator.value["protocol"] == "all" ? "all" : tonumber(fss_egress_tcp_iterator.value["protocol"])
+      stateless        = tobool(fss_egress_tcp_iterator.value["stateless"])
+
+      dynamic "tcp_options" {
+        for_each = tonumber(fss_egress_tcp_iterator.value["port"]) == -1 ? [] : list(1)
+
+        content {
+          source_port_range {
+            min = tonumber(fss_egress_tcp_iterator.value["port"])
+            max = tonumber(fss_egress_tcp_iterator.value["port"])
+          }
+        }
+      }
+    }
+  }
+
+  # egress rules - upd protocol
+  dynamic "egress_security_rules" {
+    iterator = fss_egress_udp_iterator
+    for_each = local.fss_mt_udp_egress
+
+    content {
+      description      = fss_egress_udp_iterator.value["description"]
+      destination      = fss_egress_udp_iterator.value["destination"]
+      destination_type = fss_egress_udp_iterator.value["destination_type"]
+      protocol         = fss_egress_udp_iterator.value["protocol"] == "all" ? "all" : tonumber(fss_egress_udp_iterator.value["protocol"])
+      stateless        = tobool(fss_egress_udp_iterator.value["stateless"])
+
+      dynamic "udp_options" {
+        for_each = tonumber(fss_egress_udp_iterator.value["port"]) == -1 ? [] : list(1)
+
+        content {
+          source_port_range {
+            min = tonumber(fss_egress_udp_iterator.value["port"])
+            max = tonumber(fss_egress_udp_iterator.value["port"])
+          }
+        }
+      }
+    }
+  }
+
+  # ingress rules from mount target subnet - tcp protocol
+  dynamic "ingress_security_rules" {
+    iterator = fss_mt_tcp_ingress
+    for_each = local.fss_mt_tcp_ingress
+    content {
+      description = "allow ingress traffic from mount target"
+      protocol    = fss_mt_tcp_ingress.value["protocol"]
+      source      = fss_mt_tcp_ingress.value["source"]
+      stateless   = tobool(fss_mt_tcp_ingress.value["stateless"])
+      dynamic "tcp_options" {
+        for_each = tonumber(fss_mt_tcp_ingress.value["port"]) == -1 ? [] : list(1)
+        content {
+          min = tonumber(fss_mt_tcp_ingress.value["port"])
+          max = tonumber(fss_mt_tcp_ingress.value["port"])
+        }
+      }
+
+    }
+  }
+
+  # ingress rules from mount target subnet - udp protocol
+  dynamic "ingress_security_rules" {
+    iterator = fss_mt_udp_ingress
+    for_each = local.fss_mt_udp_ingress
+    content {
+      description = "allow ingress traffic from mount target"
+      protocol    = fss_mt_udp_ingress.value["protocol"]
+      source      = fss_mt_udp_ingress.value["source"]
+      stateless   = tobool(fss_mt_udp_ingress.value["stateless"])
+      dynamic "udp_options" {
+        for_each = tonumber(fss_mt_udp_ingress.value["port"]) == -1 ? [] : list(1)
+        content {
+          min = tonumber(fss_mt_udp_ingress.value["port"])
+          max = tonumber(fss_mt_udp_ingress.value["port"])
+        }
+      }
+    }
+  }
+
+  count = (var.fss_enabled == true) ? 1 : 0
+}
+
+# FSS Security Rules for Instance subnet
+resource "oci_core_security_list" "fss_inst_seclist" {
+  compartment_id = var.compartment_id
+  display_name   = var.label_prefix == "none" ? "fss" : "${var.label_prefix}-fss-inst-seclist"
+  vcn_id         = var.oke_network_vcn.vcn_id
+
+  # egress rules - tcp protocol
+  dynamic "egress_security_rules" {
+    iterator = fss_egress_tcp_iterator
+    for_each = local.fss_inst_tcp_egress
+
+    content {
+      description      = fss_egress_tcp_iterator.value["description"]
+      destination      = fss_egress_tcp_iterator.value["destination"]
+      destination_type = fss_egress_tcp_iterator.value["destination_type"]
+      protocol         = fss_egress_tcp_iterator.value["protocol"] == "all" ? "all" : tonumber(fss_egress_tcp_iterator.value["protocol"])
+      stateless        = tobool(fss_egress_tcp_iterator.value["stateless"])
+
+      dynamic "tcp_options" {
+        for_each = tonumber(fss_egress_tcp_iterator.value["port"]) == -1 ? [] : list(1)
+
+        content {
+            min = tonumber(fss_egress_tcp_iterator.value["port"])
+            max = tonumber(fss_egress_tcp_iterator.value["port"])
+          }
+      }
+    }
+  }
+
+  # egress rules - upd protocol
+  dynamic "egress_security_rules" {
+    iterator = fss_egress_udp_iterator
+    for_each = local.fss_inst_udp_egress
+
+    content {
+      description      = fss_egress_udp_iterator.value["description"]
+      destination      = fss_egress_udp_iterator.value["destination"]
+      destination_type = fss_egress_udp_iterator.value["destination_type"]
+      protocol         = fss_egress_udp_iterator.value["protocol"] == "all" ? "all" : tonumber(fss_egress_udp_iterator.value["protocol"])
+      stateless        = tobool(fss_egress_udp_iterator.value["stateless"])
+
+      dynamic "udp_options" {
+        for_each = tonumber(fss_egress_udp_iterator.value["port"]) == -1 ? [] : list(1)
+
+        content {
+            min = tonumber(fss_egress_udp_iterator.value["port"])
+            max = tonumber(fss_egress_udp_iterator.value["port"])
+        }
+      }
+    }
+  }
+
+  # ingress rules from mount target subnet - tcp protocol
+  dynamic "ingress_security_rules" {
+    iterator = fss_inst_tcp_ingress
+    for_each = local.fss_inst_tcp_ingress
+    content {
+      description = "allow ingress traffic from mount target"
+      protocol    = fss_inst_tcp_ingress.value["protocol"]
+      source      = fss_inst_tcp_ingress.value["source"]
+      stateless   = tobool(fss_inst_tcp_ingress.value["stateless"])
+      dynamic "tcp_options" {
+        for_each = tonumber(fss_inst_tcp_ingress.value["port"]) == -1 ? [] : list(1)
+        content {
+          source_port_range {
+            min = tonumber(fss_inst_tcp_ingress.value["port"])
+            max = tonumber(fss_inst_tcp_ingress.value["port"])
+          }
+        }
+      }
+
+    }
+  }
+
+  # ingress rules from mount target subnet - udp protocol
+  dynamic "ingress_security_rules" {
+    iterator = fss_inst_udp_ingress
+    for_each = local.fss_inst_udp_ingress
+    content {
+      description = "allow ingress traffic from mount target"
+      protocol    = fss_inst_udp_ingress.value["protocol"]
+      source      = fss_inst_udp_ingress.value["source"]
+      stateless   = tobool(fss_inst_udp_ingress.value["stateless"])
+      dynamic "udp_options" {
+        for_each = tonumber(fss_inst_udp_ingress.value["port"]) == -1 ? [] : list(1)
+        content {
+          source_port_range {
+            min = tonumber(fss_inst_udp_ingress.value["port"])
+            max = tonumber(fss_inst_udp_ingress.value["port"])
+          }
+        }
+      }
+    }
+  }
+
+  count = (var.fss_enabled == true) ? 1 : 0
+}
+

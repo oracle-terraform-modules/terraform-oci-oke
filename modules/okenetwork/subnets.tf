@@ -8,7 +8,7 @@ resource "oci_core_subnet" "workers" {
   dns_label                  = "workers"
   prohibit_public_ip_on_vnic = var.oke_network_worker.worker_mode == "private" ? true : false
   route_table_id             = var.oke_network_worker.worker_mode == "private" ? var.oke_network_vcn.nat_route_id : var.oke_network_vcn.ig_route_id
-  security_list_ids          = var.oke_network_worker.worker_mode == "private" ? [oci_core_security_list.private_workers_seclist[0].id] : [oci_core_security_list.public_workers_seclist[0].id]
+  security_list_ids = var.oke_network_worker.worker_mode == "private" ? ((var.fss_enabled == true) ? [oci_core_security_list.private_workers_seclist[0].id, oci_core_security_list.fss_inst_seclist[0].id] : [oci_core_security_list.private_workers_seclist[0].id]) : ((var.fss_enabled == true) ? [oci_core_security_list.public_workers_seclist[0].id, oci_core_security_list.fss_inst_seclist[0].id] : [oci_core_security_list.public_workers_seclist[0].id])
   vcn_id                     = var.oke_network_vcn.vcn_id
 }
 
@@ -36,4 +36,17 @@ resource "oci_core_subnet" "pub_lb" {
   vcn_id                     = var.oke_network_vcn.vcn_id
 
   count = var.lb_subnet_type == "public" || var.lb_subnet_type == "both" ? 1 : 0
+}
+
+resource "oci_core_subnet" "fss" {
+  cidr_block                 = local.fss_subnet
+  compartment_id             = var.compartment_id
+  display_name               = var.label_prefix == "none" ? "fss" : "${var.label_prefix}-fss"
+  dns_label                  = "fss"
+  prohibit_public_ip_on_vnic = true
+  route_table_id             = var.oke_network_vcn.nat_route_id
+  security_list_ids          = [oci_core_security_list.fss_mt_seclist[0].id]
+  vcn_id                     = var.oke_network_vcn.vcn_id
+
+  count = (var.fss_enabled == true) ? 1 : 0
 }

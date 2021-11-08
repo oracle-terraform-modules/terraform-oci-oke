@@ -8,6 +8,8 @@ locals {
   int_lb_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.netnum["int_lb"])
   pub_lb_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["lb"], var.oke_network_vcn.netnum["pub_lb"])
   worker_subnet  = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["workers"], var.oke_network_vcn.netnum["workers"])
+  fss_subnet     = cidrsubnet(var.oke_network_vcn.vcn_cidr, var.oke_network_vcn.newbits["fss"], var.oke_network_vcn.netnum["fss"])
+
 
   anywhere = "0.0.0.0/0"
 
@@ -144,4 +146,204 @@ locals {
     "192.29.48.0/21", "192.29.56.0/21", "192.29.64.0/20", "192.29.96.0/20", "192.69.118.0/23", "198.181.48.0/21",
     "199.195.6.0/23", "205.147.88.0/21"
   ]
+
+  # fss mount target security rules
+  # security list for fss : ingress rule for UDP protocol
+  fss_mt_udp_ingress = [
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.udp_protocol,
+      port        = 111,
+      source      = local.worker_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.udp_protocol,
+      port        = 2048,
+      source      = local.worker_subnet,
+      stateless   = false
+    },
+  ]
+
+  # security list for fss : ingress rules for TCP protocol
+  fss_mt_tcp_ingress = [
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 111,
+      source      = local.worker_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 2048,
+      source      = local.worker_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 2049,
+      source      = local.worker_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 2050,
+      source      = local.worker_subnet,
+      stateless   = false
+    },
+  ]
+
+  # security list for fss : egress rule for UDP protocol
+  fss_mt_udp_egress = [
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.worker_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.udp_protocol,
+      port             = "111",
+      stateless        = "false"
+    },
+  ]
+
+  # security list for fss : egress rule for TCP protocol
+  fss_mt_tcp_egress = [
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.worker_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "111",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.worker_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "2048",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.worker_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "2049",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.worker_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "2050",
+      stateless        = "false"
+    },
+  ]
+
+  # fss instance security rules
+  # security list for fss : ingress rule for UDP protocol
+  fss_inst_udp_ingress = [
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.udp_protocol,
+      port        = 111,
+      source      = local.fss_subnet,
+      stateless   = false
+    },
+  ]
+
+  # security list for fss : ingress rules for TCP protocol
+  fss_inst_tcp_ingress = [
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 111,
+      source      = local.fss_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 2048,
+      source      = local.fss_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 2049,
+      source      = local.fss_subnet,
+      stateless   = false
+    },
+    {
+      description = "Allow ingress for all traffic to allow node pools to connect",
+      protocol    = local.tcp_protocol,
+      port        = 2050,
+      source      = local.fss_subnet,
+      stateless   = false
+    },
+  ]
+
+  # security list for fss : egress rule for UDP protocol
+  fss_inst_udp_egress = [
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.fss_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.udp_protocol,
+      port             = "111",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.fss_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.udp_protocol,
+      port             = "2048",
+      stateless        = "false"
+    },
+  ]
+
+  # security list for fss : egress rule for TCP protocol
+  fss_inst_tcp_egress = [
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.fss_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "111",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.fss_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "2048",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.fss_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "2049",
+      stateless        = "false"
+    },
+    {
+      description      = "Allow egress for all traffic to node pool",
+      destination      = local.fss_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = "2050",
+      stateless        = "false"
+    },
+  ]
+
 }

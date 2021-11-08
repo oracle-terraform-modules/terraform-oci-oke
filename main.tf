@@ -70,6 +70,8 @@ module "network" {
   # waf integration
   waf_enabled = var.waf_enabled
 
+  # fss 
+  fss_enabled = var.fss_enabled
 }
 
 # cluster creation for oke

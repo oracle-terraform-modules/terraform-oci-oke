@@ -43,3 +43,7 @@ variable "waf_enabled" {
   type = bool
 }
 
+
+variable "fss_enabled" {
+  type = bool
+}
