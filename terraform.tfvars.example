@@ -150,7 +150,7 @@ node_pools = {
   np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
 }
 
-node_pools_to_drain = [ "np1", "np2", "np3" ] 
+node_pools_to_drain = [ "np1", "np2", "np3" ]
 
 nodepool_drain = false
 
@@ -214,3 +214,6 @@ service_account_name = "kubeconfigsa"
 service_account_namespace = "kube-system"
 
 service_account_cluster_role_binding = "cluster-admin"
+
+# OCI File System network option
+fss_enabled = false

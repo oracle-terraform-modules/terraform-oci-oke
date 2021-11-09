@@ -151,14 +151,14 @@ locals {
   # security list for fss : ingress rule for UDP protocol
   fss_mt_udp_ingress = [
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress UDP traffic from OKE worker subnet to port 111 on FSS (Mount Target) subnet",
       protocol    = local.udp_protocol,
       port        = 111,
       source      = local.worker_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress UDP traffic from OKE worker subnet to port 2048 on FSS (Mount Target) subnet",
       protocol    = local.udp_protocol,
       port        = 2048,
       source      = local.worker_subnet,
@@ -169,28 +169,28 @@ locals {
   # security list for fss : ingress rules for TCP protocol
   fss_mt_tcp_ingress = [
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from OKE worker subnet to port 111 on FSS (Mount Target) subnet",
       protocol    = local.tcp_protocol,
       port        = 111,
       source      = local.worker_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from OKE worker subnet to port 2048 on FSS (Mount Target) subnet",
       protocol    = local.tcp_protocol,
       port        = 2048,
       source      = local.worker_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from OKE worker subnet to port 2049 on FSS (Mount Target) subnet",
       protocol    = local.tcp_protocol,
       port        = 2049,
       source      = local.worker_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from OKE worker subnet to port 2050 on FSS (Mount Target) subnet",
       protocol    = local.tcp_protocol,
       port        = 2050,
       source      = local.worker_subnet,
@@ -201,7 +201,7 @@ locals {
   # security list for fss : egress rule for UDP protocol
   fss_mt_udp_egress = [
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress UDP traffic from FSS (Mount Target) subnet to port 111 on OKE worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.udp_protocol,
@@ -213,7 +213,7 @@ locals {
   # security list for fss : egress rule for TCP protocol
   fss_mt_tcp_egress = [
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from FSS (Mount Target) subnet to port 111 on OKE worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -221,7 +221,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from FSS (Mount Target) subnet to port 2048 on OKE worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -229,7 +229,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from FSS (Mount Target) subnet to port 2049 on OKE worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -237,7 +237,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from FSS (Mount Target) subnet to port 2050 on OKE worker subnet",
       destination      = local.worker_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -250,7 +250,7 @@ locals {
   # security list for fss : ingress rule for UDP protocol
   fss_inst_udp_ingress = [
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress UDP traffic from FSS (Mount Target) subnet to port 111 on OKE worker subnet",
       protocol    = local.udp_protocol,
       port        = 111,
       source      = local.fss_subnet,
@@ -261,28 +261,28 @@ locals {
   # security list for fss : ingress rules for TCP protocol
   fss_inst_tcp_ingress = [
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from FSS (Mount Target) subnet to port 111 on OKE worker subnet",
       protocol    = local.tcp_protocol,
       port        = 111,
       source      = local.fss_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from FSS (Mount Target) subnet to port 2048 on OKE worker subnet",
       protocol    = local.tcp_protocol,
       port        = 2048,
       source      = local.fss_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from FSS (Mount Target) subnet to port 2049 on OKE worker subnet",
       protocol    = local.tcp_protocol,
       port        = 2049,
       source      = local.fss_subnet,
       stateless   = false
     },
     {
-      description = "Allow ingress for all traffic to allow node pools to connect",
+      description = "Allow ingress TCP traffic from FSS (Mount Target) subnet to port 2050 on OKE worker subnet",
       protocol    = local.tcp_protocol,
       port        = 2050,
       source      = local.fss_subnet,
@@ -293,7 +293,7 @@ locals {
   # security list for fss : egress rule for UDP protocol
   fss_inst_udp_egress = [
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress UDP traffic from OKE worker subnet to port 111 on FSS (Mount Target) subnet",
       destination      = local.fss_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.udp_protocol,
@@ -301,7 +301,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress UDP traffic from OKE worker subnet to port 2048 on FSS (Mount Target) subnet",
       destination      = local.fss_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.udp_protocol,
@@ -313,7 +313,7 @@ locals {
   # security list for fss : egress rule for TCP protocol
   fss_inst_tcp_egress = [
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from OKE worker subnet to port 111 on FSS (Mount Target) subnet",
       destination      = local.fss_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -321,7 +321,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from OKE worker subnet to port 2048 on FSS (Mount Target) subnet",
       destination      = local.fss_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -329,7 +329,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from OKE worker subnet to port 2049 on FSS (Mount Target) subnet",
       destination      = local.fss_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -337,7 +337,7 @@ locals {
       stateless        = "false"
     },
     {
-      description      = "Allow egress for all traffic to node pool",
+      description      = "Allow egress TCP traffic from OKE worker subnet to port 2050 on FSS (Mount Target) subnet",
       destination      = local.fss_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
