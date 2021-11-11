@@ -53,6 +53,7 @@ subnets = {
   cp       = { netnum = 2, newbits = 13 }
   int_lb   = { netnum = 16, newbits = 11 }
   pub_lb   = { netnum = 17, newbits = 11 }
+  fss      = { netnum = 18, newbits = 11 }
   workers  = { netnum = 1, newbits = 2 }
 }
 
@@ -200,6 +201,9 @@ create_service_account               = false
 service_account_name                 = ""
 service_account_namespace            = ""
 service_account_cluster_role_binding = ""
+
+# fss mount point network provisioning
+enable_fss = false
 
 # freeform_tags
 freeform_tags = {

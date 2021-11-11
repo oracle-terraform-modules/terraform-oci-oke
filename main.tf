@@ -189,6 +189,9 @@ module "network" {
   # waf integration
   enable_waf = var.enable_waf
 
+  # fss mount point network
+  enable_fss = var.enable_fss
+
   depends_on = [
     module.vcn
   ]

@@ -140,6 +140,7 @@ variable "subnets" {
     cp       = { netnum = 2, newbits = 13 }
     int_lb   = { netnum = 16, newbits = 11 }
     pub_lb   = { netnum = 17, newbits = 11 }
+    fss      = { netnum = 18, newbits = 11 }
     workers  = { netnum = 1, newbits = 2 }
   }
   type = map(any)
@@ -768,6 +769,11 @@ variable "service_account_cluster_role_binding" {
   description = "The cluster role binding name"
   default     = "cluster-admin"
   type        = string
+}
+
+# fss mount point network provisioning
+variable "enable_fss" {
+  type = bool
 }
 
 # tagging
