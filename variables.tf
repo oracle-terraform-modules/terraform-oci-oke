@@ -773,6 +773,8 @@ variable "service_account_cluster_role_binding" {
 
 # fss mount point network provisioning
 variable "enable_fss" {
+  description = "Wheather to enable provisioning for FSS"
+  default     = false
   type = bool
 }
 
