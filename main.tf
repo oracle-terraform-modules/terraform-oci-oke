@@ -192,6 +192,9 @@ module "network" {
   # fss mount point network
   enable_fss = var.enable_fss
 
+  # fss subnet name
+  fss_subnet_name = var.fss_subnet_name
+
   depends_on = [
     module.vcn
   ]
@@ -243,6 +246,35 @@ module "oke" {
 
   depends_on = [
     module.network
+  ]
+
+  providers = {
+    oci.home = oci.home
+  }
+}
+
+# module to create storage to be attached to OKE nodes
+module "storage" {
+  source = "./modules/storage"
+
+  # general oci parameters
+  tenancy_id          = var.tenancy_id
+  compartment_id      = var.compartment_id
+  availability_domain = var.availability_domains["fss"]
+  label_prefix        = var.label_prefix
+
+  # FSS netowrk information
+  enable_fss          = var.enable_fss
+  fss_subnet_id       = module.network.fss_id
+  fss_mount_path      = var.fss_mount_path
+  nsg_ids             = [module.network.fss_mount_target_nsg_id]
+
+  # start provisioning after the following modules are completed
+  depends_on = [
+    module.bastion,
+    module.network,
+    module.operator,
+    module.oke
   ]
 
   providers = {
@@ -327,7 +359,8 @@ module "extensions" {
     module.bastion,
     module.network,
     module.operator,
-    module.oke
+    module.oke,
+    module.storage
   ]
 
   providers = {

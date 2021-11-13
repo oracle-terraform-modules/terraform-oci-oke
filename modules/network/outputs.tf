@@ -26,3 +26,10 @@ output "worker_nsg_id" {
   value = oci_core_network_security_group.workers.id
 }
 
+output "fss_id" {
+  value = (var.enable_fss == true) ? oci_core_subnet.fss[0].id : ""
+}
+
+output "fss_mount_target_nsg_id" {
+  value = (var.enable_fss == true) ? oci_core_network_security_group.fss_mt[0].id : ""
+}

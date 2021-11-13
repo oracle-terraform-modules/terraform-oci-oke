@@ -76,3 +76,7 @@ variable "enable_fss" {
   type = bool
 }
 
+# fss subnet name
+variable "fss_subnet_name" {
+  type = string
+}

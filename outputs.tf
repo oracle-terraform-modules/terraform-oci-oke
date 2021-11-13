@@ -74,3 +74,9 @@ output "kubeconfig" {
 output "bastion_service_instance_id" {
   value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id: "null"
 }
+
+# output mount target OCID for OKE Storage Class definition
+output "fss_mount_target_id" {
+  description = "FSS Mount Target OCID to be used by OKE definition for creating Storage Class"
+  value = module.storage.fss_mount_target_id
+}

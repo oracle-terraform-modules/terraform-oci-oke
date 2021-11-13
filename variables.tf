@@ -380,6 +380,7 @@ variable "availability_domains" {
   default = {
     bastion  = 1
     operator = 1
+    fss = 1
   }
   type = map(any)
 }
@@ -775,7 +776,21 @@ variable "service_account_cluster_role_binding" {
 variable "enable_fss" {
   description = "Wheather to enable provisioning for FSS"
   default     = false
-  type = bool
+  type        = bool
+}
+
+# subnet in which fss will be provisioned
+variable "fss_subnet_name" {
+  description = "FSS subnet name to be added after lable prefix"
+  default     = "fss"
+  type        = string
+}
+
+# fss mount path
+variable fss_mount_path {
+  description = "FSS mount path to be associated"
+  default     = "/oke_fss"
+  type        = string
 }
 
 # tagging
