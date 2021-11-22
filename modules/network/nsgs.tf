@@ -78,6 +78,35 @@ resource "oci_core_network_security_group_security_rule" "cp_ingress" {
   }
 }
 
+resource "oci_core_network_security_group_security_rule" "cp_ingress_additional_cidrs" {
+  network_security_group_id = oci_core_network_security_group.cp.id
+  description               = "Allow additional CIDR block access to control plane. Required for kubectl/helm."
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = element(var.control_plane_allowed_cidrs, count.index)
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = 6443
+      max = 6443
+    }
+  }
+
+  icmp_options {
+    type = 3
+    code = 4
+  }
+
+  count = length(var.control_plane_allowed_cidrs)
+
+  lifecycle {
+    ignore_changes = [source, source_type, direction, protocol, tcp_options]
+  }
+}
+
 # workers nsg and rules
 resource "oci_core_network_security_group" "workers" {
   compartment_id = var.compartment_id
