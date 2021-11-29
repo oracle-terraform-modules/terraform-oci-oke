@@ -1,7 +1,7 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-resource "null_resource" "install_kubectl_operator" {
+resource "null_resource" "install_kubectl_on_operator" {
   connection {
     host        = var.operator_private_ip
     private_key = local.ssh_private_key
@@ -31,7 +31,7 @@ resource "null_resource" "install_kubectl_operator" {
 }
 
 # helm
-resource "null_resource" "install_helm_operator" {
+resource "null_resource" "install_helm_on_operator" {
   connection {
     host        = var.operator_private_ip
     private_key = local.ssh_private_key
@@ -44,7 +44,7 @@ resource "null_resource" "install_helm_operator" {
     bastion_private_key = local.ssh_private_key
   }
 
-  depends_on = [null_resource.install_kubectl_operator, null_resource.write_kubeconfig_on_operator]
+  depends_on = [null_resource.install_kubectl_on_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
     content     = local.install_helm_template
