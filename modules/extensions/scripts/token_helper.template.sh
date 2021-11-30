@@ -5,7 +5,7 @@
 CLUSTER=$5
 REGION=$7
 
-TOKEN_FILE=~/.kube/TOKEN-$CLUSTER
+TOKEN_FILE=$HOME/.kube/TOKEN-$CLUSTER
 
 if ! test -f "$TOKEN_FILE" || test $(( `date +%s` - `stat -L -c %Y $TOKEN_FILE` )) -gt 240; then
   umask 022
