@@ -2,7 +2,7 @@
 # Copyright 2021 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-kubectl config set-credentials "user-${cluster-id-11}" --exec-command="./token_helper.sh" \
+kubectl config set-credentials "user-${cluster-id-11}" --exec-command="$HOME/bin/token_helper.sh" \
   --exec-arg="ce" \
   --exec-arg="cluster" \
   --exec-arg="generate-token" \
