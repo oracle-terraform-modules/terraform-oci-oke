@@ -61,7 +61,7 @@ resource "null_resource" "write_kubeconfig_on_operator" {
       "chmod +x $HOME/generate_kubeconfig.sh",
       "$HOME/generate_kubeconfig.sh",
       "chmod +x $HOME/token_helper.sh",
-      "sudo mv $HOME/token_helper.sh /usr/local/bin",
+      "sudo mv $HOME/token_helper.sh $HOME/bin",
       "chmod +x $HOME/kubeconfig_set_credentials.sh",
       "$HOME/kubeconfig_set_credentials.sh",
       "rm -f $HOME/generate_kubeconfig.sh",
