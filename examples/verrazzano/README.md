@@ -1,4 +1,4 @@
-# Installing Verrazzano on OKE
+# Installing Verrazzano on Oracle Container Engine for Kubernetes(OKE)
 
 This example illustrates how to automate the installation of [Verrazzano](https://verrazzano.io) on top of this module.
 
@@ -6,19 +6,19 @@ This example illustrates how to automate the installation of [Verrazzano](https:
 
 You need to create 2 providers:
 * 1 provider for the region where your OKE cluster and other resources will be created
-* 1 provider for the home region. This is required for conducting identity operations. 
+* 1 provider for your tenancy's home region. This is required for conducting identity operations. 
 
-> **Note that your home region may not necessarily be the same as your current region.**
+> **Note that your home region may not necessarily be the same as the region where you want to create the cluster.**
 
 ### Update Terraform values
 
-* Copy or rename the terraform.tfvars.example to terraform.tfvars
+* Copy or rename the `terraform.tfvars.example` to `terraform.tfvars`
 
 ```
 cp terraform.tfvars.example terraform.tfvars
 ```
 
-* Enter or update the values to terraform.tfvars:
+* Enter or update the values to `terraform.tfvars`:
 
 ```
 api_fingerprint      = ""
