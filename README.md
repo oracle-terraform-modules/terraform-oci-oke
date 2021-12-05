@@ -76,7 +76,7 @@ Learn how to [contribute][uri-contribute].
 
 ## License
 
-Copyright &copy; 2019 Oracle and/or its associates. All rights reserved.
+Copyright &copy; 2019 Oracle and/or its associates.
 
 Licensed under the [Universal Permissive License 1.0][uri-license] as shown at 
 [https://oss.oracle.com/licenses/upl][uri-canonical-license].

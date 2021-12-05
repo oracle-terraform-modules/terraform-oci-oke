@@ -1,0 +1,21 @@
+# Identity and access parameters
+api_fingerprint      = ""
+api_private_key_path = ""
+
+verrazzano_regions = {
+  home  = "us-phoenix-1"
+  v8o   = "ap-sydney-1"
+}
+
+tenancy_id = ""
+user_id    = ""
+
+# general oci parameters
+compartment_id = ""
+label_prefix   = "dev"
+
+ssh_private_key_path = "~/.ssh/id_rsa"
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+
+verrazzano_version = "1.0.3"
+verrazzano_name    = "v8o"
