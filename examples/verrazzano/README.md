@@ -1,4 +1,4 @@
-# Installing Verrazzano on Oracle Container Engine for Kubernetes(OKE)
+# Installing Verrazzano on Oracle Container Engine for Kubernetes (OKE)
 
 This example illustrates how to automate the installation of [Verrazzano](https://verrazzano.io) on top of this module.
 
