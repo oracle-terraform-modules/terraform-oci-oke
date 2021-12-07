@@ -1,6 +1,13 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
-
+provider "oci" {
+  alias            = "home"
+  region           = var.region
+  tenancy_id     = var.tenancy_ocid
+  user_id        = var.user_ocid
+  fingerprint      = var.fingerprint
+  private_key_path = var.private_key_path
+}
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
   version = "3.0.0"
