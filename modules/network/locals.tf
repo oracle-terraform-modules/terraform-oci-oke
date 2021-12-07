@@ -219,7 +219,7 @@ locals {
 
   int_lb_egress = [
     {
-      description      = "Allow stateful egress to workers. Required for NodePorts and load balancer http/tcp health checks",
+      description      = "Allow stateful egress to workers. Required for NodePorts",
       destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
@@ -232,6 +232,14 @@ locals {
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
       port             = -1,
+      stateless        = false
+    },
+    {
+      description      = "Allow stateful egress to workers. Required for load balancer http/tcp health checks",
+      destination      = local.workers_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = local.health_check_port,
       stateless        = false
     },
   ]
