@@ -5,8 +5,8 @@ provider "oci" {
   region           = var.region
   tenancy_id     = var.tenancy_id
   user_id        = var.user_id
-  api_fingerprint      = var.api_fingerprint
-  api_private_key_path = var.api_private_key_path
+  fingerprint      = var.api_fingerprint
+  private_key_path = var.api_private_key_path
 }
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
