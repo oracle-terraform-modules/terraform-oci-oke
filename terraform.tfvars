@@ -2,33 +2,33 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
-api_fingerprint      = ""
+api_fingerprint      = "4d:10:ea:4f:0b:c6:ac:8a:c0:cb:76:50:1d:63:8e:12"
 # api_private_key      = <<EOT
 #-----BEGIN RSA PRIVATE KEY-----
 #content+of+api+key
 #-----END RSA PRIVATE KEY-----
 #EOT
 
-api_private_key_path = ""
+api_private_key_path = "oci_api_key.pem"
 
-home_region = "us-ashburn-1"
-region = "us-phoenix-1"
+home_region = "eu-frankfurt-1"
+region = "eu-frankfurt-1"
 
-tenancy_id           = ""
-user_id              = ""
+tenancy_id           = "ocid1.tenancy.oc1..aaaaaaaagozl47dkv6gpbkffed5imrm3f6rjiwamxhz5ns7m2wqwfoplhhzq"
+user_id              = "ocid1.user.oc1..aaaaaaaawqmr6lc2jj3s6gv2kjxebmr6vndbz3ykfp653cq2zkz3zocfdeoq"
 
 # general oci parameters
-compartment_id = ""
+compartment_id = "ocid1.compartment.oc1..aaaaaaaaidy3jl7bdmiwfryo6myhdnujcuug5zxzoclsz7vpfzw4bggng7iq"
 label_prefix   = "dev"
 
 # ssh keys
-ssh_private_key      = ""
+#ssh_private_key      = ""
 # ssh_private_key    = <<EOT
 #-----BEGIN RSA PRIVATE KEY-----
 #content+of+api+key
 #-----END RSA PRIVATE KEY-----
 #EOT
-ssh_private_key_path = "~/.ssh/id_rsa"
+#ssh_private_key_path = "~/.ssh/id_rsa"
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
@@ -61,7 +61,7 @@ vcn_dns_label = "oke"
 vcn_name      = "vcnoke"
 
 # bastion host
-create_bastion_host = true
+create_bastion_host = false
 bastion_access      = ["anywhere"]
 bastion_image_id    = "Autonomous"
 bastion_os_version  = "7.9"
@@ -89,7 +89,7 @@ bastion_service_name          = "bastion"
 bastion_service_target_subnet = "operator"
 
 # operator host
-create_operator                    = true
+create_operator                    = false
 operator_image_id                  = "Oracle"
 enable_operator_instance_principal = true
 operator_nsg_ids                   = []
