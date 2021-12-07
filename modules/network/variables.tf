@@ -15,7 +15,7 @@ variable "subnets" {
   type = map(any)
 }
 
-variable "vcn_id" {}
+variable vcn_id {}
 
 # cluster endpoint
 
