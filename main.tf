@@ -304,6 +304,10 @@ module "extensions" {
   enable_vpa           = var.enable_vpa
   vpa_version          = var.vpa_version
 
+  #OPA Gatekeeper
+  enable_OPA_gatekeeper = var.enable_OPA_gatekeeper
+  OPA_gatekeeper_version = var.OPA_gatekeeper_version
+
   # service account
   create_service_account               = var.create_service_account
   service_account_name                 = var.service_account_name

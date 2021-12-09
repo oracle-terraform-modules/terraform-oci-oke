@@ -91,6 +91,15 @@ variable "enable_metric_server" {
   type    = bool
 }
 
+variable "enable_OPA_gatekeeper" {
+  type = bool
+  default = false
+}
+
+variable "OPA_gatekeeper_version" {
+  type = string
+  
+}
 variable "enable_vpa" {
   type = bool
 }

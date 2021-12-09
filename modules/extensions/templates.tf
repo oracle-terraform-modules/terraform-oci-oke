@@ -61,6 +61,13 @@ locals {
     }
   )
 
+  opa_gatekeeper_template = templatefile("${path.module}/scripts/install_OPA_gatekeeper.template.sh",
+    {
+      enable_OPA_gatekeeper  = var.enable_OPA_gatekeeper
+      OPA_gatekeeper_version = var.OPA_gatekeeper_version
+    }
+  )
+
   secret_template = templatefile("${path.module}/scripts/secret.sh",
     {
       compartment_id = var.compartment_id
