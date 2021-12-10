@@ -10,7 +10,7 @@ region = "eu-frankfurt-1"
 
 # general oci parameters
 compartment_id = "ocid1.compartment.oc1..aaaaaaaaidy3jl7bdmiwfryo6myhdnujcuug5zxzoclsz7vpfzw4bggng7iq"
-label_prefix   = "dev"
+#label_prefix   = "dev"
 
 # ssh keys
 #ssh_private_key      = ""
