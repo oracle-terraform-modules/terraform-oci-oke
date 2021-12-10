@@ -745,13 +745,13 @@ variable "vpa_version" {
 }
 
 #OPA Gatekeeper
-variable "enable_OPA_gatekeeper" {
+variable "enable_openpolicyagent_gatekeeper" {
   type = bool
   default = false
   description = "Whether to install OPA Gatekeeper"
 }
 
-variable "OPA_gatekeeper_version" {
+variable "openpolicyagent_gatekeeper_version" {
   type = string
   default = "3.7"
   description = "The version of OPA Gatekeeper to install"

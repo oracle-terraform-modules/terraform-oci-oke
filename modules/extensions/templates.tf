@@ -63,8 +63,8 @@ locals {
 
   opa_gatekeeper_template = templatefile("${path.module}/scripts/install_OPA_gatekeeper.template.sh",
     {
-      enable_OPA_gatekeeper  = var.enable_OPA_gatekeeper
-      OPA_gatekeeper_version = var.OPA_gatekeeper_version
+      enable_openpolicyagent_gatekeeper  = var.enable_openpolicyagent_gatekeeper
+      openpolicyagent_gatekeeper_version = var.openpolicyagent_gatekeeper_version
     }
   )
 

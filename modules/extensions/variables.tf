@@ -91,12 +91,12 @@ variable "enable_metric_server" {
   type    = bool
 }
 
-variable "enable_OPA_gatekeeper" {
+variable "enable_openpolicyagent_gatekeeper" {
   type = bool
   default = false
 }
 
-variable "OPA_gatekeeper_version" {
+variable "openpolicyagent_gatekeeper_version" {
   type = string
   
 }

@@ -196,8 +196,8 @@ enable_vpa           = false
 vpa_version          = 0.8
 
 #OPA Gatekeeper
-enable_OPA_gatekeeper = false
-OPA_gatekeeper_version = "3.7"
+enable_openpolicyagent_gatekeeper = false
+openpolicyagent_gatekeeper_version = "3.7"
 
 # service account
 create_service_account               = false
