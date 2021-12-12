@@ -440,7 +440,7 @@ variable "control_plane_nsgs" {
 }
 
 variable "dashboard_enabled" {
-  default     = false
+  default     = true
   description = "Whether to enable kubernetes dashboard."
   type        = bool
 }
