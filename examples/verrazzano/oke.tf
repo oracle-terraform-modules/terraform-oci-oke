@@ -25,12 +25,12 @@ module "oke" {
   vcn_name      = "v8o"
 
   # bastion host
-  create_bastion_host = true
+  create_bastion_host = false
   upgrade_bastion     = false
 
   # operator host
-  create_operator                    = true
-  enable_operator_instance_principal = true
+  create_operator                    = false
+  enable_operator_instance_principal = false
   upgrade_operator                   = false
 
   # oke cluster options
