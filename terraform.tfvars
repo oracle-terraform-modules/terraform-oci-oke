@@ -54,7 +54,7 @@ vcn_dns_label = "oke"
 vcn_name      = "vcnoke"
 
 # bastion host
-create_bastion_host = false
+create_bastion_host = true
 bastion_access      = ["anywhere"]
 bastion_image_id    = "Autonomous"
 bastion_os_version  = "7.9"
@@ -65,24 +65,24 @@ bastion_shape = {
   boot_volume_size = 50
 }
 bastion_state    = "RUNNING"
-bastion_timezone = "Australia/Sydney"
+bastion_timezone = "Europe/Amsterdam"
 bastion_type     = "public"
 upgrade_bastion  = false
 
 ## bastion notification
-enable_bastion_notification   = false
+enable_bastion_notification   = true
 bastion_notification_endpoint = ""
 bastion_notification_protocol = "EMAIL"
 bastion_notification_topic    = "bastion_server_notification"
 
 # bastion service
-create_bastion_service        = false
+create_bastion_service        = true
 bastion_service_access        = ["0.0.0.0/0"]
 bastion_service_name          = "bastion"
 bastion_service_target_subnet = "operator"
 
 # operator host
-create_operator                    = false
+create_operator                    = true
 operator_image_id                  = "Oracle"
 enable_operator_instance_principal = true
 operator_nsg_ids                   = []
@@ -94,7 +94,7 @@ operator_shape = {
   boot_volume_size = 50
 }
 operator_state    = "RUNNING"
-operator_timezone = "Australia/Sydney"
+operator_timezone = "Europe/Amsterdam"
 upgrade_operator  = false
 
 ## operator notification
@@ -120,7 +120,7 @@ cluster_name                 = "oke"
 control_plane_type         = "private"
 control_plane_allowed_cidrs  = ["0.0.0.0/0"]
 control_plane_nsgs           = []
-dashboard_enabled            = false
+dashboard_enabled            = true
 kubernetes_version           = "v1.20.11"
 pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
@@ -159,12 +159,12 @@ worker_nsgs           = []
 worker_type           = "private"
 
 # upgrade of existing node pools
-upgrade_nodepool        = false
+upgrade_nodepool        = true
 node_pools_to_drain     = ["np1", "np2"]
 nodepool_upgrade_method = "out_of_place"
 
 # oke load balancers
-enable_waf                   = false
+enable_waf                   = true
 load_balancers               = "both"
 preferred_load_balancer      = "public"
 # internal_lb_allowed_cidrs  = ["172.16.1.0/24", "172.16.2.0/24"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
