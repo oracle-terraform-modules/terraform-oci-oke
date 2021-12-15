@@ -21,10 +21,10 @@ compartment_id = "ocid1.compartment.oc1..aaaaaaaamluifb5mxw2tiexvy5m4dga2phffesh
 #content+of+api+key
 #-----END RSA PRIVATE KEY-----
 #EOT
-ssh_private_key_path = ".ssh/id_rsa"
+#ssh_private_key_path = ".ssh/id_rsa"
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
-ssh_public_key_path = ".ssh/id_rsa.pub"
+#ssh_public_key_path = ".ssh/id_rsa.pub"
 
 # networking
 create_drg                   = false
@@ -54,7 +54,7 @@ vcn_dns_label = "oke"
 vcn_name      = "vcnoke"
 
 # bastion host
-create_bastion_host = true
+create_bastion_host = false
 bastion_access      = ["anywhere"]
 bastion_image_id    = "Autonomous"
 bastion_os_version  = "7.9"
@@ -70,13 +70,13 @@ bastion_type     = "public"
 upgrade_bastion  = false
 
 ## bastion notification
-enable_bastion_notification   = true
+enable_bastion_notification   = false
 bastion_notification_endpoint = ""
 bastion_notification_protocol = "EMAIL"
 bastion_notification_topic    = "bastion_server_notification"
 
 # bastion service
-create_bastion_service        = true
+create_bastion_service        = false
 bastion_service_access        = ["0.0.0.0/0"]
 bastion_service_name          = "bastion"
 bastion_service_target_subnet = "operator"
