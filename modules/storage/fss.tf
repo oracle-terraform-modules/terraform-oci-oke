@@ -20,7 +20,6 @@ resource "oci_file_storage_file_system" "fss" {
     lifecycle {
       ignore_changes = [availability_domain, defined_tags]
     }
-    count = (var.enable_fss == true) ? 1 : 0
 }
 
 # create file system mount target
@@ -35,22 +34,19 @@ resource "oci_file_storage_mount_target" "fss_mount_target" {
     lifecycle {
       ignore_changes = [availability_domain, defined_tags]
     }
-    count = (var.enable_fss == true) ? 1 : 0
 }
 
 # FSS export set associate with mount target
 resource "oci_file_storage_export_set" "export_sets" {
-  mount_target_id   = oci_file_storage_mount_target.fss_mount_target[0].id
+  mount_target_id   = oci_file_storage_mount_target.fss_mount_target.id
   display_name      = var.label_prefix == "none" ? "fss-storage-export" : "${var.label_prefix}-fss-storage-export"
-
-  count = (var.enable_fss == true) ? 1 : 0
+  max_fs_stat_bytes = var.max_fs_stat_bytes
+  max_fs_stat_files = var.max_fs_stat_files
 }
 
 # FSS file storage export
 resource "oci_file_storage_export" "exports" {
-  export_set_id  = oci_file_storage_export_set.export_sets[0].id
-  file_system_id = oci_file_storage_file_system.fss[0].id
+  export_set_id  = oci_file_storage_export_set.export_sets.id
+  file_system_id = oci_file_storage_file_system.fss.id
   path           = var.fss_mount_path
-  
-  count = (var.enable_fss == true) ? 1 : 0
 }

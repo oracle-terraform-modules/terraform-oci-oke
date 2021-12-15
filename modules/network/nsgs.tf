@@ -491,7 +491,7 @@ resource "oci_core_network_security_group_security_rule" "waf_ingress" {
 ## fss mount point security group and rules
 resource "oci_core_network_security_group" "fss_mt" {
   compartment_id = var.compartment_id
-  display_name   = var.label_prefix == "none" ? "fss_mt" : "${var.label_prefix}-fss_mt"
+  display_name   = var.label_prefix == "none" ? "fss-mt" : "${var.label_prefix}-fss-mt"
   vcn_id         = var.vcn_id
 
   count = var.enable_fss == true ? 1 : 0
@@ -503,6 +503,7 @@ resource "oci_core_network_security_group_security_rule" "fss_mt_ingress" {
   protocol                  = local.fss_mt_ingress[count.index].protocol
   source                    = local.fss_mt_ingress[count.index].source
   source_type               = local.fss_mt_ingress[count.index].source_type
+  description               = "Allow incoming traffic for FSS Mount Target from OKE worker subnet"
 
   stateless = false
 
@@ -535,7 +536,7 @@ resource "oci_core_network_security_group_security_rule" "fss_mt_egress" {
   protocol                  = local.fss_mt_egress[count.index].protocol
   destination               = local.fss_mt_egress[count.index].destination
   destination_type          = local.fss_mt_egress[count.index].destination_type
-
+  description               = "Allow outgoing traffic from FSS Mount Target to OKE worker subnet"
   stateless = false
 
   dynamic "tcp_options" {
@@ -564,7 +565,7 @@ resource "oci_core_network_security_group_security_rule" "fss_mt_egress" {
 ## fss : instance network security group and rules
 resource "oci_core_network_security_group" "fss_inst" {
   compartment_id = var.compartment_id
-  display_name   = var.label_prefix == "none" ? "fss_inst" : "${var.label_prefix}-fss_inst"
+  display_name   = var.label_prefix == "none" ? "fss-inst" : "${var.label_prefix}-fss-inst"
   vcn_id         = var.vcn_id
 
   count = var.enable_fss == true ? 1 : 0
@@ -576,7 +577,7 @@ resource "oci_core_network_security_group_security_rule" "fss_inst_ingress" {
   protocol                  = local.fss_inst_ingress[count.index].protocol
   source                    = local.fss_inst_ingress[count.index].source
   source_type               = local.fss_inst_ingress[count.index].source_type
-
+  description               = "Allow incoming traffic for OKE worker subnet from FSS Mount Target subnet"
   stateless = false
 
   dynamic "tcp_options" {
@@ -608,7 +609,7 @@ resource "oci_core_network_security_group_security_rule" "fss_inst_egress" {
   protocol                  = local.fss_inst_egress[count.index].protocol
   destination               = local.fss_inst_egress[count.index].destination
   destination_type          = local.fss_inst_egress[count.index].destination_type
-
+  description               = "Allow outgoing traffic from OKE worker subnet to FSS Mount Target subnet"
   stateless = false
 
   dynamic "tcp_options" {

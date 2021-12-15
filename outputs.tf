@@ -78,5 +78,5 @@ output "bastion_service_instance_id" {
 # output mount target OCID for OKE Storage Class definition
 output "fss_mount_target_id" {
   description = "FSS Mount Target OCID to be used by OKE definition for creating Storage Class"
-  value = module.storage.fss_mount_target_id
+  value = var.enable_fss ? module.storage[0].fss_mount_target_id : "null"
 }

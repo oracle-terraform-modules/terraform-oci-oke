@@ -269,6 +269,11 @@ module "storage" {
   fss_mount_path      = var.fss_mount_path
   nsg_ids             = [module.network.fss_mount_target_nsg_id]
 
+  # Export set configuration
+  max_fs_stat_bytes = var.max_fs_stat_bytes
+  max_fs_stat_files = var.max_fs_stat_files
+
+
   # start provisioning after the following modules are completed
   depends_on = [
     module.bastion,
@@ -280,6 +285,8 @@ module "storage" {
   providers = {
     oci.home = oci.home
   }
+
+  count = var.enable_fss == true ? 1 : 0
 }
 
 # extensions to oke

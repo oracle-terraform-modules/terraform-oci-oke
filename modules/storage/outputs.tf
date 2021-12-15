@@ -3,5 +3,5 @@
 
 # mount target OCID for PVC definition
 output "fss_mount_target_id" {
-  value = (var.enable_fss == true) ? oci_file_storage_mount_target.fss_mount_target[0].id : ""
+  value = oci_file_storage_mount_target.fss_mount_target.id
 }

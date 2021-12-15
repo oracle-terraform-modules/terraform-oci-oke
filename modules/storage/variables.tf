@@ -22,3 +22,9 @@ variable "enable_fss" {}
 
 # fss mount path
 variable fss_mount_path {}
+
+# Controls the maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets.
+variable max_fs_stat_bytes {}
+
+# Controls the maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT calls through any associated mount targets.
+variable max_fs_stat_files {}

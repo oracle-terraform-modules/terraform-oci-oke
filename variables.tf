@@ -380,7 +380,7 @@ variable "availability_domains" {
   default = {
     bastion  = 1
     operator = 1
-    fss = 1
+    fss = 0
   }
   type = map(any)
 }
@@ -791,6 +791,20 @@ variable fss_mount_path {
   description = "FSS mount path to be associated"
   default     = "/oke_fss"
   type        = string
+}
+
+# Controls the maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets.
+variable max_fs_stat_bytes {
+  description = "Maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets"
+  default     = 23843202333
+  type        = number
+}
+
+# Controls the maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT calls through any associated mount targets.
+variable max_fs_stat_files {
+  description = "Maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT"
+  default     = 223442
+  type        = number
 }
 
 # tagging
