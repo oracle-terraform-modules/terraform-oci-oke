@@ -24,7 +24,7 @@ compartment_id = "ocid1.compartment.oc1..aaaaaaaamluifb5mxw2tiexvy5m4dga2phffesh
 ssh_private_key_path = ".ssh/id_rsa"
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
-ssh_public_key_path = ".ssh/id_rsa.pub
+ssh_public_key_path = ".ssh/id_rsa.pub"
 
 # networking
 create_drg                   = false
