@@ -167,10 +167,10 @@ nodepool_upgrade_method = "out_of_place"
 enable_waf                   = true
 load_balancers               = "both"
 preferred_load_balancer      = "public"
-# internal_lb_allowed_cidrs  = ["172.16.1.0/24", "172.16.2.0/24"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
-# internal_lb_allowed_ports  = [80, 443, "7001-7005"] # By default, only 80 and 443 are allowed
-# public_lb_allowed_cidrs    = ["0.0.0.0/0"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
-# public_lb_allowed_ports    = [443,"9001-9002"] # By default, only 443 is allowed
+internal_lb_allowed_cidrs  = ["172.16.1.0/24", "172.16.2.0/24"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
+internal_lb_allowed_ports  = [80, 443, "7001-7005"] # By default, only 80 and 443 are allowed
+public_lb_allowed_cidrs    = ["0.0.0.0/0"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
+public_lb_allowed_ports    = [443,"9001-9002"] # By default, only 443 is allowed
 
 # ocir
 email_address    = ""
