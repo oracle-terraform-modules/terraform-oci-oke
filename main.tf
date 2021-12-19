@@ -304,7 +304,7 @@ module "extensions" {
   enable_vpa           = var.enable_vpa
   vpa_version          = var.vpa_version
 
-  #OPA Gatekeeper
+  #Gatekeeper
   enable_gatekeeper   = var.enable_gatekeeper
   gatekeeeper_version = var.gatekeeeper_version
 

@@ -744,17 +744,17 @@ variable "vpa_version" {
   default     = "0.8"
 }
 
-#OPA Gatekeeper
+#Gatekeeper
 variable "enable_gatekeeper" {
   type        = bool
   default     = false
-  description = "Whether to install OPA Gatekeeper"
+  description = "Whether to install Gatekeeper"
 }
 
 variable "gatekeeeper_version" {
   type        = string
   default     = "3.7"
-  description = "The version of OPA Gatekeeper to install"
+  description = "The version of Gatekeeper to install"
 }
 
 # serviceaccount

@@ -834,7 +834,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |===
 
-== Open Policy Agent Gatekeeper
+== Gatekeeper
 
 [stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
 |===
@@ -844,12 +844,12 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Default
 
 |enable_gatekeeper
-|Whether to install {uri-openpolicyagent-gatekeeper}[OpenPolicyAgent Gatekeeper].
+|Whether to install {uri-openpolicyagent-gatekeeper}[Gatekeeper].
 |true/false
 |false
 
 |gatekeeeper_version
-|version of {uri-openpolicyagent-gatekeeper}[OpenPolicyAgent Gatekeeper].
+|version of {uri-openpolicyagent-gatekeeper}[Gatekeeper].
 |
 |3.7
 
