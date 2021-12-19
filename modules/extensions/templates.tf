@@ -18,7 +18,7 @@ locals {
       service_account_cluster_role_binding = local.service_account_cluster_role_binding_name
     }
   )
-  
+
   drain_template = templatefile("${path.module}/scripts/drain.template.sh", {})
 
   drain_list_template = templatefile("${path.module}/scripts/drainlist.py",
@@ -61,10 +61,10 @@ locals {
     }
   )
 
-  opa_gatekeeper_template = templatefile("${path.module}/scripts/install_OPA_gatekeeper.template.sh",
+  gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh",
     {
-      enable_openpolicyagent_gatekeeper  = var.enable_openpolicyagent_gatekeeper
-      openpolicyagent_gatekeeper_version = var.openpolicyagent_gatekeeper_version
+      enable_gatekeeper   = var.enable_gatekeeper
+      gatekeeeper_version = var.gatekeeeper_version
     }
   )
 

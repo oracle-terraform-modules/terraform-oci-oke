@@ -843,12 +843,12 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |Values
 |Default
 
-|enable_openpolicyagent_gatekeeper
+|enable_gatekeeper
 |Whether to install {uri-openpolicyagent-gatekeeper}[OpenPolicyAgent Gatekeeper].
 |true/false
 |false
 
-|openpolicyagent_gatekeeper_version
+|gatekeeeper_version
 |version of {uri-openpolicyagent-gatekeeper}[OpenPolicyAgent Gatekeeper].
 |
 |3.7
