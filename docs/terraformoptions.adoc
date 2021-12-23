@@ -15,6 +15,7 @@
 :uri-kubernetes-hpa: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 :uri-kubernetes-vpa: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
+:uri-openpolicyagent-gatekeeper: https://open-policy-agent.github.io/gatekeeper/website/docs/
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
 :uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
@@ -828,8 +829,29 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 |vpa_version
 |version of {uri-kubernetes-vpa}[Vertical Pod Autoscaler]. *Requires*  {uri-metrics-server}[Kubernetes Metrics Server].
+|
+|0.8
+
+|===
+
+== Gatekeeper
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|enable_gatekeeper
+|Whether to install {uri-openpolicyagent-gatekeeper}[Gatekeeper].
 |true/false
 |false
+
+|gatekeeeper_version
+|version of {uri-openpolicyagent-gatekeeper}[Gatekeeper].
+|
+|3.7
 
 |===
 

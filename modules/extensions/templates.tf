@@ -18,7 +18,7 @@ locals {
       service_account_cluster_role_binding = local.service_account_cluster_role_binding_name
     }
   )
-  
+
   drain_template = templatefile("${path.module}/scripts/drain.template.sh", {})
 
   drain_list_template = templatefile("${path.module}/scripts/drainlist.py",
@@ -58,6 +58,13 @@ locals {
     {
       enable_vpa  = var.enable_vpa
       vpa_version = var.vpa_version
+    }
+  )
+
+  gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh",
+    {
+      enable_gatekeeper   = var.enable_gatekeeper
+      gatekeeeper_version = var.gatekeeeper_version
     }
   )
 

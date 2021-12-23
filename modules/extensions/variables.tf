@@ -91,6 +91,15 @@ variable "enable_metric_server" {
   type    = bool
 }
 
+variable "enable_gatekeeper" {
+  type    = bool
+  default = false
+}
+
+variable "gatekeeeper_version" {
+  type = string
+
+}
 variable "enable_vpa" {
   type = bool
 }
@@ -126,5 +135,5 @@ variable "node_pools_to_drain" {
 }
 
 variable "debug_mode" {
-  type        = bool
+  type = bool
 }
