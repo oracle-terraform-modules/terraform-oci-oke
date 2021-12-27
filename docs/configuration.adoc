@@ -272,7 +272,7 @@ create_operator = true
 enable_operator_instance_principal = true
 enable_operator_pv_encryption_in_transit = false
 operator_volume_kms_id = <operator_volume_kms_id>
-----
+create_policies = true
 
 OKE also supports enforcing the use of signed images. You can enforce the use of signed image using the following parameters:
 

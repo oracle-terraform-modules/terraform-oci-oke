@@ -478,6 +478,11 @@ variable "services_cidr" {
 }
 
 ## oke cluster kms integration
+variable "create_policies" {
+  description = "Whether to create dynamic group for cluster with policies to access KMS when using encryption"
+  default     = true
+  type        = bool
+}
 
 variable "use_cluster_encryption" {
   description = "Whether to use OCI KMS to encrypt Kubernetes secrets."

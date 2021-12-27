@@ -618,8 +618,11 @@ EOT
 
 |cluster_kms_key_id
 |The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_cluster_encryption_ is set to *true*
-|`ocid1.key.oc1....`
-|
+
+|create_policies
+|Whether to create dynamic group for cluster with policies to access {uri-oci-kms}[OCI KMS] when using encryption.
+|true/false
+|true
 
 |use_node_pool_volume_encryption
 |Whether to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes Nodepool's boot/block volume.

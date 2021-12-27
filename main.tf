@@ -230,6 +230,7 @@ module "oke" {
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
+  create_policies                                         = var.create_policies
 
   # oke node pool parameters
   node_pools                      = var.node_pools

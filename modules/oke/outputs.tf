@@ -6,7 +6,7 @@ output "cluster_id" {
 }
 
 output "cluster_kms_dynamic_group_id" {
-  value = var.use_cluster_encryption == true ? oci_identity_dynamic_group.oke_kms_cluster[0].id : "null"
+  value = var.use_cluster_encryption == true && var.create_policies ? oci_identity_dynamic_group.oke_kms_cluster[0].id : "null"
 }
 
 output "nodepool_ids" {
