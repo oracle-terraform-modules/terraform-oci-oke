@@ -141,12 +141,9 @@ pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
 
 ## oke cluster kms integration
-use_cluster_encryption = false
-cluster_kms_key_id     = ""
-
-### oke node pool volume kms integration
-use_node_pool_volume_encryption = false
-node_pool_volume_kms_key_id     = ""
+use_encryption  = false
+kms_key_id      = ""
+create_policies = true
 
 ## oke cluster container image policy and keys
 use_signed_images = false

@@ -57,6 +57,12 @@ variable "enable_pv_encryption_in_transit" {
   type = bool
 }
 
+variable "create_policies" {
+  description = "Whether to create dynamic group for KMS access when using encryption"
+  default     = true
+  type        = bool
+}
+
 # signed images
 variable "use_signed_images" {
   type = bool

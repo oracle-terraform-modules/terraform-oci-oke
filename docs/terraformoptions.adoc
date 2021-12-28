@@ -616,6 +616,7 @@ EOT
 |true/false
 |false
 
+<<<<<<< HEAD
 |cluster_kms_key_id
 |The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_cluster_encryption_ is set to *true*
 
@@ -638,6 +639,17 @@ EOT
 |Whether to encrypt data in transit between the instance, the boot volume, and the block volumes.
 |true/false
 |false
+=======
+|kms_key_id
+|The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption.. *Required* if _use_encryption_ is set to *true*
+|`ocid1.key.oc1....`
+|
+
+|create_policies
+|Whether to create dynamic group for cluster with policies to access {uri-oci-kms}[OCI KMS] when using encryption.
+|true/false
+|true
+>>>>>>> create_policies  > review feedback (#325)
 
 |`use_signed_images`
 |Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys.

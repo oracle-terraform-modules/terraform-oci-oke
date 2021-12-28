@@ -227,10 +227,10 @@ module "oke" {
   vcn_id                                                  = module.vcn.vcn_id
   use_cluster_encryption                                  = var.use_cluster_encryption
   cluster_kms_key_id                                      = var.cluster_kms_key_id
+  create_policies                                         = var.create_policies
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
-  create_policies                                         = var.create_policies
 
   # oke node pool parameters
   node_pools                      = var.node_pools
@@ -330,6 +330,7 @@ module "extensions" {
   use_cluster_encryption       = var.use_cluster_encryption
   cluster_kms_key_id           = var.cluster_kms_key_id
   cluster_kms_dynamic_group_id = module.oke.cluster_kms_dynamic_group_id
+  create_policies      = var.create_policies
 
   # ocir parameters
   email_address    = var.email_address
