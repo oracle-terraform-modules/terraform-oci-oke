@@ -6,7 +6,6 @@ provider.tf
 # .tfstate files
 *.tfstate
 *.tfstate.*
-.terraform.lock.hcl
 
 # .tfvars files
 *.tfvars
