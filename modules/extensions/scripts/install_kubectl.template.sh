@@ -10,13 +10,13 @@ if [ ! -f .kubectl_completed ]; then
   if [ ${ol} = 8 ]; then
     sudo dnf install -y oracle-olcne-release-el8
 
-    sudo dnf config-manager --enable ol8_olcne12
+    sudo dnf config-manager --enable ol8_olcne14
 
     sudo dnf install -y kubectl git
   else 
     sudo yum install -y oracle-olcne-release-el7 > /dev/null 2>&1
 
-    sudo yum-config-manager --enable ol7_olcne11 > /dev/null 2>&1
+    sudo yum-config-manager --enable ol7_olcne14 > /dev/null 2>&1
 
     sudo yum install -y kubectl git > /dev/null 2>&1
   fi
