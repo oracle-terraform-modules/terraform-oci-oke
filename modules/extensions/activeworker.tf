@@ -22,7 +22,7 @@ resource "null_resource" "check_worker_active" {
 
   provisioner "file" {
     content     = local.check_active_worker_template
-    destination = "~/check_active_worker.sh"
+    destination = "/home/opc/check_active_worker.sh"
   }
 
   provisioner "remote-exec" {

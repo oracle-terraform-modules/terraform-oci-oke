@@ -18,7 +18,7 @@ resource "null_resource" "install_calico" {
 
   provisioner "file" {
     content     = local.install_calico_template
-    destination = "~/install_sh"
+    destination = "/home/opc/install_sh"
   }
 
   provisioner "remote-exec" {

@@ -18,7 +18,7 @@ resource "null_resource" "enable_metric_server" {
 
   provisioner "file" {
     content     = local.metric_server_template
-    destination = "~/enable_metric_server.sh"
+    destination = "/home/opc/enable_metric_server.sh"
   }
 
   provisioner "remote-exec" {

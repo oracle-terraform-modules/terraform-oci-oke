@@ -46,7 +46,7 @@ resource "null_resource" "update_dynamic_group" {
 
   provisioner "file" {
     content     = local.update_dynamic_group_template
-    destination = "~/update_dynamic_group.sh"
+    destination = "/home/opc/update_dynamic_group.sh"
   }
 
   provisioner "remote-exec" {

@@ -43,17 +43,17 @@ resource "null_resource" "write_kubeconfig_on_operator" {
 
   provisioner "file" {
     content     = local.generate_kubeconfig_template
-    destination = "~/generate_kubeconfig.sh"
+    destination = "/home/opc/generate_kubeconfig.sh"
   }
 
   provisioner "file" {
     content     = local.token_helper_template
-    destination = "~/token_helper.sh"
+    destination = "/home/opc/token_helper.sh"
   }
 
   provisioner "file" {
     content     = local.set_credentials_template
-    destination = "~/kubeconfig_set_credentials.sh"
+    destination = "/home/opc/kubeconfig_set_credentials.sh"
   }
 
   provisioner "remote-exec" {
