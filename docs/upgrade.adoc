@@ -42,13 +42,13 @@ NOTE: The out-of-place method is currently the _only_ supported method of upgrad
 
 +
 ----
-kubernetes_version = "v1.20.8" 
+kubernetes_version = "v1.20.11" 
 ----
 to 
 
 +
 ----
-kubernetes_version = "v1.20.11"
+kubernetes_version = "v1.21.5"
 ----
 
 . Run terraform:
@@ -94,7 +94,7 @@ node_pools = {
 
 and run `terraform apply` again. (See note above about targeted apply). If you are using Kubernetes labels for your existing applications, you will need to ensure the new node pools also have the same labels. Refer to the `terraform.tfvars.example` file for the format to specify the labels.
 
-When node pools 3 and 4 are created, they will be created with the newer cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.20.11`, node pools 3 and 4 will be running Kubernetes v1.20.11.
+When node pools 3 and 4 are created, they will be created with the newer cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.21.5`, node pools 3 and 4 will be running Kubernetes v1.21.5.
 
 === Drain older nodepools
 . Set `upgrade_nodepool=true`. This will instruct the OKE cluster that some node pools will be drained.
