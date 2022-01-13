@@ -18,14 +18,14 @@ resource "null_resource" "install_calico" {
 
   provisioner "file" {
     content     = local.install_calico_template
-    destination = "/home/opc/install_sh"
+    destination = "/home/opc/install_calico.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/install_sh",
-      "$HOME/install_sh",
-      # "rm -f $HOME/install_sh"
+      "chmod +x $HOME/install_calico.sh",
+      "$HOME/install_calico.sh",
+      "rm -f $HOME/install_calico.sh"
     ]
   }
 
