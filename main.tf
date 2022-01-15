@@ -289,7 +289,6 @@ module "extensions" {
 
   # ocir parameters
   email_address    = var.email_address
-  ocir_urls        = var.ocir_urls
   secret_id        = var.secret_id
   secret_name      = var.secret_name
   secret_namespace = var.secret_namespace
