@@ -477,7 +477,7 @@ variable "kms_key_id" {
   type        = string
 }
 
-variable "volume_kms_key_id" {
+variable "node_pool_volume_kms_key_id" {
   default     = ""
   description = "The id of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption."
   type        = string
@@ -586,7 +586,7 @@ variable "enable_waf" {
   default     = false
 }
 
-variable "is_pv_encryption_in_transit_enabled" {
+variable "encryption_transit_enabled" {
   description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
   type        = bool
   default     = false

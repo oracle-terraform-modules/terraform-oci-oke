@@ -21,8 +21,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
       }
     }
     nsg_ids = var.worker_nsgs
-    is_pv_encryption_in_transit_enabled = var.is_pv_encryption_in_transit_enabled
-    kms_key_id                          = var.volume_kms_key_id
+    is_pv_encryption_in_transit_enabled = var.encryption_transit_enabled
+    kms_key_id                          = var.node_pool_volume_kms_key_id
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
   }

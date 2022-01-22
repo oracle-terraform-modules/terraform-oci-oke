@@ -231,8 +231,8 @@ module "oke" {
   node_pool_image_id                  = var.node_pool_image_id
   node_pool_os                        = var.node_pool_os
   node_pool_os_version                = var.node_pool_os_version
-  is_pv_encryption_in_transit_enabled = var.is_pv_encryption_in_transit_enabled
-  volume_kms_key_id                   = var.volume_kms_key_id
+  encryption_transit_enabled          = var.encryption_transit_enabled
+  node_pool_volume_kms_key_id         = var.node_pool_volume_kms_key_id
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer

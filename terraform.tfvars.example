@@ -136,6 +136,10 @@ services_cidr                = "10.96.0.0/16"
 use_encryption = false
 kms_key_id     = ""
 
+### oke node pool volume kms integration
+encryption_transit_enabled = false
+node_pool_volume_kms_key_id = ""
+
 ## oke cluster container image policy and keys
 use_signed_images = false
 image_signing_keys = []

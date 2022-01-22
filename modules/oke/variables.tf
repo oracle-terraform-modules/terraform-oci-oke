@@ -47,7 +47,7 @@ variable "use_encryption" {
 
 variable "kms_key_id" {}
 
-variable "volume_kms_key_id" {}
+variable "node_pool_volume_kms_key_id" {}
 
 # signed images
 variable "use_signed_images" {
@@ -81,6 +81,6 @@ variable "worker_nsgs" {
   type = list(any)
 }
 
-variable "is_pv_encryption_in_transit_enabled" {
+variable "encryption_transit_enabled" {
   type = bool
 }
