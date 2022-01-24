@@ -477,6 +477,12 @@ variable "kms_key_id" {
   type        = string
 }
 
+variable "enable_pv_encryption_in_transit" {
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
+  type        = bool
+  default     = false
+}
+
 variable "node_pool_volume_kms_key_id" {
   default     = ""
   description = "The id of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption."
@@ -582,12 +588,6 @@ variable "nodepool_upgrade_method" {
 ## waf
 variable "enable_waf" {
   description = "Whether to enable WAF monitoring of load balancers"
-  type        = bool
-  default     = false
-}
-
-variable "encryption_transit_enabled" {
-  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
   type        = bool
   default     = false
 }

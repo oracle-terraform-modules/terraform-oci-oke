@@ -599,7 +599,7 @@ EOT
 |`ocid1.key.oc1....`
 |
 
-|encryption_transit_enabled
+|enable_pv_encryption_in_transit
 |Whether to encrypt data in transit between the instance, the boot volume, and the block volumes.
 |true/false
 |false

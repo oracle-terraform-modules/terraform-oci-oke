@@ -76,11 +76,11 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the fol
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt OKE nodepool boot/block volume, the following is required:
 
-* node_pool_volume_kms_key_id must be provider
+* node_pool_volume_kms_key_id must be provided
 
 If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes.
 
-* encryption_transit_enabled must be _true_
+* enable_pv_encryption_in_transit must be _true_
 
 === Creating the OKE Cluster
 

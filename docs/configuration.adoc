@@ -256,7 +256,7 @@ create_operator = true
 enable_operator_instance_principal = true
 use_encryption = true
 kms_key_id = <kms_key_id>
-encryption_transit_enabled = false
+enable_pv_encryption_in_transit = false
 node_pool_volume_kms_key_id = <node_pool_volume_kms_key_id>
 ----
 

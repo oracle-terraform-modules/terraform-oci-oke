@@ -137,7 +137,7 @@ use_encryption = false
 kms_key_id     = ""
 
 ### oke node pool volume kms integration
-encryption_transit_enabled = false
+enable_pv_encryption_in_transit = false
 node_pool_volume_kms_key_id = ""
 
 ## oke cluster container image policy and keys
