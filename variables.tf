@@ -477,6 +477,18 @@ variable "kms_key_id" {
   type        = string
 }
 
+variable "enable_pv_encryption_in_transit" {
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
+  type        = bool
+  default     = false
+}
+
+variable "node_pool_volume_kms_key_id" {
+  default     = ""
+  description = "The id of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption."
+  type        = string
+}
+
 ## oke cluster container image policy and keys
 variable "use_signed_images" {
   description = "Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys."
