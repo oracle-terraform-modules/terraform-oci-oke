@@ -18,7 +18,7 @@ resource "null_resource" "enable_gatekeeper" {
 
   provisioner "file" {
     content     = local.gatekeeper_template
-    destination = "~/enable_gatekeeper.sh"
+    destination = "/home/opc/enable_gatekeeper.sh"
   }
 
   provisioner "remote-exec" {

@@ -74,7 +74,7 @@ locals {
       region         = var.region
 
       email_address     = var.email_address
-      region_registry   = var.ocir_urls[var.region]
+      region_registry   = join("",[var.region,".ocir.io"])
       secret_id         = var.secret_id
       secret_name       = var.secret_name
       secret_namespace  = var.secret_namespace

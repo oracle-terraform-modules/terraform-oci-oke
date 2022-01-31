@@ -18,12 +18,12 @@ resource "null_resource" "install_verrazzano" {
 
   provisioner "file" {
     content     = local.install_verrazzano_operator_template
-    destination = "~/install_verrazzano_operator"
+    destination = "/home/opc/install_verrazzano_operator"
   }
 
   provisioner "file" {
     content     = local.install_verrazzano_template
-    destination = "~/install_verrazzano"
+    destination = "/home/opc/install_verrazzano"
   }
 
   provisioner "remote-exec" {

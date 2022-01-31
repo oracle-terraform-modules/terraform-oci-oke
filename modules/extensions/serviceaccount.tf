@@ -17,8 +17,8 @@ resource "null_resource" "create_service_account" {
   depends_on = [null_resource.install_kubectl_on_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
-    content = local.create_service_account_template
-    destination = "~/create_service_account.sh"
+    content     = local.create_service_account_template
+    destination = "/home/opc/create_service_account.sh"
   }
 
   provisioner "remote-exec" {

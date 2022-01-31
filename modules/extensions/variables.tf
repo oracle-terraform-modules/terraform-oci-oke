@@ -65,10 +65,6 @@ variable "kms_dynamic_group_id" {}
 # ocir
 variable "email_address" {}
 
-variable "ocir_urls" {
-  type = map(any)
-}
-
 variable "secret_id" {}
 
 variable "secret_name" {}

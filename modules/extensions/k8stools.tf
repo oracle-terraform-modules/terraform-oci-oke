@@ -16,7 +16,7 @@ resource "null_resource" "install_kubectl_on_operator" {
 
   provisioner "file" {
     content     = local.install_kubectl_template
-    destination = "~/install_kubectl.sh"
+    destination = "/home/opc/install_kubectl.sh"
   }
 
   provisioner "remote-exec" {
@@ -48,7 +48,7 @@ resource "null_resource" "install_helm_on_operator" {
 
   provisioner "file" {
     content     = local.install_helm_template
-    destination = "~/install_helm.sh"
+    destination = "/home/opc/install_helm.sh"
   }
 
   provisioner "remote-exec" {

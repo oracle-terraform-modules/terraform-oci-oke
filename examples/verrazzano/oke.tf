@@ -37,7 +37,7 @@ module "oke" {
   cluster_name                = "v8o"
   control_plane_type          = "private"
   control_plane_allowed_cidrs = ["0.0.0.0/0"]
-  kubernetes_version          = "v1.20.11"
+  kubernetes_version          = "v1.21.5"
   pods_cidr                   = "10.244.0.0/16"
   services_cidr               = "10.96.0.0/16"
 
