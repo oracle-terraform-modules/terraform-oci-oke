@@ -85,7 +85,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.1"
+  version = "3.0.2"
 
   tenancy_id = var.tenancy_id
 
