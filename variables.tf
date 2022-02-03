@@ -778,9 +778,20 @@ variable "freeform_tags" {
       environment = "dev"
       role        = "operator"
     }
+    oke = {
+      service_lb  = {
+        environment = "dev"
+        role         = "load balancer"
+      }
+    }
   }
   description = "Tags to apply to different resources."
-  type        = map(any)
+  type = object({
+    vcn      = map(any),
+    bastion  = map(any),
+    operator = map(any),
+    oke      = map(map(any))
+  })
 }
 
 # placeholder variable for debugging scripts. To be implemented in future

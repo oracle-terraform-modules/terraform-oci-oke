@@ -224,6 +224,7 @@ module "oke" {
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
+  freeform_tags                                           = var.freeform_tags["oke"]
 
   # oke node pool parameters
   node_pools                          = var.node_pools
