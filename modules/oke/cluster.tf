@@ -39,6 +39,8 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
   }
 
+  freeform_tags = var.freeform_tags
+
   options {
     add_ons {
       is_kubernetes_dashboard_enabled = var.cluster_options_add_ons_is_kubernetes_dashboard_enabled

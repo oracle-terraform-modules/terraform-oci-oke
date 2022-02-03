@@ -84,3 +84,11 @@ variable "preferred_load_balancer" {}
 variable "worker_nsgs" {
   type = list(any)
 }
+
+variable "freeform_tags" {
+  description = "Freeform tags for OKE"
+  default = {
+    role        = "oke"
+  }
+  type = map(any)
+}
