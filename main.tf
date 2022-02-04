@@ -10,7 +10,7 @@ module "vcn" {
   label_prefix   = var.label_prefix
 
   # gateways
-  create_internet_gateway  = true
+  create_internet_gateway  = var.load_balancers == "internal" && var.create_bastion_host == false ? false : true
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
