@@ -90,6 +90,31 @@ variable "ssh_public_key_path" {
 }
 
 # vcn parameters
+
+variable "create_vcn" {
+  default     = true
+  description = "Whether to create a Virtual Cloud Network."
+  type        = bool
+}
+
+variable "vcn_display_name" {
+  default     = ""
+  description = "Name of the existing Virtual Cloud Network"
+  type        = string
+}
+
+variable "ig_route_table_display_name" {
+  default     = ""
+  description = "Name of the existing NAT Gateway route table"
+  type        = string
+}
+
+variable "nat_route_table_display_name" {
+  default     = ""
+  description = "Name of the existing Internet Gateway route table"
+  type        = string
+}
+
 variable "create_drg" {
   description = "whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN."
   type        = bool
@@ -765,7 +790,7 @@ variable "service_account_cluster_role_binding" {
 # tagging
 variable "freeform_tags" {
   default = {
-    # vcn, bastion and operator tags are required
+    # vcn, bastion, and operator tags are required
     # add more tags in each as desired
     vcn = {
       environment = "dev"
@@ -777,6 +802,10 @@ variable "freeform_tags" {
     operator = {
       environment = "dev"
       role        = "operator"
+    }
+    oke = {
+      environment = "dev"
+      role        = "oke"
     }
   }
   description = "Tags to apply to different resources."
