@@ -40,7 +40,7 @@ output "subnet_ids" {
 
 output "vcn_id" {
   description = "id of vcn where oke is created. use this vcn id to add additional resources"
-  value       = format("ID=%s", local.vcn_id)
+  value       = local.vcn_id
 }
 
 # convenient output
