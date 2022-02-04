@@ -48,10 +48,10 @@ module "bastion" {
   # networking
   availability_domain = var.availability_domains["bastion"]
   bastion_access      = var.bastion_access
-  ig_route_id         = local.ig_route_id # module.vcn.ig_route_id
+  ig_route_id         = local.ig_route_id
   netnum              = lookup(var.subnets["bastion"], "netnum")
   newbits             = lookup(var.subnets["bastion"], "newbits")
-  vcn_id              = local.vcn_id # module.vcn.vcn_id
+  vcn_id              = local.vcn_id
 
   # bastion host parameters
   bastion_image_id   = var.bastion_image_id
@@ -96,11 +96,11 @@ module "operator" {
 
   # networking
   availability_domain = var.availability_domains["operator"]
-  nat_route_id        = local.nat_route_id # module.vcn.nat_route_id
+  nat_route_id        = local.nat_route_id
   netnum              = lookup(var.subnets["operator"], "netnum")
   newbits             = lookup(var.subnets["operator"], "newbits")
   nsg_ids             = var.operator_nsg_ids
-  vcn_id              = local.vcn_id # module.vcn.vcn_id
+  vcn_id              = local.vcn_id
 
   # operator host parameters
   operator_image_id                  = var.operator_image_id
@@ -143,7 +143,7 @@ module "bastionsvc" {
   bastion_service_access        = var.bastion_service_access
   bastion_service_name          = var.bastion_service_name
   bastion_service_target_subnet = var.bastion_service_target_subnet
-  vcn_id                        = local.vcn_id # module.vcn.vcn_id
+  vcn_id                        = local.vcn_id
 
   depends_on = [
     module.operator
@@ -161,10 +161,10 @@ module "network" {
   label_prefix   = var.label_prefix
 
   # oke networking parameters
-  ig_route_id  = local.ig_route_id # module.vcn.ig_route_id
-  nat_route_id = local.nat_route_id # module.vcn.nat_route_id
+  ig_route_id  = local.ig_route_id
+  nat_route_id = local.nat_route_id
   subnets      = var.subnets
-  vcn_id       = local.vcn_id # module.vcn.vcn_id
+  vcn_id       = local.vcn_id
 
   # control plane endpoint parameters
   control_plane_type          = var.control_plane_type
@@ -252,7 +252,7 @@ module "oke" {
   }
 }
 
-# # extensions to oke
+# extensions to oke
 module "extensions" {
   source = "./modules/extensions"
 

@@ -15,12 +15,12 @@ output "nodepool_ids" {
 
 output "ig_route_id" {
   description = "id of route table to vcn internet gateway"
-  value       = local.ig_route_id # module.vcn.ig_route_id
+  value       = local.ig_route_id
 }
 
 output "nat_route_id" {
   description = "id of route table to nat gateway attached to vcn"
-  value       = local.nat_route_id # module.vcn.nat_route_id
+  value       = local.nat_route_id
 }
 
 output "int_lb_nsg" {
@@ -40,7 +40,7 @@ output "subnet_ids" {
 
 output "vcn_id" {
   description = "id of vcn where oke is created. use this vcn id to add additional resources"
-  value       = format("ID=%s", local.vcn_id) # module.vcn.vcn_id
+  value       = format("ID=%s", local.vcn_id)
 }
 
 # convenient output
