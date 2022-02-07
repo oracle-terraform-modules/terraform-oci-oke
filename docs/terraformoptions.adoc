@@ -487,6 +487,12 @@ EOT
     environment = "dev"
     role        = "operator"
   }
+  oke = {
+    service_lb  = {
+      environment = "dev"
+      role        = "load balancer"
+    }
+  }
 }`
 |
 `freeform_tags = {
@@ -500,6 +506,12 @@ EOT
   operator = {
     environment = "dev"
     role        = "operator"
+  }
+  oke = {
+    service_lb  = {
+      environment = "dev"
+      role        = "load balancer"
+    }
   }
 }`
 |===

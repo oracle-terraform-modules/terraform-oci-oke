@@ -240,6 +240,9 @@ module "oke" {
   # worker nsgs
   worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
+  # freeform_tags
+  freeform_tags  = var.freeform_tags["oke"]
+
   depends_on = [
     module.network
   ]
