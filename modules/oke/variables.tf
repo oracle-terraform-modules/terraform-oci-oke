@@ -86,9 +86,5 @@ variable "worker_nsgs" {
 }
 
 variable "freeform_tags" {
-  description = "Freeform tags for OKE"
-  default = {
-    role        = "oke"
-  }
   type = map(any)
 }
