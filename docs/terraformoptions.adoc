@@ -407,6 +407,16 @@ EOT
 | RUNNING/STOPPED
 | RUNNING
 
+|enable_operator_pv_encryption_in_transit
+|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes in Operator.
+|true/false
+|false
+
+|operator_volume_kms_id
+|The id of the OCI KMS key to be used as the master encryption key for Operator's boot volume/block volume encryption..
+|`ocid1.key.oc1....`
+|
+
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
 |e.g. Australia/Sydney
@@ -618,16 +628,6 @@ EOT
 
 |node_pool_volume_kms_key_id
 |The id of the OCI KMS key to be used as the master encryption key for nodepools boot volume/block volume encryption..
-|`ocid1.key.oc1....`
-|
-
-|enable_operator_pv_encryption_in_transit
-|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes in Operator.
-|true/false
-|false
-
-|operator_boot_volume_encryption_key_id
-|The id of the OCI KMS key to be used as the master encryption key for Operator's boot volume/block volume encryption..
 |`ocid1.key.oc1....`
 |
 

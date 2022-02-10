@@ -296,7 +296,7 @@ variable "operator_image_id" {
   type        = string
 }
 
-variable "operator_boot_volume_encryption_key_id" {
+variable "operator_volume_kms_id" {
   default     = ""
   description = "The OCID of the OCI KMS key to assign as the master encryption key for the boot volume."
   type        = string

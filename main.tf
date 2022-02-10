@@ -111,7 +111,7 @@ module "operator" {
   ssh_public_key                     = var.ssh_public_key
   ssh_public_key_path                = var.ssh_public_key_path
   upgrade_operator                   = var.upgrade_operator
-  boot_volume_encryption_key         = var.operator_boot_volume_encryption_key_id
+  boot_volume_encryption_key         = var.operator_volume_kms_id
   enable_pv_encryption_in_transit    = var.enable_operator_pv_encryption_in_transit
 
   # operator notification
