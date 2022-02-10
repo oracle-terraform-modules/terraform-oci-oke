@@ -85,7 +85,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.2"
+  version = "3.0.3"
 
   tenancy_id = var.tenancy_id
 
@@ -111,6 +111,8 @@ module "operator" {
   ssh_public_key                     = var.ssh_public_key
   ssh_public_key_path                = var.ssh_public_key_path
   upgrade_operator                   = var.upgrade_operator
+  boot_volume_encryption_key         = var.operator_boot_volume_encryption_key_id
+  enable_pv_encryption_in_transit    = var.enable_operator_pv_encryption_in_transit
 
   # operator notification
   enable_operator_notification   = var.enable_operator_notification

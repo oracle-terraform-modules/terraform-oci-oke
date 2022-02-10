@@ -78,9 +78,17 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt OKE nodepool boot/block vol
 
 * node_pool_volume_kms_key_id must be provided
 
-If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes.
+If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes in OKE node pool.
 
 * enable_pv_encryption_in_transit must be _true_
+
+If you wish to use {uri-oci-kms}[OCI KMS] to encrypt operator boot/block volume, the following is required:
+
+* operator_boot_volume_encryption_key_id must be provided
+
+If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes in operator.
+
+* enable_operator_pv_encryption_in_transit must be _true_
 
 === Creating the OKE Cluster
 

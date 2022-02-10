@@ -258,6 +258,8 @@ use_encryption = true
 kms_key_id = <kms_key_id>
 enable_pv_encryption_in_transit = false
 node_pool_volume_kms_key_id = <node_pool_volume_kms_key_id>
+enable_operator_pv_encryption_in_transit = false
+operator_boot_volume_encryption_key_id = <operator_boot_volume_encryption_key_id>
 ----
 
 OKE also supports enforcing the use of signed images. You can enforce the use of signed image using the following parameters:

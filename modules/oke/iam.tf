@@ -41,5 +41,5 @@ resource "oci_identity_policy" "oke_volume_kms" {
   description    = "Policies for block volumes to access kms key"
   name           = var.label_prefix == "none" ? "oke-volume-kms" : "${var.label_prefix}-oke-volume-kms"
   statements     = local.oke_volume_kms_policy_statements
-  count          = var.node_pool_volume_kms_key_id == "" ? 0 : 1
+  count          = var.use_encryption == true ? 0 : 1
 }
