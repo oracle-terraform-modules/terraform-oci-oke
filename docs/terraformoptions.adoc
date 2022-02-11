@@ -376,6 +376,11 @@ EOT
 |true/false
 |true
 
+|`enable_operator_pv_encryption_in_transit`
+|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes in Operator.
+|true/false
+|false
+
 |operator_image_id
 |Custom image id for the operator host
 |image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
@@ -406,6 +411,11 @@ EOT
 |The target state for the operator instance. Could be set to RUNNING or STOPPED. (Updatable)
 | RUNNING/STOPPED
 | RUNNING
+
+|`operator_volume_kms_id`
+|The id of the OCI KMS key to be used as the master encryption key for Operator's boot volume/block volume encryption..
+|`ocid1.key.oc1....`
+|
 
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*

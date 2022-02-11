@@ -296,6 +296,18 @@ variable "operator_image_id" {
   type        = string
 }
 
+variable "operator_volume_kms_id" {
+  default     = ""
+  description = "The OCID of the OCI KMS key to assign as the master encryption key for the boot volume."
+  type        = string
+}
+
+variable "enable_operator_pv_encryption_in_transit" {
+  default     = false
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment."
+  type        = bool
+}
+
 variable "enable_operator_instance_principal" {
   default     = true
   description = "Whether to enable the operator to call OCI API services without requiring api key."

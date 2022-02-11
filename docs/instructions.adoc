@@ -64,6 +64,8 @@ This section assumes you have completed the following:
 
 === KMS Integration
 
+==== OKE Variables
+
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the following is required:
 
 * the Terraform user must have the following rights
@@ -71,16 +73,27 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the fol
 ** {uri-oci-manage-policies}[manage policies in root tenancy]
 * link:#adding-the-bastion-host[bastion must be enabled]
 * link:#enabling-instance_principal-on-the-operator-host[operator instance_principal must be enabled]
-* use_encryption must be set to _true_
-* kms_key_id must be provided
+
+use_encryption must be set to _true_
+kms_key_id must be provided
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt OKE nodepool boot/block volume, the following is required:
 
 * node_pool_volume_kms_key_id must be provided
 
-If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes.
+If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes in OKE node pool.
 
 * enable_pv_encryption_in_transit must be _true_
+
+==== Operator Variables
+
+If you wish to use {uri-oci-kms}[OCI KMS] to encrypt operator boot/block volume, the following is required:
+
+* operator_volume_kms_id must be provided
+
+If you wish to encrypt data in transit between the instance, the boot volume, and the block volumes in operator.
+
+* enable_operator_pv_encryption_in_transit must be _true_
 
 === Creating the OKE Cluster
 
