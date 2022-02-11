@@ -104,8 +104,10 @@ operator_state    = "RUNNING"
 operator_timezone = "Australia/Sydney"
 upgrade_operator  = false
 
-### operator volume kms integration
+# Operator in-transit encryption for the data volume's paravirtualized attachment.
 enable_operator_pv_encryption_in_transit = false
+
+# operator volume kms integration
 operator_volume_kms_id = ""
 
 ## operator notification
