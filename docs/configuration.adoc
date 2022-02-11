@@ -250,14 +250,26 @@ The Kubernetes Metrics Server parameter controls the installation of {uri-metric
 
 The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets and boot volumes/block volumes. Additionally, the bastion and operator hosts must be enabled as well as instance_principal on the operator.
 
+Bastion Variables
+
 ----
 create_bastion_host = true
-create_operator = true
-enable_operator_instance_principal = true
+----
+
+OKE Variables:-
+
+----
 use_encryption = true
 kms_key_id = <kms_key_id>
 enable_pv_encryption_in_transit = false
 node_pool_volume_kms_key_id = <node_pool_volume_kms_key_id>
+----
+
+Operator Variables
+
+----
+create_operator = true
+enable_operator_instance_principal = true
 enable_operator_pv_encryption_in_transit = false
 operator_volume_kms_id = <operator_volume_kms_id>
 ----
