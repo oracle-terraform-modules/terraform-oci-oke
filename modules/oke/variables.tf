@@ -47,11 +47,15 @@ variable "use_encryption" {
 
 variable "kms_key_id" {}
 
-variable "enable_pv_encryption_in_transit" {
+variable "use_node_pool_volume_encryption" {
   type = bool
 }
 
 variable "node_pool_volume_kms_key_id" {}
+
+variable "enable_pv_encryption_in_transit" {
+  type = bool
+}
 
 # signed images
 variable "use_signed_images" {

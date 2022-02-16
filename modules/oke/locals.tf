@@ -18,10 +18,10 @@ locals {
   policy_statement = (var.use_encryption == true) ? "Allow dynamic-group ${oci_identity_dynamic_group.oke_kms_cluster[0].name} to use keys in compartment id ${var.compartment_id} where target.key.id = '${var.kms_key_id}'" : ""
 
   # policy to allow block volumes inside oke to use kms
-  oke_volume_kms_policy_statements = (var.node_pool_volume_kms_key_id == "") ? []: [
+  oke_volume_kms_policy_statements = (var.use_node_pool_volume_encryption == true) ? [
     "Allow service oke to use key-delegates in compartment id ${var.compartment_id} where target.key.id = '${var.node_pool_volume_kms_key_id}'",
     "Allow service blockstorage to use keys in compartment id ${var.compartment_id} where target.key.id = '${var.node_pool_volume_kms_key_id}'"
-  ]
+  ]: []
 
   # 1. get a list of available images for this cluster
   # 2. filter by version

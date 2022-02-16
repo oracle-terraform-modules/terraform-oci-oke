@@ -489,8 +489,8 @@ variable "kms_key_id" {
   type        = string
 }
 
-variable "enable_pv_encryption_in_transit" {
-  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
+variable "use_node_pool_volume_encryption" {
+  description = "Whether to use OCI KMS to encrypt Kubernetes Nodepool's boot/block volume."
   type        = bool
   default     = false
 }
@@ -524,6 +524,12 @@ variable "check_node_active" {
     condition     = contains(["none", "one", "all"], var.check_node_active)
     error_message = "Accepted values are none, one or all."
   }
+}
+
+variable "enable_pv_encryption_in_transit" {
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
+  type        = bool
+  default     = false
 }
 
 variable "node_pools" {
