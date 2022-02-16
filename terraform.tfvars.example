@@ -130,7 +130,7 @@ allow_node_port_access       = false
 allow_worker_internet_access = true
 allow_worker_ssh_access      = false
 cluster_name                 = "oke"
-control_plane_type         = "private"
+control_plane_type           = "private"
 control_plane_allowed_cidrs  = ["0.0.0.0/0"]
 control_plane_nsgs           = []
 dashboard_enabled            = false
@@ -143,8 +143,8 @@ use_encryption = false
 kms_key_id     = ""
 
 ### oke node pool volume kms integration
-enable_pv_encryption_in_transit = false
-node_pool_volume_kms_key_id = ""
+use_node_pool_volume_encryption = false
+node_pool_volume_kms_key_id     = ""
 
 ## oke cluster container image policy and keys
 use_signed_images = false
@@ -152,6 +152,7 @@ image_signing_keys = []
 
 # node pools
 check_node_active = "all"
+enable_pv_encryption_in_transit = false
 node_pools = {
   np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np2" } }
@@ -233,6 +234,12 @@ freeform_tags = {
     environment = "dev",
     role        = "operator",
     security    = "high"
+  }
+  oke = {
+    service_lb  = {
+      environment = "dev"
+      role        = "load balancer"
+    }
   }
 }
 

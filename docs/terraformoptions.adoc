@@ -621,8 +621,8 @@ EOT
 |`ocid1.key.oc1....`
 |
 
-|enable_pv_encryption_in_transit
-|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes.
+|use_node_pool_volume_encryption
+|Whether to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes Nodepool's boot/block volume.
 |true/false
 |false
 
@@ -630,6 +630,11 @@ EOT
 |The id of the OCI KMS key to be used as the master encryption key for nodepools boot volume/block volume encryption..
 |`ocid1.key.oc1....`
 |
+
+|enable_pv_encryption_in_transit
+|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes.
+|true/false
+|false
 
 |`use_signed_images`
 |Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys.
