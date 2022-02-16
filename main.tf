@@ -228,13 +228,13 @@ module "oke" {
   admission_controller_options                            = var.admission_controller_options
 
   # oke node pool parameters
-  node_pools                          = var.node_pools
-  node_pool_name_prefix               = var.node_pool_name_prefix
-  node_pool_image_id                  = var.node_pool_image_id
-  node_pool_os                        = var.node_pool_os
-  node_pool_os_version                = var.node_pool_os_version
-  enable_pv_encryption_in_transit     = var.enable_pv_encryption_in_transit
-  node_pool_volume_kms_key_id         = var.node_pool_volume_kms_key_id
+  node_pools                      = var.node_pools
+  node_pool_name_prefix           = var.node_pool_name_prefix
+  node_pool_image_id              = var.node_pool_image_id
+  node_pool_os                    = var.node_pool_os
+  node_pool_os_version            = var.node_pool_os_version
+  enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
+  node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer
@@ -243,7 +243,7 @@ module "oke" {
   worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
   # freeform_tags
-  freeform_tags  = var.freeform_tags["oke"]
+  freeform_tags = var.freeform_tags["oke"]
 
   depends_on = [
     module.network
@@ -252,6 +252,36 @@ module "oke" {
   providers = {
     oci.home = oci.home
   }
+}
+
+#fss
+module "storage" {
+  source = "./modules/storage"
+
+  # general oci parameters
+  tenancy_id          = var.tenancy_id
+  compartment_id      = var.compartment_id
+  availability_domain = var.availability_domains["fss"]
+  label_prefix        = var.label_prefix
+
+  # FSS netowrk information
+  fss_subnet_name = var.fss_subnet_name
+  subnets         = var.subnets
+  vcn_id          = module.vcn.vcn_id
+  nat_route_id    = module.vcn.nat_route_id
+
+  enable_fss     = var.enable_fss
+  fss_mount_path = var.fss_mount_path
+
+  # Export set configuration
+  max_fs_stat_bytes = var.max_fs_stat_bytes
+  max_fs_stat_files = var.max_fs_stat_files
+
+  providers = {
+    oci.home = oci.home
+  }
+
+  count = var.enable_fss == true ? 1 : 0
 }
 
 # extensions to oke
