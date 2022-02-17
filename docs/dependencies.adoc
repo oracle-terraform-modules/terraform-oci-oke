@@ -14,7 +14,7 @@
 
 == Dependencies
 
-The following table documents the {uri-terraform-options}[Terraform Options] dependencies.
+The following table documents the {uri-terraform-options}[Terraform Options] dependencies i.e. the prerequisites in order for certain features to work.
 
 [stripes=odd,cols="1d,4d,3a", options=header,width="100%"] 
 |===
@@ -28,7 +28,7 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |create_service_account
 |Creates a service account that can be used for CI/CD. 
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
 |enable_calico
 |Installs calico as network policy engine
@@ -36,22 +36,26 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 
 |enable_metric_server
 |Installs Kubernetes metrics server for Horizontal Pod Autoscaling
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
 |node_pools_to_drain
 |Drains existing node pools before upgrading
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
 |ocir secret
 |Whether to create an authentication secret for OCIR
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true, secret_id = secret ocid
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true, secret_id = secret ocid
 
 |use_encryption
 |Uses OCI KMS to encrypt data in OKE's underlying etcd
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
 |vpa
 |Installs Kubernetes Vertical Pod Autoscaler
-|create_bastion_host = true, create_operator = true, admin_instance_principal = true, enable_metric_server = true
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true, enable_metric_server = true
+
+|enable_gatekeeper
+|Installs OPA Gatekeeper
+|create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
 |===
