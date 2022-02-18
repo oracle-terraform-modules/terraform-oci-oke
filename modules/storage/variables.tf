@@ -30,7 +30,7 @@ variable "fss_subnet_name" {
 }
 
 # fss mount point network provisioning
-variable "enable_fss" {}
+variable "create_fss" {}
 
 # fss mount path
 variable "fss_mount_path" {}

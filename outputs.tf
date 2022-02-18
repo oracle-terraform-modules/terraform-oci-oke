@@ -76,5 +76,5 @@ output "bastion_service_instance_id" {
 }
 
 output "fss_id" {
-  value = var.enable_fss == true ? module.storage[0].fss_id : "null"
+  value = var.create_fss == true ? module.storage[0].fss_id : "null"
 }

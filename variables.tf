@@ -391,6 +391,7 @@ variable "availability_domains" {
   default = {
     bastion  = 1
     operator = 1
+    fss      = 1
   }
   type = map(any)
 }
@@ -679,7 +680,7 @@ variable "public_lb_allowed_ports" {
 }
 
 #fss
-variable "enable_fss" {
+variable "create_fss" {
   description = "Whether to enable provisioning for FSS"
   default     = false
   type        = bool

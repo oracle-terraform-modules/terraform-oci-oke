@@ -379,11 +379,11 @@ Review the following documentation and articles on creating load balancers of di
 
 === Provisioning PVCs on the File Storage Service
 
-. Set enable_fss to true in terraform.tfvars
+. Set create_fss to true in terraform.tfvars
 
 +
 ----
-enable_fss = false
+create_fss = false
 ----
 It will create the File system storage on a separate subnet with network security group configured. 
 

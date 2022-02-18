@@ -716,7 +716,7 @@ node_pools = {
 |Values
 |Default
 
-|enable_fss
+|create_fss
 |Whether to create File storage or not.
 |true/false
 |false

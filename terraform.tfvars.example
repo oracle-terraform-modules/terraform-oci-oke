@@ -119,7 +119,8 @@ operator_notification_topic    = ""
 # availability_domains
 availability_domains = {
   bastion  = 1,
-  operator = 1
+  operator = 1,
+  fss = 1
 }
 
 # oke cluster options
@@ -191,7 +192,7 @@ preferred_load_balancer      = "public"
 # public_lb_allowed_ports    = [443,"9001-9002"] # By default, only 443 is allowed
 
 #fss
-enable_fss = false
+create_fss = false
 fss_subnet_name = "fss"
 fss_mount_path = "/oke_fss"
 max_fs_stat_bytes = 23843202333

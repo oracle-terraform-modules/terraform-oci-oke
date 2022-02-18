@@ -8,11 +8,6 @@ locals {
 
   udp_protocol = 17
 
-  # ad_names = [
-  #   for ad_name in data.oci_identity_availability_domains.ad_list.availability_domains :
-  #   ad_name.name
-  # ]
-
   availability_domain = data.oci_identity_availability_domain.ad.name
 
   vcn_cidr = element(data.oci_core_vcn.vcn.cidr_blocks, 0)

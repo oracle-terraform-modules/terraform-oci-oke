@@ -37,7 +37,7 @@ resource "oci_core_network_security_group_security_rule" "fss_mt_ingress" {
     }
   }
 
-  count = (var.enable_fss == true) ? length(local.fss_mt_ingress) : 0
+  count = (var.create_fss == true) ? length(local.fss_mt_ingress) : 0
 }
 
 resource "oci_core_network_security_group_security_rule" "fss_mt_egress" {
@@ -69,7 +69,7 @@ resource "oci_core_network_security_group_security_rule" "fss_mt_egress" {
     }
   }
 
-  count = (var.enable_fss == true) ? length(local.fss_mt_egress) : 0
+  count = (var.create_fss == true) ? length(local.fss_mt_egress) : 0
 }
 
 ## fss : instance network security group and rules
@@ -78,7 +78,7 @@ resource "oci_core_network_security_group" "fss_inst" {
   display_name   = var.label_prefix == "none" ? "fss-inst" : "${var.label_prefix}-fss-inst"
   vcn_id         = var.vcn_id
 
-  count = var.enable_fss == true ? 1 : 0
+  count = var.create_fss == true ? 1 : 0
 }
 
 resource "oci_core_network_security_group_security_rule" "fss_inst_ingress" {
@@ -110,7 +110,7 @@ resource "oci_core_network_security_group_security_rule" "fss_inst_ingress" {
     }
   }
 
-  count = (var.enable_fss == true) ? length(local.fss_inst_ingress) : 0
+  count = (var.create_fss == true) ? length(local.fss_inst_ingress) : 0
 }
 
 resource "oci_core_network_security_group_security_rule" "fss_inst_egress" {
@@ -142,5 +142,5 @@ resource "oci_core_network_security_group_security_rule" "fss_inst_egress" {
     }
   }
 
-  count = (var.enable_fss == true) ? length(local.fss_inst_egress) : 0
+  count = (var.create_fss == true) ? length(local.fss_inst_egress) : 0
 }
