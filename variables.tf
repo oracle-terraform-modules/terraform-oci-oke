@@ -477,13 +477,13 @@ variable "services_cidr" {
 
 ## oke cluster kms integration
 
-variable "use_encryption" {
+variable "use_cluster_encryption" {
   description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
   default     = false
   type        = bool
 }
 
-variable "kms_key_id" {
+variable "cluster_kms_key_id" {
   default     = ""
   description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
   type        = string
@@ -680,7 +680,7 @@ variable "public_lb_allowed_ports" {
 
 #fss
 variable "enable_fss" {
-  description = "Wheather to enable provisioning for FSS"
+  description = "Whether to enable provisioning for FSS"
   default     = false
   type        = bool
 }

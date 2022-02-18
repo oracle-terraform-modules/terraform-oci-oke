@@ -221,8 +221,8 @@ module "oke" {
   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
   cluster_subnets                                         = module.network.subnet_ids
   vcn_id                                                  = module.vcn.vcn_id
-  use_encryption                                          = var.use_encryption
-  kms_key_id                                              = var.kms_key_id
+  use_cluster_encryption                                  = var.use_cluster_encryption
+  cluster_kms_key_id                                      = var.cluster_kms_key_id
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
@@ -283,6 +283,7 @@ module "storage" {
   }
 
   count = var.enable_fss == true ? 1 : 0
+
 }
 
 # extensions to oke
@@ -319,11 +320,11 @@ module "extensions" {
   operator_os_version                = var.operator_os_version
 
   # oke cluster parameters
-  cluster_id           = module.oke.cluster_id
-  pods_cidr            = var.pods_cidr
-  use_encryption       = var.use_encryption
-  kms_key_id           = var.kms_key_id
-  kms_dynamic_group_id = module.oke.kms_dynamic_group_id
+  cluster_id             = module.oke.cluster_id
+  pods_cidr              = var.pods_cidr
+  use_cluster_encryption = var.use_cluster_encryption
+  cluster_kms_key_id     = var.cluster_kms_key_id
+  kms_dynamic_group_id   = module.oke.kms_dynamic_group_id
 
   # ocir parameters
   email_address    = var.email_address

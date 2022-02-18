@@ -74,8 +74,8 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the fol
 * link:#adding-the-bastion-host[bastion must be enabled]
 * link:#enabling-instance_principal-on-the-operator-host[operator instance_principal must be enabled]
 
-* use_encryption must be set to _true_
-* kms_key_id must be provided
+* use_cluster_encryption must be set to _true_
+* cluster_kms_key_id must be provided
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt OKE nodepool boot/block volume, the following is required:
 
@@ -376,3 +376,19 @@ Review the following documentation and articles on creating load balancers of di
 * {uri-oci-load-balancers}[Specifying Alternative Load Balancer Shapes]
 
 * {uri-oci-oke-flexible-loadbalancers}[Creating flexible OCI Load Balancers with OKE]
+
+=== Provisioning PVCs on the File Storage Service
+
+. Set enable_fss to true in terraform.tfvars
+
++
+----
+enable_fss = false
+----
+It will create the File system storage on a separate subnet with network security group configured. 
+
+Review the following documentation for creating persistent volume claim and persistent volume using file storage
+
+* {uri-fss-pvc}[Provisioning PV and PVC using FSS]
+
+CAUTION: Running terraform destroy will remove the filesystem storage created using terraform .Make sure you have taken backup if needed.

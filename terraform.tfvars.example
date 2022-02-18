@@ -139,8 +139,8 @@ pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
 
 ## oke cluster kms integration
-use_encryption = false
-kms_key_id     = ""
+use_cluster_encryption = false
+cluster_kms_key_id     = ""
 
 ### oke node pool volume kms integration
 use_node_pool_volume_encryption = false
@@ -189,6 +189,14 @@ preferred_load_balancer      = "public"
 # internal_lb_allowed_ports  = [80, 443, "7001-7005"] # By default, only 80 and 443 are allowed
 # public_lb_allowed_cidrs    = ["0.0.0.0/0"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
 # public_lb_allowed_ports    = [443,"9001-9002"] # By default, only 443 is allowed
+
+#fss
+enable_fss = false
+fss_subnet_name = "fss"
+fss_mount_path = "/oke_fss"
+max_fs_stat_bytes = 23843202333
+max_fs_stat_files = 223442
+
 
 # ocir
 email_address    = ""

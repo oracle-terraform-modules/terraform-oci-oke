@@ -41,11 +41,11 @@ variable "cluster_subnets" {
 variable "vcn_id" {}
 
 # encryption
-variable "use_encryption" {
+variable "use_cluster_encryption" {
   type = bool
 }
 
-variable "kms_key_id" {}
+variable "cluster_kms_key_id" {}
 
 variable "use_node_pool_volume_encryption" {
   type = bool

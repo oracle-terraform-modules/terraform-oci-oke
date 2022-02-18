@@ -55,11 +55,11 @@ variable "cluster_id" {}
 variable "pods_cidr" {}
 
 # encryption
-variable "use_encryption" {
+variable "use_cluster_encryption" {
   type = bool
 }
 
-variable "kms_key_id" {}
+variable "cluster_kms_key_id" {}
 
 variable "kms_dynamic_group_id" {}
 # ocir

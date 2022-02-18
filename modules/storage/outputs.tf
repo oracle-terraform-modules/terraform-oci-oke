@@ -6,10 +6,14 @@ output "fss_mount_target_id" {
   value = oci_file_storage_mount_target.fss_mount_target.id
 }
 
-output "fss_id" {
+output "fss_subnet_id" {
   value = (var.enable_fss == true) ? oci_core_subnet.fss.id : ""
 }
 
 output "fss_mount_target_nsg_id" {
   value = (var.enable_fss == true) ? oci_core_network_security_group.fss_mt.id : ""
+}
+
+output "fss_id" {
+  value = (var.enable_fss == true) ? oci_file_storage_file_system.fss.id : ""
 }
