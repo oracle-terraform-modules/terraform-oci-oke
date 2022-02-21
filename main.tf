@@ -265,13 +265,13 @@ module "storage" {
   availability_domain = var.availability_domains["fss"]
   label_prefix        = var.label_prefix
 
-  # FSS netowrk information
+  # FSS network information
   fss_subnet_name = var.fss_subnet_name
   subnets         = var.subnets
   vcn_id          = module.vcn.vcn_id
   nat_route_id    = module.vcn.nat_route_id
 
-  enable_fss     = var.enable_fss
+  create_fss     = var.create_fss
   fss_mount_path = var.fss_mount_path
 
   # Export set configuration
@@ -282,7 +282,7 @@ module "storage" {
     oci.home = oci.home
   }
 
-  count = var.enable_fss == true ? 1 : 0
+  count = var.create_fss == true ? 1 : 0
 
 }
 
