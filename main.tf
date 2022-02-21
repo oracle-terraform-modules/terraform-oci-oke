@@ -240,6 +240,7 @@ module "oke" {
   node_pool_image_id              = var.node_pool_image_id
   node_pool_os                    = var.node_pool_os
   node_pool_os_version            = var.node_pool_os_version
+  node_pool_timezone              = var.node_pool_timezone
   enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
   use_node_pool_volume_encryption = var.use_node_pool_volume_encryption
   node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id

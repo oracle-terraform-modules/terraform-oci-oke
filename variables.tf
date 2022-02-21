@@ -210,7 +210,7 @@ variable "bastion_state" {
 }
 
 variable "bastion_timezone" {
-  default     = "Australia/Sydney"
+  default     = "Etc/UTC"
   description = "The preferred timezone for the bastion host."
   type        = string
 }
@@ -349,7 +349,7 @@ variable "operator_state" {
 }
 
 variable "operator_timezone" {
-  default     = "Australia/Sydney"
+  default     = "Etc/UTC"
   description = "The preferred timezone for the operator host."
   type        = string
 }
@@ -563,6 +563,12 @@ variable "node_pool_os" {
 variable "node_pool_os_version" {
   default     = "7.9"
   description = "The version of operating system to use for the worker nodes."
+  type        = string
+}
+
+variable "node_pool_timezone" {
+  default     = "Etc/UTC"
+  description = "The preferred timezone for the worker nodes."
   type        = string
 }
 
@@ -797,9 +803,9 @@ variable "freeform_tags" {
       role        = "operator"
     }
     oke = {
-      service_lb  = {
+      service_lb = {
         environment = "dev"
-        role         = "load balancer"
+        role        = "load balancer"
       }
     }
   }
