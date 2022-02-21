@@ -3,7 +3,7 @@
 
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
-  version = "3.0.0"
+  version = "3.2.0"
 
   # general oci parameters
   compartment_id = var.compartment_id
@@ -14,10 +14,6 @@ module "vcn" {
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
-
-  # drg
-  create_drg       = var.create_drg
-  drg_display_name = var.drg_display_name
 
   # lpgs
   local_peering_gateways = var.local_peering_gateways
@@ -153,6 +149,7 @@ module "bastionsvc" {
   count = var.create_bastion_service == true ? 1 : 0
 }
 
+
 # additional networking for oke
 module "network" {
   source = "./modules/network"
@@ -166,6 +163,16 @@ module "network" {
   nat_route_id = module.vcn.nat_route_id
   subnets      = var.subnets
   vcn_id       = module.vcn.vcn_id
+
+  # drg integration
+  create_drg = var.create_drg
+  drg_display_name = var.drg_display_name
+  drg_vcn_attachments = { for k, v in {vcn=module.vcn} : k => {
+    vcn_id : v.vcn_id
+    vcn_transit_routing_rt_id : null
+    drg_route_table_id : null
+    }
+  }
 
   # control plane endpoint parameters
   control_plane_type          = var.control_plane_type
@@ -228,14 +235,14 @@ module "oke" {
   admission_controller_options                            = var.admission_controller_options
 
   # oke node pool parameters
-  node_pools                          = var.node_pools
-  node_pool_name_prefix               = var.node_pool_name_prefix
-  node_pool_image_id                  = var.node_pool_image_id
-  node_pool_os                        = var.node_pool_os
-  node_pool_os_version                = var.node_pool_os_version
-  enable_pv_encryption_in_transit     = var.enable_pv_encryption_in_transit
-  use_node_pool_volume_encryption      = var.use_node_pool_volume_encryption
-  node_pool_volume_kms_key_id         = var.node_pool_volume_kms_key_id
+  node_pools                      = var.node_pools
+  node_pool_name_prefix           = var.node_pool_name_prefix
+  node_pool_image_id              = var.node_pool_image_id
+  node_pool_os                    = var.node_pool_os
+  node_pool_os_version            = var.node_pool_os_version
+  enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
+  use_node_pool_volume_encryption = var.use_node_pool_volume_encryption
+  node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer
@@ -244,7 +251,7 @@ module "oke" {
   worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
   # freeform_tags
-  freeform_tags  = var.freeform_tags["oke"]
+  freeform_tags = var.freeform_tags["oke"]
 
   depends_on = [
     module.network

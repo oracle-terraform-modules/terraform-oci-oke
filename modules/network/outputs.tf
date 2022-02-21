@@ -19,10 +19,14 @@ output "int_lb" {
 }
 
 output "pub_lb" {
-  value = var.load_balancers == "public" || var.load_balancers == "both" ? oci_core_network_security_group.pub_lb[0].id :""
+  value = var.load_balancers == "public" || var.load_balancers == "both" ? oci_core_network_security_group.pub_lb[0].id : ""
 }
 
 output "worker_nsg_id" {
   value = oci_core_network_security_group.workers.id
+}
+
+output "drg_id" {
+  value = var.create_drg ? module.drg.0.drg_id : ""
 }
 
