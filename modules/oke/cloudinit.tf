@@ -1,7 +1,7 @@
 locals {
   worker_script_template = templatefile("${path.module}/cloudinit/worker.template.sh",
     {
-      worker_timezone = "Australia/Sydney"
+      worker_timezone = var.node_pool_timezone
     }
   )
   # example for adding more script 

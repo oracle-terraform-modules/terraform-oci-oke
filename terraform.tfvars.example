@@ -72,7 +72,7 @@ bastion_shape = {
   boot_volume_size = 50
 }
 bastion_state    = "RUNNING"
-bastion_timezone = "Australia/Sydney"
+bastion_timezone = "Etc/UTC"
 bastion_type     = "public"
 upgrade_bastion  = false
 
@@ -101,7 +101,7 @@ operator_shape = {
   boot_volume_size = 50
 }
 operator_state    = "RUNNING"
-operator_timezone = "Australia/Sydney"
+operator_timezone = "Etc/UTC"
 upgrade_operator  = false
 
 # Operator in-transit encryption for the data volume's paravirtualized attachment.
@@ -173,7 +173,7 @@ node_pool_image_id    = "none"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
 node_pool_os_version  = "7.9"
-node_pool_timezone    = "Australia/Sydney"
+node_pool_timezone    = "Etc/UTC"
 worker_nsgs           = []
 worker_type           = "private"
 
