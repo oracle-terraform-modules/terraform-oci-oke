@@ -55,16 +55,16 @@
 :uri-psp: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingpspswithoke.htm#Using_Pod_Security_Polices_with_Container_Engine_for_Kubernetes
 :uri-kubernetes-vpa: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
 
-=== Assumptions
+== Assumptions
 
 This section assumes you have completed the following:
 
 . all the {uri-prereqs}[prerequisites]
 . all the required {uri-configuration}[configuration]
 
-=== KMS Integration
+== KMS Integration
 
-==== OKE Variables
+== OKE Variables
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the following is required:
 
@@ -86,7 +86,7 @@ If you wish to encrypt data in transit between the instance, the boot volume, an
 
 * enable_pv_encryption_in_transit must be _true_
 
-==== Operator Variables
+== Operator Variables
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt operator boot/block volume, the following is required:
 
@@ -96,7 +96,7 @@ If you wish to encrypt data in transit between the instance, the boot volume, an
 
 * enable_operator_pv_encryption_in_transit must be _true_
 
-=== Creating the OKE Cluster
+== Creating the OKE Cluster
 
 Initialize a working directory containing Terraform configuration files:
 
@@ -114,13 +114,10 @@ You can create a Kubernetes cluster with the latest version of Kubernetes availa
 
 Use the parameter *cluster_name* to change the name of the cluster as per your needs.
 
-
+== Using the bastion host
 === Adding the bastion host
 
 If you want to use bastion host, set the parameter *create_bastion_host* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#bastion-host[Bastion Host] for other available bastion related parameters.
-
-
-=== Using the bastion host
 
 ****
 *Assumption: you have set the create_bastion_host parameter to true in terraform.tfvars*
@@ -134,13 +131,22 @@ terraform output
 
 You can then copy the ssh_to_bastion command, paste and run it in a terminal.
 
+=== Shutting down the bastion host
+
+You can also shutdown the bastion host. Shutting down the bastion host does not destroy it and its public IP address will be preserved. 
+
+To turn off the bastion host, set `bastion_state= "STOPPED"` and run `terraform apply` again.
+
+To turn it on again, set `bastion_state= "RUNNING"` and run `terraform apply` again.
+
+== Using the operator host
 === Adding the operator host
 
 The operator host is used to minimize local dependencies such as oci-cli, kubectl and so on. 
 
 If you want to use the operator host, set the parameter *create_operator* to *true* in terraform.tfvars. Refer to {uri-terraform-options}#operator-host[Admin Host] for other available bastion related parameters.
 
-==== Upgrading the operator host
+=== Upgrading the operator host
 
 There is 1 additional parameter for the operator:
 
@@ -152,12 +158,6 @@ _upgrade_operator_ will upgrade the operator compute packages on first boot.
 N.B. It is good and recommended practice to upgrade your package host to the latest packages to minimize the possibility of vulnerabilities. However, it will also take slightly longer before the package host is available.
 ****
 
-=== Using the operator host
-
-****
-*Assumption: you have set the create_operator parameter to true in terraform.tfvars*
-****
-
 Once the terraform apply is successful you will get the operator_private_ip as output and also a ssh command. You can also run the below command to get the output:
 
 ----
@@ -166,6 +166,15 @@ terraform output
 
 You can then copy the ssh_to_operator command, paste and run it in a terminal.
 
+=== Shutting down the operator host
+
+You can also shutdown the operator host. Shutting down the operator host does not destroy it. 
+
+To turn off the operator host, set `operator_state= "STOPPED"` and run `terraform apply` again. 
+
+To turn it on again, set `operator_state= "RUNNING"` and run `terraform apply` again.
+
+=== Using instance_principal on the operator host
 ==== Enabling instance_principal on the operator host
 {uri-oci-instance-principal}[instance_principal] is an IAM service feature that enables instances to be authorized actors (or principals) to perform actions on service resources. Each compute instance has its own identity, and it authenticates using the certificates that are added to it. These certificates are automatically created, assigned to instances and rotated, preventing the need for you to distribute credentials to your hosts and rotate them.
 
@@ -211,7 +220,7 @@ terraform apply
 . Enable instance_principal *_if and only if_* you are using link:#kms-integration[KMS Integration], calico, metricserver or creating the OCIR secret.
 . Disable instance_principal once the cluster is created
 
-=== Interacting with the OKE Cluster
+== Interacting with the OKE Cluster
 
 kubectl installed on the operator host by default and the kubeconfig file is set in the default location (~/.kube/config) so you don't need to set the KUBECONFIG environment variable every time you log in to the operator host. 
 
@@ -231,7 +240,7 @@ export KUBECONFIG=generated/kubeconfig
 *Ensure you install the same kubectl version as the OKE Kubernetes version for compatibility.*
 ****
 
-=== Creating a Secret for OCIR
+== Creating a Secret for OCIR
 
 {uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. Use the following rules to determine if you need to create a Kubernetes Secret for OCIR:
 
@@ -244,15 +253,15 @@ You must then {uri-oci-secret}[create a Secret in OCI Vault to store] the value 
 
 Finally, assign the Secret OCID to *secret_id* in terraform.tfvars. Refer to {uri-terraform-options}#ocir[OCIR parameters] for other parameters to be set.
 
-=== Installing Calico 
+== Installing Calico 
 
 Calico enables network policy in Kubernetes clusters. To install calico set the parameter *enable_calico = true* in terraform.tfvars. By default its set to false. Refer to {uri-terraform-options}#calico[Calico parameters] for other available parameters.
 
-=== Installing Kubernetes Metrics Server
+== Installing Kubernetes Metrics Server
 
 {uri-metricserver}[Kubernetes Metrics Server] can be installed by setting the parameter *enable_metric_server = true* in terraform.tfvars. By default, the latest version is installed in kube-system namespace. This is required if you need to use Horizontal Pod Autoscaling.
 
-=== Installing Vertical Pod Autoscaler
+== Installing Vertical Pod Autoscaler
 
 {uri-kubernetes-vpa}[Vertical Pod Autoscaler] can be installed by configuring the `vpa` parameter:
 
@@ -263,7 +272,7 @@ Calico enables network policy in Kubernetes clusters. To install calico set the 
 
 NOTE: Installing the Vertical Pod Autoscaler also requires installing the Metrics Server, so you need to enable that too.
 
-=== Scaling the node pools
+== Scaling the node pools
 
 There are 2 ways you can scale the node pools:
 
@@ -276,7 +285,83 @@ Scaling changes to the number and size of node pools are immediate after changin
 
 Set the parameter *node_pools* to the desired quantities to scale the node pools accordingly. Refer to {uri-topology}#node-pools[Nodepool].
 
-=== Accessing the Kubernetes dashboard
+== Configuring cloud-init for the nodepools
+
+To install additional packages, configure settings or execute certain extra commands on node pools, you can use cloud-init to do that for you.
+
+By default, there is a `worker.template.sh` file under the cloudinit directory in the `oke` module. Follow the following steps to add your own:
+
+. Add your own script in the cloudinit directory. An example is provided by `second.template.sh`. If you need to parameterize the script, enclose the parameter within `${}`. For example:
+
++
+----
+yum install -y package-${version}
+----
+
+
+. Declare your script as a template in the cloudinit.tf in the locals section. A corresponding example for the `second.template.sh` is provided. 
+
++
+If you do *_not_* need to pass a parameter to the script, leave the 2^nd^ argument to the template file function as empty:
+
++
+----
+second_script_template = templatefile("${path.module}/cloudinit/second.template.sh",{})
+----
+
++
+Otherwise, pass a parameter to the template script as follows:
+
++
+----
+  second_script_template = templatefile("${path.module}/cloudinit/second.template.sh",
+    {
+      version = "5.4.0"
+    }
+  )
+----
+
+. Add the part in the `cloudinit_config worker` section:
+
++  
+----
+part {
+  filename     = "second.sh"
+  content_type = "text/x-shellscript"
+  content      = local.second_script_template
+}
+----
+
+. You can add more scripts and have them loaded in the order you need. For example:
+
++
+----
+data "cloudinit_config" "worker" {
+  gzip          = false
+  base64_encode = true
+
+  part {
+    filename     = "worker.sh"
+    content_type = "text/x-shellscript"
+    content      = local.worker_script_template
+  }
+  
+  part {
+    filename     = "second.sh"
+    content_type = "text/x-shellscript"
+    content      = local.second_script_template
+  }
+
+  part {
+    filename     = "third.sh"
+    content_type = "text/x-shellscript"
+    content      = local.third_script_template
+  }
+}
+----
+
+
+== Accessing the Kubernetes dashboard
 
 By default, the Kubernetes dashboard is now disabled. To enable it, set the *dashboard_enabled = true* _before_ creating the cluster. The dashboard will then be deployed.
 
@@ -288,7 +373,7 @@ kubectl proxy
 
 Open a browser and go to {uri-k8s-dashboard}[Kubernetes Dashboard] to display the Kubernetes Dashboard.
 
-=== Destroying the cluster
+== Destroying the cluster
 
 Run the below command to destroy the infrastructure created by terraform:
 
@@ -301,7 +386,7 @@ terraform destroy
 ****
 
 
-=== Creating a service account for CI/CD tools
+== Creating a service account for CI/CD tools
 
 OKE now uses Kubeconfig v2 which means the default token has a limited lifespan. In order to allow CI/CD tools to deploy to OKE, a service account must be created.
 
@@ -317,7 +402,7 @@ service_account_namespace = "kube-system"
 service_account_cluster_role_binding = ""
 ----
 
-=== Enabling WAF
+== Enabling WAF
 
 You can monitor and protect the load balancers created by OKE using {uri-oci-waf}[OCI Web Application Firewall].
 
@@ -340,7 +425,7 @@ N.B.
 . WAF protection currently only works if you use a public load balancer as a front end to your services. This means that services deployed as NodePort services are currently *not protected* by WAF.
 ****
 
-=== Enabling PodSecurityPolicy
+== Enabling PodSecurityPolicy
 
 If you would like to enable the PodSecurityPolicy Admission Controller, set 
 
@@ -355,7 +440,7 @@ Ensure you also read {uri-psp}[the documentation] before enabling it.
 N.B. This field is updatable. You can set to `true` and `false` and run terraform apply again.
 ****
 
-=== Using Dynamic and Flexible Load Balancers
+== Using Dynamic and Flexible Load Balancers
 
 When you create a service of type LoadBalancer, by default, an OCI Load Balancer with dynamic shape 100Mbps will be created.
 

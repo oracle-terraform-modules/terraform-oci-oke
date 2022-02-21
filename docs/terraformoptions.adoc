@@ -299,7 +299,7 @@ EOT
 |bastion_timezone
 |The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
 |
-|Australia/Sydney
+|Etc/UTC
 
 |bastion_type
 |Whether to make the bastion host public or private.
@@ -419,8 +419,8 @@ EOT
 
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
-|e.g. Australia/Sydney
-|Australia/Sydney
+|e.g. Etc/UTC
+|Etc/UTC
 
 |`upgrade_operator`
 |Whether to also upgrade the packages for the operator host.
@@ -694,6 +694,11 @@ node_pools = {
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
 |7.9
+
+|node_pool_timezone
+|The preferred timezone for the worker nodes. {uri-timezones}[List of timezones].
+|
+|Etc/UTC
 
 |`worker_nsgs`
 |An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently.

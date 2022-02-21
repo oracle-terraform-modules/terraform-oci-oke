@@ -83,6 +83,8 @@ variable "node_pool_os" {}
 
 variable "node_pool_os_version" {}
 
+variable "node_pool_timezone" {}
+
 variable "preferred_load_balancer" {}
 
 variable "worker_nsgs" {
