@@ -695,6 +695,11 @@ node_pools = {
 |
 |7.9
 
+|node_pool_timezone
+|The preferred timezone for the worker nodes. {uri-timezones}[List of timezones].
+|
+|Australia/Sydney
+
 |`worker_nsgs`
 |An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently.
 |["ocid1.networksecuritygroup.oc1....","ocid1.networksecuritygroup.oc1...."]

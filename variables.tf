@@ -566,6 +566,12 @@ variable "node_pool_os_version" {
   type        = string
 }
 
+variable "node_pool_timezone" {
+  default     = "Australia/Sydney"
+  description = "The preferred timezone for the worker nodes."
+  type        = string
+}
+
 variable "worker_nsgs" {
   default     = []
   description = "An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently."
@@ -797,9 +803,9 @@ variable "freeform_tags" {
       role        = "operator"
     }
     oke = {
-      service_lb  = {
+      service_lb = {
         environment = "dev"
-        role         = "load balancer"
+        role        = "load balancer"
       }
     }
   }
