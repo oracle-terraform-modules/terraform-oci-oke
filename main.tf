@@ -165,10 +165,10 @@ module "network" {
   vcn_id       = module.vcn.vcn_id
 
   # drg integration
-  freeform_tags = var.freeform_tags["vcn"]
-  create_drg = var.create_drg
-  drg_display_name = var.drg_display_name
-  drg_vcn_attachments = { for k, v in {vcn=module.vcn} : k => {
+  freeform_tags       = var.freeform_tags["vcn"]
+  create_drg          = var.create_drg
+  drg_display_name    = var.drg_display_name
+  drg_vcn_attachments = { for k, v in { vcn = module.vcn } : k => {
     vcn_id : v.vcn_id
     vcn_transit_routing_rt_id : null
     drg_route_table_id : null
