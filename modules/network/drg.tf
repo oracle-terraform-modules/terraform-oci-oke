@@ -9,6 +9,7 @@ module "drg" {
   label_prefix        = var.label_prefix
   drg_display_name    = var.drg_display_name
   drg_vcn_attachments = var.drg_vcn_attachments
+  freeform_tags       = var.freeform_tags
 
   count = var.create_drg == true ? 1 : 0
 }
