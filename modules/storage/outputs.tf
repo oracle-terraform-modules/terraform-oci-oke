@@ -17,3 +17,7 @@ output "fss_mount_target_nsg_id" {
 output "fss_id" {
   value = (var.create_fss == true) ? oci_file_storage_file_system.fss.id : ""
 }
+
+output "fss_inst_nsg_id" {
+  value = (var.create_fss == true) ? oci_core_network_security_group.fss_inst[0].id : ""
+}

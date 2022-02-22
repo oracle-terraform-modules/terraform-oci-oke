@@ -241,7 +241,8 @@ module "oke" {
   preferred_load_balancer = var.preferred_load_balancer
 
   # worker nsgs
-  worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
+  worker_nsgs = var.create_fss ? concat(var.worker_nsgs, [module.network.worker_nsg_id], [module.storage[0].fss_inst_nsg_id]) : concat(var.worker_nsgs, [module.network.worker_nsg_id])
+
 
   # freeform_tags
   freeform_tags = var.freeform_tags["oke"]
