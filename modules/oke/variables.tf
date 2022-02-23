@@ -45,7 +45,7 @@ variable "use_encryption" {
   type = bool
 }
 
-variable "kms_key_id" {}
+variable "cluster_kms_key_id" {}
 
 variable "use_node_pool_volume_encryption" {
   type = bool

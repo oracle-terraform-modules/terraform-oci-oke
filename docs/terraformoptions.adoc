@@ -616,8 +616,8 @@ EOT
 |true/false
 |false
 
-|kms_key_id
-|The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption.. *Required* if _use_encryption_ is set to *true*
+|cluster_kms_key_id
+|The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_encryption_ is set to *true*
 |`ocid1.key.oc1....`
 |
 

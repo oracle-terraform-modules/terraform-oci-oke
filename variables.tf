@@ -483,7 +483,7 @@ variable "use_encryption" {
   type        = bool
 }
 
-variable "kms_key_id" {
+variable "cluster_kms_key_id" {
   default     = ""
   description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
   type        = string

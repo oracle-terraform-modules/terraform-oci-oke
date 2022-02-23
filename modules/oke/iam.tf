@@ -31,7 +31,7 @@ resource "oci_identity_policy" "oke_kms" {
   description    = "policy to allow dynamic group ${var.label_prefix}-oke-kms-cluster to use KMS to encrypt etcd"
   depends_on     = [oci_identity_dynamic_group.oke_kms_cluster]
   name           = var.label_prefix == "none" ? "oke-kms" : "${var.label_prefix}-oke-kms"
-  statements     = [local.policy_statement]
+  statements     = [local.cluster_kms_policy_statement]
   count          = var.use_encryption == true ? 1 : 0
 }
 

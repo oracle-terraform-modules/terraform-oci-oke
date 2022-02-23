@@ -260,7 +260,7 @@ OKE Variables:-
 
 ----
 use_encryption = true
-kms_key_id = <kms_key_id>
+cluster_kms_key_id = <cluster_kms_key_id>
 use_node_pool_volume_encryption = true
 node_pool_volume_kms_key_id = <node_pool_volume_kms_key_id>
 ----
