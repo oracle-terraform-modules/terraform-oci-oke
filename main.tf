@@ -127,7 +127,7 @@ module "operator" {
   }
 
   depends_on = [
-    module.vcn
+    module.vcn, module.oke
   ]
 
   count = var.create_operator == true ? 1 : 0
