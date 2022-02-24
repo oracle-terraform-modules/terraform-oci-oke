@@ -2,7 +2,7 @@
 resource "oci_core_subnet" "fss" {
   cidr_block                 = local.fss_subnet
   compartment_id             = var.compartment_id
-  display_name               = var.label_prefix == "none" ? var.fss_subnet_name : "${var.label_prefix}-${var.fss_subnet_name}"
+  display_name               = var.label_prefix == "none" ? "fss" : "${var.label_prefix}-fss"
   dns_label                  = "fss"
   prohibit_public_ip_on_vnic = true
   route_table_id             = var.nat_route_id

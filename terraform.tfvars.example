@@ -54,6 +54,7 @@ subnets = {
   int_lb   = { netnum = 16, newbits = 11 }
   pub_lb   = { netnum = 17, newbits = 11 }
   workers  = { netnum = 1, newbits = 2 }
+  fss  = { netnum = 18, newbits = 11 }
 }
 
 vcn_cidrs     = ["10.0.0.0/16"]
@@ -193,7 +194,6 @@ preferred_load_balancer      = "public"
 
 #fss
 create_fss = false
-fss_subnet_name = "fss"
 fss_mount_path = "/oke_fss"
 max_fs_stat_bytes = 23843202333
 max_fs_stat_files = 223442

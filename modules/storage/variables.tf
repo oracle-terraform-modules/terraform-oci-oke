@@ -23,12 +23,6 @@ variable "vcn_id" {
 
 variable "nat_route_id" {}
 
-#fss subnet name
-variable "fss_subnet_name" {
-  type        = string
-  description = "fss subnet name"
-}
-
 # fss mount point network provisioning
 variable "create_fss" {}
 

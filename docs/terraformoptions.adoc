@@ -726,11 +726,6 @@ node_pools = {
 |/oke_fss
 |/oke_fss
 
-|fss_subnet_name
-|File storage subnet name
-|fss
-|fss
-
 |max_fs_stat_bytes
 |Maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets.
 |23843202333

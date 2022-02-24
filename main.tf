@@ -191,6 +191,9 @@ module "network" {
   # waf integration
   enable_waf = var.enable_waf
 
+  # fss integration
+  create_fss = var.create_fss
+
   depends_on = [
     module.vcn
   ]
@@ -241,7 +244,7 @@ module "oke" {
   preferred_load_balancer = var.preferred_load_balancer
 
   # worker nsgs
-  worker_nsgs = var.create_fss ? concat(var.worker_nsgs, [module.network.worker_nsg_id], [module.storage[0].fss_inst_nsg_id]) : concat(var.worker_nsgs, [module.network.worker_nsg_id])
+  worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
 
   # freeform_tags
@@ -267,10 +270,9 @@ module "storage" {
   label_prefix        = var.label_prefix
 
   # FSS network information
-  fss_subnet_name = var.fss_subnet_name
-  subnets         = var.subnets
-  vcn_id          = module.vcn.vcn_id
-  nat_route_id    = module.vcn.nat_route_id
+  subnets      = var.subnets
+  vcn_id       = module.vcn.vcn_id
+  nat_route_id = module.vcn.nat_route_id
 
   create_fss     = var.create_fss
   fss_mount_path = var.fss_mount_path

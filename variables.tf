@@ -686,13 +686,6 @@ variable "create_fss" {
   type        = bool
 }
 
-# subnet in which fss will be provisioned
-variable "fss_subnet_name" {
-  description = "FSS subnet name to be added after lable prefix"
-  default     = "fss"
-  type        = string
-}
-
 # fss mount path
 variable "fss_mount_path" {
   description = "FSS mount path to be associated"

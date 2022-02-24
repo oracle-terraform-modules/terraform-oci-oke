@@ -515,3 +515,69 @@ resource "oci_core_network_security_group_security_rule" "waf_ingress" {
     ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
 }
+
+## fss : instance network security group rules
+
+resource "oci_core_network_security_group_security_rule" "fss_inst_ingress" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  direction                 = "INGRESS"
+  protocol                  = local.fss_inst_ingress[count.index].protocol
+  source                    = local.fss_inst_ingress[count.index].source
+  source_type               = local.fss_inst_ingress[count.index].source_type
+  description               = local.fss_inst_ingress[count.index].description
+  stateless                 = false
+
+  dynamic "tcp_options" {
+    for_each = local.fss_inst_ingress[count.index].protocol == local.tcp_protocol ? [1] : []
+    content {
+      source_port_range {
+        min = local.fss_inst_ingress[count.index].port
+        max = local.fss_inst_ingress[count.index].port
+      }
+    }
+  }
+
+  dynamic "udp_options" {
+    for_each = local.fss_inst_ingress[count.index].protocol == local.udp_protocol ? [1] : []
+    content {
+      source_port_range {
+        min = local.fss_inst_ingress[count.index].port
+        max = local.fss_inst_ingress[count.index].port
+      }
+    }
+  }
+
+  count = var.create_fss ? length(local.fss_inst_ingress) : 0
+}
+
+resource "oci_core_network_security_group_security_rule" "fss_inst_egress" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  direction                 = "EGRESS"
+  protocol                  = local.fss_inst_egress[count.index].protocol
+  destination               = local.fss_inst_egress[count.index].destination
+  destination_type          = local.fss_inst_egress[count.index].destination_type
+  description               = local.fss_inst_egress[count.index].description
+  stateless                 = false
+
+  dynamic "tcp_options" {
+    for_each = local.fss_inst_egress[count.index].protocol == local.tcp_protocol ? [1] : []
+    content {
+      destination_port_range {
+        min = local.fss_inst_egress[count.index].port
+        max = local.fss_inst_egress[count.index].port
+      }
+    }
+  }
+
+  dynamic "udp_options" {
+    for_each = local.fss_inst_egress[count.index].protocol == local.udp_protocol ? [1] : []
+    content {
+      destination_port_range {
+        min = local.fss_inst_egress[count.index].port
+        max = local.fss_inst_egress[count.index].port
+      }
+    }
+  }
+
+  count = var.create_fss ? length(local.fss_inst_egress) : 0
+}

@@ -26,10 +26,10 @@ resource "oci_file_storage_file_system" "fss" {
 resource "oci_file_storage_mount_target" "fss_mount_target" {
   availability_domain = local.availability_domain
   compartment_id      = var.compartment_id
-  subnet_id           = oci_core_subnet.fss.id #var.fss_subnet_id
+  subnet_id           = oci_core_subnet.fss.id
   display_name        = var.label_prefix == "none" ? "fss-mt" : "${var.label_prefix}-fss-mt"
-  hostname_label      = var.label_prefix == "none" ? "fss-mt" : "${var.label_prefix}-fss-mt"
-  nsg_ids             = [oci_core_network_security_group.fss_mt.id] #var.nsg_ids
+  hostname_label      = "fss-mt"
+  nsg_ids             = [oci_core_network_security_group.fss_mt.id]
 
   lifecycle {
     ignore_changes = [availability_domain, defined_tags]
