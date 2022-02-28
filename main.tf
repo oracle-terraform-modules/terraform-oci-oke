@@ -86,7 +86,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.2"
+  version = "3.0.3"
 
   tenancy_id = var.tenancy_id
 
@@ -105,6 +105,7 @@ module "operator" {
   # operator host parameters
   operator_image_id                  = var.operator_image_id
   enable_operator_instance_principal = var.enable_operator_instance_principal
+  enable_pv_encryption_in_transit    = var.enable_operator_pv_encryption_in_transit
   operator_os_version                = var.operator_os_version
   operator_shape                     = var.operator_shape
   operator_state                     = var.operator_state
@@ -112,6 +113,7 @@ module "operator" {
   ssh_public_key                     = var.ssh_public_key
   ssh_public_key_path                = var.ssh_public_key_path
   upgrade_operator                   = var.upgrade_operator
+  boot_volume_encryption_key         = var.operator_volume_kms_id
 
   # operator notification
   enable_operator_notification   = var.enable_operator_notification
@@ -221,19 +223,21 @@ module "oke" {
   cluster_subnets                                         = module.network.subnet_ids
   vcn_id                                                  = local.vcn_id
   use_encryption                                          = var.use_encryption
-  kms_key_id                                              = var.kms_key_id
+  cluster_kms_key_id                                      = var.cluster_kms_key_id
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
 
   # oke node pool parameters
-  node_pools                          = var.node_pools
-  node_pool_name_prefix               = var.node_pool_name_prefix
-  node_pool_image_id                  = var.node_pool_image_id
-  node_pool_os                        = var.node_pool_os
-  node_pool_os_version                = var.node_pool_os_version
-  enable_pv_encryption_in_transit     = var.enable_pv_encryption_in_transit
-  node_pool_volume_kms_key_id         = var.node_pool_volume_kms_key_id
+  node_pools                      = var.node_pools
+  node_pool_name_prefix           = var.node_pool_name_prefix
+  node_pool_image_id              = var.node_pool_image_id
+  node_pool_os                    = var.node_pool_os
+  node_pool_os_version            = var.node_pool_os_version
+  node_pool_timezone              = var.node_pool_timezone
+  enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
+  use_node_pool_volume_encryption = var.use_node_pool_volume_encryption
+  node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer
@@ -286,11 +290,11 @@ module "extensions" {
   operator_os_version                = var.operator_os_version
 
   # oke cluster parameters
-  cluster_id           = module.oke.cluster_id
-  pods_cidr            = var.pods_cidr
-  use_encryption       = var.use_encryption
-  kms_key_id           = var.kms_key_id
-  kms_dynamic_group_id = module.oke.kms_dynamic_group_id
+  cluster_id                   = module.oke.cluster_id
+  pods_cidr                    = var.pods_cidr
+  use_encryption               = var.use_encryption
+  cluster_kms_key_id           = var.cluster_kms_key_id
+  cluster_kms_dynamic_group_id = module.oke.cluster_kms_dynamic_group_id
 
   # ocir parameters
   email_address    = var.email_address

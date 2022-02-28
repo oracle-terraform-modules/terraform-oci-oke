@@ -36,6 +36,11 @@ resource "oci_containerengine_node_pool" "nodepools" {
       memory_in_gbs = (lookup(each.value, "memory", 16) / lookup(each.value, "ocpus", 1)) > 64 ? (lookup(each.value, "ocpus", 1) * 64) : lookup(each.value, "memory", 16)
     }
   }
+
+  node_metadata = {
+    user_data = data.cloudinit_config.worker.rendered
+  }
+  
   node_source_details {
     boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
     # check is done for GPU,A1 and other shapes.In future if some other shapes or images added we need to modify

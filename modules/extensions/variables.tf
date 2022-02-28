@@ -48,8 +48,7 @@ variable "enable_operator_instance_principal" {
 }
 variable "operator_os_version" {}
 
-
-
+# oke
 variable "cluster_id" {}
 
 variable "pods_cidr" {}
@@ -59,9 +58,9 @@ variable "use_encryption" {
   type = bool
 }
 
-variable "kms_key_id" {}
+variable "cluster_kms_key_id" {}
 
-variable "kms_dynamic_group_id" {}
+variable "cluster_kms_dynamic_group_id" {}
 # ocir
 variable "email_address" {}
 

@@ -235,7 +235,7 @@ variable "bastion_state" {
 }
 
 variable "bastion_timezone" {
-  default     = "Australia/Sydney"
+  default     = "Etc/UTC"
   description = "The preferred timezone for the bastion host."
   type        = string
 }
@@ -321,6 +321,18 @@ variable "operator_image_id" {
   type        = string
 }
 
+variable "operator_volume_kms_id" {
+  default     = ""
+  description = "The OCID of the OCI KMS key to assign as the master encryption key for the boot volume."
+  type        = string
+}
+
+variable "enable_operator_pv_encryption_in_transit" {
+  default     = false
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment."
+  type        = bool
+}
+
 variable "enable_operator_instance_principal" {
   default     = true
   description = "Whether to enable the operator to call OCI API services without requiring api key."
@@ -362,7 +374,7 @@ variable "operator_state" {
 }
 
 variable "operator_timezone" {
-  default     = "Australia/Sydney"
+  default     = "Etc/UTC"
   description = "The preferred timezone for the operator host."
   type        = string
 }
@@ -496,14 +508,14 @@ variable "use_encryption" {
   type        = bool
 }
 
-variable "kms_key_id" {
+variable "cluster_kms_key_id" {
   default     = ""
   description = "The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption."
   type        = string
 }
 
-variable "enable_pv_encryption_in_transit" {
-  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
+variable "use_node_pool_volume_encryption" {
+  description = "Whether to use OCI KMS to encrypt Kubernetes Nodepool's boot/block volume."
   type        = bool
   default     = false
 }
@@ -539,6 +551,12 @@ variable "check_node_active" {
   }
 }
 
+variable "enable_pv_encryption_in_transit" {
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
+  type        = bool
+  default     = false
+}
+
 variable "node_pools" {
   default = {
     np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
@@ -570,6 +588,12 @@ variable "node_pool_os" {
 variable "node_pool_os_version" {
   default     = "7.9"
   description = "The version of operating system to use for the worker nodes."
+  type        = string
+}
+
+variable "node_pool_timezone" {
+  default     = "Etc/UTC"
+  description = "The preferred timezone for the worker nodes."
   type        = string
 }
 

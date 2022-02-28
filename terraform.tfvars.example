@@ -72,7 +72,7 @@ bastion_shape = {
   boot_volume_size = 50
 }
 bastion_state    = "RUNNING"
-bastion_timezone = "Australia/Sydney"
+bastion_timezone = "Etc/UTC"
 bastion_type     = "public"
 upgrade_bastion  = false
 
@@ -101,8 +101,14 @@ operator_shape = {
   boot_volume_size = 50
 }
 operator_state    = "RUNNING"
-operator_timezone = "Australia/Sydney"
+operator_timezone = "Etc/UTC"
 upgrade_operator  = false
+
+# Operator in-transit encryption for the data volume's paravirtualized attachment.
+enable_operator_pv_encryption_in_transit = false
+
+# operator volume kms integration
+operator_volume_kms_id = ""
 
 ## operator notification
 enable_operator_notification   = false
@@ -124,7 +130,7 @@ allow_node_port_access       = false
 allow_worker_internet_access = true
 allow_worker_ssh_access      = false
 cluster_name                 = "oke"
-control_plane_type         = "private"
+control_plane_type           = "private"
 control_plane_allowed_cidrs  = ["0.0.0.0/0"]
 control_plane_nsgs           = []
 dashboard_enabled            = false
@@ -134,11 +140,11 @@ services_cidr                = "10.96.0.0/16"
 
 ## oke cluster kms integration
 use_encryption = false
-kms_key_id     = ""
+cluster_kms_key_id     = ""
 
 ### oke node pool volume kms integration
-enable_pv_encryption_in_transit = false
-node_pool_volume_kms_key_id = ""
+use_node_pool_volume_encryption = false
+node_pool_volume_kms_key_id     = ""
 
 ## oke cluster container image policy and keys
 use_signed_images = false
@@ -146,6 +152,7 @@ image_signing_keys = []
 
 # node pools
 check_node_active = "all"
+enable_pv_encryption_in_transit = false
 node_pools = {
   np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np2" } }
@@ -166,6 +173,7 @@ node_pool_image_id    = "none"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
 node_pool_os_version  = "7.9"
+node_pool_timezone    = "Etc/UTC"
 worker_nsgs           = []
 worker_type           = "private"
 
@@ -227,6 +235,12 @@ freeform_tags = {
     environment = "dev",
     role        = "operator",
     security    = "high"
+  }
+  oke = {
+    service_lb  = {
+      environment = "dev"
+      role        = "load balancer"
+    }
   }
 }
 

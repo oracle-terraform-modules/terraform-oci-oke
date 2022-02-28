@@ -299,7 +299,7 @@ EOT
 |bastion_timezone
 |The preferred timezone for the bastion host. {uri-timezones}[List of timezones]. *Required*
 |
-|Australia/Sydney
+|Etc/UTC
 
 |bastion_type
 |Whether to make the bastion host public or private.
@@ -376,6 +376,11 @@ EOT
 |true/false
 |true
 
+|`enable_operator_pv_encryption_in_transit`
+|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes in Operator.
+|true/false
+|false
+
 |operator_image_id
 |Custom image id for the operator host
 |image_id or Oracle. If the value is set to Oracle, an Oracle Platform image will be used instead.
@@ -407,10 +412,15 @@ EOT
 | RUNNING/STOPPED
 | RUNNING
 
+|`operator_volume_kms_id`
+|The id of the OCI KMS key to be used as the master encryption key for Operator's boot volume/block volume encryption..
+|`ocid1.key.oc1....`
+|
+
 |`operator_timezone`
 |The preferred timezone for the operator host. {uri-timezones}[List of timezones]. *Required*
-|e.g. Australia/Sydney
-|Australia/Sydney
+|e.g. Etc/UTC
+|Etc/UTC
 
 |`upgrade_operator`
 |Whether to also upgrade the packages for the operator host.
@@ -606,13 +616,13 @@ EOT
 |true/false
 |false
 
-|kms_key_id
-|The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption.. *Required* if _use_encryption_ is set to *true*
+|cluster_kms_key_id
+|The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_encryption_ is set to *true*
 |`ocid1.key.oc1....`
 |
 
-|enable_pv_encryption_in_transit
-|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes.
+|use_node_pool_volume_encryption
+|Whether to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes Nodepool's boot/block volume.
 |true/false
 |false
 
@@ -620,6 +630,11 @@ EOT
 |The id of the OCI KMS key to be used as the master encryption key for nodepools boot volume/block volume encryption..
 |`ocid1.key.oc1....`
 |
+
+|enable_pv_encryption_in_transit
+|Whether to encrypt data in transit between the instance, the boot volume, and the block volumes.
+|true/false
+|false
 
 |`use_signed_images`
 |Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys.
@@ -679,6 +694,11 @@ node_pools = {
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
 |7.9
+
+|node_pool_timezone
+|The preferred timezone for the worker nodes. {uri-timezones}[List of timezones].
+|
+|Etc/UTC
 
 |`worker_nsgs`
 |An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently.
