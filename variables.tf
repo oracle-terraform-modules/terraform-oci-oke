@@ -828,12 +828,10 @@ variable "freeform_tags" {
       role        = "operator"
     }
     oke = {
-      environment = "dev"
-      role        = "oke"
-    }
-    service_lb  = {
-      environment = "dev"
-      role        = "load balancer"
+      service_lb  = {
+        environment = "dev"
+        role        = "load balancer"
+      }
     }
   }
   description = "Tags to apply to different resources."
