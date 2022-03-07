@@ -391,6 +391,7 @@ variable "availability_domains" {
   default = {
     bastion  = 1
     operator = 1
+    fss      = 1
   }
   type = map(any)
 }
@@ -477,7 +478,7 @@ variable "services_cidr" {
 
 ## oke cluster kms integration
 
-variable "use_encryption" {
+variable "use_cluster_encryption" {
   description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
   default     = false
   type        = bool
@@ -682,6 +683,34 @@ variable "public_lb_allowed_ports" {
     condition     = length(var.public_lb_allowed_ports) > 0
     error_message = "At least 1 port is required."
   }
+}
+
+#fss
+variable "create_fss" {
+  description = "Whether to enable provisioning for FSS"
+  default     = false
+  type        = bool
+}
+
+# fss mount path
+variable "fss_mount_path" {
+  description = "FSS mount path to be associated"
+  default     = "/oke_fss"
+  type        = string
+}
+
+# Controls the maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets.
+variable "max_fs_stat_bytes" {
+  description = "Maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets"
+  default     = 23843202333
+  type        = number
+}
+
+# Controls the maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT calls through any associated mount targets.
+variable "max_fs_stat_files" {
+  description = "Maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT"
+  default     = 223442
+  type        = number
 }
 
 # ocir

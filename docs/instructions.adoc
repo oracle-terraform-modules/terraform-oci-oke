@@ -24,6 +24,7 @@
 :uri-networks-subnets-cidr: https://erikberg.com/notes/networks.html
 :uri-oci: https://cloud.oracle.com/cloud-infrastructure
 :uri-oci-documentation: https://docs.cloud.oracle.com/iaas/Content/home.htm
+:uri-oci-fss-pvc: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingpersistentvolumeclaim.htm#Provisioning_Persistent_Volume_Claims_on_the_FileStorageService
 :uri-oci-instance-principal: https://docs.cloud.oracle.com/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm
 :uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
@@ -74,7 +75,7 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the fol
 * link:#adding-the-bastion-host[bastion must be enabled]
 * link:#enabling-instance_principal-on-the-operator-host[operator instance_principal must be enabled]
 
-* use_encryption must be set to _true_
+* use_cluster_encryption must be set to _true_
 * cluster_kms_key_id must be provided
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt OKE nodepool boot/block volume, the following is required:
@@ -461,3 +462,22 @@ Review the following documentation and articles on creating load balancers of di
 * {uri-oci-load-balancers}[Specifying Alternative Load Balancer Shapes]
 
 * {uri-oci-oke-flexible-loadbalancers}[Creating flexible OCI Load Balancers with OKE]
+
+== Provisioning PVCs on the File Storage Service
+
+. Set `create_fss` to true in terraform.tfvars
+
++
+----
+create_fss = false
+----
+
++
+It will create the File Storage service instance on a separate subnet with the network security group configured.
+
++
+You can then review the following documentation for creating persistent volume claim and persistent volume using file storage
+
+* {uri-oci-fss-pvc}[Provisioning PV and PVC using FSS]
+
+CAUTION: Running terraform destroy will remove the filesystem storage created using terraform. Ensure you have taken the necessary backup if needed.

@@ -611,13 +611,13 @@ EOT
 |Values
 |Default
 
-|use_encryption
+|use_cluster_encryption
 |Whether to use {uri-oci-kms}[OCI KMS] to encrypt secrets.
 |true/false
 |false
 
 |cluster_kms_key_id
-|The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_encryption_ is set to *true*
+|The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_cluster_encryption_ is set to *true*
 |`ocid1.key.oc1....`
 |
 
@@ -711,6 +711,37 @@ node_pools = {
 |private
 
 |===
+
+== File Storage
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_fss
+|Whether to create File storage or not.
+|true/false
+|false
+
+|fss_mount_path
+|File storage mount path to be associated.
+|/oke_fss
+|/oke_fss
+
+|max_fs_stat_bytes
+|Maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets.
+|23843202333
+|23843202333
+
+|max_fs_stat_files
+|Maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT.
+|223442
+|223442
+|===
+
 
 == Upgrade cluster
 

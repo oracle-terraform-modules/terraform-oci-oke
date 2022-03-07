@@ -11,7 +11,7 @@ resource "time_sleep" "wait_30_seconds" {
 resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = var.compartment_id
   kubernetes_version = var.cluster_kubernetes_version
-  kms_key_id         = var.use_encryption == true ? var.cluster_kms_key_id : null
+  kms_key_id         = var.use_cluster_encryption == true ? var.cluster_kms_key_id : null
   name               = var.label_prefix == "none" ? var.cluster_name : "${var.label_prefix}-${var.cluster_name}"
 
   depends_on = [time_sleep.wait_30_seconds]
@@ -62,4 +62,6 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   vcn_id = var.vcn_id
+
+
 }

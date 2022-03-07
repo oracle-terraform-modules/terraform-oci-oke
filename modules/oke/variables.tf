@@ -41,7 +41,7 @@ variable "cluster_subnets" {
 variable "vcn_id" {}
 
 # encryption
-variable "use_encryption" {
+variable "use_cluster_encryption" {
   type = bool
 }
 

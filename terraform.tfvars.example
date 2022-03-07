@@ -54,6 +54,7 @@ subnets = {
   int_lb   = { netnum = 16, newbits = 11 }
   pub_lb   = { netnum = 17, newbits = 11 }
   workers  = { netnum = 1, newbits = 2 }
+  fss      = { netnum = 18, newbits = 11 }
 }
 
 vcn_cidrs     = ["10.0.0.0/16"]
@@ -119,7 +120,8 @@ operator_notification_topic    = ""
 # availability_domains
 availability_domains = {
   bastion  = 1,
-  operator = 1
+  operator = 1,
+  fss      = 1
 }
 
 # oke cluster options
@@ -139,7 +141,7 @@ pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
 
 ## oke cluster kms integration
-use_encryption = false
+use_cluster_encryption = false
 cluster_kms_key_id     = ""
 
 ### oke node pool volume kms integration
@@ -190,6 +192,13 @@ preferred_load_balancer      = "public"
 # internal_lb_allowed_ports  = [80, 443, "7001-7005"] # By default, only 80 and 443 are allowed
 # public_lb_allowed_cidrs    = ["0.0.0.0/0"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
 # public_lb_allowed_ports    = [443,"9001-9002"] # By default, only 443 is allowed
+
+#fss
+create_fss = false
+fss_mount_path = "/oke_fss"
+max_fs_stat_bytes = 23843202333
+max_fs_stat_files = 223442
+
 
 # ocir
 email_address    = ""

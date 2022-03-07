@@ -54,7 +54,7 @@ variable "cluster_id" {}
 variable "pods_cidr" {}
 
 # encryption
-variable "use_encryption" {
+variable "use_cluster_encryption" {
   type = bool
 }
 
