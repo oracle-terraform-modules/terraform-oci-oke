@@ -23,9 +23,6 @@ variable "vcn_id" {
 
 variable "nat_route_id" {}
 
-# fss mount point network provisioning
-variable "create_fss" {}
-
 # fss mount path
 variable "fss_mount_path" {}
 

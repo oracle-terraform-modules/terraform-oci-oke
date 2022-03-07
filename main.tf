@@ -274,7 +274,6 @@ module "storage" {
   vcn_id       = module.vcn.vcn_id
   nat_route_id = module.vcn.nat_route_id
 
-  create_fss     = var.create_fss
   fss_mount_path = var.fss_mount_path
 
   # Export set configuration
