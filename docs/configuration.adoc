@@ -259,7 +259,7 @@ create_bastion_host = true
 OKE Variables:-
 
 ----
-use_encryption = true
+use_cluster_encryption = true
 cluster_kms_key_id = <cluster_kms_key_id>
 use_node_pool_volume_encryption = true
 node_pool_volume_kms_key_id = <node_pool_volume_kms_key_id>

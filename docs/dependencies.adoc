@@ -46,7 +46,7 @@ The following table documents the {uri-terraform-options}[Terraform Options] dep
 |Whether to create an authentication secret for OCIR
 |create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true, secret_id = secret ocid
 
-|use_encryption
+|use_cluster_encryption
 |Uses OCI KMS to encrypt data in OKE's underlying etcd
 |create_bastion_host = true, create_operator = true, enable_operator_instance_principal = true
 
