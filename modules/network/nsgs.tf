@@ -299,6 +299,27 @@ resource "oci_core_network_security_group_security_rule" "workers_healthcheck_in
   }
 }
 
+resource "oci_core_network_security_group_security_rule" "workers_ssh_ingress_from_bastion" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow ssh access to workers via Bastion host"
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = local.bastion_subnet
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = local.ssh_port
+      max = local.ssh_port
+    }
+  }
+
+  count = var.allow_worker_ssh_access == true ? 1 : 0
+
+}
+
 # internal lb nsg and rules
 resource "oci_core_network_security_group" "int_lb" {
   compartment_id = var.compartment_id
