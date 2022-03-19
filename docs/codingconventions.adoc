@@ -85,7 +85,7 @@ Links that are used multiple times must be defined in the header using the `:uri
 
 - Use `snake_case` when naming Terraform files, variables and resources
 - If you need a new .tf file for better clarity, use this naming scheme: `<resources_group>`: e.g. `subnets.tf`, `nsgs.tf`
-- If your variable is controlling a behaviour, use imperative style to name it: e.g. `create_internet_gateway`, `use_encryption`
+- If your variable is controlling a behaviour, use imperative style to name it: e.g. `create_internet_gateway`, `use_cluster_encryption`
 
 === Variable blocks
 

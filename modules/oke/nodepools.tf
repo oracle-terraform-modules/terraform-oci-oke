@@ -22,7 +22,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.cluster_subnets["workers"]
       }
     }
-    nsg_ids = var.worker_nsgs
+    nsg_ids                             = var.worker_nsgs
     is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
     kms_key_id                          = var.node_pool_volume_kms_key_id
     # allow zero-sized node pools
