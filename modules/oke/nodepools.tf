@@ -10,7 +10,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   kubernetes_version = var.cluster_kubernetes_version
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
-  freeform_tags = var.freeform_tags
+  freeform_tags = var.freeform_tags["node_pool"]
   
   node_config_details {
 

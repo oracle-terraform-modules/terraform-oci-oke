@@ -92,28 +92,49 @@ variable "ssh_public_key_path" {
 # vcn parameters
 
 variable "create_vcn" {
-  default     = true
-  description = "Whether to create a Virtual Cloud Network."
   type        = bool
+  description = "Whether to create a Virtual Cloud Network."
+  default     = true
 }
 
 variable "vcn_display_name" {
-  default     = ""
-  description = "Name of the existing Virtual Cloud Network"
   type        = string
+  description = "Existing VCN name where the resources will be created"
+  default     = ""
+}
+
+variable "vcn_id" {
+  type        = string
+  description = "Existing VCN id where the resources will be created"
+  default     = ""
+
 }
 
 variable "ig_route_table_display_name" {
-  default     = ""
-  description = "Name of the existing NAT Gateway route table"
   type        = string
+  description = "Name of the existing NAT Gateway route table"
+  default     = ""
+}
+
+variable "ig_route_table_id" {
+  type        = string
+  description = "Existing Internet Gateway Route table id"
+  default     = ""
+
 }
 
 variable "nat_route_table_display_name" {
-  default     = ""
-  description = "Name of the existing Internet Gateway route table"
   type        = string
+  description = "Name of the existing Internet Gateway route table"
+  default     = ""
 }
+
+variable "nat_route_table_id" {
+  type        = string
+  description = "Existing NAT Gateway Route table id"
+  default     = ""
+}
+
 
 variable "create_drg" {
   description = "whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN."
@@ -857,7 +878,7 @@ variable "freeform_tags" {
       role        = "operator"
     }
     oke = {
-      service_lb  = {
+      service_lb = {
         environment = "dev"
         role        = "load balancer"
       }
