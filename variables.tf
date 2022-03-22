@@ -863,7 +863,7 @@ variable "service_account_cluster_role_binding" {
 # tagging
 variable "freeform_tags" {
   default = {
-    # vcn, bastion, and operator tags are required
+    # vcn, bastion and operator tags are required
     # add more tags in each as desired
     vcn = {
       environment = "dev"
