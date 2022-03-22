@@ -112,7 +112,7 @@ variable "vcn_id" {
 
 variable "ig_route_table_display_name" {
   type        = string
-  description = "Name of the existing NAT Gateway route table"
+  description = "Existing Internet Gateway route table name"
   default     = ""
 }
 
@@ -125,7 +125,7 @@ variable "ig_route_table_id" {
 
 variable "nat_route_table_display_name" {
   type        = string
-  description = "Name of the existing Internet Gateway route table"
+  description = "Existing NAT Gateway route table name"
   default     = ""
 }
 
@@ -134,7 +134,6 @@ variable "nat_route_table_id" {
   description = "Existing NAT Gateway Route table id"
   default     = ""
 }
-
 
 variable "create_drg" {
   description = "whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN."
