@@ -271,8 +271,8 @@ module "storage" {
 
   # FSS network information
   subnets      = var.subnets
-  vcn_id       = module.vcn.vcn_id
-  nat_route_id = module.vcn.nat_route_id
+  vcn_id       = local.vcn_id
+  nat_route_id = local.nat_route_id
 
   fss_mount_path = var.fss_mount_path
 
