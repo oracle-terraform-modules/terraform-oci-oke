@@ -14,7 +14,7 @@ resource "null_resource" "enable_gatekeeper" {
     bastion_private_key = local.ssh_private_key
   }
 
-  depends_on = [null_resource.install_kubectl_on_operator, null_resource.write_kubeconfig_on_operator]
+  depends_on = [null_resource.install_k8stools_on_operator, null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
     content     = local.gatekeeper_template
