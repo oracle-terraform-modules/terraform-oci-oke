@@ -240,6 +240,8 @@ module "oke" {
   enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
   use_node_pool_volume_encryption = var.use_node_pool_volume_encryption
   node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id
+  node_pool_node_metadata         = var.node_pool_node_metadata
+  common_nodepool_node_metadata   = var.common_nodepool_node_metadata
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer

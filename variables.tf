@@ -533,6 +533,16 @@ variable "enable_pv_encryption_in_transit" {
   default     = false
 }
 
+variable "node_pool_node_metadata" {
+  type    = map(any)
+  default = {}
+}
+
+variable "common_nodepool_node_metadata" {
+  type    = string
+  default = ""
+}
+
 variable "node_pools" {
   default = {
     np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }

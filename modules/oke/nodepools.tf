@@ -36,9 +36,9 @@ resource "oci_containerengine_node_pool" "nodepools" {
   }
 
   node_metadata = {
-    user_data = data.cloudinit_config.worker.rendered
+    user_data = var.common_nodepool_node_metadata == "" && lookup(var.node_pool_node_metadata, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.node_pool_node_metadata, each.key, null) != null ? filebase64(lookup(var.node_pool_node_metadata, each.key, null)) : filebase64(var.common_nodepool_node_metadata)
   }
-  
+
   node_source_details {
     boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
     # check is done for GPU,A1 and other shapes.In future if some other shapes or images added we need to modify
