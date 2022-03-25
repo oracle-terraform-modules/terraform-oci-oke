@@ -53,9 +53,13 @@ variable "use_node_pool_volume_encryption" {
 
 variable "node_pool_volume_kms_key_id" {}
 
-variable "node_pool_node_metadata" {}
+variable "node_pool_node_metadata" {
+  type = map(any)
+}
 
-variable "common_nodepool_node_metadata" {}
+variable "common_nodepool_node_metadata" {
+  type = string
+}
 
 variable "enable_pv_encryption_in_transit" {
   type = bool
