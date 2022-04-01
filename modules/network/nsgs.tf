@@ -364,6 +364,30 @@ resource "oci_core_network_security_group_security_rule" "int_lb_egress" {
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.int_lb_egress) : 0
 }
 
+resource "oci_core_network_security_group_security_rule" "int_lb_ingress" {
+  network_security_group_id = oci_core_network_security_group.int_lb[0].id
+  description               = "Allow stateful ingress from ${element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 0)} on port ${element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)}"
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 0)
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+    destination_port_range {
+      min = length(regexall("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1))) > 0 ? element(split("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)), 0) : element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)
+      max = length(regexall("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1))) > 0 ? element(split("-", element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)), 1) : element(element(local.internal_lb_allowed_cidrs_and_ports, count.index), 1)
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
+  }
+
+  count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.internal_lb_allowed_cidrs_and_ports) : 0
+}
+
 # add this rule separately so it can be controlled independently
 resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ingress_from_pub_lb" {
   network_security_group_id = oci_core_network_security_group.int_lb[0].id
