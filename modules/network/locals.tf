@@ -247,7 +247,7 @@ locals {
   ]
 
   # Combine supplied allow list and the public load balancer subnet
-  internal_lb_allowed_cidrs = concat(var.internal_lb_allowed_cidrs, tolist([local.pub_lb_subnet]))
+  internal_lb_allowed_cidrs = var.load_balancers == "both"? concat(var.internal_lb_allowed_cidrs, tolist([local.pub_lb_subnet])) : var.internal_lb_allowed_cidrs
 
   # Create a Cartesian product of allowed cidrs and ports
   internal_lb_allowed_cidrs_and_ports = setproduct(local.internal_lb_allowed_cidrs, var.internal_lb_allowed_ports)
