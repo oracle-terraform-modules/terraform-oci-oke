@@ -14,7 +14,7 @@ module "vcn" {
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
-  create_drg = true
+  create_drg = var.create_drg
 
   # lpgs
   local_peering_gateways = var.local_peering_gateways
