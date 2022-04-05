@@ -26,7 +26,4 @@ output "worker_nsg_id" {
   value = oci_core_network_security_group.workers.id
 }
 
-output "drg_id" {
-  value = var.create_drg ? module.drg.0.drg_id : ""
-}
 

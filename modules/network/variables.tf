@@ -71,22 +71,6 @@ variable "public_lb_allowed_ports" {
   type = list(any)
 }
 
-variable "create_drg" {
-  type = bool
-}
 
-
-# drg
-variable "drg_display_name" {
-  type = string
-}
-
-variable "drg_vcn_attachments" {
-  type = map(any)
-}
-
-variable "freeform_tags" {
-  type = map(any)
-}
 
 
