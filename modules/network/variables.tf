@@ -71,6 +71,9 @@ variable "public_lb_allowed_ports" {
   type = list(any)
 }
 
+variable "create_fss" {
+  type = bool
+}
 
 variable "create_fss" {
   type = bool
