@@ -74,7 +74,3 @@ variable "public_lb_allowed_ports" {
 variable "create_fss" {
   type = bool
 }
-
-variable "create_fss" {
-  type = bool
-}
