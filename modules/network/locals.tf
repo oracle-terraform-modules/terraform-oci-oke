@@ -253,22 +253,22 @@ locals {
   internal_lb_allowed_cidrs_and_ports = setproduct(local.internal_lb_allowed_cidrs, var.internal_lb_allowed_ports)
 
   pub_lb_egress = [
-    {
-      description      = "Allow stateful egress to internal load balancers subnet on port 80",
-      destination      = local.int_lb_subnet,
-      destination_type = "CIDR_BLOCK",
-      protocol         = local.tcp_protocol,
-      port             = 80
-      stateless        = false
-    },
-    {
-      description      = "Allow stateful egress to internal load balancers subnet on port 443",
-      destination      = local.int_lb_subnet,
-      destination_type = "CIDR_BLOCK",
-      protocol         = local.tcp_protocol,
-      port             = 443
-      stateless        = false
-    },
+    # {
+    #   description      = "Allow stateful egress to internal load balancers subnet on port 80",
+    #   destination      = local.int_lb_subnet,
+    #   destination_type = "CIDR_BLOCK",
+    #   protocol         = local.tcp_protocol,
+    #   port             = 80
+    #   stateless        = false
+    # },
+    # {
+    #   description      = "Allow stateful egress to internal load balancers subnet on port 443",
+    #   destination      = local.int_lb_subnet,
+    #   destination_type = "CIDR_BLOCK",
+    #   protocol         = local.tcp_protocol,
+    #   port             = 443
+    #   stateless        = false
+    # },
     {
       description      = "Allow stateful egress to workers. Required for NodePorts",
       destination      = local.workers_subnet,

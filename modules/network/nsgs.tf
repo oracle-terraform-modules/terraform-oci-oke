@@ -38,9 +38,6 @@ resource "oci_core_network_security_group_security_rule" "cp_egress" {
 
   count = length(local.cp_egress)
 
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "cp_ingress" {
@@ -73,9 +70,6 @@ resource "oci_core_network_security_group_security_rule" "cp_ingress" {
 
   count = length(local.cp_ingress)
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "cp_ingress_additional_cidrs" {
@@ -102,9 +96,6 @@ resource "oci_core_network_security_group_security_rule" "cp_ingress_additional_
 
   count = length(var.control_plane_allowed_cidrs)
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 # workers nsg and rules
@@ -144,9 +135,6 @@ resource "oci_core_network_security_group_security_rule" "workers_egress" {
 
   count = length(local.workers_egress)
 
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
-  }
 }
 
 # add this rule separately so it can be controlled independently
@@ -162,9 +150,6 @@ resource "oci_core_network_security_group_security_rule" "workers_egress_interne
 
   count = var.allow_worker_internet_access == true ? 1 : 0
 
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "workers_ingress" {
@@ -197,9 +182,6 @@ resource "oci_core_network_security_group_security_rule" "workers_ingress" {
 
   count = length(local.workers_ingress)
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 # add the next 4 rules separately so it can be controlled independently based on which lbs are created
@@ -222,9 +204,6 @@ resource "oci_core_network_security_group_security_rule" "workers_ingress_from_i
 
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? 1 : 0
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "workers_healthcheck_ingress_from_int_lb" {
@@ -246,9 +225,6 @@ resource "oci_core_network_security_group_security_rule" "workers_healthcheck_in
 
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? 1 : 0
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "workers_ingress_from_pub_lb" {
@@ -270,9 +246,6 @@ resource "oci_core_network_security_group_security_rule" "workers_ingress_from_p
 
   count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "workers_healthcheck_ingress_from_pub_lb" {
@@ -294,9 +267,6 @@ resource "oci_core_network_security_group_security_rule" "workers_healthcheck_in
 
   count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options]
-  }
 }
 
 resource "oci_core_network_security_group_security_rule" "workers_ssh_ingress_from_bastion" {
@@ -357,10 +327,6 @@ resource "oci_core_network_security_group_security_rule" "int_lb_egress" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
-  }
-
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.int_lb_egress) : 0
 }
 
@@ -381,37 +347,29 @@ resource "oci_core_network_security_group_security_rule" "int_lb_ingress" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
-  }
-
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.internal_lb_allowed_cidrs_and_ports) : 0
 }
 
 # add this rule separately so it can be controlled independently
-resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ingress_from_pub_lb" {
-  network_security_group_id = oci_core_network_security_group.int_lb[0].id
-  description               = "Allow healthchecks from public load balancers"
-  direction                 = "INGRESS"
-  protocol                  = local.tcp_protocol
-  source                    = local.pub_lb_subnet
-  source_type               = "CIDR_BLOCK"
+# resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ingress_from_pub_lb" {
+#   network_security_group_id = oci_core_network_security_group.int_lb[0].id
+#   description               = "Allow healthchecks from public load balancers"
+#   direction                 = "INGRESS"
+#   protocol                  = local.tcp_protocol
+#   source                    = local.pub_lb_subnet
+#   source_type               = "CIDR_BLOCK"
 
-  stateless = false
+#   stateless = false
 
-  tcp_options {
-    destination_port_range {
-      min = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 0)) : element(var.internal_lb_allowed_ports, count.index)
-      max = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 1)) : element(var.internal_lb_allowed_ports, count.index)
-    }
-  }
+#   tcp_options {
+#     destination_port_range {
+#       min = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 0)) : element(var.internal_lb_allowed_ports, count.index)
+#       max = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 1)) : element(var.internal_lb_allowed_ports, count.index)
+#     }
+#   }
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
-  }
-
-  count = var.load_balancers == "both" ? length(var.internal_lb_allowed_ports) : 0
-}
+#   count = var.load_balancers == "both" ? length(var.internal_lb_allowed_ports) : 0
+# }
 
 # public lb nsg and rules
 resource "oci_core_network_security_group" "pub_lb" {
@@ -450,10 +408,6 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_egress" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
-  }
-
   count = var.load_balancers == "public" || var.load_balancers == "both" ? length(local.pub_lb_egress) : 0
 }
 
@@ -472,10 +426,6 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_egress_health_c
       min = local.health_check_port
       max = local.health_check_port
     }
-  }
-
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
   }
 
   count = var.load_balancers == "public" || var.load_balancers == "both" ? 1 : 0
@@ -498,10 +448,6 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_egress_health_c
     }
   }
 
-  lifecycle {
-    ignore_changes = [destination, destination_type, direction, protocol, tcp_options]
-  }
-
   count = var.load_balancers == "both" ? length(var.internal_lb_allowed_ports) : 0
 }
 
@@ -520,10 +466,6 @@ resource "oci_core_network_security_group_security_rule" "pub_lb_ingress" {
       min = length(regexall("-", element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1))) > 0 ? element(split("-", element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1)), 0) : element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1)
       max = length(regexall("-", element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1))) > 0 ? element(split("-", element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1)), 1) : element(element(local.public_lb_allowed_cidrs_and_ports, count.index), 1)
     }
-  }
-
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
   }
 
   count = var.load_balancers == "public" || var.load_balancers == "both" ? length(local.public_lb_allowed_cidrs_and_ports) : 0
@@ -556,9 +498,6 @@ resource "oci_core_network_security_group_security_rule" "waf_ingress" {
     }
   }
 
-  lifecycle {
-    ignore_changes = [source, source_type, direction, protocol, tcp_options, icmp_options]
-  }
 }
 
 ## fss : instance network security group rules
