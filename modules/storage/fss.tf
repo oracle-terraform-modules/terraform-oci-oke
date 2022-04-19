@@ -1,17 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-terraform {
-  required_providers {
-    oci = {
-      source = "hashicorp/oci"
-      # pass oci home region provider explicitly for identity operations
-      configuration_aliases = [oci.home]
-    }
-  }
-  required_version = ">= 1.0.0"
-}
-
 # Create file system
 resource "oci_file_storage_file_system" "fss" {
   availability_domain = local.availability_domain

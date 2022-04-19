@@ -3,7 +3,7 @@
 
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
-  version = "3.0.0"
+  version = "3.4.0"
 
   # general oci parameters
   compartment_id = var.compartment_id
@@ -14,10 +14,7 @@ module "vcn" {
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
-
-  # drg
-  create_drg       = var.create_drg
-  drg_display_name = var.drg_display_name
+  create_drg = var.create_drg
 
   # lpgs
   local_peering_gateways = var.local_peering_gateways
@@ -36,9 +33,10 @@ module "vcn" {
   count = var.create_vcn == true ? 1 : 0
 }
 
+
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.0.0"
+  version = "3.1.0"
 
   tenancy_id     = var.tenancy_id
   compartment_id = var.compartment_id
@@ -86,7 +84,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.3"
+  version = "3.1.0"
 
   tenancy_id = var.tenancy_id
 
@@ -154,6 +152,7 @@ module "bastionsvc" {
   count = var.create_bastion_service == true ? 1 : 0
 }
 
+
 # additional networking for oke
 module "network" {
   source = "./modules/network"
@@ -167,6 +166,7 @@ module "network" {
   nat_route_id = local.nat_route_id
   subnets      = var.subnets
   vcn_id       = local.vcn_id
+
 
   # control plane endpoint parameters
   control_plane_type          = var.control_plane_type

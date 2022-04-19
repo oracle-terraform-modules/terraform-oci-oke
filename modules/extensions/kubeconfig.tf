@@ -5,23 +5,8 @@ data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id = var.cluster_id
 }
 
-resource "null_resource" "create_local_kubeconfig" {
-  provisioner "local-exec" {
-    command = "rm -rf generated"
-  }
-
-  provisioner "local-exec" {
-    command = "mkdir generated"
-  }
-
-  provisioner "local-exec" {
-    command = "touch generated/kubeconfig"
-  }
-}
-
 resource "local_file" "kube_config_file" {
   content         = data.oci_containerengine_cluster_kube_config.kube_config.content
-  depends_on      = [null_resource.create_local_kubeconfig]
   filename        = "${path.root}/generated/kubeconfig"
   file_permission = "0600"
 }
@@ -39,7 +24,7 @@ resource "null_resource" "write_kubeconfig_on_operator" {
     bastion_private_key = local.ssh_private_key
   }
 
-  depends_on = [null_resource.install_kubectl_on_operator]
+  depends_on = [null_resource.install_k8stools_on_operator]
 
   provisioner "file" {
     content     = local.generate_kubeconfig_template

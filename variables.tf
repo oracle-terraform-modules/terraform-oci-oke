@@ -186,6 +186,7 @@ variable "subnets" {
     int_lb   = { netnum = 16, newbits = 11 }
     pub_lb   = { netnum = 17, newbits = 11 }
     workers  = { netnum = 1, newbits = 2 }
+    fss      = { netnum = 18, newbits = 11 }
   }
   type = map(any)
 }
