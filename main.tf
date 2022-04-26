@@ -36,7 +36,7 @@ module "vcn" {
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.1.0"
+  version = "3.1.1"
 
   tenancy_id     = var.tenancy_id
   compartment_id = var.compartment_id
