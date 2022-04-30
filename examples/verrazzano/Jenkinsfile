@@ -38,8 +38,8 @@ pipeline {
          //sh 'cp vars.tf .'//
           println 'List all files needed'
           sh 'ls'
-          println 'Terraform plan oke'
-          sh 'terraform plan  -lock=false -out oke_plan'
+          println 'Terraform plan VZ'
+          sh 'terraform plan  -lock=false -out vz_plan'
       }      
     }
 
@@ -58,8 +58,8 @@ pipeline {
 					}
 				}
       steps {
-          println 'Apply the TF Infrastructure oke_plan'
-          sh 'terraform apply -lock=false -auto-approve oke_plan'
+          println 'Apply the TF Infrastructure vz_plan'
+          sh 'terraform apply -lock=false -auto-approve vz_plan'
         }
       }
  
