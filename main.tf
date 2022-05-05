@@ -64,7 +64,7 @@ module "bastion" {
   upgrade_bastion     = var.upgrade_bastion
 
   # bastion notification
-  enable_bastion_notification   = var.enable_bastion_notification
+  enable_bastion_notification   = var.enable_bastion_notification && var.create_policies
   bastion_notification_endpoint = var.bastion_notification_endpoint
   bastion_notification_protocol = var.bastion_notification_protocol
   bastion_notification_topic    = var.bastion_notification_topic
@@ -102,7 +102,7 @@ module "operator" {
 
   # operator host parameters
   operator_image_id                  = var.operator_image_id
-  enable_operator_instance_principal = var.enable_operator_instance_principal
+  enable_operator_instance_principal = var.enable_operator_instance_principal && var.create_policies
   enable_pv_encryption_in_transit    = var.enable_operator_pv_encryption_in_transit
   operator_os_version                = var.operator_os_version
   operator_shape                     = var.operator_shape

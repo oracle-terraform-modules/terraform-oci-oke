@@ -13,13 +13,17 @@ terraform {
   required_version = ">= 1.0.0"
 }
 
+locals {
+  create_operator_instance_principal_dynamic_group = (var.use_cluster_encryption == true && var.create_policies == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true)
+}
+
 resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
   provider       = oci.home
   compartment_id = var.tenancy_id
   description    = "policy to allow operator host to manage dynamic group"
   name           = var.label_prefix == "none" ? "operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}" : "${var.label_prefix}-operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}"
   statements     = ["Allow dynamic-group ${var.operator_dynamic_group} to use dynamic-groups in tenancy"]
-  count          = (var.use_cluster_encryption == true && var.create_policies == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true) ? 1 : 0
+  count          = (local.create_operator_instance_principal_dynamic_group == true) ? 1 : 0
 }
 
 # 30s delay to allow policies to take effect globally
@@ -27,6 +31,7 @@ resource "time_sleep" "wait_30_seconds" {
   depends_on = [oci_identity_policy.operator_instance_principal_dynamic_group]
 
   create_duration = "30s"
+  count          = (local.create_operator_instance_principal_dynamic_group == true) ? 1 : 0
 }
 
 resource "null_resource" "update_dynamic_group" {
@@ -58,5 +63,5 @@ resource "null_resource" "update_dynamic_group" {
     ]
   }
 
-  count = (var.use_cluster_encryption == true && var.create_policies == true && var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.enable_operator_instance_principal == true) ? 1 : 0
+  count = (local.create_operator_instance_principal_dynamic_group && var.bastion_state == "RUNNING" ) ? 1 : 0
 }

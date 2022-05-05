@@ -64,8 +64,6 @@ variable "cluster_kms_key_id" {}
 variable "cluster_kms_dynamic_group_id" {}
 
 variable "create_policies" {
-  description = "Whether to create OIM policies"
-  default     = true
   type        = bool
 }
 

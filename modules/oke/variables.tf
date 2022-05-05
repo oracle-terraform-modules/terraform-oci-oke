@@ -58,8 +58,6 @@ variable "enable_pv_encryption_in_transit" {
 }
 
 variable "create_policies" {
-  description = "Whether to create dynamic group for KMS access when using encryption"
-  default     = true
   type        = bool
 }
 
@@ -99,10 +97,4 @@ variable "worker_nsgs" {
 
 variable "freeform_tags" {
   type = map(any)
-}
-
-variable "create_policies" {
-  description = "whether to create dynamic group for KMS access when using encryption"
-  default     = true
-  type        = bool
 }

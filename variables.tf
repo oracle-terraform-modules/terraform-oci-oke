@@ -479,7 +479,7 @@ variable "services_cidr" {
 
 ## oke cluster kms integration
 variable "create_policies" {
-  description = "Whether to create dynamic group for cluster with policies to access KMS when using encryption"
+  description = "Whether to create OCI IAM policies for KMS or dynamic groups."
   default     = true
   type        = bool
 }
@@ -635,8 +635,8 @@ variable "load_balancers" {
 }
 
 variable "preferred_load_balancer" {
-  # values: public, internal. 
-  # When creating an internal load balancer, the internal annotation must still be specified regardless 
+  # values: public, internal.
+  # When creating an internal load balancer, the internal annotation must still be specified regardless
   default     = "public"
   description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'."
   type        = string
