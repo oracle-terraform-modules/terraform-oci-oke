@@ -21,7 +21,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
     # iterating over ADs
     dynamic "placement_configs" {
       iterator = ad_iterator
-      for_each = local.ad_names
+      for_each = [for n in lookup(each.value, "placement_ads", local.ad_numbers):
+                  local.ad_number_to_name[n]]
       content {
         availability_domain = ad_iterator.value
         subnet_id           = var.cluster_subnets["workers"]
