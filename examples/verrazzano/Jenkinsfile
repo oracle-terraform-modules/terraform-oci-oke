@@ -18,6 +18,7 @@ pipeline {
          // sh 'terraform refresh -lock=false'//
          // sh 'cp terraform.tfvars .'//
          sh 'ls'
+	 sh 'cd examples/verrazzano'
                
       }
     }
