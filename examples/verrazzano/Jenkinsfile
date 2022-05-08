@@ -12,14 +12,14 @@ pipeline {
     stage('Checkout') {
       steps {
          sh 'PATH=/usr/local/bin'
-         // sh 'terraform fmt'//
+	 sh 'cd examples/verrazzano'
+         sh 'terraform fmt'
          println 'Initiate Terraform provider'
          sh 'terraform init' //only need for first run 
          // sh 'terraform refresh -lock=false'//
          // sh 'cp terraform.tfvars .'//
          sh 'ls'
-	 sh 'cd examples/verrazzano'
-               
+	                
       }
     }
 
