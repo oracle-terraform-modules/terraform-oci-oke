@@ -74,9 +74,9 @@ If you wish to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes secrets, the fol
 ** {uri-oci-manage-policies}[manage policies in root tenancy]
 * link:#adding-the-bastion-host[bastion must be enabled]
 * link:#enabling-instance_principal-on-the-operator-host[operator instance_principal must be enabled]
-
 * use_cluster_encryption must be set to _true_
 * cluster_kms_key_id must be provided
+* create_policies should be set to _true_ if policies for cluster access to KMS are not already in place
 
 If you wish to use {uri-oci-kms}[OCI KMS] to encrypt OKE nodepool boot/block volume, the following is required:
 
