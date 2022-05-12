@@ -251,6 +251,51 @@ EOT
 |oke-vcn
 
 |===
+== Reuse VCN
+
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
+|===
+|Parameter
+|Description
+|Values
+|Default
+
+|create_vcn
+|Whether to create the VCN.
+|true/false
+|true
+
+|vcn_display_name
+|Existing VCN display name
+|
+|
+
+|vcn_id
+|Existing VCN OCID
+|
+|
+
+|ig_route_table_display_name
+|Existing Internet Gateway route table display name
+|
+|
+
+|ig_route_table_id 
+|Existing Internet Gateway route table OCID
+|
+|
+
+|nat_route_table_display_name
+|Existing NAT Gateway route table OCID
+|
+|
+
+|nat_route_table_id
+|Existing NAT Gateway route table OCID
+|
+|
+
+|===
 
 == Bastion Host
 

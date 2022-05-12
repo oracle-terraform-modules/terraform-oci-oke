@@ -1,0 +1,21 @@
+= Reuse VCN
+:idprefix:
+:idseparator:
+:sectlinks:
+:sectnums:
+:toc: auto
+
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
+
+:uri-docs-reuse-vcn: {uri-rel-file-base}/docs/terraformoptions.adoc#reuse-vcn
+
+== Assumptions
+Internet Gateway, NAT Gateway,Service Gateway was created in the VCN and route table preexist.
+
+== Instructions
+By default the module will create VCN ,gateways etc and then create Oracle kubernetes engine cluster. There are usecases where enduser might want to reuse their existing VCN . To do that set `create_vcn = false` and pass other required values mentioned in {uri-docs-tfoption}[terraformoption.adoc] under Reuse VCN section.
+
+You can pass either the vcn_display_name or vcn_id .If you have duplicate VCN display names recommend to use vcn_id. If both values are passed vcn_id will take precedence. Similarly for Internet Gateway and NAT Gateway route table you can either pass displayname(`ig_route_table_display_name` and `nat_route_table_display_name`) or pass the id (`ig_route_table_id` and `nat_route_table_id`) .
