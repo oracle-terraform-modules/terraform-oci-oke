@@ -9,7 +9,7 @@ locals {
 
 # cloud-init for workers
 data "cloudinit_config" "worker" {
-  gzip          = true
+  gzip          = false
   base64_encode = true
 
   part {

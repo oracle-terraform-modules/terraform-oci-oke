@@ -172,9 +172,15 @@ node_pool_image_id    = "none"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
 node_pool_os_version  = "7.9"
-node_pool_timezone    = "Etc/UTC"
 worker_nsgs           = []
 worker_type           = "private"
+
+#cloudinit_nodepool_common = "/tmp/commoncloudinit.sh"
+#cloudinit_nodepool        = {
+  #np1 = "/tmp/np1cloudinit.sh"
+  #np3 = "/tmp/np3cloudinit.sh"
+#}
+node_pool_timezone        = "Etc/UTC"
 
 # upgrade of existing node pools
 upgrade_nodepool        = false

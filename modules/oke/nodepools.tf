@@ -36,7 +36,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   }
 
   node_metadata = {
-    user_data = var.common_nodepool_node_metadata == "" && lookup(var.node_pool_node_metadata, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.node_pool_node_metadata, each.key, null) != null ? filebase64(lookup(var.node_pool_node_metadata, each.key, null)) : filebase64(var.common_nodepool_node_metadata)
+    user_data = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
   }
 
   node_source_details {

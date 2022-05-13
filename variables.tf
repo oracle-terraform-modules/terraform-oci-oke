@@ -539,14 +539,16 @@ variable "enable_pv_encryption_in_transit" {
   default     = false
 }
 
-variable "node_pool_node_metadata" {
-  type    = map(any)
-  default = {}
+variable "cloudinit_nodepool" {
+  description = "Cloudinit script specific to nodepool"
+  type        = map(any)
+  default     = {}
 }
 
-variable "common_nodepool_node_metadata" {
-  type    = string
-  default = ""
+variable "cloudinit_nodepool_common" {
+  description = "Cloudinit script common to all nodepool when cloudinit_nodepool  is not provided"
+  type        = string
+  default     = ""
 }
 
 variable "node_pools" {

@@ -53,11 +53,11 @@ variable "use_node_pool_volume_encryption" {
 
 variable "node_pool_volume_kms_key_id" {}
 
-variable "node_pool_node_metadata" {
+variable "cloudinit_nodepool" {
   type = map(any)
 }
 
-variable "common_nodepool_node_metadata" {
+variable "cloudinit_nodepool_common" {
   type = string
 }
 

@@ -14,7 +14,7 @@ module "vcn" {
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
-  create_drg = var.create_drg
+  create_drg               = var.create_drg
 
   # lpgs
   local_peering_gateways = var.local_peering_gateways
@@ -242,8 +242,8 @@ module "oke" {
   enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
   use_node_pool_volume_encryption = var.use_node_pool_volume_encryption
   node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id
-  node_pool_node_metadata         = var.node_pool_node_metadata
-  common_nodepool_node_metadata   = var.common_nodepool_node_metadata
+  cloudinit_nodepool              = var.cloudinit_nodepool
+  cloudinit_nodepool_common       = var.cloudinit_nodepool_common
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer
@@ -332,7 +332,7 @@ module "extensions" {
   use_cluster_encryption       = var.use_cluster_encryption
   cluster_kms_key_id           = var.cluster_kms_key_id
   cluster_kms_dynamic_group_id = module.oke.cluster_kms_dynamic_group_id
-  create_policies      = var.create_policies
+  create_policies              = var.create_policies
 
   # ocir parameters
   email_address    = var.email_address
