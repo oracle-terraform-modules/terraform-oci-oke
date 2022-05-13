@@ -3,7 +3,7 @@
 
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
-  version = "3.0.0"
+  version = "3.4.0"
 
   # general oci parameters
   compartment_id = var.compartment_id
@@ -14,10 +14,7 @@ module "vcn" {
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
-
-  # drg
-  create_drg       = var.create_drg
-  drg_display_name = var.drg_display_name
+  create_drg = var.create_drg
 
   # lpgs
   local_peering_gateways = var.local_peering_gateways
@@ -33,11 +30,13 @@ module "vcn" {
   internet_gateway_route_rules = var.internet_gateway_route_rules
   nat_gateway_route_rules      = var.nat_gateway_route_rules
 
+
 }
+
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.0.0"
+  version = "3.1.1"
 
   tenancy_id     = var.tenancy_id
   compartment_id = var.compartment_id
@@ -65,7 +64,7 @@ module "bastion" {
   upgrade_bastion     = var.upgrade_bastion
 
   # bastion notification
-  enable_bastion_notification   = var.enable_bastion_notification
+  enable_bastion_notification   = var.enable_bastion_notification && var.create_policies
   bastion_notification_endpoint = var.bastion_notification_endpoint
   bastion_notification_protocol = var.bastion_notification_protocol
   bastion_notification_topic    = var.bastion_notification_topic
@@ -85,7 +84,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.0.3"
+  version = "3.1.0"
 
   tenancy_id = var.tenancy_id
 
@@ -103,7 +102,7 @@ module "operator" {
 
   # operator host parameters
   operator_image_id                  = var.operator_image_id
-  enable_operator_instance_principal = var.enable_operator_instance_principal
+  enable_operator_instance_principal = var.enable_operator_instance_principal && var.create_policies
   enable_pv_encryption_in_transit    = var.enable_operator_pv_encryption_in_transit
   operator_os_version                = var.operator_os_version
   operator_shape                     = var.operator_shape
@@ -153,6 +152,7 @@ module "bastionsvc" {
   count = var.create_bastion_service == true ? 1 : 0
 }
 
+
 # additional networking for oke
 module "network" {
   source = "./modules/network"
@@ -166,6 +166,7 @@ module "network" {
   nat_route_id = module.vcn.nat_route_id
   subnets      = var.subnets
   vcn_id       = module.vcn.vcn_id
+
 
   # control plane endpoint parameters
   control_plane_type          = var.control_plane_type
@@ -226,6 +227,7 @@ module "oke" {
   vcn_id                                                  = module.vcn.vcn_id
   use_cluster_encryption                                  = var.use_cluster_encryption
   cluster_kms_key_id                                      = var.cluster_kms_key_id
+  create_policies                                         = var.create_policies
   use_signed_images                                       = var.use_signed_images
   image_signing_keys                                      = var.image_signing_keys
   admission_controller_options                            = var.admission_controller_options
@@ -330,6 +332,7 @@ module "extensions" {
   use_cluster_encryption       = var.use_cluster_encryption
   cluster_kms_key_id           = var.cluster_kms_key_id
   cluster_kms_dynamic_group_id = module.oke.cluster_kms_dynamic_group_id
+  create_policies      = var.create_policies
 
   # ocir parameters
   email_address    = var.email_address

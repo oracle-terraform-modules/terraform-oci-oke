@@ -77,7 +77,7 @@ Alternatively, you can also specify these using Terraform environment variables 
 export TF_api_fingerprint = "1a:bc:23:45:6d:78:e9:f0:gh:ij:kl:m1:23:no:4p:5q"
 ----
 
-You would have obtained your values when doing the {uri-prereqs}[Prerequisites]. 
+You would have obtained your values when doing the {uri-prereqs}[Prerequisites].
 
 {uri-terraform-options}#identity-and-access[Reference]
 
@@ -129,7 +129,7 @@ The list of regions can be found {uri-oci-region}[here].
 
 == Configure OCI Networking parameters
 
-The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT Gateway. 
+The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT Gateway.
 
 You can leave most of the default options. However, you may want to change the following 2 parameters:
 
@@ -272,6 +272,7 @@ create_operator = true
 enable_operator_instance_principal = true
 enable_operator_pv_encryption_in_transit = false
 operator_volume_kms_id = <operator_volume_kms_id>
+create_policies = true
 ----
 
 OKE also supports enforcing the use of signed images. You can enforce the use of signed image using the following parameters:

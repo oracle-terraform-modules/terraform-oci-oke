@@ -65,6 +65,10 @@ variable "enable_pv_encryption_in_transit" {
   type = bool
 }
 
+variable "create_policies" {
+  type        = bool
+}
+
 # signed images
 variable "use_signed_images" {
   type = bool
