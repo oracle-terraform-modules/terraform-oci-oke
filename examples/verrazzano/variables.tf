@@ -45,13 +45,13 @@ variable "label_prefix" {
 
 # ssh keys
 variable "ssh_private_key_path" {
-  default     = "none"
+  default     = ""
   description = "The path to ssh private key."
   type        = string
 }
 
 variable "ssh_public_key_path" {
-  default     = "none"
+  default     = ""
   description = "The path to ssh public key."
   type        = string
 }
