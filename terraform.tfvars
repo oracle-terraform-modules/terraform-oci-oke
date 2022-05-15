@@ -12,7 +12,7 @@ user_id = "ocid1.user.oc1..aaaaaaaawqmr6lc2jj3s6gv2kjxebmr6vndbz3ykfp653cq2zkz3z
 
 # general oci parameters
 compartment_id = "ocid1.compartment.oc1..aaaaaaaamluifb5mxw2tiexvy5m4dga2phffeshb2efk7w7xbf5mnqplsceq"
-#label_prefix   = "dev"
+label_prefix   = "dev"
 
 # ssh keys
 #ssh_private_key      = ""
