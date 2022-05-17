@@ -39,6 +39,8 @@ pipeline {
          //sh 'cp vars.tf .'//
           println 'List all files needed'
           sh 'ls'
+	  sh 'cd verrazzano'
+	  sh 'ls -l'
           println 'Terraform plan oke'
           sh 'terraform plan -lock=false -out oke_plan'
       }      
