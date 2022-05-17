@@ -17,7 +17,7 @@ pipeline {
          // println 'Initiate Terraform provider'//
          // sh 'terraform init' //only need for first run //
          // sh 'terraform refresh -lock=false'//
-         sh 'cp terraform.tfvars .'
+         // sh 'cp terraform.tfvars .'"
          sh 'ls -l'
 	                
       }
