@@ -13,12 +13,12 @@ pipeline {
       steps {
          sh 'PATH=/usr/local/bin'
 	 sh 'cd examples/verrazzano'
-         sh 'terraform fmt'
-         println 'Initiate Terraform provider'
-         sh 'terraform init' //only need for first run 
-         sh 'terraform refresh -lock=false'//
-         sh 'cp terraform.tfvars .'//
-         sh 'ls'
+        // sh 'terraform fmt' //
+         // println 'Initiate Terraform provider'//
+         // sh 'terraform init' //only need for first run //
+         // sh 'terraform refresh -lock=false'//
+         sh 'cp terraform.tfvars .'
+         sh 'ls -l'
 	                
       }
     }
@@ -34,13 +34,13 @@ pipeline {
           
           sh 'PATH=/usr/local/bin'
          // sh 'terraform fmt'//
-          //sh 'terraform init' //only need for first run 
+         sh 'terraform init' //only need for first run 
          // sh 'terraform refresh -lock=false'//
          //sh 'cp vars.tf .'//
           println 'List all files needed'
           sh 'ls'
           println 'Terraform plan oke'
-          sh 'terraform plan  -lock=false -out vz_plan'
+          sh 'terraform plan  -lock=false -out oke_plan'
       }      
     }
 
