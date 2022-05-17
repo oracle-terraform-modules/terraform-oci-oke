@@ -16,8 +16,8 @@ pipeline {
          sh 'terraform fmt'
          println 'Initiate Terraform provider'
          sh 'terraform init' //only need for first run 
-         // sh 'terraform refresh -lock=false'//
-         // sh 'cp terraform.tfvars .'//
+         sh 'terraform refresh -lock=false'//
+         sh 'cp terraform.tfvars .'//
          sh 'ls'
 	                
       }
@@ -39,7 +39,7 @@ pipeline {
          //sh 'cp vars.tf .'//
           println 'List all files needed'
           sh 'ls'
-          println 'Terraform plan VZ'
+          println 'Terraform plan oke'
           sh 'terraform plan  -lock=false -out vz_plan'
       }      
     }
@@ -59,8 +59,8 @@ pipeline {
 					}
 				}
       steps {
-          println 'Apply the TF Infrastructure vz_plan'
-          sh 'terraform apply -lock=false -auto-approve vz_plan'
+          println 'Apply the TF Infrastructure oke_plan'
+          sh 'terraform apply -lock=false -auto-approve oke_plan'
         }
       }
  
