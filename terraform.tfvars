@@ -16,7 +16,7 @@ label_prefix   = "dev"
 
 # ssh keys
 #ssh_private_key      = ""
-# ssh_private_key    = <<EOT
+ssh_private_key    = <<EOT
 -----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEAwREUzKQXovrykjUnLKeV7SEd7UoG58522qsYjZSfdabTjm9E
 BYoWe807HBSMwLju6wj+joVg8pxASsow1PdoiZmWwMfTsMB+4CqhMXkXZxoKN7VA
@@ -44,9 +44,7 @@ BOzSLx0CgYBhMyubDYSacTRKi/6QVnYLGRrby7i+Nif+JnOjlRiBACNXwo4JaboM
 eAdRwQwZIAI37EICitOQP0V7LpRuzTBCUVfA8UwG/Q0gqEEjks9/dayRPqBYwlpZ
 Ogr9IXr6NarPA4ZD6MbQ31SHOfWeKOhvgQgJm5jbaMsqC3Vj/8eT/w==
 -----END RSA PRIVATE KEY-----
-#content+of+api+key
-#-----END RSA PRIVATE KEY-----
-#EOT
+EOT
 #ssh_private_key_path = "~/.ssh/id_rsa"
 ssh_public_key       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDBERTMpBei+vKSNScsp5XtIR3tSgbnznbaqxiNlJ91ptOOb0QFihZ7zTscFIzAuO7rCP6OhWDynEBKyjDU92iJmZbAx9OwwH7gKqExeRdnGgo3tUA3De9e6QjD5wie60aTGN8NP5mNHzdlLcipxpFvEguXNOvXi9Hs7tdvluJDdwsZmecOjhELIrURmV+nAvO11OXfY0OVRpkVkm6uGfeBjHuyX/veWWikKRJ34mkMcqvQ5ChYOhhZkXxn/CfbAqdGQeoYWeY/vF+OrMsv9+oJMXZeYgTiFB+e0XgdxLXewZWFmpYRheZcIm+9SmKwJsSIglDNyaStwtJ9xmOEv8ed"
 # ssh_public_key_path  = "none"
