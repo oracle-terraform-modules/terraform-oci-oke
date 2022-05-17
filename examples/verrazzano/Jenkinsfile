@@ -40,7 +40,7 @@ pipeline {
           println 'List all files needed'
           sh 'ls'
           println 'Terraform plan oke'
-          sh 'terraform plan -lock=false -out oke_plan ./verrazzano'
+          sh 'terraform plan -chdir="./verrazzano" -lock=false -out oke_plan'
       }      
     }
 
