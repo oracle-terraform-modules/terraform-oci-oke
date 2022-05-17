@@ -21,10 +21,10 @@ label_prefix   = "dev"
 #content+of+api+key
 #-----END RSA PRIVATE KEY-----
 #EOT
-ssh_private_key_path = "~/.ssh/id_rsa"
+#ssh_private_key_path = "~/.ssh/id_rsa"
 # ssh_public_key       = ""
 # ssh_public_key_path  = "none"
-ssh_public_key_path = "~/.ssh/id_rsa.pub"
+#ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 # networking
 create_drg                   = false
