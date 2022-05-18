@@ -39,7 +39,7 @@ pipeline {
          // sh 'terraform refresh -lock=false'//
          //sh 'cp vars.tf .'//
           println 'List all files needed'
-          sh 'ls -l ./examples/verrazzano'
+          sh 'ls -l'
           println 'Terraform plan oke'
           sh 'terraform plan -lock=false -out oke_plan'
       }      
