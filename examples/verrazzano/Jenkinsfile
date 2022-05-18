@@ -41,6 +41,7 @@ pipeline {
           //println 'List all files needed'//
          // sh 'ls -l'//
           println 'Terraform plan oke'
+	  sh 'cd ./examples/verrazzano'
           sh 'terraform plan -lock=false -out oke_plan'
       }      
     }
