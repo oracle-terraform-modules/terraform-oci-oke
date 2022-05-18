@@ -34,6 +34,7 @@ pipeline {
           
           sh 'PATH=/usr/local/bin'
          // sh 'terraform fmt'//
+	 sh 'cd ./examples/verrazzano'
          sh 'terraform init' //only need for first run 
          // sh 'terraform refresh -lock=false'//
          //sh 'cp vars.tf .'//
