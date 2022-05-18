@@ -14,8 +14,8 @@ user_id    = "ocid1.user.oc1..aaaaaaaawqmr6lc2jj3s6gv2kjxebmr6vndbz3ykfp653cq2zk
 compartment_id = "ocid1.compartment.oc1..aaaaaaaamluifb5mxw2tiexvy5m4dga2phffeshb2efk7w7xbf5mnqplsceq"
 label_prefix   = "dev"
 
-#ssh_private_key_path = "~/.ssh/id_rsa"
-#ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+ssh_private_key_path = "~/.ssh/id_rsa"
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
 
 verrazzano_version = "1.0.3"
 verrazzano_name    = "v8o"
