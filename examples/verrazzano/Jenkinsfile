@@ -34,12 +34,12 @@ pipeline {
           
           sh 'PATH=/usr/local/bin'
          // sh 'terraform fmt'//
-	 sh 'cd ./examples/verrazzano'
-         sh 'terraform init' //only need for first run 
+	 sh 'cd ./examples/verrazzano && terraform init'
+         //sh 'terraform init' //only need for first run 
          // sh 'terraform refresh -lock=false'//
          //sh 'cp vars.tf .'//
           println 'List all files needed'
-          sh 'ls -l'
+          sh 'ls -l ./examples/verrazzano'
           println 'Terraform plan oke'
           sh 'terraform plan -lock=false -out oke_plan'
       }      
