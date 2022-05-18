@@ -12,7 +12,7 @@ pipeline {
     stage('Checkout') {
       steps {
          sh 'PATH=/usr/local/bin'
-	 sh 'cd examples/verrazzano'
+	 sh 'cd ./examples/verrazzano'
         // sh 'terraform fmt' //
          // println 'Initiate Terraform provider'//
          // sh 'terraform init' //only need for first run //
@@ -42,7 +42,7 @@ pipeline {
          // sh 'ls -l'//
           println 'Terraform plan oke'
 	  sh 'cd ./examples/verrazzano'
-          sh 'terraform plan -lock=false -out ./examples/verrazzano/oke_plan'
+          sh 'terraform plan -lock=false'
       }      
     }
 
