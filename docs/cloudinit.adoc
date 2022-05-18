@@ -1,4 +1,4 @@
-= CloudInit
+= Cloud-init
 :idprefix:
 :idseparator: -
 :sectlinks:
@@ -9,7 +9,8 @@
 
 == Instructions:
 
-* The default cloudinit script is as below:
+* {uri-cloudinit}[Using cloud-init in OKE] 
+* The default cloud-init script used by this module is as below:
 ----
 #!/bin/bash
 
