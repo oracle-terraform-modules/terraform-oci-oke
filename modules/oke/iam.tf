@@ -21,7 +21,6 @@ resource "oci_identity_dynamic_group" "oke_kms_cluster" {
   name           = var.label_prefix == "none" ? "oke-kms-cluster" : "${var.label_prefix}-oke-kms-cluster"
   count          = var.use_cluster_encryption == true && var.create_policies == true ? 1 : 0
 
-  freeform_tags = var.freeform_tags
 
   lifecycle {
     ignore_changes = [matching_rule]
@@ -35,7 +34,6 @@ resource "oci_identity_policy" "oke_kms" {
   depends_on     = [oci_identity_dynamic_group.oke_kms_cluster]
   name           = var.label_prefix == "none" ? "oke-kms" : "${var.label_prefix}-oke-kms"
 
-  freeform_tags = var.freeform_tags
 
   statements     = [local.cluster_kms_policy_statement]
 
