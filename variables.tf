@@ -539,6 +539,18 @@ variable "enable_pv_encryption_in_transit" {
   default     = false
 }
 
+variable "cloudinit_nodepool" {
+  description = "Cloudinit script specific to nodepool"
+  type        = map(any)
+  default     = {}
+}
+
+variable "cloudinit_nodepool_common" {
+  description = "Cloudinit script common to all nodepool when cloudinit_nodepool  is not provided"
+  type        = string
+  default     = ""
+}
+
 variable "node_pools" {
   default = {
     np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
