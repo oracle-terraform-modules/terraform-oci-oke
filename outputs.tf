@@ -13,15 +13,14 @@ output "nodepool_ids" {
   value       = module.oke.nodepool_ids
 }
 
-
 output "ig_route_id" {
   description = "id of route table to vcn internet gateway"
-  value       = module.vcn.ig_route_id
+  value       = local.ig_route_id
 }
 
 output "nat_route_id" {
   description = "id of route table to nat gateway attached to vcn"
-  value       = module.vcn.nat_route_id
+  value       = local.nat_route_id
 }
 
 output "int_lb_nsg" {
@@ -41,7 +40,7 @@ output "subnet_ids" {
 
 output "vcn_id" {
   description = "id of vcn where oke is created. use this vcn id to add additional resources"
-  value       = module.vcn.vcn_id
+  value       = local.vcn_id
 }
 
 # convenient output

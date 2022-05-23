@@ -21,6 +21,8 @@ resource "oci_identity_dynamic_group" "oke_kms_cluster" {
   name           = var.label_prefix == "none" ? "oke-kms-cluster" : "${var.label_prefix}-oke-kms-cluster"
   count          = var.use_cluster_encryption == true && var.create_policies == true ? 1 : 0
 
+  freeform_tags = var.freeform_tags
+
   lifecycle {
     ignore_changes = [matching_rule]
   }
@@ -32,8 +34,13 @@ resource "oci_identity_policy" "oke_kms" {
   description    = "policy to allow dynamic group ${var.label_prefix}-oke-kms-cluster to use KMS to encrypt etcd"
   depends_on     = [oci_identity_dynamic_group.oke_kms_cluster]
   name           = var.label_prefix == "none" ? "oke-kms" : "${var.label_prefix}-oke-kms"
+
+  freeform_tags = var.freeform_tags
+
   statements     = [local.cluster_kms_policy_statement]
+
   count          = var.use_cluster_encryption == true && var.create_policies == true ? 1 : 0
+
 }
 
 resource "oci_identity_policy" "oke_volume_kms" {
@@ -42,5 +49,7 @@ resource "oci_identity_policy" "oke_volume_kms" {
   description    = "Policies for block volumes to access kms key"
   name           = var.label_prefix == "none" ? "oke-volume-kms" : "${var.label_prefix}-oke-volume-kms"
   statements     = local.oke_volume_kms_policy_statements
+
   count          = var.use_node_pool_volume_encryption == true && var.create_policies == true ? 1 : 0
+
 }
