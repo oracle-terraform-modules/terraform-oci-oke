@@ -743,6 +743,18 @@ node_pools = {
 |
 |7.9
 
+|cloudinit_nodepool_common
+|cloud-init common for all nodepools when no specific script mentioned for nodepool in cloudinit_nodepool.
+|e.g.: `"/tmp/commoncloudinit.sh"`
+|""
+
+|cloudinit_nodepool
+|cloud-init specific to nodepool to override cloudinit_nodepool_common.
+|e.g.: `cloudinit_nodepool = {
+np2 = "/tmp/np2cloudinit.sh"
+}`
+|{}
+
 |node_pool_timezone
 |The preferred timezone for the worker nodes. {uri-timezones}[List of timezones].
 |

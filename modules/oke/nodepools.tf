@@ -10,6 +10,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
   kubernetes_version = var.cluster_kubernetes_version
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
+  freeform_tags = var.freeform_tags["node_pool"]
+  
   node_config_details {
 
     dynamic "placement_configs" {
@@ -36,9 +38,9 @@ resource "oci_containerengine_node_pool" "nodepools" {
   }
 
   node_metadata = {
-    user_data = data.cloudinit_config.worker.rendered
+    user_data = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
   }
-  
+
   node_source_details {
     boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
     # check is done for GPU,A1 and other shapes.In future if some other shapes or images added we need to modify

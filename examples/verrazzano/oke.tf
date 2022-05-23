@@ -70,6 +70,20 @@ module "oke" {
       security   = "high"
       verrazzano = "dev"
     }
+    oke = {
+      cluster = {
+        environment = "dev"
+        role        = "cluster"
+      }
+      service_lb = {
+        environment = "dev"
+        role        = "load balancer"
+      }
+      node_pool = {
+        environment = "dev"
+        role        = "node-pool"
+      }
+    }
   }
 
   providers = {
