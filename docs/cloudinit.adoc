@@ -1,4 +1,4 @@
-= Cloud-init
+= cloud-init
 :idprefix:
 :idseparator: -
 :sectlinks:
@@ -28,7 +28,7 @@ timedatectl set-timezone ${worker_timezone}
 
 * To customize this you can modify the above script and pass the script as input variable to `cloudinit_nodepool_common`. This script will be used across all the nodepools.
 
-* To use specific cloud init script for a nodepool pass the script as input variable to `cloudinit_nodepool` as a map.This will take precedence over `cloudinit_nodepool_common` for that nodepool.
+* To use specific cloud-init script for a nodepool pass the script as input variable to `cloudinit_nodepool` as a map.This will take precedence over `cloudinit_nodepool_common` for that nodepool.
 Ex: cloudinit_nodepool        = {
   #np1 = "/tmp/np1cloudinit.sh"
   #np3 = "/tmp/np3cloudinit.sh"
