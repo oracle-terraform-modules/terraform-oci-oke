@@ -523,6 +523,11 @@ variable "services_cidr" {
 }
 
 ## oke cluster kms integration
+variable "create_policies" {
+  description = "Whether to create OCI IAM policies for KMS or dynamic groups."
+  default     = true
+  type        = bool
+}
 
 variable "use_cluster_encryption" {
   description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
@@ -577,6 +582,18 @@ variable "enable_pv_encryption_in_transit" {
   description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment. This field applies to both block volumes and boot volumes. The default value is false"
   type        = bool
   default     = false
+}
+
+variable "cloudinit_nodepool" {
+  description = "Cloudinit script specific to nodepool"
+  type        = map(any)
+  default     = {}
+}
+
+variable "cloudinit_nodepool_common" {
+  description = "Cloudinit script common to all nodepool when cloudinit_nodepool  is not provided"
+  type        = string
+  default     = ""
 }
 
 variable "node_pools" {
@@ -675,8 +692,8 @@ variable "load_balancers" {
 }
 
 variable "preferred_load_balancer" {
-  # values: public, internal. 
-  # When creating an internal load balancer, the internal annotation must still be specified regardless 
+  # values: public, internal.
+  # When creating an internal load balancer, the internal annotation must still be specified regardless
   default     = "public"
   description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'."
   type        = string

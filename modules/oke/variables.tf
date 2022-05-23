@@ -53,8 +53,20 @@ variable "use_node_pool_volume_encryption" {
 
 variable "node_pool_volume_kms_key_id" {}
 
+variable "cloudinit_nodepool" {
+  type = map(any)
+}
+
+variable "cloudinit_nodepool_common" {
+  type = string
+}
+
 variable "enable_pv_encryption_in_transit" {
   type = bool
+}
+
+variable "create_policies" {
+  type        = bool
 }
 
 # signed images

@@ -31,7 +31,7 @@ Ensure you review the {uri-terraform-dependencies}[dependencies].
 
 == OCI Provider parameters
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -88,7 +88,7 @@ region = "ap-sydney-1"
 
 == General OCI
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -109,7 +109,7 @@ region = "ap-sydney-1"
 
 == SSH Keys
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -146,7 +146,7 @@ EOT
 
 == OCI Networking
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -171,10 +171,10 @@ EOT
 |internet_gateway_route_rules
 |(Updatable) List of routing rules to add to Internet Gateway Route Table.
 |
-[ 
+[
   {
     destination       = "192.168.0.0/16"
-    destination_type  = "CIDR_BLOCK"     
+    destination_type  = "CIDR_BLOCK"
     network_entity_id = "drg"
     description       = "Terraformed"
   },
@@ -184,7 +184,7 @@ EOT
 |local_peering_gateways
 |Map of Local Peering Gateways to attach to the VCN.
 |
-    to_spoke2 = { 
+    to_spoke2 = {
       route_table_id = ""
       peer_id        = ""
     }
@@ -198,10 +198,10 @@ EOT
 |nat_gateway_route_rules
 |(Updatable) List of routing rules to add to Internet Gateway Route Table.
 |
-[ 
+[
   {
     destination       = "192.168.0.0/16"
-    destination_type  = "CIDR_BLOCK"     
+    destination_type  = "CIDR_BLOCK"
     network_entity_id = "drg"
     description       = "Terraformed"
   },
@@ -254,7 +254,7 @@ EOT
 
 == Bastion Host
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -334,7 +334,7 @@ EOT
 
 == OCI Bastion Service
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -364,7 +364,7 @@ EOT
 
 == Operator Host
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -451,7 +451,7 @@ EOT
 
 == Availability Domain
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -475,7 +475,7 @@ EOT
 
 == Tagging
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -528,7 +528,7 @@ EOT
 
 == OKE
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -604,7 +604,7 @@ EOT
 
 == KMS integration
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -618,8 +618,11 @@ EOT
 
 |cluster_kms_key_id
 |The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_cluster_encryption_ is set to *true*
-|`ocid1.key.oc1....`
-|
+
+|create_policies
+|Whether to create dynamic group for cluster with policies to access {uri-oci-kms}[OCI KMS] when using encryption.
+|true/false
+|true
 
 |use_node_pool_volume_encryption
 |Whether to use {uri-oci-kms}[OCI KMS] to encrypt Kubernetes Nodepool's boot/block volume.
@@ -642,7 +645,7 @@ EOT
 |false
 
 |`image_signing_keys`
-|A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm. *Required* if _use_signed_images_ is set to *true* 
+|A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm. *Required* if _use_signed_images_ is set to *true*
 |
 `["ocid1.key.oc1....", "ocid1.key.oc1...."]`
 |[]
@@ -650,7 +653,7 @@ EOT
 
 == Node pools
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -671,8 +674,8 @@ Refer to {uri-topology}[topology] for more thorough examples.
 node_pools = {
 np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   np2 = {shape="VM.Standard.E2.2",node_pool_size=2,boot_volume_size=150,label={app="application",name="test"}}
-  np3 = {shape="VM.Standard.E2.2",node_pool_size=1} 
-} 
+  np3 = {shape="VM.Standard.E2.2",node_pool_size=1}
+}
 |
 node_pools = {
   np1 = {shape="VM.Standard.E3.Flex",ocpus=2,node_pool_size=2,boot_volume_size=150}
@@ -695,6 +698,18 @@ node_pools = {
 |
 |7.9
 
+|cloudinit_nodepool_common
+|cloud-init common for all nodepools when no specific script mentioned for nodepool in cloudinit_nodepool.
+|e.g.: `"/tmp/commoncloudinit.sh"`
+|""
+
+|cloudinit_nodepool
+|cloud-init specific to nodepool to override cloudinit_nodepool_common.
+|e.g.: `cloudinit_nodepool = {
+np2 = "/tmp/np2cloudinit.sh"
+}`
+|{}
+
 |node_pool_timezone
 |The preferred timezone for the worker nodes. {uri-timezones}[List of timezones].
 |
@@ -714,7 +729,7 @@ node_pools = {
 
 == File Storage
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -745,7 +760,7 @@ node_pools = {
 
 == Upgrade cluster
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -776,7 +791,7 @@ node_pools = {
 
 == OKE Load Balancers
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -784,7 +799,7 @@ node_pools = {
 |Default
 
 |load_balancers
-|The type of load balancer subnets to create. 
+|The type of load balancer subnets to create.
 
 Even if you set the load balancer subnets to be internal, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting this value to internal is *_not_* sufficient.
 
@@ -826,7 +841,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == OCIR
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -862,7 +877,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Calico
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -883,7 +898,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Kubernetes Metrics Server
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -909,7 +924,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Gatekeeper
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
@@ -930,7 +945,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 == Service Account
 
-[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"] 
+[stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
 |Parameter
 |Description
