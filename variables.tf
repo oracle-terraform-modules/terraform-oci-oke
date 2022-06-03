@@ -612,6 +612,16 @@ variable "node_pool_image_id" {
   type        = string
 }
 
+variable "node_pool_image_type" {
+  default     = "oke"
+  description = "Whether to use a Platform, OKE or custom image. When custom is set, the node_pool_image_id must be specified."
+  type        = string
+  validation {
+    condition     = contains(["custom", "oke", "platform"], var.node_pool_image_type)
+    error_message = "Accepted values are custom, oke, platform."
+  }  
+}
+
 variable "node_pool_name_prefix" {
   default     = "np"
   description = "The prefix of the node pool name."

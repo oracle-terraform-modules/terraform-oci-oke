@@ -91,6 +91,8 @@ variable "node_pool_name_prefix" {}
 
 variable "node_pool_image_id" {}
 
+variable "node_pool_image_type" {}
+
 variable "node_pool_os" {}
 
 variable "node_pool_os_version" {}

@@ -688,6 +688,11 @@ node_pools = {
 |
 |"none"
 
+|node_pool_image_type
+|Whether to use a Platform, OKE or custom image. When custom is set, the node_pool_image_id must be specified. Using an OKE image minimizes the time it takes to provision worker nodes at runtime when compared to platform images and custom images. OKE images are optimized for use as worker node base images, with all the necessary configurations and required software. The use of OKE images reduces worker node provisioning time by more than half when compared to platform images. OKE images are provided by Oracle and built on top of platform images.
+| "custom","oke","platform"
+|"oke"
+
 |node_pool_os
 |The name of the Operating System image to use to provision the worker nodes.
 |

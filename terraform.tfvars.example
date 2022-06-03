@@ -177,6 +177,7 @@ node_pools = {
   # np10 = {shape="BM.HPC2.36	", node_pool_size=5}
 }
 node_pool_image_id    = "none"
+node_pool_image_type  = "oke"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
 node_pool_os_version  = "7.9"
