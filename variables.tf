@@ -909,6 +909,10 @@ variable "freeform_tags" {
         environment = "dev"
         role        = "load balancer"
       }
+      cluster = {
+        environment = "dev"
+      }
+      node_pool = {}
     }
   }
   description = "Tags to apply to different resources."

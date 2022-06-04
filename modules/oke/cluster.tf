@@ -39,7 +39,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
   }
 
-  # freeform_tags = var.freeform_tags["cluster"]
+  freeform_tags = var.freeform_tags["cluster"]
 
   options {
     add_ons {
