@@ -11,9 +11,10 @@ resource "oci_containerengine_node_pool" "nodepools" {
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
   freeform_tags = var.freeform_tags["node_pool"]
-  
-  node_config_details {
 
+  node_config_details {
+    
+    # iterating over ADs
     dynamic "placement_configs" {
       iterator = ad_iterator
       for_each = local.ad_names
@@ -25,10 +26,12 @@ resource "oci_containerengine_node_pool" "nodepools" {
     nsg_ids                             = var.worker_nsgs
     is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
     kms_key_id                          = var.node_pool_volume_kms_key_id
+
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
   }
 
+  # setting shape
   dynamic "node_shape_config" {
     for_each = length(regexall("Flex", lookup(each.value, "shape", "VM.Standard.E4.Flex"))) > 0 ? [1] : []
     content {
@@ -37,25 +40,55 @@ resource "oci_containerengine_node_pool" "nodepools" {
     }
   }
 
+  # cloud-init
   node_metadata = {
     user_data = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
   }
 
-  node_source_details {
-    boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
-    # check is done for GPU,A1 and other shapes.In future if some other shapes or images added we need to modify
-    image_id    = (var.node_pool_image_type == "oke" && length(regexall("GPU|A1", lookup(each.value, "shape"))) == 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-20[0-9]*.*-OKE-${local.k8s_version_only}", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "oke" && length(regexall("GPU", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-Gen[0-9]-GPU-20[0-9]*.*-OKE-${local.k8s_version_only}", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "oke" && length(regexall("A1", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-aarch64-20[0-9]*.*-OKE-${local.k8s_version_only}", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "platform" && length(regexall("GPU|A1", lookup(each.value, "shape"))) == 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-20[0-9]*.*", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "platform" && length(regexall("GPU", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-Gen[0-9]-GPU-20[0-9]*.*", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "platform" && length(regexall("A1", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-aarch64-20[0-9]*.*", source.source_name)) > 0], 0)): var.node_pool_image_id
+  # optimized OKE images
+  dynamic "node_source_details" {
+    for_each = var.node_pool_image_type == "oke" ? [1] : []
+    content {
+      boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
+      # check for GPU,A1 and other shapes. In future, if some other shapes or images are added, we need to modify
+      image_id = (var.node_pool_image_type == "oke" && length(regexall("GPU|A1", lookup(each.value, "shape"))) == 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-20[0-9]*.*-OKE-${local.k8s_version_only}", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "oke" && length(regexall("GPU", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-Gen[0-9]-GPU-20[0-9]*.*-OKE-${local.k8s_version_only}", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "oke" && length(regexall("A1", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("Oracle-Linux-${var.node_pool_os_version}-aarch64-20[0-9]*.*-OKE-${local.k8s_version_only}", source.source_name)) > 0], 0)) : null
 
-    source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+      source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+    }
   }
 
+  # OCI platform images
+  dynamic "node_source_details" {
+    for_each = var.node_pool_image_type == "platform" ? [1] : []
+    content {
+      boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
+      # check for GPU,A1 and other shapes. In future, if some other shapes or images are added, we need to modify
+      image_id = (var.node_pool_image_type == "platform" && length(regexall("GPU|A1", lookup(each.value, "shape"))) == 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("^(Oracle-Linux-${var.node_pool_os_version}-\\d{4}.\\d{2}.\\d{2}-[0-9]*)$", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "platform" && length(regexall("GPU", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("^(Oracle-Linux-${var.node_pool_os_version}-Gen[0-9]-GPU-\\d{4}.\\d{2}.\\d{2}-[0-9]*)$", source.source_name)) > 0], 0)) : (var.node_pool_image_type == "platform" && length(regexall("A1", lookup(each.value, "shape"))) > 0) ? (element([for source in local.node_pool_image_ids : source.image_id if length(regexall("^(Oracle-Linux-${var.node_pool_os_version}-aarch64-\\d{4}.\\d{2}.\\d{2}-[0-9]*)$", source.source_name)) > 0], 0)) : null
+
+      source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+    }
+  }
+
+  # custom images 
+  dynamic "node_source_details" {
+    for_each = var.node_pool_image_type == "custom" ? [1] : []
+    content {
+      boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
+      image_id    = var.node_pool_image_id
+      source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+    }
+  }
   node_shape = lookup(each.value, "shape", "VM.Standard.E4.Flex")
 
   ssh_public_key = (var.ssh_public_key != "") ? var.ssh_public_key : (var.ssh_public_key_path != "none") ? file(var.ssh_public_key_path) : ""
 
+  # do not destroy the node pool if the kubernetes version has changed as part of the upgrade
+
   lifecycle {
     ignore_changes = [kubernetes_version]
   }
+
+  # initial node labels for the different node pools
   dynamic "initial_node_labels" {
     for_each = lookup(each.value, "label", "") != "" ? each.value.label : {}
     content {
