@@ -28,4 +28,8 @@ locals {
   # 3. if more than 1 image found for this version, pick the latest
   node_pool_image_ids = data.oci_containerengine_node_pool_option.node_pool_options.sources
 
+  # kubernetes string version length
+  k8s_version_length = length(var.cluster_kubernetes_version)
+  k8s_version_only = substr(var.cluster_kubernetes_version,1,local.k8s_version_length)
+
 }
