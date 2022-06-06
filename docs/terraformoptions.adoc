@@ -266,12 +266,12 @@ EOT
 |true
 
 |vcn_display_name
-|Existing VCN display name
+|Existing VCN display name where the resources will be created.
 |
 |
 
 |vcn_id
-|Existing VCN OCID
+|Existing VCN OCID where the resources will be created
 |
 |
 
