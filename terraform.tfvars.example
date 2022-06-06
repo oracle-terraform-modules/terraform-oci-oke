@@ -57,9 +57,17 @@ subnets = {
   fss      = { netnum = 18, newbits = 11 }
 }
 
-vcn_cidrs     = ["10.0.0.0/16"]
-vcn_dns_label = "oke"
-vcn_name      = "vcnoke"
+create_vcn                   = true
+vcn_cidrs                    = ["10.0.0.0/16"]
+vcn_dns_label                = "oke"
+vcn_name                     = "vcnoke"
+vcn_display_name             = ""
+vcn_id                       = ""
+ig_route_table_display_name  = ""
+ig_route_table_id            = ""
+nat_route_table_display_name = ""
+nat_route_table_id           = ""
+
 
 # bastion host
 create_bastion_host = true
@@ -172,9 +180,15 @@ node_pool_image_id    = "none"
 node_pool_name_prefix = "np"
 node_pool_os          = "Oracle Linux"
 node_pool_os_version  = "7.9"
-node_pool_timezone    = "Etc/UTC"
 worker_nsgs           = []
 worker_type           = "private"
+
+#cloudinit_nodepool_common = "/tmp/commoncloudinit.sh"
+#cloudinit_nodepool        = {
+  #np1 = "/tmp/np1cloudinit.sh"
+  #np3 = "/tmp/np3cloudinit.sh"
+#}
+node_pool_timezone        = "Etc/UTC"
 
 # upgrade of existing node pools
 upgrade_nodepool        = false
@@ -243,9 +257,17 @@ freeform_tags = {
     security    = "high"
   }
   oke = {
-    service_lb  = {
+    cluster = {
+      environment = "dev"
+      role        = "cluster"
+    }
+    service_lb = {
       environment = "dev"
       role        = "load balancer"
+    }
+    node_pool = {
+      environment = "dev"
+      role        = "node-pool"
     }
   }
 }
