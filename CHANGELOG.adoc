@@ -7,6 +7,95 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
+== 4.2.4
+=== Changes
+* feat: added support for OKE images for faster worker node provisioning by @hyder in #529
+
+== 4.2.3
+=== Changes
+* create_policies variable to turn off any potential policy creation tempt (#325) by @slmjy in #442
+* fix: cloudinit changes to allow user to pass custom script by @karthicgit in #502
+* Optional VCN by @nlamirault in #467
+* fix: remove freeform tags iam.tf by @karthicgit in #523
+* feat: upgraded default Kubernetes version to v1.23.4 by @hyder in #526
+
+== 4.2.2
+=== Changes
+* fix: added default fss subnet in subnets variable by @karthicgit in #513
+* fix: added rule for internal lb. by @hyder in #504
+* fix: autonomous cloud-init template should not be used by @hyder in #517
+
+== 4.2.1
+=== Changes
+* fix: changed oci provider namespace in submodules by @hyder in #508
+
+== 4.2.0
+=== Changes
+* feat: renamed kms_key_id to cluster_kms_key_id to avoid confusion. by @hyder in #487
+* feat: Added fss storage module. by @karthicgit in #491
+* fix: Added additional rule to workers nsg to allow ssh by @hyder in #498
+* removed null resource for localkubeconfig and helm by @karthicgit in #500
+* feat: upgrade VCN module to 3.4.0 by @snafuz in #486
+* changed provider to oracle/oci by @hyder in #506
+
+== 4.1.6 
+=== Changes
+* docs: updated dependencies chart by @hyder in #482
+* feat: Added support for cloud-init in node pools by @hyder in #484
+* feat: Added support for expanding boot volume size of worker nodes by @hyder in #484
+
+== 4.1.5
+=== Changes
+* fix: fixed empty policy issue and added oke-tags to freeform_tags in terraform.tfvars.example by @KSN2510 in #477
+
+== 4.1.4
+=== Changes
+* feat: Added support for adding boot/block volume and in-transit encryption for Operator by @KSN2510 in #472
+
+== 4.1.3
+=== Changes
+* fix: Policies added for nodepool's boot volume and block volume encryption by @KSN2510 in #461
+* feat: Updated the version of Operator from 3.0.1 to 3.0.2 by @KSN2510 in #463
+
+== 4.1.2
+=== Changes
+* feat: dynamically generate the OCIR url using the region name by @snafuz in #454
+* feat: Added support for in-transit encryption in OKE and custom kms_key for boot volume encryption support by @KSN2510 in #456
+
+== 4.1.1
+=== Changes
+* fix: File provisioner path ~ changed to /home/opc by @karthicgit in #451
+* fix: Change default Kubernetes version to v1.21.5 by @karthicgit in #453
+
+== 4.1.0
+=== Changes
+* feat: added OPA Gatekeeper by @karthicgit in #439
+* updated the operator version to 3.0.1 from 3.0.0 to disable OSMS by @KSN2510 in #444
+* feat: added support for new OCI regions: Milan, Stockholm, Abu Dhabi and Vinhedo by @snafuz in #441
+* feat: upgraded olcne package so we can have latest version of kubectl by @hyder in #446
+
+== 4.0.4
+=== Changes
+* fix: added 1 additional rule to allow egress traffic for load balancer health checks to work by @snafuz in #438
+
+== 4.0.3
+=== Changes
+* others: added example for automated Verrazzano installation. Closes #435 by @hyder in https://github.com/oracle-terraform-modules/terraform-oci-oke/pull/437/files
+* feat: enhancements to token_helper for kubectl. Closes #429 by @hyder in #432
+* fix: Created bin directory in /home/opc before moving token_helper script there. by @hyder in #437
+
+== 4.0.2
+=== Changes
+* others: added 3rd party attributions by @hyder in #428
+* fix: added 1 additional rule to allow control plane to be accessed by specified list of cidr blocks by @hyder in #431
+
+== 4.0.1
+=== Changes
+* Added home provider argument in remote module usage example (#421)
+
+=== New Features
+* Added Marseille, Singapore and Jerusalem as supported regions (#423)
+
 == 4.0.0
 === Breaking changes
 * Set minimum version to Terraform 1.0.0

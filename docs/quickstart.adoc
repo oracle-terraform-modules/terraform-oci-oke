@@ -133,6 +133,22 @@ terraform apply
 
 . In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the OKE module root.
 
+. In your project root, create a versions.tf file and add the following:
+
++
+----
+terraform {
+  required_providers {
+    oci = {
+      source                = "oracle/oci"
+      configuration_aliases = [oci.home]
+      version               = ">= 4.67.3"
+    }
+  }
+  required_version = ">= 1.0.0"
+}
+----
+
 . In your project root, create a main.tf file and add the following:
 
 +
