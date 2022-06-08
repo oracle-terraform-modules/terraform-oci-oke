@@ -155,7 +155,7 @@ terraform {
 ----
 module "oke" {
   source  = "oracle-terraform-modules/oke/oci"
-  version = "4.0.0"
+  version = "4.2.4"
   # insert the 9 required variables here
 }
 ----
@@ -175,7 +175,8 @@ module "oke" {
   ssh_public_key_path                   =   var.ssh_public_key_path
 
   label_prefix                          =   var.label_prefix
-  regions                               =   var.regions
+  home_region                           =   var.regions["home"]
+  region                                =   var.regions["primary"]
 
   vcn_dns_label                         =   var.vcn_dns_label
   vcn_name                              =   var.vcn_name
