@@ -175,8 +175,8 @@ module "oke" {
   ssh_public_key_path                   =   var.ssh_public_key_path
 
   label_prefix                          =   var.label_prefix
-  home_region                           =   var.regions["home"]
-  region                                =   var.regions["primary"]
+  home_region                           =   "us-phoenix-1"
+  region                                =   "ap-sydney-1"
 
   vcn_dns_label                         =   var.vcn_dns_label
   vcn_name                              =   var.vcn_name
