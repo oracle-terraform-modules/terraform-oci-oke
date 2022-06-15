@@ -26,7 +26,7 @@
 
 :uri-topology: {uri-docs}/topology.adoc
 
-=== Default Deployment
+== Default Deployment
 
 By default, the following resources are created:
 
@@ -58,7 +58,7 @@ image::images/defaultmad.png[align="center"]
 .Single-AD Default Deployment
 image::images/defaultsad.png[align="center"]
 
-=== Networking and Gateways
+== Networking and Gateways
 
 .Networking and Gateways
 image::images/networking.png[align="Networking and Gateways"]
@@ -98,7 +98,7 @@ Additionally, the following gateways are created:
 
 The Service Gateway enables OCI cloud resources without public IP addresses to privately access Oracle services and without the traffic going over the public Internet. Refer to the {uri-oci-service-gateway}[OCI Service Gateway documentation] to understand whether you need to enable it.
 
-=== Bastion Host
+== Bastion Host
 
 .SSH to Bastion
 image::images/bastion.png[align="center"]
@@ -135,7 +135,7 @@ ssh-add ~/.ssh/dev_rsa
 ----
 ****
 
-=== Public vs Private Clusters
+== Public vs Private Clusters
 
 When deployed in public mode, the Kubernetes API endpoint is publicly accessible.
 
@@ -178,7 +178,7 @@ The following table maps all possible cluster and workers deployment combination
 [IMPORTANT]
 For new clusters, we recommend you provision private clusters and private workers.
 
-=== Public vs Private worker nodes
+== Public vs Private worker nodes
 
 .Public Worker Nodes
 image::images/publicworkers.png[align="center"]
@@ -196,11 +196,15 @@ allow_node_port_access = true
 allow_worker_ssh_access = true
 ----
 
+.Private Worker Nodes
+image::images/privateworkers.png[align="center"]
+
+{bl}
 When deployed in private mode, the worker subnet will be deployed as a private subnet and route to the NAT Gateway instead. 
 
 Additionally, ssh access to the worker nodes *_must_* be done through the bastion host regardless of whether the worker nodes are deployed in public or private mode. If you intend to ssh to your worker nodes, ensure you have also link:terraformoptions.adoc#bastion-host[enabled the creation of the bastion host].
 
-=== Managing Node Pools
+== Managing Node Pools
 
 A node pool is a set of hosts within a cluster that all have the same configuration. A node pool requires the following configuration:
 
@@ -268,7 +272,7 @@ Note that:
 * the public ssh key used is the same as that used for the bastion host.
 ====
 
-==== Number of Node Pools
+=== Number of Node Pools
 
 The number, shape and size of the node pools created is controlled by the number of entries in the node_pools parameter. Each key and tuple pair corresponds to 1 node pool. 
 
@@ -331,8 +335,11 @@ node_pools = {
 }
 ----
 
-.4 Mixed workload with different node pool shapes and sizes
+.Mixed workload with different node pool shapes and sizes
 image::images/mixedworkload.png[align="center"]
+
+.Mixed architectures(x86_64,aarch64,x86_64/CUDA) with different node pool shapes and sizes
+image::images/mixedarch.png[align="center"]
 
 === Fault Domains
 
@@ -342,13 +349,13 @@ When a node pool is created, the worker nodes are spread over all three fault do
 
 image::images/defaultsad.png[align="center"]
 
-=== Public and Internal Load Balancers
+== Public and Internal Load Balancers
 
 By default, public load balancers are created when you deploy services of type *LoadBalancer*. Public load balancers have public IP addresses.
 
 You can also use internal load balancers. Internal load balancers have only private IP addresses and are not accessible from the Internet. 
 
-==== Public and Internal Load Balancer combinations
+=== Public and Internal Load Balancer combinations
 
 The following parameters govern how load balancers are created with:
 
@@ -378,7 +385,7 @@ The table below shows the valid combinations of preferred_load_balancer and subn
 
 |===
 
-==== Using Public Load Balancers
+=== Using Public Load Balancers
 
 When creating a public load balancer, you *_must_* specify the list of NSGs using annotations e.g.
 
@@ -397,7 +404,7 @@ spec:
 
 Note that since we have already added the NodePort range to the public load balancer NSG, you can also disable the security list management and set its value to `"None"`.
 
-==== Using Internal Load Balancers
+=== Using Internal Load Balancers
 
 When creating an internal load balancer, you must ensure the following:
 
@@ -419,7 +426,7 @@ service.beta.kubernetes.io/oci-load-balancer-internal: "true"
 
 Refer to the {uri-oci-oke-internal-lb}[OCI Documentation] for how to create internal load balancers with OKE.
 
-==== Creating LoadBalancers using IngressControllers
+=== Creating LoadBalancers using IngressControllers
 
 Review the following articles on creating public and private load balancers using Ingress Controllers:
 
