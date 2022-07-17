@@ -6,6 +6,7 @@
 :toc: auto
 
 :uri-cloudinit: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingcustomcloudinitscripts.htm
+:uri-source-cloudinit-doc: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/instructions.adoc#configuring-cloud-init-for-the-nodepools
 
 == Instructions:
 
@@ -35,4 +36,80 @@ Ex: cloudinit_nodepool        = {
 #}
 
 
+== Configuring cloud-init for the nodepools
 
+To install additional packages, configure settings or execute certain extra commands on node pools, you can use cloud-init to do that for you.
+
+By default, there is a `worker.template.sh` file under the cloudinit directory in the `oke` module. Follow the following steps to add your own:
+
+. Add your own script in the cloudinit directory. An example is provided by `second.template.sh`. If you need to parameterize the script, enclose the parameter within `${}`. For example:
+
++
+----
+yum install -y package-${version}
+----
+
+
+. Declare your script as a template in the cloudinit.tf in the locals section. A corresponding example for the `second.template.sh` is provided. 
+
++
+If you do *_not_* need to pass a parameter to the script, leave the 2^nd^ argument to the template file function as empty:
+
++
+----
+second_script_template = templatefile("${path.module}/cloudinit/second.template.sh",{})
+----
+
++
+Otherwise, pass a parameter to the template script as follows:
+
++
+----
+  second_script_template = templatefile("${path.module}/cloudinit/second.template.sh",
+    {
+      version = "5.4.0"
+    }
+  )
+----
+
+. Add the part in the `cloudinit_config worker` section:
+
++  
+----
+part {
+  filename     = "second.sh"
+  content_type = "text/x-shellscript"
+  content      = local.second_script_template
+}
+----
+
+. You can add more scripts and have them loaded in the order you need. For example:
+
++
+----
+data "cloudinit_config" "worker" {
+  gzip          = false
+  base64_encode = true
+
+  part {
+    filename     = "worker.sh"
+    content_type = "text/x-shellscript"
+    content      = local.worker_script_template
+  }
+  
+  part {
+    filename     = "second.sh"
+    content_type = "text/x-shellscript"
+    content      = local.second_script_template
+  }
+
+  part {
+    filename     = "third.sh"
+    content_type = "text/x-shellscript"
+    content      = local.third_script_template
+  }
+}
+----
+
+
+Refer Doc {uri-source-cloudinit-doc}[here] 
