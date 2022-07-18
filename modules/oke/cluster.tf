@@ -16,6 +16,10 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
 
   depends_on = [time_sleep.wait_30_seconds]
 
+  cluster_pod_network_options {
+    cni_type = var.cni_type == "flannel" ? "FLANNEL_OVERLAY" : "OCI_VCN_IP_NATIVE"
+  }
+
   endpoint_config {
     is_public_ip_enabled = var.control_plane_type == "public" ? true : false
     nsg_ids              = var.control_plane_nsgs

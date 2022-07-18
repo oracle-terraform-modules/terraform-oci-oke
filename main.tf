@@ -169,12 +169,14 @@ module "network" {
 
 
   # control plane endpoint parameters
+  cni_type                    = var.cni_type
   control_plane_type          = var.control_plane_type
   control_plane_allowed_cidrs = var.control_plane_allowed_cidrs
 
   # oke worker network parameters
   allow_node_port_access       = var.allow_node_port_access
   allow_worker_internet_access = var.allow_worker_internet_access
+  allow_pod_internet_access    = var.allow_pod_internet_access
   allow_worker_ssh_access      = var.allow_worker_ssh_access
   worker_type                  = var.worker_type
 
@@ -224,6 +226,7 @@ module "oke" {
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr
   cluster_subnets                                         = module.network.subnet_ids
+  cni_type                                                = var.cni_type
   vcn_id                                                  = local.vcn_id
   use_cluster_encryption                                  = var.use_cluster_encryption
   cluster_kms_key_id                                      = var.cluster_kms_key_id
@@ -249,7 +252,8 @@ module "oke" {
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer
 
-  # worker nsgs
+  # nsgs
+  pod_nsgs = concat(module.network.pod_nsg_id)
   worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
   freeform_tags = var.freeform_tags["oke"]

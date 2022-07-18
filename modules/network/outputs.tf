@@ -4,6 +4,7 @@
 output "subnet_ids" {
   value = {
     "cp"      = join(",", oci_core_subnet.cp[*].id)
+    "pods" = join(",", oci_core_subnet.pods[*].id)
     "workers" = join(",", oci_core_subnet.workers[*].id)
     "int_lb"  = join(",", oci_core_subnet.int_lb[*].id)
     "pub_lb"  = join(",", oci_core_subnet.pub_lb[*].id)
@@ -20,6 +21,10 @@ output "int_lb" {
 
 output "pub_lb" {
   value = var.load_balancers == "public" || var.load_balancers == "both" ? oci_core_network_security_group.pub_lb[0].id : ""
+}
+
+output "pod_nsg_id" {
+  value = tolist([oci_core_network_security_group.pods.id])
 }
 
 output "worker_nsg_id" {

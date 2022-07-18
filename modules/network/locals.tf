@@ -20,6 +20,8 @@ locals {
 
   workers_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["workers"], "newbits"), lookup(var.subnets["workers"], "netnum"))
 
+  pods_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["pods"], "newbits"), lookup(var.subnets["pods"], "netnum"))
+
   fss_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["fss"], "newbits"), lookup(var.subnets["fss"], "netnum"))
 
   anywhere = "0.0.0.0/0"
@@ -91,15 +93,16 @@ locals {
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
       protocol         = local.tcp_protocol,
-      port             = 443,
-      stateless        = false
+      # port           = 443
+      port      = -1,
+      stateless = false
     },
     {
-      description      = "Allow all TCP traffic from control plane to worker nodes",
+      description      = "Allow Kubernetes Control plane to communicate with worker nodes",
       destination      = local.workers_subnet,
       destination_type = "CIDR_BLOCK",
       protocol         = local.tcp_protocol,
-      port             = -1,
+      port             = 10250,
       stateless        = false
     },
     {
@@ -149,17 +152,19 @@ locals {
 
   # workers
   workers_egress = [
+    # flannel only moved to a rule on its own
+    # {
+    #   description      = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
+    #   destination      = local.workers_subnet,
+    #   destination_type = "CIDR_BLOCK",
+    #   protocol         = local.all_protocols,
+    #   port             = -1,
+    #   stateless        = false
+    # },
     {
-      description      = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
-      destination      = local.workers_subnet,
-      destination_type = "CIDR_BLOCK",
-      protocol         = local.all_protocols,
-      port             = -1,
-      stateless        = false
-    },
-    {
-      description      = "Allow ICMP traffic for path discovery",
-      destination      = local.workers_subnet
+      description = "Allow ICMP traffic for path discovery",
+      # destination      = local.workers_subnet
+      destination      = local.anywhere
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
       port             = -1,
@@ -203,7 +208,7 @@ locals {
     {
       description = "Allow control plane to communicate with worker nodes",
       protocol    = local.tcp_protocol,
-      port        = -1,
+      port        = 10250,
       source      = local.cp_subnet,
       source_type = "CIDR_BLOCK",
       stateless   = false
@@ -217,6 +222,60 @@ locals {
       source_type = "CIDR_BLOCK",
       stateless   = false
     }
+  ]
+
+  pods_egress = [
+    {
+      description      = "Allow pods to communicate with other pods.",
+      destination      = local.pods_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.all_protocols,
+      port             = -1,
+      stateless        = false
+    },
+    {
+      description      = "Allow ICMP traffic for path discovery",
+      destination      = local.osn,
+      destination_type = "SERVICE_CIDR_BLOCK",
+      protocol         = local.icmp_protocol,
+      port             = -1,
+      stateless        = false
+    },
+    {
+      description      = "Allow pods to communicate with OCI Services",
+      destination      = local.osn,
+      destination_type = "SERVICE_CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = -1,
+      stateless        = false
+    },            
+  ]
+
+  pods_ingress = [
+    {
+      description = "Allow worker nodes to access pods.",
+      protocol    = local.all_protocols,
+      port        = -1,
+      source      = local.cp_subnet,
+      source_type = "CIDR_BLOCK",
+      stateless   = false
+    },
+    {
+      description = "Allow Kubernetes Control Plane to communicate with pods.",
+      protocol    = local.all_protocols,
+      port        = -1,
+      source      = local.workers_subnet,
+      source_type = "CIDR_BLOCK",
+      stateless   = false
+    },
+    {
+      description = "Allow pods to communicate with each other.",
+      protocol    = local.all_protocols,
+      port        = -1,
+      source      = local.pods_subnet,
+      source_type = "CIDR_BLOCK",
+      stateless   = false
+    },        
   ]
 
   int_lb_egress = [
@@ -247,7 +306,7 @@ locals {
   ]
 
   # Combine supplied allow list and the public load balancer subnet
-  internal_lb_allowed_cidrs = var.load_balancers == "both"? concat(var.internal_lb_allowed_cidrs, tolist([local.pub_lb_subnet])) : var.internal_lb_allowed_cidrs
+  internal_lb_allowed_cidrs = var.load_balancers == "both" ? concat(var.internal_lb_allowed_cidrs, tolist([local.pub_lb_subnet])) : var.internal_lb_allowed_cidrs
 
   # Create a Cartesian product of allowed cidrs and ports
   internal_lb_allowed_cidrs_and_ports = setproduct(local.internal_lb_allowed_cidrs, var.internal_lb_allowed_ports)

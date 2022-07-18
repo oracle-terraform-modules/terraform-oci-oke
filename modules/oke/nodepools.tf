@@ -13,7 +13,11 @@ resource "oci_containerengine_node_pool" "nodepools" {
   freeform_tags = var.freeform_tags["node_pool"]
 
   node_config_details {
-    
+
+    is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
+
+    kms_key_id = var.node_pool_volume_kms_key_id
+
     # iterating over ADs
     dynamic "placement_configs" {
       iterator = ad_iterator
@@ -23,9 +27,26 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.cluster_subnets["workers"]
       }
     }
-    nsg_ids                             = var.worker_nsgs
-    is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
-    kms_key_id                          = var.node_pool_volume_kms_key_id
+    nsg_ids = var.worker_nsgs
+
+    # flannel requires cni type only
+    dynamic "node_pool_pod_network_option_details" {
+      for_each = var.cni_type == "flannel" ? [1] : []
+      content {
+        cni_type = var.cni_type
+      }
+    }
+
+    # native requires max pods/node, nsg ids, subnet ids
+    dynamic "node_pool_pod_network_option_details" {
+      for_each = var.cni_type == "npn" ? [1] : []
+      content {
+        cni_type          = "OCI_VCN_IP_NATIVE"
+        max_pods_per_node = 31
+        pod_nsg_ids       = var.pod_nsgs
+        pod_subnet_ids    = tolist([var.cluster_subnets["pods"]])
+      }
+    }
 
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
@@ -74,8 +95,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
     for_each = var.node_pool_image_type == "custom" ? [1] : []
     content {
       boot_volume_size_in_gbs = lookup(each.value, "boot_volume_size", 50)
-      image_id    = var.node_pool_image_id
-      source_type = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
+      image_id                = var.node_pool_image_id
+      source_type             = data.oci_containerengine_node_pool_option.node_pool_options.sources[0].source_type
     }
   }
   node_shape = lookup(each.value, "shape", "VM.Standard.E4.Flex")

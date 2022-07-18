@@ -19,6 +19,8 @@ variable "vcn_id" {}
 
 # cluster endpoint
 
+variable "cni_type" {}
+
 variable "control_plane_type" {
   type = string
 }
@@ -34,6 +36,10 @@ variable "allow_node_port_access" {
 }
 
 variable "allow_worker_internet_access" {
+  type = bool
+}
+
+variable "allow_pod_internet_access" {
   type = bool
 }
 

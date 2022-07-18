@@ -186,6 +186,7 @@ variable "subnets" {
     int_lb   = { netnum = 16, newbits = 11 }
     pub_lb   = { netnum = 17, newbits = 11 }
     workers  = { netnum = 1, newbits = 2 }
+    pods     = { netnum = 2, newbits = 2 }
     fss      = { netnum = 18, newbits = 11 }
   }
   type = map(any)
@@ -463,6 +464,12 @@ variable "allow_worker_internet_access" {
   type        = bool
 }
 
+variable "allow_pod_internet_access" {
+  default     = true
+  description = "Allow pods to egress to internet. Required if the pods are invoking Internet services."
+  type        = bool
+}
+
 variable "allow_worker_ssh_access" {
   default     = false
   description = "Whether to allow ssh access to worker nodes."
@@ -473,6 +480,17 @@ variable "cluster_name" {
   default     = "oke"
   description = "The name of oke cluster."
   type        = string
+}
+
+variable "cni_type" {
+  # Keep flannel as default so users can upgrade without impact. Give a grace period for users to plan and change
+  default     = "flannel"
+  description = "The CNI for the cluster. Choose between flannel or npn."
+  type        = string
+  validation {
+    condition     = contains(["flannel", "npn"], var.cni_type)
+    error_message = "Accepted values are flannel or npn."
+  }  
 }
 
 variable "control_plane_type" {
