@@ -33,7 +33,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
     dynamic "node_pool_pod_network_option_details" {
       for_each = var.cni_type == "flannel" ? [1] : []
       content {
-        cni_type = var.cni_type
+        cni_type = "FLANNEL_OVERLAY"
       }
     }
 
