@@ -42,7 +42,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
       for_each = var.cni_type == "npn" ? [1] : []
       content {
         cni_type          = "OCI_VCN_IP_NATIVE"
-        max_pods_per_node = 31
+        max_pods_per_node = var.max_pods_per_node
         pod_nsg_ids       = var.pod_nsgs
         pod_subnet_ids    = tolist([var.cluster_subnets["pods"]])
       }

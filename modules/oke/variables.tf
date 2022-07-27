@@ -85,6 +85,10 @@ variable "admission_controller_options" {
   type = map(any)
 }
 
+variable "max_pods_per_node" {
+  type        = number
+}
+
 variable "node_pools" {
   type = any
 }

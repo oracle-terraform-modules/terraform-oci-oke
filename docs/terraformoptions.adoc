@@ -725,6 +725,11 @@ EOT
 |one,all,none
 |none
 
+|max_pods_per_node
+|The maximum number of pods to deploy per node. Absolute maximum is 110. Applies only when CNI type is `npn`.
+|
+|31
+
 |node_pools
 |The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.
 
