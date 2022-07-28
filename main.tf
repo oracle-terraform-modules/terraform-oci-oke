@@ -3,7 +3,7 @@
 
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
-  version = "3.4.0"
+  version = "3.5.0"
 
   # general oci parameters
   compartment_id = var.compartment_id
@@ -14,7 +14,7 @@ module "vcn" {
   create_nat_gateway       = var.worker_type == "private" || var.create_operator == true || (var.load_balancers == "internal" || var.load_balancers == "both") ? true : false
   create_service_gateway   = true
   nat_gateway_public_ip_id = var.nat_gateway_public_ip_id
-  create_drg               = var.create_drg
+  attached_drg_id          = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
 
   # lpgs
   local_peering_gateways = var.local_peering_gateways
@@ -33,6 +33,29 @@ module "vcn" {
   count = var.create_vcn == true ? 1 : 0
 }
 
+module "drg" {
+
+  source  = "oracle-terraform-modules/drg/oci"
+  version = "1.0.3"
+
+  # general oci parameters
+  compartment_id = var.compartment_id
+  label_prefix   = var.label_prefix
+
+  # drg parameters
+  drg_display_name = var.drg_display_name
+  drg_vcn_attachments = { for k, v in module.vcn : k => {
+    # gets the vcn_id values dynamically from the vcn module 
+    vcn_id : v.vcn_id
+    vcn_transit_routing_rt_id : null
+    drg_route_table_id : null
+    }
+  }
+  # var.drg_id can either concontain and existing DRG ID or be null. 
+  drg_id = var.drg_id
+
+  count = var.create_drg || var.drg_id != null ? 1 : 0
+}
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"

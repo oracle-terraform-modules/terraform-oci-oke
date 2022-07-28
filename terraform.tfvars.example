@@ -34,8 +34,9 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 # networking
-create_drg                   = false
-drg_display_name             = "drg"
+create_drg       = false
+drg_display_name = "drg"
+drg_id           = null
 
 internet_gateway_route_rules = []
 
