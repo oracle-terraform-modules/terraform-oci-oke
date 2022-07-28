@@ -23,6 +23,12 @@ resource "null_resource" "install_k8stools_on_operator" {
     content     = local.install_helm_template
     destination = "/home/opc/install_helm.sh"
   }
+
+  provisioner "file" {
+    content     = local.install_kubectx_template
+    destination = "/home/opc/install_kubectx.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "chmod +x $HOME/install_kubectl.sh",
@@ -30,7 +36,10 @@ resource "null_resource" "install_k8stools_on_operator" {
       "rm -f $HOME/install_kubectl.sh",
       "chmod +x $HOME/install_helm.sh",
       "$HOME/install_helm.sh",
-      "rm -f $HOME/install_helm.sh"
+      "rm -f $HOME/install_helm.sh",
+      "chmod +x $HOME/install_kubectx.sh",
+      "$HOME/install_kubectx.sh",
+      "rm -f $HOME/install_kubectx.sh"      
     ]
   }
 

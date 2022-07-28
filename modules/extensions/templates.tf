@@ -54,6 +54,8 @@ locals {
     }
   )
 
+  install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {})
+  
   metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
     {
       enable_vpa  = var.enable_vpa
