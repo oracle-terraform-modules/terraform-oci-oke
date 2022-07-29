@@ -147,6 +147,12 @@ variable "drg_display_name" {
   default     = "drg"
 }
 
+variable "drg_id"{
+  description = "ID of an external created Dynamic Routing Gateway to be attached to the VCN"
+  type = string
+  default = null
+}
+
 variable "internet_gateway_route_rules" {
   description = "(Updatable) List of routing rules to add to Internet Gateway Route Table"
   type        = list(map(string))

@@ -43,6 +43,11 @@ output "vcn_id" {
   value       = local.vcn_id
 }
 
+output "drg_id" {
+  description = "ID of DRG. use this DRG id to add additional resources"
+  value       = var.create_drg || var.drg_id != null ? module.drg[0].drg_id : null
+}
+
 # convenient output
 
 output "bastion_public_ip" {

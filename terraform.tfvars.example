@@ -34,16 +34,31 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 # networking
-create_drg                   = false
-drg_display_name             = "drg"
+create_drg       = false
+drg_display_name = "drg"
+drg_id           = null
 
-internet_gateway_route_rules = []
+internet_gateway_route_rules = [
+#   {
+#     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
+#     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
+#     network_entity_id = "drg"            # for internet_gateway_route_rules input variable, you can use special strings "drg", "internet_gateway" or pass a valid OCID using string or any Named Values
+#     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
+#   },
+]
 
 local_peering_gateways = {}
 
 lockdown_default_seclist = true
 
-nat_gateway_route_rules = []
+nat_gateway_route_rules = [
+#   {
+#     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
+#     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
+#     network_entity_id = "drg"            # for nat_gateway_route_rules input variable, you can use special strings "drg", "nat_gateway" or pass a valid OCID using string or any Named Values
+#     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
+#   },
+]
 
 nat_gateway_public_ip_id = "none"
 
