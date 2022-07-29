@@ -51,7 +51,7 @@ module "drg" {
     drg_route_table_id : null
     }
   }
-  # var.drg_id can either concontain and existing DRG ID or be null. 
+  # var.drg_id can either contain an existing DRG ID or be null. 
   drg_id = var.drg_id
 
   count = var.create_drg || var.drg_id != null ? 1 : 0
