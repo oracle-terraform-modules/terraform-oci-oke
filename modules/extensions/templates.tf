@@ -54,7 +54,9 @@ locals {
     }
   )
 
-  install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {})
+  install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {
+    version = "0.9.4"
+  })
   
   metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
     {
