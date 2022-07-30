@@ -26,8 +26,7 @@ resource "null_resource" "secret" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/secret.sh",
-      "$HOME/secret.sh",
+      "bash $HOME/secret.sh",
       "sleep 10",
       "rm -f $HOME/secret.sh"
     ]

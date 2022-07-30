@@ -29,7 +29,6 @@ resource "null_resource" "check_worker_active" {
     inline = [
       "chmod +x $HOME/check_active_worker.sh",
       "$HOME/check_active_worker.sh"
-      //"rm -f $HOME/check_active_worker.sh"
     ]
   }
 

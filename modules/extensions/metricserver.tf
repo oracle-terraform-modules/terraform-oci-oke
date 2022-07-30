@@ -23,8 +23,7 @@ resource "null_resource" "enable_metric_server" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/enable_metric_server.sh",
-      "$HOME/enable_metric_server.sh",
+      "bash $HOME/enable_metric_server.sh",
       "rm -f $HOME/enable_metric_server.sh"
     ]
   }

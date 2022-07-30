@@ -31,14 +31,11 @@ resource "null_resource" "install_k8stools_on_operator" {
 
   provisioner "remote-exec" {
     inline = [
-      # "chmod +x $HOME/install_kubectl.sh",
       "bash $HOME/install_kubectl.sh",
-      "rm -f $HOME/install_kubectl.sh",
-      # "chmod +x $HOME/install_helm.sh",
       "bash $HOME/install_helm.sh",
-      "rm -f $HOME/install_helm.sh",
-      # "chmod +x $HOME/install_kubectx.sh",
       "bash $HOME/install_kubectx.sh",
+      "rm -f $HOME/install_kubectl.sh",
+      "rm -f $HOME/install_helm.sh",
       "rm -f $HOME/install_kubectx.sh"      
     ]
   }

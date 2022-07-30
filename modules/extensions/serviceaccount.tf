@@ -23,8 +23,7 @@ resource "null_resource" "create_service_account" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/create_service_account.sh",
-      "$HOME/create_service_account.sh",
+      "bash $HOME/create_service_account.sh",
       "rm -f $HOME/create_service_account.sh"
     ]
   }

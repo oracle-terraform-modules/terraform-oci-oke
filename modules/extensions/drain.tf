@@ -27,8 +27,7 @@ resource "null_resource" "drain_nodes" {
   provisioner "remote-exec" {
     inline = [
       "python3 drainlist.py",
-      "chmod +x $HOME/drain.sh",
-      "$HOME/drain.sh",
+      "bash $HOME/drain.sh",
       "cat drainlist.txt >> drained.txt",
       "rm -f drainlist.txt"
     ]
