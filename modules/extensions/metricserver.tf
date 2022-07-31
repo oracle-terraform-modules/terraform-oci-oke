@@ -23,8 +23,7 @@ resource "null_resource" "enable_metric_server" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash $HOME/enable_metric_server.sh",
-      "rm -f $HOME/enable_metric_server.sh"
+      "if [ -f \"$HOME/enable_metric_server.sh\" ]; then bash $HOME/enable_metric_server.sh; rm -f \"$HOME/enable_metric_server.sh\";fi",
     ]
   }
 

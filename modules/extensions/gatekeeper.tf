@@ -23,8 +23,7 @@ resource "null_resource" "enable_gatekeeper" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash $HOME/enable_gatekeeper.sh",
-      "rm -f $HOME/enable_gatekeeper.sh"
+      "if [ -f \"$HOME/enable_gatekeeper.sh\" ]; then bash $HOME/enable_gatekeeper.sh; rm -f \"$HOME/enable_gatekeeper.sh\";fi",
     ]
   }
 
