@@ -43,15 +43,11 @@ resource "null_resource" "write_kubeconfig_on_operator" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/generate_kubeconfig.sh",
-      "$HOME/generate_kubeconfig.sh",
+      "if [ -f \"$HOME/generate_kubeconfig.sh\" ]; then bash \"$HOME/generate_kubeconfig.sh\"; rm -f \"$HOME/generate_kubeconfig.sh\";fi",
       "mkdir $HOME/bin",
       "chmod +x $HOME/token_helper.sh",
       "mv $HOME/token_helper.sh $HOME/bin",
-      "chmod +x $HOME/kubeconfig_set_credentials.sh",
-      "$HOME/kubeconfig_set_credentials.sh",
-      "rm -f $HOME/generate_kubeconfig.sh",
-      "rm -f $HOME/kubeconfig_set_credentials.sh"
+      "if [ -f \"$HOME/kubeconfig_set_credentials.sh\" ]; then bash \"$HOME/kubeconfig_set_credentials.sh\"; rm -f \"$HOME/kubeconfig_set_credentials.sh\";fi",
     ]
   }
 

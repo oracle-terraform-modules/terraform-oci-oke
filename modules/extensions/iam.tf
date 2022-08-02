@@ -57,9 +57,7 @@ resource "null_resource" "update_dynamic_group" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod +x $HOME/update_dynamic_group.sh",
-      "$HOME/update_dynamic_group.sh",
-      "rm -f $HOME/update_dynamic_group.sh"
+      "if [ -f \"$HOME/update_dynamic_group.sh\" ]; then bash $HOME/update_dynamic_group.sh; rm -f \"$HOME/update_dynamic_group.sh\";fi",
     ]
   }
 

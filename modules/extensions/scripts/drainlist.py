@@ -14,8 +14,6 @@ pools_to_drain = ['${pools_to_drain}']
 
 signer = oci.auth.signers.InstancePrincipalsSecurityTokenSigner()
 
-identity_client = oci.identity.IdentityClient(config={}, signer=signer)
-
 oce = oci.container_engine.ContainerEngineClient(config={'region': region}, signer=signer)
 
 # Get list of node pools
