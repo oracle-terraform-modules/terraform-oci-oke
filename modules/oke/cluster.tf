@@ -65,5 +65,4 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
 
   vcn_id = var.vcn_id
 
-
 }

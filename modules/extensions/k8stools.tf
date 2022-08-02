@@ -31,9 +31,9 @@ resource "null_resource" "install_k8stools_on_operator" {
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/install_kubectl.sh\" ]; then bash $HOME/install_kubectl.sh; rm -f \"$HOME/install_kubectl.sh\";fi",
-      "if [ -f \"$HOME/install_helm.sh\" ]; then bash $HOME/install_helm.sh; rm -f \"$HOME/install_helm.sh\";fi",
-      "if [ -f \"$HOME/install_kubectx.sh\" ]; then bash $HOME/install_kubectx.sh; rm -f \"$HOME/install_kubectx.sh\";fi",
+      "if [ -f \"$HOME/install_kubectl.sh\" ]; then bash \"$HOME/install_kubectl.sh\"; rm -f \"$HOME/install_kubectl.sh\";fi",
+      "if [ -f \"$HOME/install_helm.sh\" ]; then bash \"$HOME/install_helm.sh\"; rm -f \"$HOME/install_helm.sh\";fi",
+      "if [ -f \"$HOME/install_kubectx.sh\" ]; then bash \"$HOME/install_kubectx.sh\"; rm -f \"$HOME/install_kubectx.sh\";fi",
     ]
   }
 

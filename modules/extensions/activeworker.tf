@@ -27,7 +27,7 @@ resource "null_resource" "check_worker_active" {
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/check_active_worker.sh\" ]; then bash $HOME/check_active_worker.sh; rm -f \"$HOME/check_active_worker.sh\";fi",
+      "if [ -f \"$HOME/check_active_worker.sh\" ]; then bash \"$HOME/check_active_worker.sh\"; rm -f \"$HOME/check_active_worker.sh\";fi",
     ]
   }
 

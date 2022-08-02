@@ -46,7 +46,11 @@ locals {
     }
   )
 
-  install_helm_template = templatefile("${path.module}/scripts/install_helm.template.sh", {})
+  install_helm_template = templatefile("${path.module}/scripts/install_helm.template.sh",
+    {
+      ol = var.operator_os_version
+    }
+  )
 
   install_kubectl_template = templatefile("${path.module}/scripts/install_kubectl.template.sh",
     {
@@ -57,7 +61,7 @@ locals {
   install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {
     version = "0.9.4"
   })
-  
+
   metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
     {
       enable_vpa  = var.enable_vpa
@@ -72,7 +76,7 @@ locals {
     }
   )
 
-  secret_template = templatefile("${path.module}/scripts/secret.sh",
+  secret_template = templatefile("${path.module}/scripts/secret.template.sh",
     {
       compartment_id = var.compartment_id
       region         = var.region

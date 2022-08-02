@@ -23,7 +23,7 @@ resource "null_resource" "install_calico" {
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/install_calico.sh\" ]; then bash $HOME/install_calico.sh; rm -f \"$HOME/install_calico.sh\";fi",
+      "if [ -f \"$HOME/install_calico.sh\" ]; then bash \"$HOME/install_calico.sh\"; rm -f \"$HOME/install_calico.sh\";fi",
     ]
   }
 

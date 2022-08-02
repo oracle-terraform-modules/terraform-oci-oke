@@ -23,7 +23,7 @@ resource "null_resource" "create_service_account" {
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/create_service_account.sh\" ]; then bash $HOME/create_service_account.sh; rm -f \"$HOME/create_service_account.sh\";fi",
+      "if [ -f \"$HOME/create_service_account.sh\" ]; then bash \"$HOME/create_service_account.sh\"; rm -f \"$HOME/create_service_account.sh\";fi",
     ]
   }
 

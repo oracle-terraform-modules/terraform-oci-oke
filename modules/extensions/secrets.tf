@@ -26,7 +26,7 @@ resource "null_resource" "secret" {
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/secret.sh\" ]; then bash $HOME/secret.sh; rm -f \"$HOME/secret.sh\";fi",
+      "if [ -f \"$HOME/secret.sh\" ]; then bash \"$HOME/secret.sh\"; rm -f \"$HOME/secret.sh\";fi",
       "sleep 10",
     ]
   }
