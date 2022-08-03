@@ -23,18 +23,25 @@ output "nat_route_id" {
   value       = local.nat_route_id
 }
 
+# Deprecated
 output "int_lb_nsg" {
   description = "id of default NSG that can be associated with the internal load balancer"
   value       = module.network.int_lb
 }
 
+output "nsg_ids" {
+  description = "map of NSG ids (cp, worker, int_lb, pub_lb, pod) used by OKE."
+  value       = module.network.nsg_ids
+}
+
+# Deprecated
 output "pub_lb_nsg" {
   description = "id of default NSG that can be associated with the internal load balancer"
   value       = module.network.pub_lb
 }
 
 output "subnet_ids" {
-  description = "map of subnet ids (worker, int_lb, pub_lb) used by OKE."
+  description = "map of subnet ids (cp, worker, int_lb, pub_lb, pod) used by OKE."
   value       = module.network.subnet_ids
 }
 
