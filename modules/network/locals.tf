@@ -93,9 +93,8 @@ locals {
       destination      = local.osn,
       destination_type = "SERVICE_CIDR_BLOCK",
       protocol         = local.tcp_protocol,
-      # port           = 443
-      port      = -1,
-      stateless = false
+      port             = -1,
+      stateless        = false
     },
     {
       description      = "Allow Kubernetes Control plane to communicate with worker nodes",
@@ -152,18 +151,8 @@ locals {
 
   # workers
   workers_egress = [
-    # flannel only moved to a rule on its own
-    # {
-    #   description      = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
-    #   destination      = local.workers_subnet,
-    #   destination_type = "CIDR_BLOCK",
-    #   protocol         = local.all_protocols,
-    #   port             = -1,
-    #   stateless        = false
-    # },
     {
-      description = "Allow ICMP traffic for path discovery",
-      # destination      = local.workers_subnet
+      description      = "Allow ICMP traffic for path discovery",
       destination      = local.anywhere
       destination_type = "CIDR_BLOCK",
       protocol         = local.icmp_protocol,
@@ -248,7 +237,7 @@ locals {
       protocol         = local.tcp_protocol,
       port             = -1,
       stateless        = false
-    },            
+    },
   ]
 
   pods_ingress = [
@@ -275,7 +264,7 @@ locals {
       source      = local.pods_subnet,
       source_type = "CIDR_BLOCK",
       stateless   = false
-    },        
+    },
   ]
 
   int_lb_egress = [
