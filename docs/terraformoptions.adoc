@@ -223,6 +223,8 @@ EOT
     int_lb   = { netnum = 16, newbits = 11 }
     pub_lb   = { netnum = 17, newbits = 11 }
     workers  = { netnum = 1, newbits = 2 }
+    pods     = { netnum = 2, newbits = 2 }
+    fss      = { netnum = 18, newbits = 11 }
   }
 |
   subnets = {
@@ -232,6 +234,8 @@ EOT
     int_lb   = { netnum = 16, newbits = 11 }
     pub_lb   = { netnum = 17, newbits = 11 }
     workers  = { netnum = 1, newbits = 2 }
+    pods     = { netnum = 2, newbits = 2 }
+    fss      = { netnum = 18, newbits = 11 }
   }
 
 
@@ -251,6 +255,7 @@ EOT
 |oke-vcn
 
 |===
+
 == Reuse VCN
 
 [stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
@@ -596,6 +601,11 @@ EOT
 |true/false
 |false
 
+|allow_pod_internet_access
+|Allow pods to egress to internet. Required if the pods are invoking Internet services.
+|true/false
+|true
+
 |allow_worker_internet_access
 |Whether to allow access to NodePorts when worker nodes are deployed in public mode..
 |true/false
@@ -610,6 +620,11 @@ EOT
 |The name of the OKE cluster. This will be appended to the label_prefix.
 |
 |oke
+
+|cni_type
+|The CNI for the cluster. Choose between flannel or npn (Native Pod Networking).
+|flannel/npn
+|flannel
 
 |control_plane_type
 |Whether to allow public or private access to the control plane endpoint.
@@ -709,6 +724,11 @@ EOT
 |Setting this variable to *one* will wait till any one worker node is active.Setting to *all* will wait till all worker node is active.*none* means no check.
 |one,all,none
 |none
+
+|max_pods_per_node
+|The maximum number of pods to deploy per node. Absolute maximum is 110. Applies only when CNI type is `npn`.
+|
+|31
 
 |node_pools
 |The number, shape of node pools and node_pool_size to create. Each key and tuple pair corresponds to 1 node pool.

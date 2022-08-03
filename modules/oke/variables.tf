@@ -38,6 +38,8 @@ variable "cluster_subnets" {
   type = map(any)
 }
 
+variable "cni_type" {}
+
 variable "vcn_id" {}
 
 # encryption
@@ -83,6 +85,10 @@ variable "admission_controller_options" {
   type = map(any)
 }
 
+variable "max_pods_per_node" {
+  type        = number
+}
+
 variable "node_pools" {
   type = any
 }
@@ -100,6 +106,10 @@ variable "node_pool_os_version" {}
 variable "node_pool_timezone" {}
 
 variable "preferred_load_balancer" {}
+
+variable "pod_nsgs" {
+  type = list(any)
+}
 
 variable "worker_nsgs" {
   type = list(any)

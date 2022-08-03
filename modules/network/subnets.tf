@@ -22,6 +22,18 @@ resource "oci_core_subnet" "workers" {
   vcn_id                     = var.vcn_id
 }
 
+resource "oci_core_subnet" "pods" {
+  cidr_block                 = local.pods_subnet
+  compartment_id             = var.compartment_id
+  display_name               = var.label_prefix == "none" ? "pods" : "${var.label_prefix}-pods"
+  dns_label                  = "pods"
+  prohibit_public_ip_on_vnic = true
+  route_table_id             = var.nat_route_id
+  vcn_id                     = var.vcn_id
+
+  count = var.cni_type == "npn" ? 1 : 0
+}
+
 resource "oci_core_subnet" "int_lb" {
   cidr_block                 = local.int_lb_subnet
   compartment_id             = var.compartment_id

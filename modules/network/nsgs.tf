@@ -37,6 +37,19 @@ resource "oci_core_network_security_group_security_rule" "cp_egress" {
   }
 
   count = length(local.cp_egress)
+}
+
+resource "oci_core_network_security_group_security_rule" "cp_egress_npn" {
+  network_security_group_id = oci_core_network_security_group.cp.id
+  description               = "Allow Kubernetes Control plane to communicate with pods"
+  destination               = local.pods_subnet
+  destination_type          = "CIDR_BLOCK"
+  direction                 = "EGRESS"
+  protocol                  = local.all_protocols
+
+  stateless = false
+
+  count = var.cni_type == "npn" ? 1 :0
 
 }
 
@@ -134,7 +147,32 @@ resource "oci_core_network_security_group_security_rule" "workers_egress" {
   }
 
   count = length(local.workers_egress)
+}
 
+resource "oci_core_network_security_group_security_rule" "workers_egress_flannel" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow egress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet"
+  destination               = local.workers_subnet
+  destination_type          = "CIDR_BLOCK"
+  direction                 = "EGRESS"
+  protocol                  = local.all_protocols
+
+  stateless = false
+
+  count = var.cni_type == "flannel" ? 1: 0
+}
+
+resource "oci_core_network_security_group_security_rule" "workers_egress_npn" {
+  network_security_group_id = oci_core_network_security_group.workers.id
+  description               = "Allow worker nodes access to pods"
+  destination               = local.pods_subnet
+  destination_type          = "CIDR_BLOCK"
+  direction                 = "EGRESS"
+  protocol                  = local.all_protocols
+
+  stateless = false
+
+  count = var.cni_type == "npn" ? 1: 0
 }
 
 # add this rule separately so it can be controlled independently
@@ -287,6 +325,58 @@ resource "oci_core_network_security_group_security_rule" "workers_ssh_ingress_fr
   }
 
   count = var.allow_worker_ssh_access == true ? 1 : 0
+
+}
+
+# pod nsg and rules
+resource "oci_core_network_security_group" "pods" {
+  compartment_id = var.compartment_id
+  display_name   = var.label_prefix == "none" ? "pods" : "${var.label_prefix}-pods"
+  vcn_id         = var.vcn_id
+}
+
+resource "oci_core_network_security_group_security_rule" "pods_egress" {
+  network_security_group_id = oci_core_network_security_group.pods.id
+  description               = local.pods_egress[count.index].description
+  destination               = local.pods_egress[count.index].destination
+  destination_type          = local.pods_egress[count.index].destination_type
+  direction                 = "EGRESS"
+  protocol                  = local.pods_egress[count.index].protocol
+
+  stateless = false
+
+  dynamic "tcp_options" {
+    for_each = local.pods_egress[count.index].protocol == local.tcp_protocol && local.pods_egress[count.index].port != -1 ? [1] : []
+    content {
+      destination_port_range {
+        min = local.pods_egress[count.index].port
+        max = local.pods_egress[count.index].port
+      }
+    }
+  }
+
+  dynamic "icmp_options" {
+    for_each = local.pods_egress[count.index].protocol == local.icmp_protocol ? [1] : []
+    content {
+      type = 3
+      code = 4
+    }
+  }
+
+  count = var.cni_type =="npn" ? length(local.pods_egress) : 0
+}
+
+# add this rule separately so it can be controlled independently
+resource "oci_core_network_security_group_security_rule" "pods_egress_internet" {
+  network_security_group_id = oci_core_network_security_group.pods.id
+  description               = "Allow pods access to Internet"
+  destination               = local.anywhere
+  destination_type          = "CIDR_BLOCK"
+  direction                 = "EGRESS"
+  protocol                  = local.tcp_protocol
+
+  stateless = false
+  count = (var.cni_type =="npn" && var.allow_pod_internet_access == true) ? 1 : 0
 
 }
 
