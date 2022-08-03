@@ -440,27 +440,6 @@ resource "oci_core_network_security_group_security_rule" "int_lb_ingress" {
   count = var.load_balancers == "internal" || var.load_balancers == "both" ? length(local.internal_lb_allowed_cidrs_and_ports) : 0
 }
 
-# add this rule separately so it can be controlled independently
-# resource "oci_core_network_security_group_security_rule" "int_lb_healthcheck_ingress_from_pub_lb" {
-#   network_security_group_id = oci_core_network_security_group.int_lb[0].id
-#   description               = "Allow healthchecks from public load balancers"
-#   direction                 = "INGRESS"
-#   protocol                  = local.tcp_protocol
-#   source                    = local.pub_lb_subnet
-#   source_type               = "CIDR_BLOCK"
-
-#   stateless = false
-
-#   tcp_options {
-#     destination_port_range {
-#       min = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 0)) : element(var.internal_lb_allowed_ports, count.index)
-#       max = length(regexall("-", element(var.internal_lb_allowed_ports, count.index))) > 0 ? tonumber(element(split("-", element(var.internal_lb_allowed_ports, count.index)), 1)) : element(var.internal_lb_allowed_ports, count.index)
-#     }
-#   }
-
-#   count = var.load_balancers == "both" ? length(var.internal_lb_allowed_ports) : 0
-# }
-
 # public lb nsg and rules
 resource "oci_core_network_security_group" "pub_lb" {
   compartment_id = var.compartment_id

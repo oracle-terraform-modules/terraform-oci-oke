@@ -4,10 +4,21 @@
 output "subnet_ids" {
   value = {
     "cp"      = join(",", oci_core_subnet.cp[*].id)
-    "pods" = join(",", oci_core_subnet.pods[*].id)
+    "pods"    = join(",", oci_core_subnet.pods[*].id)
     "workers" = join(",", oci_core_subnet.workers[*].id)
     "int_lb"  = join(",", oci_core_subnet.int_lb[*].id)
     "pub_lb"  = join(",", oci_core_subnet.pub_lb[*].id)
+  }
+}
+
+output "nsg_ids" {
+  value = {
+    "cp"      = join(",", oci_core_network_security_group.cp[*].id)
+    "pods"    = join(",", oci_core_network_security_group.pods[*].id)
+    "workers" = join(",", oci_core_network_security_group.workers[*].id)
+    "int_lb"  = join(",", oci_core_network_security_group.int_lb[*].id)
+    "pub_lb"  = join(",", oci_core_network_security_group.pub_lb[*].id)
+
   }
 }
 
