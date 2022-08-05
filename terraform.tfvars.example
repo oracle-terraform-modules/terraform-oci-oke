@@ -280,6 +280,9 @@ freeform_tags = {
       environment = "dev"
       role        = "cluster"
     }
+    persistent_volume = {
+      environment = "dev"
+    }    
     service_lb = {
       environment = "dev"
       role        = "load balancer"
