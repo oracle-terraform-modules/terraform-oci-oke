@@ -8,108 +8,19 @@
 :uri-cloudinit: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingcustomcloudinitscripts.htm
 :uri-source-cloudinit-doc: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/instructions.adoc#configuring-cloud-init-for-the-nodepools
 
-== Instructions:
+== Configuring Cloud init scripts for Nodepools:
+Cloud init scripts passed to the node pools can be passed in 2 different ways.
 
-* {uri-cloudinit}[Using cloud-init in OKE] 
-* The default cloud-init script used by this module is as below:
-----
-#!/bin/bash
+* *Using `cloudinit_nodepool_common`*: When a script is passed to the cloudinit_nodepool_common, this init doc is executed in all the node pools.
 
-# DO NOT MODIFY
-curl --fail -H "Authorization: Bearer Oracle" -L0 http://169.254.169.254/opc/v2/instance/metadata/oke_init_script | base64 --decode >/var/run/oke-init.sh
-
-## run oke provisioning script
-bash -x /var/run/oke-init.sh
-
-### adjust block volume size
-/usr/libexec/oci-growfs -y
-
-timedatectl set-timezone ${worker_timezone}
-----
-
-* To customize this you can modify the above script and pass the script as input variable to `cloudinit_nodepool_common`. This script will be used across all the nodepools.
-
-* To use specific cloud-init script for a nodepool pass the script as input variable to `cloudinit_nodepool` as a map.This will take precedence over `cloudinit_nodepool_common` for that nodepool.
-Ex: cloudinit_nodepool        = {
-  #np1 = "/tmp/np1cloudinit.sh"
-  #np3 = "/tmp/np3cloudinit.sh"
-#}
-
-
-== Configuring cloud-init for the nodepools
-
-To install additional packages, configure settings or execute certain extra commands on node pools, you can use cloud-init to do that for you.
-
-By default, there is a `worker.template.sh` file under the cloudinit directory in the `oke` module. Follow the following steps to add your own:
-
-. Add your own script in the cloudinit directory. An example is provided by `second.template.sh`. If you need to parameterize the script, enclose the parameter within `${}`. For example:
-
+* *Using `cloudinit_nodepool`*: When custom scripts for each node pool is required to be executed, _cloudinit_nodepool_ can be used. It takes a map of values where each key is the node pool name.
+Example: 
 +
 ----
-yum install -y package-${version}
+ { 
+    #np1 = "/tmp/np1cloudinit.sh" # script to be executed in nodepool 1
+    #np3 = "/tmp/np3cloudinit.sh" # script to be executed in nodepool 3
+ }
 ----
 
-
-. Declare your script as a template in the cloudinit.tf in the locals section. A corresponding example for the `second.template.sh` is provided. 
-
-+
-If you do *_not_* need to pass a parameter to the script, leave the 2^nd^ argument to the template file function as empty:
-
-+
-----
-second_script_template = templatefile("${path.module}/cloudinit/second.template.sh",{})
-----
-
-+
-Otherwise, pass a parameter to the template script as follows:
-
-+
-----
-  second_script_template = templatefile("${path.module}/cloudinit/second.template.sh",
-    {
-      version = "5.4.0"
-    }
-  )
-----
-
-. Add the part in the `cloudinit_config worker` section:
-
-+  
-----
-part {
-  filename     = "second.sh"
-  content_type = "text/x-shellscript"
-  content      = local.second_script_template
-}
-----
-
-. You can add more scripts and have them loaded in the order you need. For example:
-
-+
-----
-data "cloudinit_config" "worker" {
-  gzip          = false
-  base64_encode = true
-
-  part {
-    filename     = "worker.sh"
-    content_type = "text/x-shellscript"
-    content      = local.worker_script_template
-  }
-  
-  part {
-    filename     = "second.sh"
-    content_type = "text/x-shellscript"
-    content      = local.second_script_template
-  }
-
-  part {
-    filename     = "third.sh"
-    content_type = "text/x-shellscript"
-    content      = local.third_script_template
-  }
-}
-----
-
-
-Refer Doc {uri-source-cloudinit-doc}[here] 
+The precedence of execution is if a custom script for the node pool is specified (`cloudinit_nodepool`), it will be executed. If it is not provided, then the `cloudinit_nodepool_common` script will be executed if provided. Else the default `worker.template.sh` will be executed incase both are not provided.
