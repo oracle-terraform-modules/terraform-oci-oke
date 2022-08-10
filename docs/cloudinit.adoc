@@ -8,19 +8,30 @@
 :uri-cloudinit: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingcustomcloudinitscripts.htm
 :uri-source-cloudinit-doc: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/instructions.adoc#configuring-cloud-init-for-the-nodepools
 
-== Configuring Cloud init scripts for Nodepools:
-Cloud init scripts passed to the node pools can be passed in 2 different ways.
+== Configuring Cloud-init scripts for Nodepools:
+Cloud-init scripts passed to the node pools can be provisioned in 2 different ways. Cloud-init scripts can be either executed for individual node pools or one common script which can be executed across all node pools.
 
-* *Using `cloudinit_nodepool_common`*: When a script is passed to the cloudinit_nodepool_common, this init doc is executed in all the node pools.
+The precedence of execution is if a custom script for the node pool is specified (`cloudinit_nodepool`), it will be executed. If it is not provided, then the `cloudinit_nodepool_common` script will be executed. Else the default `worker.template.sh` will be executed incase both are not provided.
 
-* *Using `cloudinit_nodepool`*: When custom scripts for each node pool is required to be executed, _cloudinit_nodepool_ can be used. It takes a map of values where each key is the node pool name.
+* *Using `cloudinit_nodepool_common`*: When a script is passed to the cloudinit_nodepool_common, this init doc is executed in all the node pools. +
+Example:
++
+----
+ { 
+    cloudinit_nodepool_common = "/tmp/common_nodepool_script.sh"
+ }
+----
+In this example, the script _common_nodepool_script.sh_ present in /tmp will be executed across all the node pools.
+
+* *Using `cloudinit_nodepool`*: When custom scripts for each node pool is required to be executed, _cloudinit_nodepool_ can be used. It takes a map of values where each key is the node pool name. +
 Example: 
 +
 ----
  { 
-    #np1 = "/tmp/np1cloudinit.sh" # script to be executed in nodepool 1
-    #np3 = "/tmp/np3cloudinit.sh" # script to be executed in nodepool 3
+    cloudinit_nodepool = {
+        np1 = "/tmp/np1/cloudinit1.sh" # script to be executed in nodepool 1
+        np2 = "/tmp/np3/cloudinit2.sh" # script to be executed in nodepool 2  
+    }
  }
 ----
-
-The precedence of execution is if a custom script for the node pool is specified (`cloudinit_nodepool`), it will be executed. If it is not provided, then the `cloudinit_nodepool_common` script will be executed. Else the default `worker.template.sh` will be executed incase both are not provided.
+In this example, the script _cloudinit1.sh_ will be executed in node pool 1 and _cloudinit2.sh_ will be executed in node pool 2.
