@@ -6,33 +6,46 @@
 :toc: auto
 
 :uri-cloudinit: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingcustomcloudinitscripts.htm
+:uri-source-cloudinit-doc: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/instructions.adoc#configuring-cloud-init-for-the-nodepools
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+:uri-worker-script: link:{uri-repo}/modules/oke/cloudinit/worker.template.sh
 
-== Instructions:
 
-* {uri-cloudinit}[Using cloud-init in OKE] 
-* The default cloud-init script used by this module is as below:
+== Configuring Cloud-init scripts for Nodepools:
+Cloud-init scripts passed to the node pools can be provisioned in 2 different ways. Cloud-init scripts can be either executed for individual node pools or one common script which can be executed across all node pools.
+
+The precedence of execution is if a custom script for the node pool is specified (`cloudinit_nodepool`), it will be executed. If it is not provided, then the `cloudinit_nodepool_common` script will be executed. Else the default `worker.template.sh` will be executed incase both are not provided.
+
+This is how user_data is setup.
 ----
-#!/bin/bash
-
-# DO NOT MODIFY
-curl --fail -H "Authorization: Bearer Oracle" -L0 http://169.254.169.254/opc/v2/instance/metadata/oke_init_script | base64 --decode >/var/run/oke-init.sh
-
-## run oke provisioning script
-bash -x /var/run/oke-init.sh
-
-### adjust block volume size
-/usr/libexec/oci-growfs -y
-
-timedatectl set-timezone ${worker_timezone}
+user_data = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
 ----
 
-* To customize this you can modify the above script and pass the script as input variable to `cloudinit_nodepool_common`. This script will be used across all the nodepools.
+If the _cloudinit_nodepool_common_ and _cloudinit_nodepool_ is not available, then the common script which is placed by the repo at the location {uri-worker-script}[worker.template.sh] will be executed. In case if _cloudinit_nodepool_ specific script is available, then it will be executed else the _cloudinit_nodepool_common_ script will be executed.
 
-* To use specific cloud-init script for a nodepool pass the script as input variable to `cloudinit_nodepool` as a map.This will take precedence over `cloudinit_nodepool_common` for that nodepool.
-Ex: cloudinit_nodepool        = {
-  #np1 = "/tmp/np1cloudinit.sh"
-  #np3 = "/tmp/np3cloudinit.sh"
-#}
+=== *Using `cloudinit_nodepool_common`*: 
+When a script is passed to the cloudinit_nodepool_common, this init doc is executed in all the node pools. +
+Example:
+----
+ { 
+    cloudinit_nodepool_common = "/tmp/common_nodepool_script.sh"
+ }
+----
 
+In this example, the script _common_nodepool_script.sh_ present in /tmp will be executed across all the node pools. This key will be useful when something commonly has to be run across all the nodepools. For example installing a setting timezone in all node pools. 
 
+The common script which is by default installed is {uri-worker-script}[_worker.template.sh_].
 
+=== *Using `cloudinit_nodepool`*: 
+When custom scripts for each node pool is required to be executed, _cloudinit_nodepool_ can be used. It takes a map of values where each key is the node pool name. +
+Example: 
+
+----
+ { 
+    cloudinit_nodepool = {
+        np1 = "/tmp/np1/cloudinit1.sh" # script to be executed in nodepool 1
+        np2 = "/tmp/np3/cloudinit2.sh" # script to be executed in nodepool 2  
+    }
+ }
+----
+In this example, the script _cloudinit1.sh_ will be executed in node pool 1 and _cloudinit2.sh_ will be executed in node pool 2. This key will be useful when each nodepool has to be have some nodepool scripts to be executed. For example installing certaining packages in certain nodepools. 
