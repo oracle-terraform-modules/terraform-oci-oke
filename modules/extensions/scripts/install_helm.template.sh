@@ -11,5 +11,6 @@ if [ ! -f .helm_completed ]; then
     echo "source <(helm completion bash)" >> ~/.bashrc
     echo "alias h='helm'" >> ~/.bashrc
     echo "helm completed"
+  fi
   touch .helm_completed
 fi
