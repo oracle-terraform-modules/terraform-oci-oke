@@ -55,7 +55,7 @@ This {uri-repo}[Terraform OKE Installer] for {uri-oci}[Oracle Cloud Infrastructu
 
 * {uri-topology}[Topology]
 
-* {uri-cloudinit}[Configuring Cloudinit]
+* {uri-cloudinit}[Configuring cloud-init]
 
 * {uri-terraform-options}[Terraform Options]
 
