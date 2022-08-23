@@ -13,7 +13,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   kubernetes_version = var.cluster_kubernetes_version
   kms_key_id         = var.use_cluster_encryption == true ? var.cluster_kms_key_id : null
   name               = var.label_prefix == "none" ? var.cluster_name : "${var.label_prefix}-${var.cluster_name}"
-
+  
   depends_on = [time_sleep.wait_30_seconds]
 
   cluster_pod_network_options {
@@ -58,6 +58,10 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     kubernetes_network_config {
       pods_cidr     = var.cluster_options_kubernetes_network_config_pods_cidr
       services_cidr = var.cluster_options_kubernetes_network_config_services_cidr
+    }
+
+    persistent_volume_config {
+      freeform_tags = var.freeform_tags["persistent_volume"]
     }
 
     service_lb_config {

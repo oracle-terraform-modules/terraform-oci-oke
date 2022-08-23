@@ -27,6 +27,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
         subnet_id           = var.cluster_subnets["workers"]
       }
     }
+
     nsg_ids = var.worker_nsgs
 
     # flannel requires cni type only
@@ -50,6 +51,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
+
+    freeform_tags = var.freeform_tags["persistent_volume"]
   }
 
   # setting shape

@@ -935,12 +935,18 @@ variable "freeform_tags" {
       role        = "operator"
     }
     oke = {
+      
+      cluster = {
+        environment = "dev"
+      }
+      
+      persistent_volume = {
+        environment = "dev"
+      }
+
       service_lb = {
         environment = "dev"
         role        = "load balancer"
-      }
-      cluster = {
-        environment = "dev"
       }
       node_pool = {}
     }
