@@ -14,9 +14,6 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   kms_key_id         = var.use_cluster_encryption == true ? var.cluster_kms_key_id : null
   name               = var.label_prefix == "none" ? var.cluster_name : "${var.label_prefix}-${var.cluster_name}"
   
-  # Placeholders for defined tags implementation
-  # defined_tags = {"Operations.CostCenter"= "42"}
-
   depends_on = [time_sleep.wait_30_seconds]
 
   cluster_pod_network_options {
@@ -64,12 +61,10 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     persistent_volume_config {
-      # defined_tags  = { "Operations.CostCenter" = "42" }
       freeform_tags = var.freeform_tags["persistent_volume"]
     }
 
     service_lb_config {
-      # defined_tags  = { "Operations.CostCenter" = "42" }
       freeform_tags = var.freeform_tags["service_lb"]
     }
 

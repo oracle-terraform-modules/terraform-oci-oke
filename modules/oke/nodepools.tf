@@ -10,8 +10,6 @@ resource "oci_containerengine_node_pool" "nodepools" {
   kubernetes_version = var.cluster_kubernetes_version
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
-  # Placeholders for defined tags implementation
-  # defined_tags = {"Operations.CostCenter"= "42"}
   freeform_tags = var.freeform_tags["node_pool"]
 
   node_config_details {
@@ -54,8 +52,6 @@ resource "oci_containerengine_node_pool" "nodepools" {
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
 
-    # Placeholders for defined tags implementation
-    # defined_tags = {"Operations.CostCenter"= "42"}
     freeform_tags = var.freeform_tags["persistent_volume"]
   }
 
