@@ -41,7 +41,7 @@ image::images/cloud-init-flowchart.png[align="cloud-init script selection"]
 The common cloud-init script for all node pools can be overriden as follows:
 
 ```
-cloudinit_nodepool_common = "/tmp/commoncloudinit.sh"
+cloudinit_nodepool_common = "/tmp/cloudinit_nodepool_common.sh"
 ```
 
 === Specifying a cloud-init script for specific node pools
@@ -50,11 +50,11 @@ Sometimes, it may be desirable to configure additional settings for specific nod
 
 ----
 cloudinit_nodepool        = {
-  np1 = "/tmp/np1cloudinit.sh"
-  np3 = "/tmp/np3cloudinit.sh"
+  np1 = "/tmp/np1_cloud-init.sh"
+  np3 = "/tmp/np3_cloud-init.sh"
 }
 ----
 
-In the above example, node pool `np1` and `np3` will use `/tmp/np1cloudinit.sh` and `/tmp/np3cloudinit.sh` respectively for their cloud-init. 
+In the above example, node pool `np1` and `np3` will use `/tmp/np1_cloud-init.sh` and `/tmp/np3_cloud-init.sh` respectively for their cloud-init. 
 
 NOTE: You must ensure that the node pool name specified for cloud-init matches those you defined in the `node_pools` variable. 
