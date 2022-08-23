@@ -42,6 +42,7 @@
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 :uri-topology: {uri-docs}/topology.adoc
+:uri-cloudinit: {uri-docs}/cloudinit.adoc
 
 == Assumptions
 
@@ -206,6 +207,8 @@ The OKE Node Pool parameters control the following:
 . whether to use a custom image id. Else, the major.minor version of Oracle Linux to use
 
 An empty value for boot volume size will default the boot volume to 50GB. This value is updatable. However the effect will be effective in newly created nodes _only_.
+
+Refer to {uri-cloudinit}[cloudinit] for specifying how to configure cloud-init scripts for nodepools.
 
 Refer to {uri-topology}[topology] for more thorough examples.
 
