@@ -1,0 +1,7 @@
+apiVersion: crd.projectcalico.org/v1
+kind: FelixConfiguration
+metadata:
+  name: default
+spec:
+  ipv6Support: false
+  iptablesBackend: ${iptables_backend}

@@ -311,8 +311,13 @@ secret_namespace = "default"
 username         = ""
 
 # calico
-enable_calico  = false
-calico_version = "3.19"
+enable_calico            = false
+calico_version           = "3.24.5"
+calico_mode              = "policy-only"
+calico_mtu               = 0     # automatic if 0
+calico_apiserver_enabled = false # default false
+typha_enabled            = false # automatic if false
+typha_replicas           = 0     # automatic if 0
 
 # horizontal and vertical pod autoscaling
 enable_metric_server = false

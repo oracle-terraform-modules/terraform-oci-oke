@@ -1,0 +1,20 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: "calico-node"
+        env:
+        - name: "FELIX_INTERFACEPREFIX"
+          value: "oci"
+        - name: "NO_DEFAULT_POOLS"
+          value: "true"
+        - name: "FELIX_CHAININSERTMODE"
+          value: "Append"
+        - name: "FELIX_IPTABLESMANGLEALLOWACTION"
+          value: "Return"
+        - name: "FELIX_IPTABLESBACKEND"
+          value: "${iptables_backend}"
+        - name: "USE_POD_CIDR"
+          value: "true"
+        - name: "FELIX_REMOVEEXTERNALROUTES"
+          value: "false"

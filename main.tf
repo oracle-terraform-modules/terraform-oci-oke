@@ -380,8 +380,16 @@ module "extensions" {
   username         = var.username
 
   # calico parameters
-  calico_version = var.calico_version
-  install_calico = var.enable_calico
+  install_calico           = var.enable_calico
+  calico_version           = var.calico_version
+  calico_mode              = var.calico_mode
+  cni_type                 = var.cni_type
+  calico_mtu               = var.calico_mtu
+  calico_url               = var.calico_url
+  calico_apiserver_enabled = var.calico_apiserver_enabled
+  calico_staging_dir       = var.calico_staging_dir
+  typha_enabled            = var.typha_enabled
+  typha_replicas           = var.typha_replicas
 
   # metric server
   enable_metric_server = var.enable_metric_server
