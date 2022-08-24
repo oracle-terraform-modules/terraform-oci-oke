@@ -242,7 +242,7 @@ kubectl --namespace=default get secret ocirsecret --export -o yaml | kubectl app
 
 == Configure Calico parameters
 
-The calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
+The Calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
 
 {uri-terraform-options}#calico[Reference]
 

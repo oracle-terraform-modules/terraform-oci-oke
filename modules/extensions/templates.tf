@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -37,12 +37,19 @@ locals {
     }
   )
 
-  install_calico_template = templatefile("${path.module}/scripts/install_calico.template.sh",
+  calico_env_template = templatefile("${path.module}/scripts/calico_env.sh",
     {
-      calico_version     = var.calico_version
-      number_of_nodes    = local.total_nodes
-      pod_cidr           = var.pods_cidr
-      number_of_replicas = min(20, max((local.total_nodes) / 200, 3))
+      mode              = var.calico_mode
+      version           = var.calico_version
+      cni_type          = var.cni_type
+      mtu               = var.calico_mtu
+      pod_cidr          = var.pods_cidr
+      url               = var.calico_url
+      apiserver_enabled = var.calico_apiserver_enabled
+      typha_enabled     = var.typha_enabled || local.total_nodes > 50
+
+      # Use provided value if set, otherwise use 1 replica for every 50 nodes with a min of 1 if enabled, and max of 20 replicas
+      typha_replicas    = (var.typha_replicas > 0) ? var.typha_replicas : max(min(20, floor(local.total_nodes / 50)), var.typha_enabled ? 1 : 0)
     }
   )
 

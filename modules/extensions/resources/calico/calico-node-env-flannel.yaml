@@ -1,0 +1,12 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: "calico-node"
+        env:
+        - name: "CALICO_IPV4POOL_CIDR"
+          value: "${POD_CIDR}"
+        - name: "CALICO_IPV4POOL_VXLAN"
+          value: "${IPV4POOL_VXLAN}"
+        - name: "FELIX_IPTABLESBACKEND"
+          value: "${IPTABLES_BACKEND}"

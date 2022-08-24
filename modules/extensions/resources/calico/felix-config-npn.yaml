@@ -1,0 +1,11 @@
+apiVersion: crd.projectcalico.org/v1
+kind: FelixConfiguration
+metadata:
+  name: default
+spec:
+  ipv6Support: false
+  chainInsertMode: Append
+  iptablesBackend: ${iptables_backend}
+  interfacePrefix: oci
+  iptablesMangleAllowAction: Return
+  removeExternalRoutes: false

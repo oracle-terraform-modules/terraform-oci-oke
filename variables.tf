@@ -909,8 +909,53 @@ variable "enable_calico" {
 }
 
 variable "calico_version" {
-  description = "The version of calico to install"
-  default     = "3.19"
+  description = "The version of Calico to install"
+  default     = "3.24.1"
+  type        = string
+}
+
+variable "calico_mode" {
+  description = "The type of Calico manifest to install"
+  default     = "policy-only"
+  validation {
+    condition     = contains(["policy-only", "canal", "vxlan", "ipip", "flannel-migration"], var.calico_mode)
+    error_message = "Accepted values are policy-only, canal, vxlan, ipip, or flannel-migration."
+  }  
+}
+
+variable "calico_mtu" {
+  description = "Interface MTU for Calico device(s) (0 = auto)"
+  default     = 0
+  type        = number
+}
+
+variable "calico_url" {
+  description = "Optionally override the Calico manifest URL (empty string = auto)"
+  default     = ""
+  type        = string
+}
+
+variable "calico_apiserver_enabled" {
+  description = "Whether to enable the Calico apiserver"
+  default     = false
+  type        = bool
+}
+
+variable "typha_enabled" {
+  description = "Whether to enable Typha (automatically enabled for > 50 nodes)"
+  default     = false
+  type        = bool
+}
+
+variable "typha_replicas" {
+  description = "The number of replicas for the Typha deployment (0 = auto)"
+  default = 0
+  type    = number
+}
+
+variable "calico_staging_dir" {
+  description = "Directory on the operator instance to stage Calico install files"
+  default     = "/tmp/calico_install"
   type        = string
 }
 

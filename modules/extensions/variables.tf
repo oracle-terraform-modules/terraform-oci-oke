@@ -91,6 +91,15 @@ variable "install_calico" {
   type = bool
 }
 
+variable "cni_type" {}
+variable "calico_mode" {}
+variable "calico_mtu" {}
+variable "calico_url" {}
+variable "calico_apiserver_enabled" {}
+variable "typha_enabled" {}
+variable "typha_replicas" {}
+variable "calico_staging_dir" {}
+
 #metricserver
 
 variable "enable_metric_server" {
