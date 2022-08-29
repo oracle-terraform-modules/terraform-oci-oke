@@ -11,6 +11,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
   freeform_tags = var.freeform_tags["node_pool"]
+  defined_tags  = merge(var.defined_tags["node_pool"], lookup(each.value, "defined_tags", {}))
 
   node_config_details {
 
@@ -53,6 +54,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
     size = max(0, lookup(each.value, "node_pool_size", 0))
 
     freeform_tags = var.freeform_tags["persistent_volume"]
+    defined_tags  = var.defined_tags["persistent_volume"]
   }
 
   # setting shape

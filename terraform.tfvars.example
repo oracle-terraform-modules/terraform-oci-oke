@@ -294,5 +294,43 @@ freeform_tags = {
   }
 }
 
+# defined_tags
+defined_tags = {
+  # vcn, bastion and operator freeform_tags are required
+  # add more freeform_tags in each as desired
+  vcn = {
+    environment = "dev"
+  }
+  bastion = {
+    access      = "public",
+    environment = "dev",
+    role        = "bastion",
+    security    = "high"
+  }
+  operator = {
+    access      = "restricted",
+    environment = "dev",
+    role        = "operator",
+    security    = "high"
+  }
+  oke = {
+    cluster = {
+      environment = "dev"
+      role        = "cluster"
+    }
+    persistent_volume = {
+      environment = "dev"
+    }    
+    service_lb = {
+      environment = "dev"
+      role        = "load balancer"
+    }
+    node_pool = {
+      environment = "dev"
+      role        = "node-pool"
+    }
+  }
+}
+
 # placeholder variable for debugging scripts. To be implemented in future
 debug_mode = false

@@ -960,6 +960,47 @@ variable "freeform_tags" {
   })
 }
 
+variable "defined_tags" {
+  default = {
+    # vcn, bastion and operator tags are required
+    # add more tags in each as desired
+    vcn = {
+      environment = "dev"
+    }
+    bastion = {
+      environment = "dev"
+      role        = "bastion"
+    }
+    operator = {
+      environment = "dev"
+      role        = "operator"
+    }
+    oke = {
+      
+      cluster = {
+        environment = "dev"
+      }
+      
+      persistent_volume = {
+        environment = "dev"
+      }
+
+      service_lb = {
+        environment = "dev"
+        role        = "load balancer"
+      }
+      node_pool = {}
+    }
+  }
+  description = "Tags to apply to different resources."
+  type = object({
+    vcn      = map(any),
+    bastion  = map(any),
+    operator = map(any),
+    oke      = map(map(any))
+  })
+}
+
 # placeholder variable for debugging scripts. To be implemented in future
 variable "debug_mode" {
   default     = false

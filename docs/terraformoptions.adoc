@@ -574,6 +574,49 @@ EOT
     }
   }
 }`
+
+|defined_tags
+|Tagging using administrator defined tags. This is specified in the form of a map of maps.
+| e.g.
+`defined_tags = {
+  vcn = {
+    environment = "dev"
+  }
+  bastion = {
+    environment = "dev"
+    role        = "bastion"
+  }
+  operator = {
+    environment = "dev"
+    role        = "operator"
+  }
+  oke = {
+    service_lb  = {
+      environment = "dev"
+      role        = "load balancer"
+    }
+  }
+}`
+|
+`defined_tags = {
+  vcn = {
+    environment = "dev"
+  }
+  bastion = {
+    environment = "dev"
+    role        = "bastion"
+  }
+  operator = {
+    environment = "dev"
+    role        = "operator"
+  }
+  oke = {
+    service_lb  = {
+      environment = "dev"
+      role        = "load balancer"
+    }
+  }
+}`
 |===
 
 == OKE

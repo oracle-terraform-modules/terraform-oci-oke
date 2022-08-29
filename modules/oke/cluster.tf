@@ -44,6 +44,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   freeform_tags = var.freeform_tags["cluster"]
+  defined_tags  = var.defined_tags["cluster"]
 
   options {
     add_ons {
@@ -62,10 +63,12 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
 
     persistent_volume_config {
       freeform_tags = var.freeform_tags["persistent_volume"]
+      defined_tags  = var.defined_tags["persistent_volume"]
     }
 
     service_lb_config {
       freeform_tags = var.freeform_tags["service_lb"]
+      defined_tags  = var.defined_tags["service_lb"]
     }
 
     service_lb_subnet_ids = var.preferred_load_balancer == "public" ? [var.cluster_subnets["pub_lb"]] : [var.cluster_subnets["int_lb"]]
