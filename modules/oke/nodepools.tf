@@ -10,7 +10,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   kubernetes_version = var.cluster_kubernetes_version
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
-  freeform_tags = var.freeform_tags["node_pool"]
+  freeform_tags = merge(var.freeform_tags["node_pool"], lookup(each.value, "freeform_tags", {}))
   defined_tags  = merge(var.defined_tags["node_pool"], lookup(each.value, "defined_tags", {}))
 
   node_config_details {
@@ -53,8 +53,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
 
-    freeform_tags = var.freeform_tags["persistent_volume"]
-    defined_tags  = var.defined_tags["persistent_volume"]
+    freeform_tags = var.freeform_tags["node"]
+    defined_tags  = var.defined_tags["node"]
   }
 
   # setting shape

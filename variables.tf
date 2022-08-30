@@ -967,14 +967,6 @@ variable "defined_tags" {
     vcn = {
       environment = "dev"
     }
-    bastion = {
-      environment = "dev"
-      role        = "bastion"
-    }
-    operator = {
-      environment = "dev"
-      role        = "operator"
-    }
     oke = {
       
       cluster = {
@@ -989,14 +981,15 @@ variable "defined_tags" {
         environment = "dev"
         role        = "load balancer"
       }
+
       node_pool = {}
+
+      node = {}
     }
   }
   description = "Tags to apply to different resources."
   type = object({
     vcn      = map(any),
-    bastion  = map(any),
-    operator = map(any),
     oke      = map(map(any))
   })
 }

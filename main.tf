@@ -95,7 +95,6 @@ module "bastion" {
 
   # tags
   freeform_tags = var.freeform_tags["bastion"]
-  defined_tags  = var.defined_tags["bastion"]
 
   providers = {
     oci.home = oci.home
@@ -147,7 +146,6 @@ module "operator" {
 
   # tags
   freeform_tags = var.freeform_tags["operator"]
-  defined_tags  = var.defined_tags["operator"]
 
   providers = {
     oci.home = oci.home

@@ -582,14 +582,6 @@ EOT
   vcn = {
     environment = "dev"
   }
-  bastion = {
-    environment = "dev"
-    role        = "bastion"
-  }
-  operator = {
-    environment = "dev"
-    role        = "operator"
-  }
   oke = {
     service_lb  = {
       environment = "dev"
@@ -601,14 +593,6 @@ EOT
 `defined_tags = {
   vcn = {
     environment = "dev"
-  }
-  bastion = {
-    environment = "dev"
-    role        = "bastion"
-  }
-  operator = {
-    environment = "dev"
-    role        = "operator"
   }
   oke = {
     service_lb  = {
