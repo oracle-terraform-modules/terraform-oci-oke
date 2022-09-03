@@ -2,6 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
+  # VCN subnet configuration
+  # See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#vcnconfig
 
   # first vcn cidr
   # pick the first cidr block in the list as this is where we will create the oke subnets
@@ -54,9 +56,11 @@ locals {
     waf_subnet.cidr
   ] : []
 
+  # Security configuration
+  # See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#securitylistconfig
   # if port = -1, allow all ports
 
-  #control plane seclist
+  # Security List rules for control plane subnet (Flannel & VCN-Native Pod networking)
   cp_egress_seclist = [
     {
       description      = "Allow Bastion service to communicate to the control plane endpoint. Required for when using OCI Bastion service.",
@@ -78,7 +82,8 @@ locals {
       stateless   = false
     }
   ]
-  # control plane
+
+  # Network Security Group egress rules for control plane subnet (Flannel & VCN-Native Pod networking)
   cp_egress = [
     {
       description      = "Allow Kubernetes Control plane to communicate to the control plane subnet. Required for when using OCI Bastion service.",
@@ -114,6 +119,7 @@ locals {
     },
   ]
 
+  # Network Security Group ingress rules for control plane subnet (Flannel & VCN-Native Pod networking)
   cp_ingress = [
     {
       description = "Allow worker nodes to control plane API endpoint communication"
@@ -149,8 +155,16 @@ locals {
     },
   ]
 
-  # workers
+  # Network Security Group egress rules for workers subnet (Flannel & VCN-Native Pod networking)
   workers_egress = [
+    {
+      description      = "Allows communication from (or to) worker nodes.",
+      destination      = local.workers_subnet
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.all_protocols,
+      port             = -1,
+      stateless        = false
+    },
     {
       description      = "Allow ICMP traffic for path discovery",
       destination      = local.anywhere
@@ -185,6 +199,7 @@ locals {
     }
   ]
 
+  # Network Security Group ingress rules for workers subnet (Flannel & VCN-Native Pod networking)
   workers_ingress = [
     {
       description = "Allow ingress for all traffic to allow pods to communicate between each other on different worker nodes on the worker subnet",
@@ -213,6 +228,7 @@ locals {
     }
   ]
 
+  # Network Security Group egress rules for pods subnet (VCN-Native Pod networking only)
   pods_egress = [
     {
       description      = "Allow pods to communicate with other pods.",
@@ -238,11 +254,20 @@ locals {
       port             = -1,
       stateless        = false
     },
+    {
+      description      = "Allow pods to communicate with Kubernetes API server",
+      destination      = local.cp_subnet,
+      destination_type = "CIDR_BLOCK",
+      protocol         = local.tcp_protocol,
+      port             = 6443,
+      stateless        = false
+    }
   ]
 
+  # Network Security Group ingress rules for pods subnet (VCN-Native Pod networking only)
   pods_ingress = [
     {
-      description = "Allow worker nodes to access pods.",
+      description = "Allow Kubernetes control plane to communicate with webhooks served by pods",
       protocol    = local.all_protocols,
       port        = -1,
       source      = local.cp_subnet,
@@ -250,7 +275,7 @@ locals {
       stateless   = false
     },
     {
-      description = "Allow Kubernetes Control Plane to communicate with pods.",
+      description = "Allow cross-node pod communication when using NodePorts or hostNetwork: true",
       protocol    = local.all_protocols,
       port        = -1,
       source      = local.workers_subnet,
@@ -267,6 +292,7 @@ locals {
     },
   ]
 
+  # Network Security Group rules for load balancer subnet
   int_lb_egress = [
     {
       description      = "Allow stateful egress to workers. Required for NodePorts",
