@@ -335,7 +335,7 @@ resource "oci_core_network_security_group" "pods" {
 }
 
 resource "oci_core_network_security_group_security_rule" "pods_egress" {
-  network_security_group_id = oci_core_network_security_group.pods.id
+  network_security_group_id = oci_core_network_security_group.pods[0].id
   description               = local.pods_egress[count.index].description
   destination               = local.pods_egress[count.index].destination
   destination_type          = local.pods_egress[count.index].destination_type
@@ -366,7 +366,7 @@ resource "oci_core_network_security_group_security_rule" "pods_egress" {
 }
 
 resource "oci_core_network_security_group_security_rule" "pods_ingress" {
-  network_security_group_id = oci_core_network_security_group.pods.id
+  network_security_group_id = oci_core_network_security_group.pods[0].id
   description               = local.pods_ingress[count.index].description
   source                    = local.pods_ingress[count.index].source
   source_type               = local.pods_ingress[count.index].source_type
@@ -378,7 +378,7 @@ resource "oci_core_network_security_group_security_rule" "pods_ingress" {
 
 # add this rule separately so it can be controlled independently
 resource "oci_core_network_security_group_security_rule" "pods_egress_internet" {
-  network_security_group_id = oci_core_network_security_group.pods.id
+  network_security_group_id = oci_core_network_security_group.pods[0].id
   description               = "Allow pods access to Internet"
   destination               = local.anywhere
   destination_type          = "CIDR_BLOCK"
