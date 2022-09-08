@@ -35,7 +35,7 @@ output "pub_lb" {
 }
 
 output "pod_nsg_id" {
-  value = tolist([oci_core_network_security_group.pods.id])
+  value = tolist([oci_core_network_security_group.pods[*].id])
 }
 
 output "worker_nsg_id" {
