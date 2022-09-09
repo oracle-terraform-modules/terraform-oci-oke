@@ -20,6 +20,7 @@
 :uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
 :uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
+:uri-oci-tags: https://docs.oracle.com/en-us/iaas/Content/Tagging/Tasks/managingtagsandtagnamespaces.htm#workdefined
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
 :uri-terraform-dependencies: {uri-docs}/dependencies.adoc
 :uri-timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -576,29 +577,28 @@ EOT
 }`
 
 |defined_tags
-|Tagging using administrator defined tags. This is specified in the form of a map of maps.
+|Tagging using administrator defined tags, which *must* already exist. This is specified in the form of a map of maps, using format _"namespace.key" = "value"_ for a specific tag. For further information on tags, please refer to {uri-oci-tags}[the official documentation].
 | e.g.
 `defined_tags = {
   vcn = {
-    environment = "dev"
+    "cn.env" = "dev"
   }
   oke = {
     service_lb  = {
-      environment = "dev"
-      role        = "load balancer"
+      "cn.env" = "dev"
+      "cn.role" = "load balancer"
     }
   }
 }`
 |
 `defined_tags = {
-  vcn = {
-    environment = "dev"
-  }
+  vcn = {}
   oke = {
-    service_lb  = {
-      environment = "dev"
-      role        = "load balancer"
-    }
+    cluster = {}
+    persistent_volume = {}
+    service_lb = {}
+    node_pool = {}
+    node = {}
   }
 }`
 |===

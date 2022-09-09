@@ -179,7 +179,7 @@ image_signing_keys = []
 check_node_active = "all"
 enable_pv_encryption_in_transit = false
 node_pools = {
-  np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" }, freeform_tags = { app = "frontend", pool = "np1" }, defined_tags = { app = "frontend", pool = "np1" } }
+  np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" }, freeform_tags = { app = "frontend", pool = "np1" }, defined_tags = { "Operations.CostCenter" = "42" } }
   np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np2" } }
   # np3 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   # np4 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
@@ -303,39 +303,27 @@ defined_tags = {
   # vcn, bastion and operator freeform_tags are required
   # add more freeform_tags in each as desired
   vcn = {
-    environment = "dev"
-  }
-  bastion = {
-    access      = "public",
-    environment = "dev",
-    role        = "bastion",
-    security    = "high"
-  }
-  operator = {
-    access      = "restricted",
-    environment = "dev",
-    role        = "operator",
-    security    = "high"
+    "cn.environment" = "dev"
   }
   oke = {
     cluster = {
-      environment = "dev"
-      role        = "cluster"
+      "cn.environment" = "dev"
+      "cn.role"        = "cluster"
     }
     persistent_volume = {
-      environment = "dev"
+      "cn.environment" = "dev"
     }    
     service_lb = {
-      environment = "dev"
-      role        = "load balancer"
+      "cn.environment" = "dev"
+      "cn.role"        = "load balancer"
     }
     node_pool = {
-      environment = "dev"
-      role        = "node-pool"
+      "cn.environment" = "dev"
+      "cn.role"        = "node-pool"
     }
     node = {
-      environment = "dev"
-      role        = "instance"
+      "cn.environment" = "dev"
+      "cn.role"        = "worker"
     }
   }
 }
