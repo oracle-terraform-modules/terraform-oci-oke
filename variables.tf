@@ -962,28 +962,14 @@ variable "freeform_tags" {
 
 variable "defined_tags" {
   default = {
-    # vcn, bastion and operator tags are required
+    # vcn, oke are required
     # add more tags in each as desired
-    vcn = {
-      environment = "dev"
-    }
+    vcn = {}
     oke = {
-      
-      cluster = {
-        environment = "dev"
-      }
-      
-      persistent_volume = {
-        environment = "dev"
-      }
-
-      service_lb = {
-        environment = "dev"
-        role        = "load balancer"
-      }
-
+      cluster = {}
+      persistent_volume = {}
+      service_lb = {}
       node_pool = {}
-
       node = {}
     }
   }
