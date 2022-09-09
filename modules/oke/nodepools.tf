@@ -44,7 +44,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
       content {
         cni_type          = "OCI_VCN_IP_NATIVE"
         max_pods_per_node = var.max_pods_per_node
-        pod_nsg_ids       = var.pod_nsgs
+        # pick the 1st pod nsg here until https://github.com/oracle/terraform-provider-oci/issues/1662 is clarified and resolved
+        pod_nsg_ids       = element(var.pod_nsgs,0)
         pod_subnet_ids    = tolist([var.cluster_subnets["pods"]])
       }
     }
