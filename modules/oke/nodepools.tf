@@ -53,8 +53,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
 
-    freeform_tags = var.freeform_tags["node"]
-    defined_tags  = var.defined_tags["node"]
+    freeform_tags = merge(var.freeform_tags["node"], lookup(each.value, "freeform_node_tags", {}))
+    defined_tags  = merge(var.defined_tags["node"], lookup(each.value, "defined_node_tags", {}))
   }
 
   # setting shape
