@@ -6,10 +6,11 @@ locals {
   # used by cluster
   lb_subnet = var.preferred_load_balancer == "public" ? "pub_lb" : "int_lb"
 
-  ad_names = [
-    for ad_name in data.oci_identity_availability_domains.ad_list.availability_domains :
-    ad_name.name
-  ]
+  ad_number_to_name = {
+    for ad in data.oci_identity_availability_domains.ad_list.availability_domains :
+    parseint(substr(ad.name, -1, -1), 10) => ad.name
+  }
+  ad_numbers = keys(local.ad_number_to_name)
 
   # dynamic group all oke clusters in a compartment
   dynamic_group_rule_all_clusters = "ALL {resource.type = 'cluster', resource.compartment.id = '${var.compartment_id}'}"
