@@ -976,7 +976,7 @@ variable "defined_tags" {
   description = "Tags to apply to different resources."
   type = object({
     vcn      = map(any),
-    oke      = map(map(any))
+    oke      = map(any)
   })
 }
 
