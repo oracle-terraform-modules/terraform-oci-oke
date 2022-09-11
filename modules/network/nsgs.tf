@@ -102,6 +102,20 @@ resource "oci_core_network_security_group_security_rule" "cp_ingress_additional_
     }
   }
 
+  count = length(var.control_plane_allowed_cidrs)
+
+}
+
+resource "oci_core_network_security_group_security_rule" "cp_ingress_additional_cidrs_icmp" {
+  network_security_group_id = oci_core_network_security_group.cp.id
+  description               = "Allow additional CIDR block access to control plane. Required for kubectl/helm."
+  direction                 = "INGRESS"
+  protocol                  = local.icmp_protocol
+  source                    = element(var.control_plane_allowed_cidrs, count.index)
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
   icmp_options {
     type = 3
     code = 4
