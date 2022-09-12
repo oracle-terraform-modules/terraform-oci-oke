@@ -960,6 +960,26 @@ variable "freeform_tags" {
   })
 }
 
+variable "defined_tags" {
+  default = {
+    # vcn, oke are required
+    # add more tags in each as desired
+    vcn = {}
+    oke = {
+      cluster = {}
+      persistent_volume = {}
+      service_lb = {}
+      node_pool = {}
+      node = {}
+    }
+  }
+  description = "Tags to apply to different resources."
+  type = object({
+    vcn      = map(any),
+    oke      = map(any)
+  })
+}
+
 # placeholder variable for debugging scripts. To be implemented in future
 variable "debug_mode" {
   default     = false

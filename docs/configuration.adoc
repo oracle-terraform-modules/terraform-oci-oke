@@ -35,6 +35,8 @@
 :uri-oracle: https://www.oracle.com
 :uri-prereqs: {uri-docs}/prerequisites.adoc
 :uri-quickstart: {uri-docs}/quickstart.adoc
+:uri-oci-tags-overview: https://docs.oracle.com/en-us/iaas/Content/Tagging/Concepts/taggingoverview.htm
+:uri-oci-tags-management: https://docs.oracle.com/en-us/iaas/Content/Tagging/Tasks/managingtagsandtagnamespaces.htm#workdefined
 
 :uri-terraform: https://www.terraform.io
 :uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
@@ -286,3 +288,8 @@ image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
 ----
 {uri-terraform-options}#kms-integration[Reference]
 
+== Configure defined tags
+
+The {uri-oci-tags-overview}#[defined tags] *must* first be manually created before using them as input parameters. 
+If a tag is a list type, you must specify one of the predefined options when applying it. 
+Please refer to the {uri-oci-tags-management}[instructions] for how to assign the required permissions and to manage them.
