@@ -179,7 +179,7 @@ image_signing_keys = []
 check_node_active = "all"
 enable_pv_encryption_in_transit = false
 node_pools = {
-  np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" }, freeform_tags = { app = "frontend", pool = "np1" }, defined_tags = { "Operations.CostCenter" = "42" } }
+  np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" }, nodepool_freeform_tags = { app = "frontend", pool = "np1" }, nodepool_defined_tags = { "Operations.CostCenter" = "42" } }
   np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np2" } }
   # np3 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
   # np4 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
@@ -293,7 +293,7 @@ freeform_tags = {
     }
     node = {
       environment = "dev"
-      role        = "instance"
+      role        = "worker"
     }
   }
 }
