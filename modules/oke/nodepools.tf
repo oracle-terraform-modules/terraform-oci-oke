@@ -10,8 +10,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
   kubernetes_version = var.cluster_kubernetes_version
   name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
 
-  freeform_tags = merge(var.freeform_tags["node_pool"], lookup(each.value, "nodepool_freeform_tags", {}))
-  defined_tags  = merge(var.defined_tags["node_pool"], lookup(each.value, "nodepool_defined_tags", {}))
+  freeform_tags = merge(lookup(var.freeform_tags, "node_pool", {}), lookup(each.value, "nodepool_freeform_tags", {}))
+  defined_tags  = merge(lookup(var.defined_tags, "node_pool", {}), lookup(each.value, "nodepool_defined_tags", {}))
 
   node_config_details {
 
@@ -22,8 +22,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
     # iterating over ADs
     dynamic "placement_configs" {
       iterator = ad_iterator
-      for_each = [for n in lookup(each.value, "placement_ads", local.ad_numbers):
-                  local.ad_number_to_name[n]]
+      for_each = [for n in lookup(each.value, "placement_ads", local.ad_numbers) :
+      local.ad_number_to_name[n]]
       content {
         availability_domain = ad_iterator.value
         subnet_id           = var.cluster_subnets["workers"]
@@ -47,16 +47,16 @@ resource "oci_containerengine_node_pool" "nodepools" {
         cni_type          = "OCI_VCN_IP_NATIVE"
         max_pods_per_node = var.max_pods_per_node
         # pick the 1st pod nsg here until https://github.com/oracle/terraform-provider-oci/issues/1662 is clarified and resolved
-        pod_nsg_ids       = element(var.pod_nsgs,0)
-        pod_subnet_ids    = tolist([var.cluster_subnets["pods"]])
+        pod_nsg_ids    = element(var.pod_nsgs, 0)
+        pod_subnet_ids = tolist([var.cluster_subnets["pods"]])
       }
     }
 
     # allow zero-sized node pools
     size = max(0, lookup(each.value, "node_pool_size", 0))
 
-    freeform_tags = merge(var.freeform_tags["node"], lookup(each.value, "node_freeform_tags", {}))
-    defined_tags  = merge(var.defined_tags["node"], lookup(each.value, "node_defined_tags", {}))
+    freeform_tags = merge(lookup(var.freeform_tags, "node", {}), lookup(each.value, "node_freeform_tags", {}))
+    defined_tags  = merge(lookup(var.defined_tags, "node", {}), lookup(each.value, "node_defined_tags", {}))
   }
 
   # setting shape
