@@ -23,7 +23,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   endpoint_config {
     is_public_ip_enabled = var.control_plane_type == "public" ? true : false
     nsg_ids              = var.control_plane_nsgs
-    subnet_id            = lookup(var.cluster_subnets,"cp")
+    subnet_id            = var.cluster_subnets["cp"]
   }
 
   dynamic "image_policy_config" {
