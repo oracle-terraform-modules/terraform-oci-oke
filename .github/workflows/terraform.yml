@@ -80,6 +80,10 @@ jobs:
     - name: Terraform Format
       run: terraform fmt
 
+    # Validate Terraform code and ensure there is no error
+    - name: Terraform Validate
+      run: terraform validate
+
     # Generates an execution plan for Terraform
     #- name: Terraform Plan
     #  run: terraform plan -input=false
