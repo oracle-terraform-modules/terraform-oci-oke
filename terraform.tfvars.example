@@ -179,20 +179,96 @@ image_signing_keys = []
 check_node_active = "all"
 enable_pv_encryption_in_transit = false
 node_pools = {
-  np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" }, nodepool_freeform_tags = { app = "frontend", pool = "np1" }, nodepool_defined_tags = { "Operations.CostCenter" = "42" } }
-  np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np2" } }
-  # np3 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
-  # np4 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, placement_ads = [1] }
-  # np2 = {shape="VM.Standard.E4.Flex",ocpus=4,memory=16,node_pool_size=1,boot_volume_size=150, label={app="backend",pool="np2"}}
-  # np3 = {shape="VM.Standard.A1.Flex",ocpus=8,memory=16,node_pool_size=1,boot_volume_size=150, label={pool="np3"}}
-  # np4 = {shape="BM.Standard2.52",node_pool_size=1,boot_volume_size=150}
-  # np5 = {shape="VM.Optimized3.Flex",node_pool_size=6}
-  # np5 = {shape="BM.Standard.A1.160",node_pool_size=6}
-  # np6 = {shape="VM.Standard.E2.2", node_pool_size=5}
-  # np7 = {shape="BM.DenseIO2.52", node_pool_size=5}
-  # np8 = {shape="BM.GPU3.8", node_pool_size=1}
-  # np9 = {shape="BM.GPU4.8", node_pool_size=5}
-  # np10 = {shape="BM.HPC2.36	", node_pool_size=5}
+  # Basic node pool
+  np1 = {
+    shape            = "VM.Standard.E4.Flex",
+    ocpus            = 2,
+    memory           = 32,
+    node_pool_size   = 1,
+    boot_volume_size = 150,
+  }
+  # # node pool with initial node labels
+  # np2 = {
+  #   shape            = "VM.Standard.E4.Flex",
+  #   ocpus            = 2,
+  #   memory           = 32,
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  #   label            = { app = "frontend", pool = "np2" },
+  # }
+  # # node pool with freeform tags 
+  # np3 = {
+  #   shape                  = "VM.Standard.E4.Flex",
+  #   ocpus                  = 2,
+  #   memory                 = 32,
+  #   node_pool_size         = 1,
+  #   boot_volume_size       = 150,
+  #   nodepool_freeform_tags = { app = "frontend", pool = "np2" },
+  #   node_freeform_tags     = { app = "frontend", nodes = "np2" },
+  # }
+  # # node pool with defined tags
+  # np4 = {
+  #   shape                 = "VM.Standard.E4.Flex",
+  #   ocpus                 = 2,
+  #   memory                = 32,
+  #   node_pool_size        = 1,
+  #   boot_volume_size      = 150,
+  #   nodepool_defined_tags = { "cn.environment" = "prod" },
+  #   node_defined_tags     = { "cn.environment" = "prod" },
+  # }
+  # # node pool with placement ads
+  # np5 = {
+  #   shape            = "VM.Standard.E4.Flex",
+  #   ocpus            = 2,
+  #   memory           = 32,
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  #   placement_ads    = [1]
+  # }
+  # # node pool using ARM Flex shape
+  # np6 = {
+  #   shape            = "VM.Standard.A1.Flex",
+  #   ocpus            = 2,
+  #   memory           = 32,
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
+  # # node pool using Baremetal X86_64
+  # np7 = {
+  #   shape            = "BM.Standard2.52",
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
+  # # node pool using Baremetal ARM
+  # np8 = {
+  #   shape            = "BM.Standard.A1.160",
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
+  # # node pool using Optimized Flex
+  # np9 = {
+  #   shape            = "VM.Optimized3.Flex",
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
+  # # node pool using DenseIO2
+  # np9 = {
+  #   shape            = "BM.DenseIO2.52",
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
+  # # node pool using BM.GPU3.8
+  # np10 = {
+  #   shape            = "BM.GPU3.8",
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
+  # # node pool using BM.GPU4.8
+  # np11 = {
+  #   shape            = "BM.GPU4.8",
+  #   node_pool_size   = 1,
+  #   boot_volume_size = 150,
+  # }
 }
 node_pool_image_id    = "none"
 node_pool_image_type  = "oke"

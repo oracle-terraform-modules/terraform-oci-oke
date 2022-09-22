@@ -20,10 +20,15 @@ resource "oci_containerengine_node_pool" "nodepools" {
     kms_key_id = var.node_pool_volume_kms_key_id
 
     # iterating over ADs
+    ## If placement_ads are specified, use them.
+    ## Else, iterate over all ADs.
+    ## If a single AD region is used, pick the only AD returned from the data source.
+    
     dynamic "placement_configs" {
       iterator = ad_iterator
       for_each = [for n in lookup(each.value, "placement_ads", local.ad_numbers) :
-      local.ad_number_to_name[n]]
+        length(local.ad_numbers) == 1 ? local.ad_number_to_name[1] : local.ad_number_to_name[n]
+      ]
       content {
         availability_domain = ad_iterator.value
         subnet_id           = var.cluster_subnets["workers"]
