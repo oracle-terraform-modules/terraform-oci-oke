@@ -241,6 +241,10 @@ export KUBECONFIG=generated/kubeconfig
 *Ensure you install the same kubectl version as the OKE Kubernetes version for compatibility.*
 ****
 
+****
+*To refresh the generated kubeconfig, run `terraform apply` with `update_kubeconfig: true`.*
+****
+
 == Creating a Secret for OCIR
 
 {uri-oci-ocir}[Oracle Cloud Infrastructure Registry] is a highly available private container registry service for storing and sharing container images within the same regions as the OKE Cluster. Use the following rules to determine if you need to create a Kubernetes Secret for OCIR:

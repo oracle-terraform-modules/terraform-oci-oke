@@ -986,3 +986,9 @@ variable "debug_mode" {
   description = "Whether to turn on debug mode."
   type        = bool
 }
+
+variable "update_kubeconfig" {
+  default     = false
+  description = "Whether to refresh the generated kubeconfig file."
+  type        = bool
+}

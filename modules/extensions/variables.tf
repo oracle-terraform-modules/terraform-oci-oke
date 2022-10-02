@@ -138,3 +138,7 @@ variable "node_pools_to_drain" {
 variable "debug_mode" {
   type = bool
 }
+
+variable "update_kubeconfig" {
+  type    = bool
+}

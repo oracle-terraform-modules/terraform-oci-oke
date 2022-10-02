@@ -400,7 +400,8 @@ module "extensions" {
   nodepool_upgrade_method = var.nodepool_upgrade_method
   node_pools_to_drain     = var.node_pools_to_drain
 
-  debug_mode = var.debug_mode
+  debug_mode        = var.debug_mode
+  update_kubeconfig = var.update_kubeconfig
 
   depends_on = [
     module.bastion,
