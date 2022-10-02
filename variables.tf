@@ -34,27 +34,54 @@ variable "home_region" {
   type        = string
 }
 
+# Automatically populated by Resource Manager
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "The OCI region where OKE resources will be created."
   type        = string
 }
 
+# Overrides Resource Manager
 variable "tenancy_id" {
   description = "The tenancy id of the OCI Cloud Account in which to create the resources."
   type        = string
+  default     = ""
 }
 
+variable "tenancy_ocid" {
+  description = "A tenancy OCID automatically populated by Resource Manager."
+  type        = string
+  default     = ""
+}
+
+# Overrides Resource Manager
 variable "user_id" {
   description = "The id of the user that terraform will use to create the resources."
   type        = string
   default     = ""
 }
 
+# Automatically populated by Resource Manager
+variable "current_user_ocid" {
+  description = "A user OCID automatically populated by Resource Manager."
+  type        = string
+  default     = ""
+}
+
 # General OCI parameters
+
+# Overrides Resource Manager
 variable "compartment_id" {
   description = "The compartment id where to create all resources."
   type        = string
+  default     = ""
+}
+
+# Automatically populated by Resource Manager
+variable "compartment_ocid" {
+  description = "A compartment OCID automatically populated by Resource Manager."
+  type        = string
+  default     = ""
 }
 
 variable "label_prefix" {

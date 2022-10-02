@@ -4,7 +4,7 @@
 data "oci_core_vcns" "vcns" {
   count = var.create_vcn == true ? 0 : 1
 
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   display_name   = var.vcn_display_name
 
   state = "AVAILABLE"
@@ -13,7 +13,7 @@ data "oci_core_vcns" "vcns" {
 data "oci_core_route_tables" "nat" {
   count = var.create_vcn == true ? 0 : 1
 
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
 
   display_name = var.nat_route_table_display_name
   vcn_id       = local.vcn_id
@@ -24,7 +24,7 @@ data "oci_core_route_tables" "nat" {
 data "oci_core_route_tables" "ig" {
   count = var.create_vcn == true ? 0 : 1
 
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
 
   display_name = var.ig_route_table_display_name
   vcn_id       = local.vcn_id
