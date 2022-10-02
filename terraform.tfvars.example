@@ -101,6 +101,9 @@ bastion_timezone = "Etc/UTC"
 bastion_type     = "public"
 upgrade_bastion  = false
 
+# Use an existing bastion with create_bastion_host = false
+bastion_public_ip = "" 
+
 ## bastion notification
 enable_bastion_notification   = false
 bastion_notification_endpoint = ""

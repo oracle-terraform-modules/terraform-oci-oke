@@ -250,6 +250,12 @@ variable "create_bastion_host" {
   type        = bool
 }
 
+variable "bastion_public_ip" {
+  default     = ""
+  description = "The IP address of an existing bastion host, if create_bastion_host: false."
+  type        = string
+}
+
 variable "bastion_access" {
   default     = ["anywhere"]
   description = "A list of CIDR blocks to which ssh access to the bastion host must be restricted. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
