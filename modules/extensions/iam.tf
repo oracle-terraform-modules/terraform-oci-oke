@@ -17,11 +17,25 @@ locals {
   create_operator_instance_principal_dynamic_group = (var.use_cluster_encryption == true && var.create_policies == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true)
 }
 
+resource "random_id" "dynamic_group_suffix" {
+  keepers = {
+    # Generate a new suffix only when variables are changed
+    label_prefix         = local.dynamic_group_prefix
+    tenancy_id           = var.tenancy_id
+  }
+
+  byte_length = 8
+}
+
 resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
   provider       = oci.home
-  compartment_id = var.tenancy_id
+  compartment_id = random_id.dynamic_group_suffix.keepers.tenancy_id
   description    = "policy to allow operator host to manage dynamic group"
-  name           = var.label_prefix == "none" ? "operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}" : "${var.label_prefix}-operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}"
+  name           = join("-", compact([
+    random_id.dynamic_group_suffix.keepers.label_prefix,
+    "operator-instance-principal-dynamic-group",
+    random_id.dynamic_group_suffix.hex
+  ]))
   statements     = ["Allow dynamic-group ${var.operator_dynamic_group} to use dynamic-groups in tenancy"]
   count          = (local.create_operator_instance_principal_dynamic_group == true) ? 1 : 0
 }
