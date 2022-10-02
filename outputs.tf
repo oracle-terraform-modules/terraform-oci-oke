@@ -77,15 +77,16 @@ output "ssh_to_bastion" {
   value       = "ssh -i ${var.ssh_private_key_path} opc@${local.bastion_public_ip}"
 }
 
+# Suppress reported output change on clean destroy
 output "kubeconfig" {
   description = "convenient command to set KUBECONFIG environment variable before running kubectl locally"
-  value       = "export KUBECONFIG=generated/kubeconfig"
+  value       = length(module.oke.cluster_id) == 0 ? null : "export KUBECONFIG=generated/kubeconfig"
 }
 
 output "bastion_service_instance_id" {
-  value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id : "null"
+  value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id : null
 }
 
 output "fss_id" {
-  value = var.create_fss == true ? module.storage[0].fss_id : "null"
+  value = var.create_fss == true ? module.storage[0].fss_id : null
 }
