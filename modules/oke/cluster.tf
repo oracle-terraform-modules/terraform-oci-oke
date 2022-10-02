@@ -74,6 +74,10 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     service_lb_subnet_ids = var.preferred_load_balancer == "public" ? [var.cluster_subnets["pub_lb"]] : [var.cluster_subnets["int_lb"]]
   }
 
+  lifecycle {
+    ignore_changes = [defined_tags, freeform_tags]
+  }
+
   vcn_id = var.vcn_id
 
 }
