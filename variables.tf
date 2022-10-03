@@ -274,6 +274,12 @@ variable "bastion_os_version" {
   type        = string
 }
 
+variable "bastion_user" {
+  default     = "opc"
+  description = "User for SSH access through bastion host."
+  type        = string
+}
+
 variable "bastion_shape" {
   default = {
     shape            = "VM.Standard.E4.Flex",
@@ -412,6 +418,12 @@ variable "operator_os_version" {
   type        = string
 }
 
+variable "operator_user" {
+  default     = "opc"
+  description = "User for SSH access to operator host."
+  type        = string
+}
+
 variable "operator_shape" {
   default = {
     shape            = "VM.Standard.E4.Flex",
@@ -444,6 +456,12 @@ variable "upgrade_operator" {
   default     = true
   description = "Whether to upgrade the operator packages after provisioning. It’s useful to set this to false during development so the operator is provisioned faster."
   type        = bool
+}
+
+variable "operator_private_ip" {
+  default     = ""
+  description = "The IP address of an existing operator host, if create_operator: false."
+  type        = string
 }
 
 ## operator notification parameters

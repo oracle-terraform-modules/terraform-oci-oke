@@ -69,12 +69,12 @@ output "operator_private_ip" {
 
 output "ssh_to_operator" {
   description = "convenient command to ssh to the operator host"
-  value       = "ssh${local.ssh_key_arg} -J opc@${local.bastion_public_ip} opc@${local.operator_private_ip}"
+  value       = "ssh${local.ssh_key_arg} -J ${var.bastion_user}@${local.bastion_public_ip} ${var.operator_user}@${local.operator_private_ip}"
 }
 
 output "ssh_to_bastion" {
   description = "convenient command to ssh to the bastion host"
-  value       = "ssh${local.ssh_key_arg} opc@${local.bastion_public_ip}"
+  value       = "ssh${local.ssh_key_arg} ${var.bastion_user}@${local.bastion_public_ip}"
 }
 
 # Suppress reported output change on clean destroy

@@ -31,10 +31,10 @@ resource "null_resource" "write_kubeconfig_on_operator" {
     private_key = local.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
-    user        = "opc"
+    user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
-    bastion_user        = "opc"
+    bastion_user        = var.bastion_user
     bastion_private_key = local.ssh_private_key
   }
 

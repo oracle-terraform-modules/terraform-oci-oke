@@ -347,11 +347,13 @@ module "extensions" {
   # bastion
   create_bastion_host = var.create_bastion_host
   bastion_public_ip   = local.bastion_public_ip
+  bastion_user        = var.bastion_user
   bastion_state       = var.bastion_state
 
   # operator details
   create_operator                    = var.create_operator
   operator_private_ip                = local.operator_private_ip
+  operator_user                      = var.operator_user
   operator_state                     = var.operator_state
   operator_dynamic_group             = local.operator_instance_principal_group_name
   enable_operator_instance_principal = var.enable_operator_instance_principal
