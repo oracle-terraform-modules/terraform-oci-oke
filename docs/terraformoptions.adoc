@@ -16,11 +16,14 @@
 :uri-kubernetes-vpa: https://github.com/kubernetes/autoscaler/tree/master/vertical-pod-autoscaler
 :uri-metrics-server: https://github.com/kubernetes-incubator/metrics-server
 :uri-openpolicyagent-gatekeeper: https://open-policy-agent.github.io/gatekeeper/website/docs/
+:uri-oci-content: https://docs.cloud.oracle.com/iaas/Content
 :uri-oci-images: https://docs.cloud.oracle.com/iaas/images/
-:uri-oci-kms: https://docs.cloud.oracle.com/iaas/Content/KeyManagement/Concepts/keyoverview.htm
+:uri-oci-kms: {uri-oci-content}/KeyManagement/Concepts/keyoverview.htm
 :uri-oci-loadbalancer-annotations: https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md
-:uri-oci-region: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm
-:uri-oci-tags: https://docs.oracle.com/en-us/iaas/Content/Tagging/Tasks/managingtagsandtagnamespaces.htm#workdefined
+:uri-oci-provider-config: {uri-oci-content}/API/SDKDocs/terraformproviderconfiguration.htm
+:uri-oci-region: {uri-oci-content}/General/Concepts/regions.htm
+:uri-oci-rm-config: {uri-oci-content}/ResourceManager/Concepts/terraformconfigresourcemanager.htm#configvar
+:uri-oci-tags: {uri-oci-content}/Tagging/Tasks/managingtagsandtagnamespaces.htm#workdefined
 :uri-terraform-cidrsubnet: https://www.terraform.io/docs/configuration/functions/cidrsubnet.html
 :uri-terraform-dependencies: {uri-docs}/dependencies.adoc
 :uri-timezones: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
@@ -31,6 +34,8 @@ Configuration Terraform Options:
 Ensure you review the {uri-terraform-dependencies}[dependencies].
 
 == OCI Provider parameters
+
+See {uri-oci-provider-config}[Terraform OCI Provider] or {uri-oci-rm-config}[Resource Manager] configuration.
 
 [stripes=odd,cols="1m,4d,2m,2m", options=header,width="100%"]
 |===
@@ -332,6 +337,11 @@ EOT
 |7.9
 |7.9
 
+|`bastion_user`
+|The user for SSH access to the bastion host. Always 'opc' on supported images.
+|opc
+|opc
+
 |bastion_shape
 |The shape of bastion instance. *Required*
 |
@@ -446,6 +456,11 @@ EOT
 |The Oracle Linux version to use for the operator host.
 |e.g. 7.9, 8
 |8
+
+|`operator_user`
+|The user for SSH access to the operator host. Always 'opc' on supported images.
+|opc
+|opc
 
 |`operator_shape`
 |The shape of operator instance. *Required*

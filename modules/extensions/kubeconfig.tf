@@ -5,7 +5,21 @@ data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id = var.cluster_id
 }
 
+# Terraform doesn't support conditional dynamic blocks for lifecycle, so resource
+# is repeated with and without it based on update_kubeconfig boolean variable
+# Not ideal, but mitigates reported change on every apply
 resource "local_file" "kube_config_file" {
+  count           = var.update_kubeconfig ? 0 : 1
+  content         = data.oci_containerengine_cluster_kube_config.kube_config.content
+  filename        = "${path.root}/generated/kubeconfig"
+  file_permission = "0600"
+  lifecycle {
+    ignore_changes = [content]
+  }
+}
+
+resource "local_file" "kube_config_file_refresh" {
+  count           = var.update_kubeconfig == true ? 1 : 0
   content         = data.oci_containerengine_cluster_kube_config.kube_config.content
   filename        = "${path.root}/generated/kubeconfig"
   file_permission = "0600"
@@ -17,10 +31,10 @@ resource "null_resource" "write_kubeconfig_on_operator" {
     private_key = local.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
-    user        = "opc"
+    user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
-    bastion_user        = "opc"
+    bastion_user        = var.bastion_user
     bastion_private_key = local.ssh_private_key
   }
 
@@ -49,6 +63,10 @@ resource "null_resource" "write_kubeconfig_on_operator" {
       "mv $HOME/token_helper.sh $HOME/bin",
       "if [ -f \"$HOME/kubeconfig_set_credentials.sh\" ]; then bash \"$HOME/kubeconfig_set_credentials.sh\"; rm -f \"$HOME/kubeconfig_set_credentials.sh\";fi",
     ]
+  }
+
+  lifecycle {
+    ignore_changes = all
   }
 
   count = local.post_provisioning_ops == true ? 1 : 0

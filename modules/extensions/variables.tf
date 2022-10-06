@@ -27,6 +27,8 @@ variable "create_bastion_host" {
 
 variable "bastion_public_ip" {}
 
+variable "bastion_user" {}
+
 variable "bastion_state" {}
 
 # operator
@@ -35,6 +37,8 @@ variable "create_operator" {
 }
 
 variable "operator_private_ip" {}
+
+variable "operator_user" {}
 
 variable "operator_state" {}
 
@@ -137,4 +141,8 @@ variable "node_pools_to_drain" {
 
 variable "debug_mode" {
   type = bool
+}
+
+variable "update_kubeconfig" {
+  type    = bool
 }

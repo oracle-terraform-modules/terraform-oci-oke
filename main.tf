@@ -6,7 +6,7 @@ module "vcn" {
   version = "3.5.1"
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # gateways
@@ -35,12 +35,11 @@ module "vcn" {
 }
 
 module "drg" {
-
   source  = "oracle-terraform-modules/drg/oci"
   version = "1.0.3"
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # drg parameters
@@ -60,10 +59,10 @@ module "drg" {
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.1.1"
+  version = "3.1.2"
 
-  tenancy_id     = var.tenancy_id
-  compartment_id = var.compartment_id
+  tenancy_id     = local.tenancy_id
+  compartment_id = local.compartment_id
 
   label_prefix = var.label_prefix
 
@@ -109,12 +108,12 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.1.0"
+  version = "3.1.1"
 
-  tenancy_id = var.tenancy_id
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  tenancy_id     = local.tenancy_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # networking
@@ -162,7 +161,7 @@ module "bastionsvc" {
   source = "./modules/bastionsvc"
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # bastion service parameters
@@ -184,7 +183,7 @@ module "network" {
   source = "./modules/network"
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # oke networking parameters
@@ -233,10 +232,10 @@ module "oke" {
   source = "./modules/oke"
 
   # provider
-  tenancy_id = var.tenancy_id
+  tenancy_id = local.tenancy_id
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # ssh keys
@@ -301,8 +300,8 @@ module "storage" {
   source = "./modules/storage"
 
   # general oci parameters
-  tenancy_id          = var.tenancy_id
-  compartment_id      = var.compartment_id
+  tenancy_id          = local.tenancy_id
+  compartment_id      = local.compartment_id
   availability_domain = var.availability_domains["fss"]
   label_prefix        = var.label_prefix
 
@@ -330,10 +329,10 @@ module "extensions" {
   source = "./modules/extensions"
 
   # provider
-  tenancy_id = var.tenancy_id
+  tenancy_id = local.tenancy_id
 
   # general oci parameters
-  compartment_id = var.compartment_id
+  compartment_id = local.compartment_id
   label_prefix   = var.label_prefix
 
   # region parameters
@@ -348,11 +347,13 @@ module "extensions" {
   # bastion
   create_bastion_host = var.create_bastion_host
   bastion_public_ip   = local.bastion_public_ip
+  bastion_user        = var.bastion_user
   bastion_state       = var.bastion_state
 
   # operator details
   create_operator                    = var.create_operator
   operator_private_ip                = local.operator_private_ip
+  operator_user                      = var.operator_user
   operator_state                     = var.operator_state
   operator_dynamic_group             = local.operator_instance_principal_group_name
   enable_operator_instance_principal = var.enable_operator_instance_principal
@@ -400,7 +401,8 @@ module "extensions" {
   nodepool_upgrade_method = var.nodepool_upgrade_method
   node_pools_to_drain     = var.node_pools_to_drain
 
-  debug_mode = var.debug_mode
+  debug_mode        = var.debug_mode
+  update_kubeconfig = var.update_kubeconfig
 
   depends_on = [
     module.bastion,

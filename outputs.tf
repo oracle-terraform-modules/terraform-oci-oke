@@ -69,23 +69,24 @@ output "operator_private_ip" {
 
 output "ssh_to_operator" {
   description = "convenient command to ssh to the operator host"
-  value       = "ssh -i ${var.ssh_private_key_path} -J opc@${local.bastion_public_ip} opc@${local.operator_private_ip}"
+  value       = "ssh${local.ssh_key_arg} -J ${var.bastion_user}@${local.bastion_public_ip} ${var.operator_user}@${local.operator_private_ip}"
 }
 
 output "ssh_to_bastion" {
   description = "convenient command to ssh to the bastion host"
-  value       = "ssh -i ${var.ssh_private_key_path} opc@${local.bastion_public_ip}"
+  value       = "ssh${local.ssh_key_arg} ${var.bastion_user}@${local.bastion_public_ip}"
 }
 
+# Suppress reported output change on clean destroy
 output "kubeconfig" {
   description = "convenient command to set KUBECONFIG environment variable before running kubectl locally"
-  value       = "export KUBECONFIG=generated/kubeconfig"
+  value       = length(module.oke.cluster_id) == 0 ? null : "export KUBECONFIG=generated/kubeconfig"
 }
 
 output "bastion_service_instance_id" {
-  value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id : "null"
+  value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id : null
 }
 
 output "fss_id" {
-  value = var.create_fss == true ? module.storage[0].fss_id : "null"
+  value = var.create_fss == true ? module.storage[0].fss_id : null
 }

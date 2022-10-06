@@ -34,27 +34,54 @@ variable "home_region" {
   type        = string
 }
 
+# Automatically populated by Resource Manager
 variable "region" {
   # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
   description = "The OCI region where OKE resources will be created."
   type        = string
 }
 
+# Overrides Resource Manager
 variable "tenancy_id" {
   description = "The tenancy id of the OCI Cloud Account in which to create the resources."
   type        = string
+  default     = ""
 }
 
+variable "tenancy_ocid" {
+  description = "A tenancy OCID automatically populated by Resource Manager."
+  type        = string
+  default     = ""
+}
+
+# Overrides Resource Manager
 variable "user_id" {
   description = "The id of the user that terraform will use to create the resources."
   type        = string
   default     = ""
 }
 
+# Automatically populated by Resource Manager
+variable "current_user_ocid" {
+  description = "A user OCID automatically populated by Resource Manager."
+  type        = string
+  default     = ""
+}
+
 # General OCI parameters
+
+# Overrides Resource Manager
 variable "compartment_id" {
   description = "The compartment id where to create all resources."
   type        = string
+  default     = ""
+}
+
+# Automatically populated by Resource Manager
+variable "compartment_ocid" {
+  description = "A compartment OCID automatically populated by Resource Manager."
+  type        = string
+  default     = ""
 }
 
 variable "label_prefix" {
@@ -223,6 +250,12 @@ variable "create_bastion_host" {
   type        = bool
 }
 
+variable "bastion_public_ip" {
+  default     = ""
+  description = "The IP address of an existing bastion host, if create_bastion_host: false."
+  type        = string
+}
+
 variable "bastion_access" {
   default     = ["anywhere"]
   description = "A list of CIDR blocks to which ssh access to the bastion host must be restricted. *anywhere* is equivalent to 0.0.0.0/0 and allows ssh access from anywhere."
@@ -238,6 +271,12 @@ variable "bastion_image_id" {
 variable "bastion_os_version" {
   description = "In case Autonomous Linux is used, allow specification of Autonomous version"
   default     = "7.9"
+  type        = string
+}
+
+variable "bastion_user" {
+  default     = "opc"
+  description = "User for SSH access through bastion host."
   type        = string
 }
 
@@ -379,6 +418,12 @@ variable "operator_os_version" {
   type        = string
 }
 
+variable "operator_user" {
+  default     = "opc"
+  description = "User for SSH access to operator host."
+  type        = string
+}
+
 variable "operator_shape" {
   default = {
     shape            = "VM.Standard.E4.Flex",
@@ -411,6 +456,12 @@ variable "upgrade_operator" {
   default     = true
   description = "Whether to upgrade the operator packages after provisioning. It’s useful to set this to false during development so the operator is provisioned faster."
   type        = bool
+}
+
+variable "operator_private_ip" {
+  default     = ""
+  description = "The IP address of an existing operator host, if create_operator: false."
+  type        = string
 }
 
 ## operator notification parameters
@@ -984,5 +1035,11 @@ variable "defined_tags" {
 variable "debug_mode" {
   default     = false
   description = "Whether to turn on debug mode."
+  type        = bool
+}
+
+variable "update_kubeconfig" {
+  default     = false
+  description = "Whether to refresh the generated kubeconfig file."
   type        = bool
 }

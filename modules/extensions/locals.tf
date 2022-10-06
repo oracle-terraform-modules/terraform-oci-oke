@@ -28,4 +28,6 @@ locals {
   post_provisioning_ops = var.create_bastion_host == true && var.bastion_state == "RUNNING" && var.create_operator == true && var.operator_state == "RUNNING" && var.enable_operator_instance_principal == true ? true : false
 
   dynamic_group_rule_this_cluster = (var.use_cluster_encryption == true) ? "ALL {resource.type = 'cluster', resource.id = '${var.cluster_id}'}" : "null"
+
+  dynamic_group_prefix = (var.label_prefix == "none") ? "" : "${var.label_prefix}"
 }

@@ -90,6 +90,7 @@ create_bastion_host = true
 bastion_access      = ["anywhere"]
 bastion_image_id    = "Autonomous"
 bastion_os_version  = "7.9"
+bastion_user        = "opc"
 bastion_shape = {
   shape            = "VM.Standard.E4.Flex",
   ocpus            = 1,
@@ -100,6 +101,10 @@ bastion_state    = "RUNNING"
 bastion_timezone = "Etc/UTC"
 bastion_type     = "public"
 upgrade_bastion  = false
+
+# Use an existing bastion. If create_bastion_host = false and set
+# to non-empty string, will be used for SSH access into the VCN.
+bastion_public_ip = ""
 
 ## bastion notification
 enable_bastion_notification   = false
@@ -119,6 +124,7 @@ operator_image_id                  = "Oracle"
 enable_operator_instance_principal = true
 operator_nsg_ids                   = []
 operator_os_version                = "8"
+operator_user                      = "opc"
 operator_shape = {
   shape            = "VM.Standard.E4.Flex",
   ocpus            = 1,
@@ -128,6 +134,10 @@ operator_shape = {
 operator_state    = "RUNNING"
 operator_timezone = "Etc/UTC"
 upgrade_operator  = false
+
+# Use an existing operator. If create_operator = false and set
+# to non-empty string, will be used for k8s access within the VCN.
+operator_private_ip = ""
 
 # Operator in-transit encryption for the data volume's paravirtualized attachment.
 enable_operator_pv_encryption_in_transit = false

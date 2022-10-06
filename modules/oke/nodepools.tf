@@ -118,7 +118,13 @@ resource "oci_containerengine_node_pool" "nodepools" {
   # do not destroy the node pool if the kubernetes version has changed as part of the upgrade
 
   lifecycle {
-    ignore_changes = [kubernetes_version]
+    ignore_changes = [
+      kubernetes_version,
+      defined_tags, # automatic tagging after apply
+      node_metadata["user_data"], # templated cloud-init
+      node_config_details["placement_configs"], # dynamic placement configs
+      node_source_details # dynamic image lookup
+    ]
   }
 
   # initial node labels for the different node pools

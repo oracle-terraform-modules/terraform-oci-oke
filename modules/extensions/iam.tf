@@ -14,24 +14,39 @@ terraform {
 }
 
 locals {
-  create_operator_instance_principal_dynamic_group = (var.use_cluster_encryption == true && var.create_policies == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true)
+  create_operator_dynamic_group_policy = (var.use_cluster_encryption == true && var.create_policies == true && var.create_bastion_host == true && var.enable_operator_instance_principal == true)
 }
 
-resource "oci_identity_policy" "operator_instance_principal_dynamic_group" {
+resource "random_id" "dynamic_group_suffix" {
+  keepers = {
+    # Generate a new suffix only when variables are changed
+    label_prefix         = local.dynamic_group_prefix
+    tenancy_id           = var.tenancy_id
+  }
+
+  byte_length = 8
+}
+
+# TODO Move to Operator module
+resource "oci_identity_policy" "operator_use_dynamic_group_policy" {
   provider       = oci.home
-  compartment_id = var.tenancy_id
+  compartment_id = random_id.dynamic_group_suffix.keepers.tenancy_id
   description    = "policy to allow operator host to manage dynamic group"
-  name           = var.label_prefix == "none" ? "operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}" : "${var.label_prefix}-operator-instance-principal-dynamic-group-${substr(uuid(), 0, 8)}"
+  name           = join("-", compact([
+    random_id.dynamic_group_suffix.keepers.label_prefix,
+    "operator-instance-principal-dynamic-group",
+    random_id.dynamic_group_suffix.hex
+  ]))
   statements     = ["Allow dynamic-group ${var.operator_dynamic_group} to use dynamic-groups in tenancy"]
-  count          = (local.create_operator_instance_principal_dynamic_group == true) ? 1 : 0
+  count          = (local.create_operator_dynamic_group_policy == true) ? 1 : 0
 }
 
 # 30s delay to allow policies to take effect globally
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [oci_identity_policy.operator_instance_principal_dynamic_group]
+  depends_on = [oci_identity_policy.operator_use_dynamic_group_policy]
 
   create_duration = "30s"
-  count          = (local.create_operator_instance_principal_dynamic_group == true) ? 1 : 0
+  count          = (local.create_operator_dynamic_group_policy == true) ? 1 : 0
 }
 
 resource "null_resource" "update_dynamic_group" {
@@ -41,10 +56,10 @@ resource "null_resource" "update_dynamic_group" {
     private_key = local.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
-    user        = "opc"
+    user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
-    bastion_user        = "opc"
+    bastion_user        = var.bastion_user
     bastion_private_key = local.ssh_private_key
   }
 
@@ -61,5 +76,5 @@ resource "null_resource" "update_dynamic_group" {
     ]
   }
 
-  count = (local.create_operator_instance_principal_dynamic_group && var.bastion_state == "RUNNING" ) ? 1 : 0
+  count = (local.create_operator_dynamic_group_policy && var.bastion_state == "RUNNING" ) ? 1 : 0
 }
