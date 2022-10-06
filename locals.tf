@@ -8,8 +8,8 @@ locals {
     var.tenancy_id, var.tenancy_ocid,
   )
 
-  bastion_public_ip                      = var.create_bastion_host == true ? module.bastion[0].bastion_public_ip : coalesce(var.bastion_public_ip, "")
-  operator_private_ip                    = var.create_operator == true ? module.operator[0].operator_private_ip : coalesce(var.operator_private_ip, "")
+  bastion_public_ip                      = var.create_bastion_host == true ? module.bastion[0].bastion_public_ip : var.bastion_public_ip != "" ? var.bastion_public_ip: ""
+  operator_private_ip                    = var.create_operator == true ? module.operator[0].operator_private_ip : var.operator_private_ip !="" ? var.operator_private_ip: ""
   operator_instance_principal_group_name = var.create_operator == true ? module.operator[0].operator_instance_principal_group_name : ""
 
   vcn_id       = var.create_vcn == true ? module.vcn[0].vcn_id : coalesce(var.vcn_id, try(data.oci_core_vcns.vcns[0].virtual_networks[0].id,""))
