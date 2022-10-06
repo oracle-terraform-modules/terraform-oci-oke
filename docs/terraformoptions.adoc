@@ -337,6 +337,11 @@ EOT
 |7.9
 |7.9
 
+|`bastion_user`
+|The user for SSH access to the bastion host. Always 'opc' on supported images.
+|opc
+|opc
+
 |bastion_shape
 |The shape of bastion instance. *Required*
 |
@@ -451,6 +456,11 @@ EOT
 |The Oracle Linux version to use for the operator host.
 |e.g. 7.9, 8
 |8
+
+|`operator_user`
+|The user for SSH access to the operator host. Always 'opc' on supported images.
+|opc
+|opc
 
 |`operator_shape`
 |The shape of operator instance. *Required*

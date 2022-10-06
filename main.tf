@@ -59,7 +59,7 @@ module "drg" {
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.1.1"
+  version = "3.1.2"
 
   tenancy_id     = local.tenancy_id
   compartment_id = local.compartment_id
@@ -108,7 +108,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.1.0"
+  version = "3.1.1"
 
 
   # general oci parameters
