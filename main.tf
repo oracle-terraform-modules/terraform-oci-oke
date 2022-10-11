@@ -108,7 +108,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.1.2"
+  version = "3.1.3"
 
 
   # general oci parameters
