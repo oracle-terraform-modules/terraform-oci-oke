@@ -7,7 +7,7 @@ locals {
     var.compartment_id, var.compartment_ocid,
     var.tenancy_id, var.tenancy_ocid,
   )
-  user_id = coalesce(var.user_id, var.current_user_ocid)
+  user_id = var.user_id != "" ? var.user_id : var.current_user_ocid
 
   api_private_key = (
     var.api_private_key != ""
