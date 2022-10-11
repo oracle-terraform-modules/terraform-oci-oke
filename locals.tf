@@ -7,6 +7,14 @@ locals {
     var.compartment_id, var.compartment_ocid,
     var.tenancy_id, var.tenancy_ocid,
   )
+  user_id = coalesce(var.user_id, var.current_user_ocid)
+
+  api_private_key = (
+    var.api_private_key != ""
+    ? try(base64decode(var.api_private_key), var.api_private_key)
+    : var.api_private_key_path != ""
+      ? file(var.api_private_key_path)
+      : null)
 
   bastion_public_ip                      = var.create_bastion_host == true ? module.bastion[0].bastion_public_ip : var.bastion_public_ip != "" ? var.bastion_public_ip: ""
   operator_private_ip                    = var.create_operator == true ? module.operator[0].operator_private_ip : var.operator_private_ip !="" ? var.operator_private_ip: ""

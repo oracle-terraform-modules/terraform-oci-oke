@@ -50,7 +50,7 @@ See {uri-oci-provider-config}[Terraform OCI Provider] or {uri-oci-rm-config}[Res
 |none
 
 |api_private_key
-|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.* Use the heredoc format if you are specifying the key with this variable.
+|The contents of the private key file to use with OCI API. This takes precedence over private_key_path if both are specified in the provider. *Maybe required depending on your authentication method.* Use the heredoc format if you are specifying the key with this variable. This value may be optionally base64-encoded.
 |<<EOT
 -----BEGIN RSA PRIVATE KEY-----
 content+of+api+key
@@ -123,7 +123,7 @@ region = "ap-sydney-1"
 |Default
 
 |ssh_private_key
-|The contents of the private ssh key file. Use the heredoc format if you are specifying the private key.
+|The contents of the private ssh key file. Use the heredoc format if you are specifying the private key. This value may be optionally base64-encoded.
 |
 <<EOT
 -----BEGIN RSA PRIVATE KEY-----

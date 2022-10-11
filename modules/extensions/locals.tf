@@ -2,7 +2,13 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  ssh_private_key = var.ssh_private_key != "" ? var.ssh_private_key : var.ssh_private_key_path != "none" ? file(var.ssh_private_key_path) : null
+  ssh_private_key = (
+    var.ssh_private_key != ""
+    ? try(base64decode(var.ssh_private_key), var.ssh_private_key)
+    : var.ssh_private_key_path != "none"
+      ? file(var.ssh_private_key_path)
+      : null)
+
   node_pools_size_list = [
     for node_pool in data.oci_containerengine_node_pools.all_node_pools.node_pools :
     node_pool.node_config_details[0].size
