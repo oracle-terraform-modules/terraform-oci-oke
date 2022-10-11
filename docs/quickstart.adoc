@@ -15,6 +15,7 @@
 :uri-oci-okepolicy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
 :uri-oci-provider: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformproviderconfiguration.htm
 :uri-oci-provider-precedence: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformproviderconfiguration.htm#terraformproviderconfiguration_topic-Order_of_Precedence
+:uri-provider-example: {uri-rel-file-base}/provider.tf.example
 :uri-terraform: https://www.terraform.io
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
@@ -52,46 +53,11 @@ You need to create 2 providers:
 .. 1 provider for the region where your OKE cluster and other resources will be created
 .. 1 provider for the home region. This is required for conducting identity operations. *Note that your home region may not necessarily be the same as your current region.*
 
-. Create a provider.tf file in root add 2 providers:
+. Create a provider.tf file in root with 2 providers. An {uri-provider-example}[example] is provided for convenience:
 +
+[source,bash]
 ----
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.region
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-}
-
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.home_region
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "home"
-}
-----
-
-. Alternatively, you can also specify the key directly:
-+
-----
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key      = var.api_private_key
-  region           = var.regions["oke"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-}
-
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key      = var.api_private_key
-  region           = var.regions["home"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "home"
-}
+cp provider.tf.example provider.tf
 ----
 
 . You can also create use providers ({uri-oci-provider}[using differerent methods]) such as:
