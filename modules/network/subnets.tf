@@ -49,8 +49,8 @@ resource "oci_core_subnet" "pods" {
 resource "oci_core_subnet" "int_lb" {
   cidr_block                 = local.int_lb_subnet
   compartment_id             = var.compartment_id
-  display_name               = var.label_prefix == "none" ? "int_lb" : "${var.label_prefix}-int_lb"
-  dns_label                  = var.label_prefix == "none" ? "intlb" : "${var.label_prefix}ib"
+  display_name               = var.label_prefix == "none" ? "int-lb" : "${var.label_prefix}-int-lb"
+  dns_label                  = var.label_prefix == "none" ? "intlb" : "${var.label_prefix}ilb"
   prohibit_public_ip_on_vnic = true
   route_table_id             = var.nat_route_id
   vcn_id                     = var.vcn_id
@@ -65,8 +65,8 @@ resource "oci_core_subnet" "int_lb" {
 resource "oci_core_subnet" "pub_lb" {
   cidr_block                 = local.pub_lb_subnet
   compartment_id             = var.compartment_id
-  display_name               = var.label_prefix == "none" ? "pub_lb" : "${var.label_prefix}-pub_lb"
-  dns_label                  = var.label_prefix == "none" ? "publb" : "${var.label_prefix}pb"
+  display_name               = var.label_prefix == "none" ? "pub-lb" : "${var.label_prefix}-pub-lb"
+  dns_label                  = var.label_prefix == "none" ? "publb" : "${var.label_prefix}plb"
   prohibit_public_ip_on_vnic = false
   route_table_id             = var.ig_route_id
   # security_list_ids          = [oci_core_security_list.pub_lb_seclist[0].id]
