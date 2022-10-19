@@ -385,7 +385,7 @@ module "extensions" {
 
   #Gatekeeper
   enable_gatekeeper   = var.enable_gatekeeper
-  gatekeeeper_version = var.gatekeeeper_version
+  gatekeeper_version = var.gatekeeper_version
 
   # service account
   create_service_account               = var.create_service_account

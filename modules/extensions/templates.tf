@@ -72,7 +72,7 @@ locals {
   gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh",
     {
       enable_gatekeeper   = var.enable_gatekeeper
-      gatekeeeper_version = var.gatekeeeper_version
+      gatekeeper_version = var.gatekeeper_version
     }
   )
 

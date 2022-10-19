@@ -937,7 +937,7 @@ variable "enable_gatekeeper" {
   description = "Whether to install Gatekeeper"
 }
 
-variable "gatekeeeper_version" {
+variable "gatekeeper_version" {
   type        = string
   default     = "3.7"
   description = "The version of Gatekeeper to install"
