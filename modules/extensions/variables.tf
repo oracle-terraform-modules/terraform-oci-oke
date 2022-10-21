@@ -55,6 +55,8 @@ variable "operator_os_version" {}
 # oke
 variable "cluster_id" {}
 
+variable "cluster_name" {}
+
 variable "pods_cidr" {}
 
 # encryption

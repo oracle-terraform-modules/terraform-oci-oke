@@ -46,20 +46,8 @@ locals {
     }
   )
 
-  install_helm_template = templatefile("${path.module}/scripts/install_helm.template.sh",
-    {
-      ol = var.operator_os_version
-    }
-  )
-
-  install_kubectl_template = templatefile("${path.module}/scripts/install_kubectl.template.sh",
-    {
-      ol = var.operator_os_version
-    }
-  )
-
   install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {
-    version = "0.9.4"
+    version      = "0.9.4"
   })
 
   metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
@@ -95,6 +83,7 @@ locals {
     {
       cluster-id    = var.cluster_id
       cluster-id-11 = substr(var.cluster_id, (length(var.cluster_id) - 11), length(var.cluster_id))
+      cluster_name  = var.cluster_name
       region        = var.region
     }
   )

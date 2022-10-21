@@ -108,7 +108,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.1.3"
+  version = "3.1.4"
 
 
   # general oci parameters
@@ -279,7 +279,7 @@ module "oke" {
   preferred_load_balancer = var.preferred_load_balancer
 
   # nsgs
-  pod_nsgs = concat(module.network.pod_nsg_id)
+  pod_nsgs    = concat(module.network.pod_nsg_id)
   worker_nsgs = concat(var.worker_nsgs, [module.network.worker_nsg_id])
 
   # tags
@@ -361,6 +361,7 @@ module "extensions" {
 
   # oke cluster parameters
   cluster_id                   = module.oke.cluster_id
+  cluster_name                 = var.cluster_name
   pods_cidr                    = var.pods_cidr
   use_cluster_encryption       = var.use_cluster_encryption
   cluster_kms_key_id           = var.cluster_kms_key_id
