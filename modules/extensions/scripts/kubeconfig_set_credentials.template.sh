@@ -10,3 +10,5 @@ kubectl config set-credentials "user-${cluster-id-11}" --exec-command="$HOME/bin
   --exec-arg="${cluster-id}" \
   --exec-arg="--region" \
   --exec-arg="${region}"
+
+kubectx ${cluster_name}=$(kubectl config current-context)

@@ -15,24 +15,12 @@ resource "null_resource" "install_k8stools_on_operator" {
   }
 
   provisioner "file" {
-    content     = local.install_kubectl_template
-    destination = "/home/opc/install_kubectl.sh"
-  }
-
-  provisioner "file" {
-    content     = local.install_helm_template
-    destination = "/home/opc/install_helm.sh"
-  }
-
-  provisioner "file" {
     content     = local.install_kubectx_template
     destination = "/home/opc/install_kubectx.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/install_kubectl.sh\" ]; then bash \"$HOME/install_kubectl.sh\"; rm -f \"$HOME/install_kubectl.sh\";fi",
-      "if [ -f \"$HOME/install_helm.sh\" ]; then bash \"$HOME/install_helm.sh\"; rm -f \"$HOME/install_helm.sh\";fi",
       "if [ -f \"$HOME/install_kubectx.sh\" ]; then bash \"$HOME/install_kubectx.sh\"; rm -f \"$HOME/install_kubectx.sh\";fi",
     ]
   }
