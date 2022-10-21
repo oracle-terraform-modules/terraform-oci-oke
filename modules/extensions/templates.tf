@@ -46,18 +46,6 @@ locals {
     }
   )
 
-  install_helm_template = templatefile("${path.module}/scripts/install_helm.template.sh",
-    {
-      ol = var.operator_os_version
-    }
-  )
-
-  install_kubectl_template = templatefile("${path.module}/scripts/install_kubectl.template.sh",
-    {
-      ol = var.operator_os_version
-    }
-  )
-
   install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {
     version      = "0.9.4"
   })
