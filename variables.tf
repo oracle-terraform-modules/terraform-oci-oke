@@ -1,118 +1,9 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# OCI Provider parameters
-variable "api_fingerprint" {
-  default     = ""
-  description = "Fingerprint of the API private key to use with OCI API."
-  type        = string
-}
-
-variable "api_private_key" {
-  default     = ""
-  description = "The contents of the private key file to use with OCI API, optionally base64-encoded. This takes precedence over private_key_path if both are specified in the provider."
-  sensitive   = true
-  type        = string
-}
-
-variable "api_private_key_password" {
-  default     = ""
-  description = "The corresponding private key password to use with the api private key if it is encrypted."
-  sensitive   = true
-  type        = string
-}
-
-variable "api_private_key_path" {
-  default     = ""
-  description = "The path to the OCI API private key."
-  type        = string
-}
-
-variable "home_region" {
-  # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
-  description = "The tenancy's home region. Required to perform identity operations."
-  type        = string
-}
-
-# Automatically populated by Resource Manager
-variable "region" {
-  # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
-  description = "The OCI region where OKE resources will be created."
-  type        = string
-}
-
-# Overrides Resource Manager
-variable "tenancy_id" {
-  description = "The tenancy id of the OCI Cloud Account in which to create the resources."
-  type        = string
-  default     = ""
-}
-
-variable "tenancy_ocid" {
-  description = "A tenancy OCID automatically populated by Resource Manager."
-  type        = string
-  default     = ""
-}
-
-# Overrides Resource Manager
-variable "user_id" {
-  description = "The id of the user that terraform will use to create the resources."
-  type        = string
-  default     = ""
-}
-
-# Automatically populated by Resource Manager
-variable "current_user_ocid" {
-  description = "A user OCID automatically populated by Resource Manager."
-  type        = string
-  default     = ""
-}
-
-# General OCI parameters
-
-# Overrides Resource Manager
-variable "compartment_id" {
-  description = "The compartment id where to create all resources."
-  type        = string
-  default     = ""
-}
-
-# Automatically populated by Resource Manager
-variable "compartment_ocid" {
-  description = "A compartment OCID automatically populated by Resource Manager."
-  type        = string
-  default     = ""
-}
-
 variable "label_prefix" {
   default     = "none"
   description = "A string that will be prepended to all resources."
-  type        = string
-}
-
-# ssh keys
-variable "ssh_private_key" {
-  default     = ""
-  description = "The contents of the private ssh key file, optionally base64-encoded."
-  sensitive   = true
-  type        = string
-}
-
-variable "ssh_private_key_path" {
-  default     = "none"
-  description = "The path to ssh private key."
-  type        = string
-}
-
-variable "ssh_public_key" {
-  default     = ""
-  description = "The contents of the ssh public key."
-  type        = string
-}
-
-variable "ssh_public_key_path" {
-  default     = "none"
-  description = "The path to ssh public key."
   type        = string
 }
 
@@ -625,13 +516,6 @@ variable "services_cidr" {
   type        = string
 }
 
-## oke cluster kms integration
-variable "create_policies" {
-  description = "Whether to create OCI IAM policies for KMS or dynamic groups."
-  default     = true
-  type        = bool
-}
-
 variable "use_cluster_encryption" {
   description = "Whether to use OCI KMS to encrypt Kubernetes secrets."
   default     = false
@@ -699,16 +583,6 @@ variable "cloudinit_nodepool_common" {
   default     = ""
 }
 
-variable "kubeproxy_mode" {
-  default     = "iptables"
-  description = "The mode in which to run kube-proxy."
-  type        = string
-
-  validation {
-    condition     = contains(["iptables", "ipvs"], var.kubeproxy_mode)
-    error_message = "Accepted values are iptables or ipvs."
-  }
-}
 variable "node_pools" {
   default     = {}
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"
@@ -764,7 +638,7 @@ variable "ignore_label_prefix_in_node_pool_names" {
 variable "worker_nsgs" {
   default     = []
   description = "An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently."
-  type        = list(any)
+  type        = list(string)
 }
 
 variable "worker_type" {

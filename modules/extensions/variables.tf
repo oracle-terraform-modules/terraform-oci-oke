@@ -132,9 +132,21 @@ variable "service_account_namespace" {}
 
 variable "service_account_cluster_role_binding" {}
 
-#check worker node active
 variable "check_node_active" {
-  type = string
+  description = "check worker node is active"
+  type        = string
+  default     = "none"
+
+  validation {
+    condition     = contains(["none", "one", "all"], var.check_node_active)
+    error_message = "Accepted values are none, one or all."
+  }
+}
+
+variable "expected_node_count" {
+  description = "# of expected worker nodes, used to block until cluster is ready to schedule workloads when check_node_active != 'none'."
+  default     = 0
+  type        = number
 }
 
 # upgrade

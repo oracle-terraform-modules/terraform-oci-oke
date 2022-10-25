@@ -6,8 +6,8 @@ locals {
 
   check_active_worker_template = templatefile("${path.module}/scripts/check_worker_active.template.sh",
     {
-      check_node_active = var.check_node_active
-      total_nodes       = local.total_nodes
+      check_node_active   = var.check_node_active
+      expected_node_count = var.expected_node_count
     }
   )
 
@@ -46,15 +46,15 @@ locals {
       pod_cidr          = var.pods_cidr
       url               = var.calico_url
       apiserver_enabled = var.calico_apiserver_enabled
-      typha_enabled     = var.typha_enabled || local.total_nodes > 50
+      typha_enabled     = var.typha_enabled || var.expected_node_count > 50
 
       # Use provided value if set, otherwise use 1 replica for every 50 nodes with a min of 1 if enabled, and max of 20 replicas
-      typha_replicas    = (var.typha_replicas > 0) ? var.typha_replicas : max(min(20, floor(local.total_nodes / 50)), var.typha_enabled ? 1 : 0)
+      typha_replicas = (var.typha_replicas > 0) ? var.typha_replicas : max(min(20, floor(var.expected_node_count / 50)), var.typha_enabled ? 1 : 0)
     }
   )
 
   install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {
-    version      = "0.9.4"
+    version = "0.9.4"
   })
 
   metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
@@ -66,7 +66,7 @@ locals {
 
   gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh",
     {
-      enable_gatekeeper   = var.enable_gatekeeper
+      enable_gatekeeper  = var.enable_gatekeeper
       gatekeeper_version = var.gatekeeper_version
     }
   )

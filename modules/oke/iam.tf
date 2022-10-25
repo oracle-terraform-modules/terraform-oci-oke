@@ -35,6 +35,9 @@ resource "oci_identity_policy" "oke_kms" {
   name           = var.label_prefix == "none" ? "oke-kms" : "${var.label_prefix}-oke-kms"
   statements = [local.cluster_kms_policy_statement]
 
+
+  statements = [local.cluster_kms_policy_statement]
+
   count = var.use_cluster_encryption == true && var.create_policies == true ? 1 : 0
 
 }

@@ -13,7 +13,6 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   kubernetes_version = var.cluster_kubernetes_version
   kms_key_id         = var.use_cluster_encryption == true ? var.cluster_kms_key_id : null
   name               = var.label_prefix == "none" ? var.cluster_name : "${var.label_prefix}-${var.cluster_name}"
-  type               = var.cluster_type
   depends_on = [time_sleep.wait_30_seconds]
 
   cluster_pod_network_options {
