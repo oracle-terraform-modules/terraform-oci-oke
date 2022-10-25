@@ -1,7 +1,12 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2022, Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # for reuse 
+
+output "apiserver_private_endpoint" {
+  description = "Kubernetes apiserver endpoint of the OKE cluster"
+  value       = module.oke.apiserver_private_endpoint
+}
 
 output "cluster_id" {
   description = "ID of the Kubernetes cluster"
@@ -59,12 +64,12 @@ output "drg_id" {
 
 output "bastion_public_ip" {
   description = "public ip address of bastion host"
-  value       = local.bastion_public_ip
+  value       = length(local.bastion_public_ip) > 0 ? local.bastion_public_ip : null
 }
 
 output "operator_private_ip" {
   description = "private ip address of operator host"
-  value       = local.operator_private_ip
+  value       = length(local.operator_private_ip) > 0 ? local.operator_private_ip : null
 }
 
 output "ssh_to_operator" {

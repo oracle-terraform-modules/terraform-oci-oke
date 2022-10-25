@@ -407,8 +407,9 @@ module "extensions" {
   service_account_namespace            = var.service_account_namespace
   service_account_cluster_role_binding = var.service_account_cluster_role_binding
 
-  #check worker nodes are active
-  check_node_active = var.check_node_active
+  # check worker nodes are active
+  check_node_active   = var.check_node_active
+  expected_node_count = module.workergroup.expected_node_count + module.oke.expected_node_count
 
   # oke upgrade
   upgrade_nodepool        = var.upgrade_nodepool
@@ -421,7 +422,8 @@ module "extensions" {
     module.bastion,
     module.network,
     module.operator,
-    module.oke
+    module.oke,
+    module.workergroup
   ]
 
   providers = {

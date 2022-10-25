@@ -21,7 +21,7 @@ resource "null_resource" "install_k8stools_on_operator" {
 
   provisioner "remote-exec" {
     inline = [
-      "cloud-init status --wait",
+      "cloud-init status --wait &> /dev/null",
       "if [ -f \"$HOME/install_kubectx.sh\" ]; then bash \"$HOME/install_kubectx.sh\"; rm -f \"$HOME/install_kubectx.sh\";fi",
     ]
   }

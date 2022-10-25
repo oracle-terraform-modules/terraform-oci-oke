@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -12,8 +12,16 @@ locals {
   }
   ad_numbers = keys(local.ad_number_to_name)
 
+  cluster_endpoints          = coalescelist(oci_containerengine_cluster.k8s_cluster.endpoints, [])
+  cluster_endpoint           = length(local.cluster_endpoints) > 0 ? local.cluster_endpoints[0] : {}
+  apiserver_private_endpoint = lookup(local.cluster_endpoint, "private_endpoint", "")
+
   # dynamic group all oke clusters in a compartment
   dynamic_group_rule_all_clusters = "ALL {resource.type = 'cluster', resource.compartment.id = '${var.compartment_id}'}"
+
+  # number of expected worker nodes from configured node pools
+  expected_node_count = (length(var.node_pools) == 0 ? 0 :
+    sum([for k, v in var.node_pools : max(0, lookup(v, "node_pool_size", 0))]))
 
   # policy to allow dynamic group of all clusters to use kms 
   cluster_kms_policy_statement = (var.use_cluster_encryption == true && var.create_policies) ? "Allow dynamic-group ${oci_identity_dynamic_group.oke_kms_cluster[0].name} to use keys in compartment id ${var.compartment_id} where target.key.id = '${var.cluster_kms_key_id}'" : ""
