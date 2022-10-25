@@ -1,9 +1,9 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "null_resource" "check_worker_active" {
   triggers = {
-    node_pools = length(data.oci_containerengine_node_pools.all_node_pools.node_pools)
+    expected_node_count = var.expected_node_count
   }
 
   connection {

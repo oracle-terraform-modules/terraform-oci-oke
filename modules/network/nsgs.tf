@@ -49,7 +49,7 @@ resource "oci_core_network_security_group_security_rule" "cp_egress_npn" {
 
   stateless = false
 
-  count = var.cni_type == "npn" ? 1 :0
+  count = var.cni_type == "npn" ? 1 : 0
 
 }
 
@@ -153,7 +153,7 @@ resource "oci_core_network_security_group_security_rule" "workers_egress_npn" {
 
   stateless = false
 
-  count = var.cni_type == "npn" ? 1: 0
+  count = var.cni_type == "npn" ? 1 : 0
 }
 
 # add this rule separately so it can be controlled independently
@@ -356,7 +356,7 @@ resource "oci_core_network_security_group_security_rule" "pods_egress" {
     }
   }
 
-  count = var.cni_type =="npn" ? length(local.pods_egress) : 0
+  count = var.cni_type == "npn" ? length(local.pods_egress) : 0
 }
 
 resource "oci_core_network_security_group_security_rule" "pods_ingress" {
@@ -367,7 +367,7 @@ resource "oci_core_network_security_group_security_rule" "pods_ingress" {
   protocol                  = local.pods_ingress[count.index].protocol
   direction                 = "INGRESS"
   stateless                 = false
-  count                     = var.cni_type =="npn" ? length(local.pods_ingress) : 0
+  count                     = var.cni_type == "npn" ? length(local.pods_ingress) : 0
 }
 
 # add this rule separately so it can be controlled independently
@@ -380,7 +380,7 @@ resource "oci_core_network_security_group_security_rule" "pods_egress_internet" 
   protocol                  = local.all_protocols
 
   stateless = false
-  count = (var.cni_type =="npn" && var.allow_pod_internet_access == true) ? 1 : 0
+  count     = (var.cni_type == "npn" && var.allow_pod_internet_access == true) ? 1 : 0
 
 }
 

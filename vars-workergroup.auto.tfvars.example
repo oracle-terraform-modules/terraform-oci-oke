@@ -1,0 +1,45 @@
+# Copyright 2022 Oracle Corporation and/or affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# Default parameters
+label_prefix                  = "dev"
+worker_group_size             = 0
+worker_group_mode             = "node-pool"
+worker_group_shape            = "VM.Standard.E4.Flex"
+worker_group_ocpus            = 2  # Ignored for non-Flex shapes
+worker_group_memory           = 16 # Ignored for non-Flex shapes
+worker_group_boot_volume_size = 100
+
+# Default parameters when undefined for a group
+worker_group_enabled           = false # Defaults to true; must otherwise enable groups explicitly
+worker_compartment_id          = "" # Defaults to compartment_id when empty
+worker_group_primary_subnet_id = "" # Defaults to Terraform-managed when empty
+
+# Some default worker_groups vars will fall back to node_pools values when != "none"
+node_pool_image_id   = "ocid1.image..." # Ignored when image type != "custom"
+node_pool_image_type = "oke" # Must be "custom" when providing an image OCID
+node_pools  = {} # Functions as before; only worker_groups are defined in this example
+worker_nsgs = [] # Defaults to VCN workers NSG when empty/missing
+
+# Defaults for worker_groups, when different from node_pools
+worker_group_image_id   = "ocid1.image..." # Ignored when image type != "custom"
+worker_group_image_type = "oke"
+
+# Definitions for worker groups, with any fields set overriding defaults above
+#   The "worker_group_" prefix is omitted for parameters at the group level
+#   All value fields may be omitted to accept defaults for a sparse definition
+worker_groups = {
+  np_vm-minimal = {},
+  np_vm-ol7 = {
+    enabled = false, description = "Managed Node Pool with OKE Oracle Linux 7 image"
+    size = 1, os = "Oracle Linux", os_version  = "7"
+  },
+  np_vm-ol8 = {
+    enabled = false, description = "Managed Node Pool with OKE Oracle Linux 8 image"
+    size = 1, os = "Oracle Linux", os_version  = "8"
+  },
+  np_vm-custom = {
+    enabled = false, description = "Managed Node Pool with custom image OCID"
+    image_type = "custom", image_id = "ocid1.image..."
+  },
+}
