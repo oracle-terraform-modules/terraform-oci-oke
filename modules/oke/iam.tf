@@ -35,9 +35,9 @@ resource "oci_identity_policy" "oke_kms" {
   name           = var.label_prefix == "none" ? "oke-kms" : "${var.label_prefix}-oke-kms"
 
 
-  statements     = [local.cluster_kms_policy_statement]
+  statements = [local.cluster_kms_policy_statement]
 
-  count          = var.use_cluster_encryption == true && var.create_policies == true ? 1 : 0
+  count = var.use_cluster_encryption == true && var.create_policies == true ? 1 : 0
 
 }
 
@@ -48,6 +48,6 @@ resource "oci_identity_policy" "oke_volume_kms" {
   name           = var.label_prefix == "none" ? "oke-volume-kms" : "${var.label_prefix}-oke-volume-kms"
   statements     = local.oke_volume_kms_policy_statements
 
-  count          = var.use_node_pool_volume_encryption == true && var.create_policies == true ? 1 : 0
+  count = var.use_node_pool_volume_encryption == true && var.create_policies == true ? 1 : 0
 
 }

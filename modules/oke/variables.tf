@@ -68,7 +68,7 @@ variable "enable_pv_encryption_in_transit" {
 }
 
 variable "create_policies" {
-  type        = bool
+  type = bool
 }
 
 # signed images
@@ -88,7 +88,7 @@ variable "admission_controller_options" {
 variable "kubeproxy_mode" {}
 
 variable "max_pods_per_node" {
-  type        = number
+  type = number
 }
 
 variable "node_pools" {
