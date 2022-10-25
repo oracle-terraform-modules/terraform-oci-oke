@@ -13,6 +13,6 @@ provider.tf
 generated/**
 
 # visual code
- **/.vscode/*
+**/.vscode/*
 
 .terraform.lock.hcl

@@ -8,7 +8,7 @@ variable "label_prefix" {}
 
 # bastion service parameters
 variable "bastion_service_access" {
-  type        = list(string)
+  type = list(string)
 }
 
 variable "bastion_service_name" {}

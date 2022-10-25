@@ -1,8 +1,5 @@
-# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
-
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
-
-# for reuse 
 
 output "cluster_id" {
   description = "ID of the Kubernetes cluster"
@@ -11,7 +8,7 @@ output "cluster_id" {
 
 output "nodepool_ids" {
   description = "Map of Nodepool names and IDs"
-  value       = module.oke.nodepool_ids
+  value       = length(module.oke.nodepool_ids) > 0 ? module.oke.nodepool_ids : null
 }
 
 output "ig_route_id" {
@@ -66,12 +63,12 @@ output "rpcs_ids" {
 
 output "bastion_public_ip" {
   description = "public ip address of bastion host"
-  value       = local.bastion_public_ip
+  value       = length(local.bastion_public_ip) > 0 ? local.bastion_public_ip : null
 }
 
 output "operator_private_ip" {
   description = "private ip address of operator host"
-  value       = local.operator_private_ip
+  value       = length(local.operator_private_ip) > 0 ? local.operator_private_ip : null
 }
 
 output "ssh_to_operator" {

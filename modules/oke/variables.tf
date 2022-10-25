@@ -92,14 +92,6 @@ variable "max_pods_per_node" {
   type = number
 }
 
-variable "enable_cluster_autoscaler" {
-  type = bool
-}
-
-variable "autoscaler_pools" {
-  type = any
-}
-
 variable "node_pools" {
   type = any
 }
