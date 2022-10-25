@@ -12,6 +12,10 @@ locals {
   }
   ad_numbers = keys(local.ad_number_to_name)
 
+  cluster_endpoints          = coalesce(oci_containerengine_cluster.k8s_cluster.endpoints, [])
+  cluster_endpoint           = length(local.cluster_endpoints) > 0 ? local.cluster_endpoints[0] : {}
+  apiserver_private_endpoint = lookup(local.cluster_endpoint, "private_endpoint", "")
+
   # dynamic group all oke clusters in a compartment
   dynamic_group_rule_all_clusters = "ALL {resource.type = 'cluster', resource.compartment.id = '${var.compartment_id}'}"
 

@@ -1,0 +1,32 @@
+# Copyright 2022, Oracle Corporation and/or affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# Default parameters when missing for a group
+worker_group_enabled           = true
+worker_group_size              = 0
+worker_group_image_id          = "ocid1.image..." # Required here and/or on group
+worker_group_image_type        = "custom"
+worker_group_mode              = "node-pool"
+worker_group_shape             = "VM.Standard.E4.Flex"
+worker_group_ocpus             = 2
+worker_group_memory            = 16
+worker_group_boot_volume_size  = 100
+worker_nsgs                    = []
+worker_compartment_id          = "" # Defaults to compartment_id when empty
+worker_group_primary_subnet_id = "" # Defaults to Terraform-managed when empty
+worker_groups = {
+  np-vm-minimal = { enabled = false },
+  np-vm-optimized = {
+    description = "Managed Node Pool with OKE optimized image"
+    enabled     = false,
+    size        = 1,
+    image_type  = "oke"
+    os          = "Oracle Linux"
+    os_version  = "7.9"
+  },
+  np-vm-custom = {
+    description = "Managed Node Pool with custom image OCID"
+    enabled     = false,
+    image_id    = "ocid1.image..."
+  },
+}
