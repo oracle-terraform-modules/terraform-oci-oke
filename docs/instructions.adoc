@@ -231,19 +231,47 @@ N.B. In order for kubeconfig to be created on the operator host, you need to lin
 
 An alias "*k*" will be created for kubectl on the operator host. 
 
-If you would like to use kubectl locally, {uri-install-kubectl}[install kubectl]. Then, set the KUBECONFIG to the config file path. The kubeconfig file will be saved generated locally under the folder *generated*:
+If you would like to use kubectl locally, {uri-install-kubectl}[install kubectl]. Then, set the KUBECONFIG to the config file path.
 
 ----
-export KUBECONFIG=generated/kubeconfig
+export KUBECONFIG=path/to/kubeconfig
 ----
+
+To be able to get the kubeconfig file, you will need to get the credentials with terraform and store in the preferred storage format (e.g: file, vault, bucket...). Example:
+
+[source,hcl]
+----
+# OKE cluster creation.
+module "oke_my_cluster" {
+#...
+}
+
+# Obtain cluster Kubeconfig.
+data "oci_containerengine_cluster_kube_config" "kube_config" {
+  cluster_id = module.oke_my_cluster.cluster_id
+}
+
+# Store kubeconfig in vault.
+resource "vault_generic_secret" "kube_config" {
+  path = "my/cluster/path/kubeconfig"
+  data_json = jsonencode({
+    "data" : data.oci_containerengine_cluster_kube_config.kube_config.content
+  })
+}
+
+# Store kubeconfig in file.
+resource "local_file" "kube_config" {
+  content         = data.oci_containerengine_cluster_kube_config.kube_config.content
+  filename        = "/tmp/kubeconfig"
+  file_permission = "0600"
+}
+----
+
 
 ****
 *Ensure you install the same kubectl version as the OKE Kubernetes version for compatibility.*
 ****
 
-****
-*To refresh the generated kubeconfig, run `terraform apply` with `update_kubeconfig: true`.*
-****
 
 == Creating a Secret for OCIR
 

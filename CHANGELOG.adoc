@@ -7,6 +7,65 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
+== 4.2.14 (not released)
+=== Changes
+* feat: Removed local kubeconfig file creation and `update_kubeconfig` input variable by @slok in #602
+
+== 4.2.13
+=== Changes
+* network: use label_prefix in subnets dns_label by @ooraini in #590
+* chore: cosmetic changes to load balancer subnet names and labels by @hyder in #592
+* feat: upgraded operator module to 3.1.4 by @hyder in #598
+
+== 4.2.12
+=== Changes
+* fix: Provide empty fallback value for user_id local by @devoncrouse in #588
+
+== 4.2.11
+=== Changes
+* Update modules, support base64-encoded SSH key by @devoncrouse in #587
+* Update operator module version to 3.1.3 by @devoncrouse
+
+== 4.2.10
+=== Changes
+* fix: fixes condition when bastion/operator are set to false and no ip addresses for them are provided by @hyder in #585
+
+== 4.2.9
+=== Changes
+* fix icmp in cp_ingress_additional_cidrs nsg rule by @ooraini in #572
+* fix: Ignore lifecycle changes, support Resource Manager variables by @devoncrouse in #583
+
+== 4.2.8
+=== Changes
+* feat: Support existing VCN in other compartment by @chrisbulgaria in #564
+* fix: Add missing NSG rules for VCN-Native Pod Networking by @devoncrouse in #563
+* fix: error referencing pod nsgs by @hyder in #567
+* fix: added lifecycle meta-argument on default security list by @hyder in #565
+* fix: handle pod nsg id/ids issue by @hyder in #570
+* feat: Added option to specify ADs in node pools by @12345ieee in #520
+* feat: added tagging using defined tags #560 by @valireds in #562
+* fix: Check for existing element in freeform and defined tags by @hyder in #574
+* fix: handle placement_ads for 1 AD regions. by @hyder in #581
+
+== 4.2.7
+=== Changes
+* fix: bug fix in helm installation script by @hyder in #558
+* feat: added freeform tagging for pvc and nodepools by @hyder in #552
+* Updated docs for cloud-init by @33percent in #554
+
+== 4.2.6
+=== Changes
+* feat: added kubectx and kubens by @hyder in #548
+* Support for VCN Native Pod Networking by @hyder in #542
+* feat: added output for all nsg ids in a map. Previous nsg outputs are deprecated by @hyder in #550
+
+== 4.2.5
+=== Changes
+* docs: Reuse VCN by @karthicgit in #524
+* docs: updated instruction for when using the remote module from by @hyder in #531
+* docs: updated architecture diagrams by @hyder in #533
+* feat adopt new DRG module by @snafuz in #546
+
 == 4.2.4
 === Changes
 * feat: added support for OKE images for faster worker node provisioning by @hyder in #529

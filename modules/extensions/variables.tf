@@ -70,7 +70,7 @@ variable "cluster_kms_key_id" {}
 variable "cluster_kms_dynamic_group_id" {}
 
 variable "create_policies" {
-  type        = bool
+  type = bool
 }
 
 # ocir
@@ -143,8 +143,4 @@ variable "node_pools_to_drain" {
 
 variable "debug_mode" {
   type = bool
-}
-
-variable "update_kubeconfig" {
-  type    = bool
 }

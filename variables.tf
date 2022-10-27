@@ -174,10 +174,10 @@ variable "drg_display_name" {
   default     = "drg"
 }
 
-variable "drg_id"{
+variable "drg_id" {
   description = "ID of an external created Dynamic Routing Gateway to be attached to the VCN"
-  type = string
-  default = null
+  type        = string
+  default     = null
 }
 
 variable "internet_gateway_route_rules" {
@@ -547,7 +547,7 @@ variable "cni_type" {
   validation {
     condition     = contains(["flannel", "npn"], var.cni_type)
     error_message = "Accepted values are flannel or npn."
-  }  
+  }
 }
 
 variable "control_plane_type" {
@@ -700,7 +700,7 @@ variable "node_pool_image_type" {
   validation {
     condition     = contains(["custom", "oke", "platform"], var.node_pool_image_type)
     error_message = "Accepted values are custom, oke, platform."
-  }  
+  }
 }
 
 variable "node_pool_name_prefix" {
@@ -986,11 +986,11 @@ variable "freeform_tags" {
       role        = "operator"
     }
     oke = {
-      
+
       cluster = {
         environment = "dev"
       }
-      
+
       persistent_volume = {
         environment = "dev"
       }
@@ -1017,17 +1017,17 @@ variable "defined_tags" {
     # add more tags in each as desired
     vcn = {}
     oke = {
-      cluster = {}
+      cluster           = {}
       persistent_volume = {}
-      service_lb = {}
-      node_pool = {}
-      node = {}
+      service_lb        = {}
+      node_pool         = {}
+      node              = {}
     }
   }
   description = "Tags to apply to different resources."
   type = object({
-    vcn      = map(any),
-    oke      = map(any)
+    vcn = map(any),
+    oke = map(any)
   })
 }
 
@@ -1035,11 +1035,5 @@ variable "defined_tags" {
 variable "debug_mode" {
   default     = false
   description = "Whether to turn on debug mode."
-  type        = bool
-}
-
-variable "update_kubeconfig" {
-  default     = false
-  description = "Whether to refresh the generated kubeconfig file."
   type        = bool
 }
