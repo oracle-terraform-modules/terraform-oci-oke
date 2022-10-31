@@ -1,30 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "oci_containerengine_cluster_kube_config" "kube_config" {
-  cluster_id = var.cluster_id
-}
-
-# Terraform doesn't support conditional dynamic blocks for lifecycle, so resource
-# is repeated with and without it based on update_kubeconfig boolean variable
-# Not ideal, but mitigates reported change on every apply
-resource "local_file" "kube_config_file" {
-  count           = var.update_kubeconfig ? 0 : 1
-  content         = data.oci_containerengine_cluster_kube_config.kube_config.content
-  filename        = "${path.root}/generated/kubeconfig"
-  file_permission = "0600"
-  lifecycle {
-    ignore_changes = [content]
-  }
-}
-
-resource "local_file" "kube_config_file_refresh" {
-  count           = var.update_kubeconfig == true ? 1 : 0
-  content         = data.oci_containerengine_cluster_kube_config.kube_config.content
-  filename        = "${path.root}/generated/kubeconfig"
-  file_permission = "0600"
-}
-
 resource "null_resource" "write_kubeconfig_on_operator" {
   connection {
     host        = var.operator_private_ip
