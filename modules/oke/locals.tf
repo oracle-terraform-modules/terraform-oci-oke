@@ -12,7 +12,7 @@ locals {
   }
   ad_numbers = keys(local.ad_number_to_name)
 
-  cluster_endpoints          = coalesce(oci_containerengine_cluster.k8s_cluster.endpoints, [])
+  cluster_endpoints          = coalescelist(oci_containerengine_cluster.k8s_cluster.endpoints, [])
   cluster_endpoint           = length(local.cluster_endpoints) > 0 ? local.cluster_endpoints[0] : {}
   apiserver_private_endpoint = lookup(local.cluster_endpoint, "private_endpoint", "")
 

@@ -23,7 +23,7 @@ module "workergroup" {
   cluster_ca_cert                 = var.cluster_ca_cert
   k8s_version                     = var.kubernetes_version
   pod_nsg_ids                     = try(split(",", lookup(module.network.nsg_ids, "pods", "")), [])
-  worker_nsg_ids                  = coalesce(var.worker_nsgs, try(split(",", lookup(module.network.nsg_ids, "workers", "")), []))
+  worker_nsg_ids                  = coalescelist(var.worker_nsgs, try(split(",", lookup(module.network.nsg_ids, "workers", "")), []))
   primary_subnet_id               = coalesce(var.worker_group_primary_subnet_id, lookup(module.network.subnet_ids, "workers", ""))
   ssh_public_key                  = var.ssh_public_key
   ssh_public_key_path             = var.ssh_public_key_path
