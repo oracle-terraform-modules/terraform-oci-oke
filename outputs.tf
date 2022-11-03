@@ -77,12 +77,6 @@ output "ssh_to_bastion" {
   value       = "ssh${local.ssh_key_arg} ${var.bastion_user}@${local.bastion_public_ip}"
 }
 
-# Suppress reported output change on clean destroy
-output "kubeconfig" {
-  description = "convenient command to set KUBECONFIG environment variable before running kubectl locally"
-  value       = length(module.oke.cluster_id) == 0 ? null : "export KUBECONFIG=generated/kubeconfig"
-}
-
 output "bastion_service_instance_id" {
   value = var.create_bastion_service == true ? module.bastionsvc[0].bastion_id : null
 }
