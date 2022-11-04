@@ -33,7 +33,7 @@ resource "oci_core_instance_configuration" "instance_configuration" {
       }
 
       metadata = {
-        oke-k8version            = "v1.22.5" # Temp kube-proxy fix; version doesn't matter other than >1.21 for IPVS
+        oke-k8version            = var.kubernetes_version
         oke-kubeproxy-proxy-mode = var.kubeproxy_mode
         ssh_authorized_keys      = local.ssh_public_key
         user_data                = data.cloudinit_config.worker_ip.rendered

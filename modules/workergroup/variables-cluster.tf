@@ -41,7 +41,7 @@ variable "label_prefix" {
   type        = string
 }
 
-variable "k8s_version" {
+variable "kubernetes_version" {
   default     = "v1.24.1"
   description = "The Kubernetes version"
   type        = string

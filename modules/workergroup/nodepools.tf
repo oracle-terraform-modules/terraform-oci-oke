@@ -7,7 +7,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   for_each           = local.enabled_node_pools
   compartment_id     = lookup(each.value, "compartment_id", local.compartment_id)
   cluster_id         = var.cluster_id
-  kubernetes_version = var.k8s_version
+  kubernetes_version = var.kubernetes_version
   name               = join("-", compact([lookup(each.value, "label_prefix", var.label_prefix), each.key]))
   defined_tags       = merge(coalesce(local.defined_tags, {}), contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
   freeform_tags      = merge(coalesce(local.freeform_tags, {}), contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_group = each.key })

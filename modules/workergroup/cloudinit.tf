@@ -27,7 +27,7 @@ data "cloudinit_config" "worker_ip" {
 
   part {
     filename     = "worker.sh"
-    content_type = "text/x-shellscript"
+    content_type = "text/x-shellscript-per-instance"
     content      = templatefile("${path.module}/cloudinit/worker.ip.sh", local.script_args)
   }
 }

@@ -1,19 +1,21 @@
 # Copyright 2022, Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Default parameters when missing for a group
+# Default parameters when undefined for a group, prefixed with `worker_group_` in module root
 worker_group_enabled           = true
 worker_group_size              = 0
-worker_group_image_id          = "ocid1.image..." # Required here and/or on group
+worker_group_image_id          = "ocid1.image..." # Ignored when image_type != custom
 worker_group_image_type        = "custom"
 worker_group_mode              = "node-pool"
 worker_group_shape             = "VM.Standard.E4.Flex"
-worker_group_ocpus             = 2
-worker_group_memory            = 16
+worker_group_ocpus             = 2  # Ignored for non-Flex shapes
+worker_group_memory            = 16 # Ignored for non-Flex shapes
 worker_group_boot_volume_size  = 100
-worker_nsgs                    = []
+worker_nsgs                    = [] # Defaults to VCN workers NSG when empty/missing
 worker_compartment_id          = "" # Defaults to compartment_id when empty
 worker_group_primary_subnet_id = "" # Defaults to Terraform-managed when empty
+
+# Properties of each worker group omit the `worker_group_` prefix
 worker_groups = {
   np-vm-minimal = { enabled = false },
   np-vm-optimized = {

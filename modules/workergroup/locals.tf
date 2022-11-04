@@ -28,8 +28,8 @@ locals {
   } : { -1 : "" } # Fallback handles failure when unavailable but not required
   first_ad_name = local.ad_number_to_name[1]
 
-  k8s_version_length = length(var.k8s_version)
-  k8s_version_only   = substr(var.k8s_version, 1, local.k8s_version_length)
+  k8s_version_length = length(var.kubernetes_version)
+  k8s_version_only   = substr(var.kubernetes_version, 1, local.k8s_version_length)
 
   kubeconfig          = try(yamldecode(lookup(data.oci_containerengine_cluster_kube_config.kube_config, "content", "")), { "error" : "yamldecode" })
   kubeconfig_clusters = try(lookup(local.kubeconfig, "clusters", []), [])
