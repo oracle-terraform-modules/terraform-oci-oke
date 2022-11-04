@@ -30,4 +30,10 @@ data "cloudinit_config" "worker_ip" {
     content_type = "text/x-shellscript-per-instance"
     content      = templatefile("${path.module}/cloudinit/worker.ip.sh", local.script_args)
   }
+
+  part {
+    filename     = "mlx-vf.sh"
+    content_type = "text/x-shellscript-per-boot"
+    content      = templatefile("${path.module}/cloudinit/mlx-vf.sh", local.script_args)
+  }
 }
