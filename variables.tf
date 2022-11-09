@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # OCI Provider parameters
@@ -944,6 +944,16 @@ variable "enable_gatekeeper" {
 }
 
 variable "gatekeeeper_version" {
+  type        = string
+  default     = null
+  description = "DEPRECATED - Fix spelling to `gatekeeper_version`"
+  validation {
+    condition     = var.gatekeeeper_version == null
+    error_message = "Deprecated - please fix variable spelling to `gatekeeper_version`."
+  }
+}
+
+variable "gatekeeper_version" {
   type        = string
   default     = "3.7"
   description = "The version of Gatekeeper to install"

@@ -337,7 +337,7 @@ vpa_version          = 0.8
 
 #OPA Gatekeeper
 enable_gatekeeper = false
-gatekeeeper_version = "3.7"
+gatekeeper_version = "3.7"
 
 # service account
 create_service_account               = false

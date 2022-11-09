@@ -1048,7 +1048,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 |true/false
 |false
 
-|gatekeeeper_version
+|gatekeeper_version
 |version of {uri-openpolicyagent-gatekeeper}[Gatekeeper].
 |
 |3.7
