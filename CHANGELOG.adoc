@@ -10,6 +10,8 @@ The format is based on {uri-changelog}[Keep a Changelog].
 == 4.2.14 (not released)
 === Changes
 * feat: Removed local kubeconfig file creation and `update_kubeconfig` input variable by @slok in #602
+* feat: Support disabled DNS record assignment for OKE subnets by @devoncrouse in #606
+* fix: Fix misspelling of "gatekeeper" from "gatekeeeper" by @devoncrouse in #606
 
 == 4.2.13
 === Changes

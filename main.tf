@@ -25,7 +25,7 @@ module "vcn" {
 
   # vcn
   vcn_cidrs                    = var.vcn_cidrs
-  vcn_dns_label                = var.vcn_dns_label
+  vcn_dns_label                = var.assign_dns ? var.vcn_dns_label : null
   vcn_name                     = var.vcn_name
   lockdown_default_seclist     = var.lockdown_default_seclist
   internet_gateway_route_rules = var.internet_gateway_route_rules
@@ -187,6 +187,7 @@ module "network" {
   label_prefix   = var.label_prefix
 
   # oke networking parameters
+  assign_dns   = var.assign_dns
   ig_route_id  = local.ig_route_id
   nat_route_id = local.nat_route_id
   subnets      = var.subnets
@@ -307,6 +308,7 @@ module "storage" {
 
   # FSS network information
   subnets      = var.subnets
+  assign_dns   = var.assign_dns
   vcn_id       = local.vcn_id
   nat_route_id = local.nat_route_id
 
