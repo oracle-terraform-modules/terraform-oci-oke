@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -60,7 +60,7 @@ locals {
   gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh",
     {
       enable_gatekeeper   = var.enable_gatekeeper
-      gatekeeeper_version = var.gatekeeeper_version
+      gatekeeper_version = var.gatekeeper_version
     }
   )
 

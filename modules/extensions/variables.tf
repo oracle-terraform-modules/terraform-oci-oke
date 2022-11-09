@@ -103,7 +103,7 @@ variable "enable_gatekeeper" {
   default = false
 }
 
-variable "gatekeeeper_version" {
+variable "gatekeeper_version" {
   type = string
 
 }
