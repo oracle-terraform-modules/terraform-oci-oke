@@ -16,6 +16,10 @@ variable "subnets" {
   type = map(any)
 }
 
+variable "assign_dns" {
+  type = bool
+}
+
 variable "vcn_id" {
   type        = string
   description = "(optional) describe your variable"

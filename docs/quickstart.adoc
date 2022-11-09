@@ -122,7 +122,7 @@ terraform {
 module "oke" {
   source  = "oracle-terraform-modules/oke/oci"
   version = "4.2.4"
-  # insert the 9 required variables here
+  # insert required variables here
 }
 ----
 
@@ -144,7 +144,6 @@ module "oke" {
   home_region                           =   var.home_region
   region                                =   var.region
 
-  vcn_dns_label                         =   var.vcn_dns_label
   vcn_name                              =   var.vcn_name
 
   create_bastion_host                   =   var.create_bastion_host

@@ -47,6 +47,10 @@ variable "allow_worker_ssh_access" {
   type = bool
 }
 
+variable "assign_dns" {
+  type = bool
+}
+
 variable "worker_type" {}
 
 # load balancers

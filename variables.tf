@@ -233,8 +233,14 @@ variable "vcn_cidrs" {
 
 variable "vcn_dns_label" {
   default     = "oke"
-  description = "A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet."
+  description = "A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. DNS resolution of hostnames in the VCN is disabled when null."
   type        = string
+}
+
+variable "assign_dns" {
+  default     = true
+  description = "Whether to assign DNS records to created instances"
+  type        = bool
 }
 
 variable "vcn_name" {
