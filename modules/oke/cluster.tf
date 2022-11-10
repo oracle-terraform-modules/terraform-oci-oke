@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # 30s delay to allow policies to take effect globally
@@ -75,7 +75,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags]
+    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
   }
 
   vcn_id = var.vcn_id
