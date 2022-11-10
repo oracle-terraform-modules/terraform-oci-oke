@@ -1,4 +1,4 @@
-# Copyright 2022, Oracle Corporation and/or affiliates.
+# Copyright 2022 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 variable "primary_subnet_id" {
@@ -32,4 +32,10 @@ variable "ssh_public_key" {
 variable "ssh_public_key_path" {
   default = ""
   type    = string
+}
+
+variable "sriov_num_vfs" {
+  default     = 1
+  description = "Number of SR-IOV virtual functions to create for each physical function on Mellanox NICs when present. 0 to disable."
+  type        = number
 }

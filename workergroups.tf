@@ -25,6 +25,7 @@ module "workergroup" {
   pod_nsg_ids                     = try(split(",", lookup(module.network.nsg_ids, "pods", "")), [])
   worker_nsg_ids                  = coalescelist(var.worker_nsgs, try(split(",", lookup(module.network.nsg_ids, "workers", "")), []))
   primary_subnet_id               = coalesce(var.worker_group_primary_subnet_id, lookup(module.network.subnet_ids, "workers", ""))
+  sriov_num_vfs                   = var.sriov_num_vfs
   ssh_public_key                  = var.ssh_public_key
   ssh_public_key_path             = var.ssh_public_key_path
   timezone                        = var.node_pool_timezone
