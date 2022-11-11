@@ -786,8 +786,11 @@ node_pools = {
     memory           = 32,
     node_pool_size   = 1,
     boot_volume_size = 150,
-  } 
-} 
+  }
+  np2 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
+  np3 = { shape = "VM.Standard.E2.2", node_pool_size = 2, boot_volume_size = 150 }
+  np4 = { shape = "VM.Standard.E2.2", node_pool_size = 1 }
+}
 |{}
 
 |node_pool_image_id

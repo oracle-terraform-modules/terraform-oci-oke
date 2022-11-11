@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
-api_fingerprint      = ""
+api_fingerprint = ""
 # api_private_key      = <<EOT
 #-----BEGIN RSA PRIVATE KEY-----
 #content+of+api+key
@@ -12,17 +12,17 @@ api_fingerprint      = ""
 api_private_key_path = ""
 
 home_region = "us-ashburn-1"
-region = "us-phoenix-1"
+region      = "us-phoenix-1"
 
-tenancy_id           = ""
-user_id              = ""
+tenancy_id = ""
+user_id    = ""
 
 # general oci parameters
 compartment_id = ""
 label_prefix   = "dev"
 
 # ssh keys
-ssh_private_key      = ""
+ssh_private_key = ""
 # ssh_private_key    = <<EOT
 #-----BEGIN RSA PRIVATE KEY-----
 #content+of+api+key
@@ -34,20 +34,17 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 # ssh_public_key_path = "~/.ssh/id_rsa.pub"
 
 # networking
-
-assign_dns = true
-
 create_drg       = false
 drg_display_name = "drg"
 drg_id           = null
 
 internet_gateway_route_rules = [
-#   {
-#     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
-#     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
-#     network_entity_id = "drg"            # for internet_gateway_route_rules input variable, you can use special strings "drg", "internet_gateway" or pass a valid OCID using string or any Named Values
-#     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
-#   },
+  #   {
+  #     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
+  #     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
+  #     network_entity_id = "drg"            # for internet_gateway_route_rules input variable, you can use special strings "drg", "internet_gateway" or pass a valid OCID using string or any Named Values
+  #     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
+  #   },
 ]
 
 local_peering_gateways = {}
@@ -55,12 +52,12 @@ local_peering_gateways = {}
 lockdown_default_seclist = true
 
 nat_gateway_route_rules = [
-#   {
-#     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
-#     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
-#     network_entity_id = "drg"            # for nat_gateway_route_rules input variable, you can use special strings "drg", "nat_gateway" or pass a valid OCID using string or any Named Values
-#     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
-#   },
+  #   {
+  #     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
+  #     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
+  #     network_entity_id = "drg"            # for nat_gateway_route_rules input variable, you can use special strings "drg", "nat_gateway" or pass a valid OCID using string or any Named Values
+  #     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
+  #   },
 ]
 
 nat_gateway_public_ip_id = "none"
@@ -76,6 +73,7 @@ subnets = {
   fss      = { netnum = 18, newbits = 11 }
 }
 
+assign_dns                   = true
 create_vcn                   = true
 vcn_cidrs                    = ["10.0.0.0/16"]
 vcn_dns_label                = "oke"
@@ -180,26 +178,26 @@ pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
 
 ## oke cluster kms integration
-use_cluster_encryption  = false
-cluster_kms_key_id      = ""
-create_policies = true
+use_cluster_encryption = false
+cluster_kms_key_id     = ""
+create_policies        = true
 
 ## oke cluster container image policy and keys
-use_signed_images = false
+use_signed_images  = false
 image_signing_keys = []
 
 # node pools
-check_node_active = "all"
+check_node_active               = "all"
 enable_pv_encryption_in_transit = false
 node_pools = {
   # Basic node pool
-  np1 = {
-    shape            = "VM.Standard.E4.Flex",
-    ocpus            = 2,
-    memory           = 32,
-    node_pool_size   = 1,
-    boot_volume_size = 150,
-  }
+  #np1 = {
+  #  shape            = "VM.Standard.E4.Flex",
+  #  ocpus            = 2,
+  #  memory           = 32,
+  #  node_pool_size   = 1,
+  #  boot_volume_size = 150,
+  #}
   # # node pool with initial node labels
   # np2 = {
   #   shape            = "VM.Standard.E4.Flex",
@@ -228,15 +226,6 @@ node_pools = {
   #   boot_volume_size      = 150,
   #   nodepool_defined_tags = { "cn.environment" = "prod" },
   #   node_defined_tags     = { "cn.environment" = "prod" },
-  # }
-  # # node pool with placement ads
-  # np5 = {
-  #   shape            = "VM.Standard.E4.Flex",
-  #   ocpus            = 2,
-  #   memory           = 32,
-  #   node_pool_size   = 1,
-  #   boot_volume_size = 150,
-  #   placement_ads    = [1]
   # }
   # # node pool using ARM Flex shape
   # np6 = {
@@ -270,17 +259,12 @@ node_pools = {
   #   node_pool_size   = 1,
   #   boot_volume_size = 150,
   # }
-  # # node pool using BM.GPU3.8
-  # np10 = {
-  #   shape            = "BM.GPU3.8",
-  #   node_pool_size   = 1,
-  #   boot_volume_size = 150,
-  # }
-  # # node pool using BM.GPU4.8
+  # # node pool using BM.GPU4.8 and availability domain placement
   # np11 = {
   #   shape            = "BM.GPU4.8",
   #   node_pool_size   = 1,
   #   boot_volume_size = 150,
+  #   placement_ads    = [1]
   # }
 }
 node_pool_image_id    = "none"
@@ -296,7 +280,7 @@ worker_type           = "private"
   #np1 = "/tmp/np1cloudinit.sh"
   #np3 = "/tmp/np3cloudinit.sh"
 #}
-node_pool_timezone        = "Etc/UTC"
+node_pool_timezone = "Etc/UTC"
 
 # upgrade of existing node pools
 upgrade_nodepool        = false
@@ -304,17 +288,17 @@ node_pools_to_drain     = ["np1", "np2"]
 nodepool_upgrade_method = "out_of_place"
 
 # oke load balancers
-enable_waf                   = false
-load_balancers               = "both"
-preferred_load_balancer      = "public"
+enable_waf              = false
+load_balancers          = "both"
+preferred_load_balancer = "public"
 # internal_lb_allowed_cidrs  = ["172.16.1.0/24", "172.16.2.0/24"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
 # internal_lb_allowed_ports  = [80, 443, "7001-7005"] # By default, only 80 and 443 are allowed
 # public_lb_allowed_cidrs    = ["0.0.0.0/0"] # By default, anywhere i.e. 0.0.0.0/0 is allowed
 # public_lb_allowed_ports    = [443,"9001-9002"] # By default, only 443 is allowed
 
-#fss
-create_fss = false
-fss_mount_path = "/oke_fss"
+# fss
+create_fss        = false
+fss_mount_path    = "/oke_fss"
 max_fs_stat_bytes = 23843202333
 max_fs_stat_files = 223442
 
@@ -335,8 +319,8 @@ enable_metric_server = false
 enable_vpa           = false
 vpa_version          = 0.8
 
-#OPA Gatekeeper
-enable_gatekeeper = false
+# OPA Gatekeeper
+enable_gatekeeper  = false
 gatekeeper_version = "3.7"
 
 # service account
@@ -347,74 +331,74 @@ service_account_cluster_role_binding = ""
 
 # freeform_tags
 freeform_tags = {
-  # vcn, bastion and operator freeform_tags are required
-  # add more freeform_tags in each as desired
-  vcn = {
-    environment = "dev"
-  }
-  bastion = {
-    access      = "public",
-    environment = "dev",
-    role        = "bastion",
-    security    = "high"
-  }
-  operator = {
-    access      = "restricted",
-    environment = "dev",
-    role        = "operator",
-    security    = "high"
-  }
-  oke = {
-    cluster = {
-      environment = "dev"
-      role        = "cluster"
-    }
-    persistent_volume = {
-      environment = "dev"
-    }    
-    service_lb = {
-      environment = "dev"
-      role        = "load balancer"
-    }
-    node_pool = {
-      environment = "dev"
-      role        = "node-pool"
-    }
-    node = {
-      environment = "dev"
-      role        = "worker"
-    }
-  }
+  # # vcn, bastion and operator freeform_tags are required
+  # # add more freeform_tags in each as desired
+  # vcn = {
+  #   environment = "dev"
+  # }
+  # bastion = {
+  #   access      = "public",
+  #   environment = "dev",
+  #   role        = "bastion",
+  #   security    = "high"
+  # }
+  # operator = {
+  #   access      = "restricted",
+  #   environment = "dev",
+  #   role        = "operator",
+  #   security    = "high"
+  # }
+  # oke = {
+  #   cluster = {
+  #     environment = "dev"
+  #     role        = "cluster"
+  #   }
+  #   persistent_volume = {
+  #     environment = "dev"
+  #   }    
+  #   service_lb = {
+  #     environment = "dev"
+  #     role        = "load balancer"
+  #   }
+  #   node_pool = {
+  #     environment = "dev"
+  #     role        = "node-pool"
+  #   }
+  #   node = {
+  #     environment = "dev"
+  #     role        = "worker"
+  #   }
+  # }
 }
 
 # defined_tags
 defined_tags = {
-  # vcn, bastion and operator freeform_tags are required
-  # add more freeform_tags in each as desired
-  vcn = {
-    "cn.environment" = "dev"
-  }
-  oke = {
-    cluster = {
-      "cn.environment" = "dev"
-      "cn.role"        = "cluster"
-    }
-    persistent_volume = {
-      "cn.environment" = "dev"
-    }    
-    service_lb = {
-      "cn.environment" = "dev"
-      "cn.role"        = "load balancer"
-    }
-    node_pool = {
-      "cn.environment" = "dev"
-      "cn.role"        = "node-pool"
-    }
-    node = {
-      "cn.environment" = "dev"
-      "cn.role"        = "worker"
-    }
-  }
+  # # vcn, bastion and operator freeform_tags are required
+  # # add more freeform_tags in each as desired
+  # vcn = {
+  #   "cn.environment" = "dev"
+  # }
+  # oke = {
+  #   cluster = {
+  #     "cn.environment" = "dev"
+  #     "cn.role"        = "cluster"
+  #   }
+  #   persistent_volume = {
+  #     "cn.environment" = "dev"
+  #   }    
+  #   service_lb = {
+  #     "cn.environment" = "dev"
+  #     "cn.role"        = "load balancer"
+  #   }
+  #   node_pool = {
+  #     "cn.environment" = "dev"
+  #     "cn.role"        = "node-pool"
+  #   }
+  #   node = {
+  #     "cn.environment" = "dev"
+  #     "cn.role"        = "worker"
+  #   }
+  # }
 }
 
 # placeholder variable for debugging scripts. To be implemented in future

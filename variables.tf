@@ -684,11 +684,7 @@ variable "cloudinit_nodepool_common" {
 }
 
 variable "node_pools" {
-  default = {
-    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 1, memory = 16, node_pool_size = 1, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
-    np2 = { shape = "VM.Standard.E2.2", node_pool_size = 2, boot_volume_size = 150 }
-    np3 = { shape = "VM.Standard.E2.2", node_pool_size = 1 }
-  }
+  default = {}
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"
   type        = any
 }
@@ -941,16 +937,6 @@ variable "enable_gatekeeper" {
   type        = bool
   default     = false
   description = "Whether to install Gatekeeper"
-}
-
-variable "gatekeeeper_version" {
-  type        = string
-  default     = null
-  description = "DEPRECATED - Fix spelling to `gatekeeper_version`"
-  validation {
-    condition     = var.gatekeeeper_version == null
-    error_message = "Deprecated - please fix variable spelling to `gatekeeper_version`."
-  }
 }
 
 variable "gatekeeper_version" {
