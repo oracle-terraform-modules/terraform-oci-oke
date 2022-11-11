@@ -137,8 +137,8 @@ The networking parameters concern the VCN and the subnets network configuration 
 You can leave most of the default options. However, you may want to change the following parameters:
 
 * assign_dns: disable DNS resolution of hostnames if `false`. Defaults to `true`.
-* vcn_dns_label: this is the internal dns domain for resources created
-* vcn_name: this is the name of the vcn that will be appended to the label prefix, or null to disable DNS resolution of hostnames in the VCN.
+* vcn_dns_label: this is the internal dns domain for resources created, or null to disable DNS resolution of hostnames in the VCN.
+* vcn_name: this is the name of the vcn that will be appended to the label prefix.
 
 ****
 If you need to change the default VCN's CIDR, note the following:
