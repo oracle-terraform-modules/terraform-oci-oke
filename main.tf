@@ -3,7 +3,7 @@
 
 module "vcn" {
   source  = "oracle-terraform-modules/vcn/oci"
-  version = "3.5.2"
+  version = "3.5.3"
 
   # general oci parameters
   compartment_id = local.compartment_id
