@@ -120,7 +120,7 @@ locals {
   ]
 
   # Network Security Group ingress rules for control plane subnet (Flannel & VCN-Native Pod networking)
-  cp_ingress = [
+  cp_ingress = concat(var.cni_type == "npn" ? local.cp_ingress_npn : [], [
     {
       description = "Allow worker nodes to control plane API endpoint communication"
       protocol    = local.tcp_protocol,
@@ -150,6 +150,26 @@ locals {
       protocol    = local.tcp_protocol,
       port        = 6443,
       source      = local.operator_subnet,
+      source_type = "CIDR_BLOCK",
+      stateless   = false
+    },
+  ])
+
+  # Network Security Group ingress rules for control plane subnet (Only VCN-Native Pod networking)
+  cp_ingress_npn = [
+    {
+      description = "Allow pods to control plane API endpoint communication"
+      protocol    = local.tcp_protocol,
+      port        = 6443,
+      source      = local.pods_subnet,
+      source_type = "CIDR_BLOCK",
+      stateless   = false
+    },
+    {
+      description = "Allow pods to control plane communication"
+      protocol    = local.tcp_protocol,
+      port        = 12250,
+      source      = local.pods_subnet,
       source_type = "CIDR_BLOCK",
       stateless   = false
     },
