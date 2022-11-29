@@ -7,7 +7,19 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-== 4.2.14 (not released)
+== 4.2.17 (not released)
+=== Changes
+* fix: Operator support for disabled VCN DNS by @devoncrouse in #614
+
+== 4.2.16
+=== Changes
+* fix: Wait for cloud-init completion before k8s extension install by @devoncrouse in #611
+
+== 4.2.15
+=== Changes
+* fix: added kubernetes api control plane network access for pods by @JamesMarino in #609
+
+== 4.2.14
 === Changes
 * feat: Removed local kubeconfig file creation and `update_kubeconfig` input variable by @slok in #602
 * feat: Support disabled DNS record assignment for OKE subnets by @devoncrouse in #606

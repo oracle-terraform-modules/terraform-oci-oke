@@ -108,7 +108,7 @@ module "bastion" {
 
 module "operator" {
   source  = "oracle-terraform-modules/operator/oci"
-  version = "3.1.4"
+  version = "3.1.5"
 
 
   # general oci parameters
@@ -117,6 +117,7 @@ module "operator" {
   label_prefix   = var.label_prefix
 
   # networking
+  assign_dns          = var.assign_dns
   availability_domain = var.availability_domains["operator"]
   nat_route_id        = local.nat_route_id
   netnum              = lookup(var.subnets["operator"], "netnum")
