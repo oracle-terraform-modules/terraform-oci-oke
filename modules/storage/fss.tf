@@ -17,7 +17,7 @@ resource "oci_file_storage_mount_target" "fss_mount_target" {
   compartment_id      = var.compartment_id
   subnet_id           = oci_core_subnet.fss.id
   display_name        = var.label_prefix == "none" ? "fss-mt" : "${var.label_prefix}-fss-mt"
-  hostname_label      = "fss-mt"
+  hostname_label      = var.assign_dns ? "fss-mt" : null
   nsg_ids             = [oci_core_network_security_group.fss_mt.id]
 
   lifecycle {
