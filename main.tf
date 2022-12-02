@@ -59,7 +59,7 @@ module "drg" {
 
 module "bastion" {
   source  = "oracle-terraform-modules/bastion/oci"
-  version = "3.1.3"
+  version = "3.1.5"
 
   tenancy_id     = local.tenancy_id
   compartment_id = local.compartment_id
@@ -67,6 +67,7 @@ module "bastion" {
   label_prefix = var.label_prefix
 
   # networking
+  assign_dns          = var.assign_dns
   availability_domain = var.availability_domains["bastion"]
   bastion_access      = var.bastion_access
   ig_route_id         = local.ig_route_id
