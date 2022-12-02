@@ -7,7 +7,11 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-== 4.2.17 (not released)
+== 4.2.18 (not released)
+=== Changes
+* fix: Bastion & FSS support for disabled VCN DNS, min TF version -> 1.1 by @devoncrouse
+
+== 4.2.17
 === Changes
 * fix: Operator support for disabled VCN DNS by @devoncrouse in #614
 
