@@ -7,9 +7,13 @@ All notable changes to this project are documented in this file.
 
 The format is based on {uri-changelog}[Keep a Changelog].
 
-== 4.2.18 (not released)
+== 4.3.0 (not released)
 === Changes
-* fix: Bastion & FSS support for disabled VCN DNS, min TF version -> 1.1 by @devoncrouse
+* fix: Remove label_prefix from dns_label in subnets by @devoncrouse
+
+== 4.2.18
+=== Changes
+* fix: Bastion & FSS support for disabled VCN DNS, min TF version -> 1.1 by @devoncrouse in #617
 
 == 4.2.17
 === Changes
