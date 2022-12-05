@@ -12,3 +12,7 @@ output "cluster_kms_dynamic_group_id" {
 output "nodepool_ids" {
   value = zipmap(values(oci_containerengine_node_pool.nodepools)[*].name, values(oci_containerengine_node_pool.nodepools)[*].id)
 }
+
+output "endpoints" {
+  value = oci_containerengine_cluster.k8s_cluster.endpoints
+}

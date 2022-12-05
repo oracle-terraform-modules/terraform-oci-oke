@@ -84,3 +84,8 @@ output "bastion_service_instance_id" {
 output "fss_id" {
   value = var.create_fss == true ? module.storage[0].fss_id : null
 }
+
+output "cluster_endpoints" {
+  description = "Endpoints for the Kubernetes cluster"
+  value       = module.oke.endpoints
+}
