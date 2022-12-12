@@ -291,6 +291,10 @@ module "oke" {
   freeform_tags = var.freeform_tags["oke"]
   defined_tags  = var.defined_tags["oke"]
 
+  # cluster autoscaler
+  enable_cluster_autoscaler = var.enable_cluster_autoscaler
+  autoscaler_pools          = var.autoscaler_pools
+
   depends_on = [
     module.network
   ]
@@ -415,6 +419,12 @@ module "extensions" {
   upgrade_nodepool        = var.upgrade_nodepool
   nodepool_upgrade_method = var.nodepool_upgrade_method
   node_pools_to_drain     = var.node_pools_to_drain
+
+  # cluster autoscaler
+  enable_cluster_autoscaler = var.enable_cluster_autoscaler
+  autoscaler_pools          = var.autoscaler_pools
+
+  autoscaling_nodepools = module.oke.autoscaling_nodepools
 
   debug_mode = var.debug_mode
 

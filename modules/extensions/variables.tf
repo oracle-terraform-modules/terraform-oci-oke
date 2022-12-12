@@ -1,4 +1,4 @@
-# Copyright 2017, 2019 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # oci provider
@@ -148,6 +148,20 @@ variable "nodepool_upgrade_method" {
 
 variable "node_pools_to_drain" {
   type = list(string)
+}
+
+# cluster autoscaler
+variable "enable_cluster_autoscaler" {
+  type = bool
+}
+
+variable "autoscaler_pools" {
+  type = any
+}
+
+
+variable "autoscaling_nodepools" {
+  type = any
 }
 
 variable "debug_mode" {

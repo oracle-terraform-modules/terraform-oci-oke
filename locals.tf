@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -20,9 +20,9 @@ locals {
   operator_private_ip                    = var.create_operator == true ? module.operator[0].operator_private_ip : var.operator_private_ip !="" ? var.operator_private_ip: ""
   operator_instance_principal_group_name = var.create_operator == true ? module.operator[0].operator_instance_principal_group_name : ""
 
-  vcn_id       = var.create_vcn == true ? module.vcn[0].vcn_id : coalesce(var.vcn_id, try(data.oci_core_vcns.vcns[0].virtual_networks[0].id,""))
-  ig_route_id  = var.create_vcn == true ? module.vcn[0].ig_route_id : coalesce(var.ig_route_table_id, try(data.oci_core_route_tables.ig[0].route_tables[0].id,""))
-  nat_route_id = var.create_vcn == true ? module.vcn[0].nat_route_id : coalesce(var.nat_route_table_id, try(data.oci_core_route_tables.nat[0].route_tables[0].id,""))
+  vcn_id       = var.create_vcn == true ? module.vcn[0].vcn_id : coalesce(var.vcn_id, try(data.oci_core_vcns.vcns[0].virtual_networks[0].id, ""))
+  ig_route_id  = var.create_vcn == true ? module.vcn[0].ig_route_id : coalesce(var.ig_route_table_id, try(data.oci_core_route_tables.ig[0].route_tables[0].id, ""))
+  nat_route_id = var.create_vcn == true ? module.vcn[0].nat_route_id : coalesce(var.nat_route_table_id, try(data.oci_core_route_tables.nat[0].route_tables[0].id, ""))
 
   ssh_key_arg                            = var.ssh_private_key_path == "none" ? "" : " -i ${var.ssh_private_key_path}"
   validate_drg_input = var.create_drg && (var.drg_id != null) ? tobool("[ERROR]: create_drg variable can not be true if drg_id is provided.]") : true
