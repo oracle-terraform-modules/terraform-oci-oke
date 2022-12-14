@@ -121,8 +121,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
     ignore_changes = [
       kubernetes_version,
       defined_tags, # automatic tagging after apply
-      node_metadata["user_data"], # templated cloud-init
-      node_config_details["placement_configs"], # dynamic placement configs
+      node_metadata, # templated cloud-init
+      node_config_details[0].placement_configs, # dynamic placement configs
       node_source_details # dynamic image lookup
     ]
   }
