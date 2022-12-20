@@ -85,6 +85,8 @@ variable "admission_controller_options" {
   type = map(any)
 }
 
+variable "kubeproxy_mode" {}
+
 variable "max_pods_per_node" {
   type        = number
 }

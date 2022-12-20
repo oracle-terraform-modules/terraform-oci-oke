@@ -683,6 +683,16 @@ variable "cloudinit_nodepool_common" {
   default     = ""
 }
 
+variable "kubeproxy_mode" {
+  default     = "iptables"
+  description = "The mode in which to run kube-proxy."
+  type        = string
+
+  validation {
+    condition     = contains(["iptables", "ipvs"], var.kubeproxy_mode)
+    error_message = "Accepted values are iptables or ipvs."
+  }
+}
 variable "node_pools" {
   default = {}
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"

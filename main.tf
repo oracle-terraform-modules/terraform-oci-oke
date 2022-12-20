@@ -264,6 +264,7 @@ module "oke" {
   admission_controller_options                            = var.admission_controller_options
 
   # oke node pool parameters
+  kubeproxy_mode                  = var.kubeproxy_mode
   max_pods_per_node               = var.max_pods_per_node
   node_pools                      = var.node_pools
   node_pool_name_prefix           = var.node_pool_name_prefix

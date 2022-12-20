@@ -23,7 +23,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
     ## If placement_ads are specified, use them.
     ## Else, iterate over all ADs.
     ## If a single AD region is used, pick the only AD returned from the data source.
-    
+
     dynamic "placement_configs" {
       iterator = ad_iterator
       for_each = [for n in lookup(each.value, "placement_ads", local.ad_numbers) :
@@ -75,7 +75,8 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
   # cloud-init
   node_metadata = {
-    user_data = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
+    oke-kubeproxy-proxy-mode = var.kubeproxy_mode
+    user_data                = var.cloudinit_nodepool_common == "" && lookup(var.cloudinit_nodepool, each.key, null) == null ? data.cloudinit_config.worker.rendered : lookup(var.cloudinit_nodepool, each.key, null) != null ? filebase64(lookup(var.cloudinit_nodepool, each.key, null)) : filebase64(var.cloudinit_nodepool_common)
   }
 
   # optimized OKE images
@@ -120,10 +121,10 @@ resource "oci_containerengine_node_pool" "nodepools" {
   lifecycle {
     ignore_changes = [
       kubernetes_version,
-      defined_tags, # automatic tagging after apply
-      node_metadata, # templated cloud-init
+      defined_tags,                             # automatic tagging after apply
+      node_metadata,                            # templated cloud-init
       node_config_details[0].placement_configs, # dynamic placement configs
-      node_source_details # dynamic image lookup
+      node_source_details                       # dynamic image lookup
     ]
   }
 
