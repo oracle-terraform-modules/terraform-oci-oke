@@ -189,6 +189,7 @@ image_signing_keys = []
 # node pools
 check_node_active               = "all"
 enable_pv_encryption_in_transit = false
+kubeproxy_mode = "iptables"
 node_pools = {
   # Basic node pool
   #np1 = {
