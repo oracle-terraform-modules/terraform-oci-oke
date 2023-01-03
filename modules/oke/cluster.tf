@@ -71,11 +71,16 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       defined_tags  = lookup(var.defined_tags,"service_lb",{})
     }
 
-    service_lb_subnet_ids = var.preferred_load_balancer == "public" ? [var.cluster_subnets["pub_lb"]] : [var.cluster_subnets["int_lb"]]
+    service_lb_subnet_ids = [var.cluster_subnets[local.lb_subnet]]
   }
 
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
+
+    precondition {
+      condition     = var.cluster_subnets[local.lb_subnet] != ""
+      error_message = "Preferred load balancer references unexisting load balancer. Please check variables preferred_load_balancer and load_balancers."
+    }
   }
 
   vcn_id = var.vcn_id
