@@ -739,6 +739,12 @@ variable "node_pool_timezone" {
   type        = string
 }
 
+variable "ignore_label_prefix_in_node_pool_names" {
+  default     = false
+  description = "Do not use the label_prefix when naming each node pool. This frees up more characters for the nodepool name. Current limit to node pool name is 32 characters."
+  type        = bool
+}
+
 variable "worker_nsgs" {
   default     = []
   description = "An additional list of network security groups (NSG) ids for the worker nodes that can be created subsequently."

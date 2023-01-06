@@ -95,6 +95,12 @@ variable "node_pools" {
   type = any
 }
 
+variable "ignore_label_prefix_in_node_pool_names" {
+  default     = false
+  description = "Do not use the label_prefix when naming each node pool. This frees up more characters for the nodepool name. Current limit to node pool name is 32 characters."
+  type        = bool
+}
+
 variable "node_pool_name_prefix" {}
 
 variable "node_pool_image_id" {}
