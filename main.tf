@@ -264,20 +264,21 @@ module "oke" {
   admission_controller_options                            = var.admission_controller_options
 
   # oke node pool parameters
-  kubeproxy_mode                  = var.kubeproxy_mode
-  max_pods_per_node               = var.max_pods_per_node
-  node_pools                      = var.node_pools
-  node_pool_name_prefix           = var.node_pool_name_prefix
-  node_pool_image_id              = var.node_pool_image_id
-  node_pool_image_type            = var.node_pool_image_type
-  node_pool_os                    = var.node_pool_os
-  node_pool_os_version            = var.node_pool_os_version
-  node_pool_timezone              = var.node_pool_timezone
-  enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
-  use_node_pool_volume_encryption = var.use_node_pool_volume_encryption
-  node_pool_volume_kms_key_id     = var.node_pool_volume_kms_key_id
-  cloudinit_nodepool              = var.cloudinit_nodepool
-  cloudinit_nodepool_common       = var.cloudinit_nodepool_common
+  kubeproxy_mode                         = var.kubeproxy_mode
+  max_pods_per_node                      = var.max_pods_per_node
+  node_pools                             = var.node_pools
+  node_pool_name_prefix                  = var.node_pool_name_prefix
+  node_pool_image_id                     = var.node_pool_image_id
+  node_pool_image_type                   = var.node_pool_image_type
+  node_pool_os                           = var.node_pool_os
+  node_pool_os_version                   = var.node_pool_os_version
+  node_pool_timezone                     = var.node_pool_timezone
+  ignore_label_prefix_in_node_pool_names = var.ignore_label_prefix_in_node_pool_names
+  enable_pv_encryption_in_transit        = var.enable_pv_encryption_in_transit
+  use_node_pool_volume_encryption        = var.use_node_pool_volume_encryption
+  node_pool_volume_kms_key_id            = var.node_pool_volume_kms_key_id
+  cloudinit_nodepool                     = var.cloudinit_nodepool
+  cloudinit_nodepool_common              = var.cloudinit_nodepool_common
 
   # oke load balancer parameters
   preferred_load_balancer = var.preferred_load_balancer

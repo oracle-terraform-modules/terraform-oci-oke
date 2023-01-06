@@ -8,7 +8,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
   depends_on     = [oci_containerengine_cluster.k8s_cluster]
 
   kubernetes_version = var.cluster_kubernetes_version
-  name               = var.label_prefix == "none" ? each.key : "${var.label_prefix}-${each.key}"
+  name               = var.label_prefix == "none" || var.ignore_label_prefix_in_node_pool_names ? each.key : "${var.label_prefix}-${each.key}"
 
   freeform_tags = merge(lookup(var.freeform_tags, "node_pool", {}), lookup(each.value, "nodepool_freeform_tags", {}))
   defined_tags  = merge(lookup(var.defined_tags, "node_pool", {}), lookup(each.value, "nodepool_defined_tags", {}))
