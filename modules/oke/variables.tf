@@ -97,7 +97,7 @@ variable "node_pools" {
 
 variable "ignore_label_prefix_in_node_pool_names" {
   default     = false
-  description = "Do not use the label_prefix when naming each node pool. This frees up more characters for the nodepool name. Current limit to node pool name is 32 characters."
+  description = "While using label_prefix to add a prefix to many OCI resource names, do not use the label_prefix when naming each node pool. This frees up more characters for the nodepool name. Current limit to node pool name is 32 characters."
   type        = bool
 }
 
