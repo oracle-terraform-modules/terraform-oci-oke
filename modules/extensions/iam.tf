@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 terraform {
@@ -20,8 +20,8 @@ locals {
 resource "random_id" "dynamic_group_suffix" {
   keepers = {
     # Generate a new suffix only when variables are changed
-    label_prefix         = local.dynamic_group_prefix
-    tenancy_id           = var.tenancy_id
+    label_prefix = local.dynamic_group_prefix
+    tenancy_id   = var.tenancy_id
   }
 
   byte_length = 8
@@ -32,13 +32,13 @@ resource "oci_identity_policy" "operator_use_dynamic_group_policy" {
   provider       = oci.home
   compartment_id = random_id.dynamic_group_suffix.keepers.tenancy_id
   description    = "policy to allow operator host to manage dynamic group"
-  name           = join("-", compact([
+  name = join("-", compact([
     random_id.dynamic_group_suffix.keepers.label_prefix,
     "operator-instance-principal-dynamic-group",
     random_id.dynamic_group_suffix.hex
   ]))
-  statements     = ["Allow dynamic-group ${var.operator_dynamic_group} to use dynamic-groups in tenancy"]
-  count          = (local.create_operator_dynamic_group_policy == true) ? 1 : 0
+  statements = ["Allow dynamic-group ${var.operator_dynamic_group} to use dynamic-groups in tenancy"]
+  count      = (local.create_operator_dynamic_group_policy == true) ? 1 : 0
 }
 
 # 30s delay to allow policies to take effect globally
@@ -46,7 +46,7 @@ resource "time_sleep" "wait_30_seconds" {
   depends_on = [oci_identity_policy.operator_use_dynamic_group_policy]
 
   create_duration = "30s"
-  count          = (local.create_operator_dynamic_group_policy == true) ? 1 : 0
+  count           = (local.create_operator_dynamic_group_policy == true) ? 1 : 0
 }
 
 resource "null_resource" "update_dynamic_group" {
@@ -76,5 +76,5 @@ resource "null_resource" "update_dynamic_group" {
     ]
   }
 
-  count = (local.create_operator_dynamic_group_policy && var.bastion_state == "RUNNING" ) ? 1 : 0
+  count = (local.create_operator_dynamic_group_policy && var.bastion_state == "RUNNING") ? 1 : 0
 }

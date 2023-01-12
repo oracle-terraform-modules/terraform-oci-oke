@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "vcn" {
@@ -51,7 +51,7 @@ module "drg" {
     drg_route_table_id : null
     }
   }
-  # var.drg_id can either contain an existing DRG ID or be null. 
+  # var.drg_id can either contain an existing DRG ID or be null.
   drg_id = var.drg_id
 
   count = var.create_drg || var.drg_id != null ? 1 : 0
@@ -398,7 +398,7 @@ module "extensions" {
   vpa_version          = var.vpa_version
 
   #Gatekeeper
-  enable_gatekeeper   = var.enable_gatekeeper
+  enable_gatekeeper  = var.enable_gatekeeper
   gatekeeper_version = var.gatekeeper_version
 
   # service account

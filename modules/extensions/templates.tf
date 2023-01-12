@@ -1,4 +1,4 @@
-# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -49,12 +49,12 @@ locals {
       typha_enabled     = var.typha_enabled || local.total_nodes > 50
 
       # Use provided value if set, otherwise use 1 replica for every 50 nodes with a min of 1 if enabled, and max of 20 replicas
-      typha_replicas    = (var.typha_replicas > 0) ? var.typha_replicas : max(min(20, floor(local.total_nodes / 50)), var.typha_enabled ? 1 : 0)
+      typha_replicas = (var.typha_replicas > 0) ? var.typha_replicas : max(min(20, floor(local.total_nodes / 50)), var.typha_enabled ? 1 : 0)
     }
   )
 
   install_kubectx_template = templatefile("${path.module}/scripts/install_kubectx.template.sh", {
-    version      = "0.9.4"
+    version = "0.9.4"
   })
 
   metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh",
@@ -66,7 +66,7 @@ locals {
 
   gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh",
     {
-      enable_gatekeeper   = var.enable_gatekeeper
+      enable_gatekeeper  = var.enable_gatekeeper
       gatekeeper_version = var.gatekeeper_version
     }
   )

@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -31,6 +31,6 @@ locals {
 
   # kubernetes string version length
   k8s_version_length = length(var.cluster_kubernetes_version)
-  k8s_version_only = substr(var.cluster_kubernetes_version,1,local.k8s_version_length)
+  k8s_version_only   = substr(var.cluster_kubernetes_version, 1, local.k8s_version_length)
 
 }

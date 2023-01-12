@@ -1,4 +1,4 @@
-# Copyright 2017, 2019 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # oci provider
@@ -68,7 +68,7 @@ variable "enable_pv_encryption_in_transit" {
 }
 
 variable "create_policies" {
-  type        = bool
+  type = bool
 }
 
 # signed images
@@ -88,7 +88,7 @@ variable "admission_controller_options" {
 variable "kubeproxy_mode" {}
 
 variable "max_pods_per_node" {
-  type        = number
+  type = number
 }
 
 variable "node_pools" {

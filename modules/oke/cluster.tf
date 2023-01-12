@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # 30s delay to allow policies to take effect globally
@@ -13,7 +13,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   kubernetes_version = var.cluster_kubernetes_version
   kms_key_id         = var.use_cluster_encryption == true ? var.cluster_kms_key_id : null
   name               = var.label_prefix == "none" ? var.cluster_name : "${var.label_prefix}-${var.cluster_name}"
-  
+
   depends_on = [time_sleep.wait_30_seconds]
 
   cluster_pod_network_options {
@@ -43,8 +43,8 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
   }
 
-  freeform_tags = lookup(var.freeform_tags,"cluster",{})
-  defined_tags  = lookup(var.defined_tags,"cluster",{})
+  freeform_tags = lookup(var.freeform_tags, "cluster", {})
+  defined_tags  = lookup(var.defined_tags, "cluster", {})
 
   options {
     add_ons {
@@ -53,7 +53,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     admission_controller_options {
-      is_pod_security_policy_enabled = lookup(var.admission_controller_options,"PodSecurityPolicy",false)
+      is_pod_security_policy_enabled = lookup(var.admission_controller_options, "PodSecurityPolicy", false)
     }
 
     kubernetes_network_config {
@@ -62,13 +62,13 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     persistent_volume_config {
-      freeform_tags = lookup(var.freeform_tags,"persistent_volume",{})
-      defined_tags  = lookup(var.defined_tags,"persistent_volume",{})
+      freeform_tags = lookup(var.freeform_tags, "persistent_volume", {})
+      defined_tags  = lookup(var.defined_tags, "persistent_volume", {})
     }
 
     service_lb_config {
-      freeform_tags = lookup(var.freeform_tags,"service_lb",{})
-      defined_tags  = lookup(var.defined_tags,"service_lb",{})
+      freeform_tags = lookup(var.freeform_tags, "service_lb", {})
+      defined_tags  = lookup(var.defined_tags, "service_lb", {})
     }
 
     service_lb_subnet_ids = [var.cluster_subnets[local.lb_subnet]]
