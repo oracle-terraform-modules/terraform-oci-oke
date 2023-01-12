@@ -24,6 +24,5 @@ locals {
   ig_route_id  = var.create_vcn == true ? module.vcn[0].ig_route_id : coalesce(var.ig_route_table_id, try(data.oci_core_route_tables.ig[0].route_tables[0].id, ""))
   nat_route_id = var.create_vcn == true ? module.vcn[0].nat_route_id : coalesce(var.nat_route_table_id, try(data.oci_core_route_tables.nat[0].route_tables[0].id, ""))
 
-  ssh_key_arg        = var.ssh_private_key_path == "none" ? "" : " -i ${var.ssh_private_key_path}"
-  validate_drg_input = var.create_drg && (var.drg_id != null) ? tobool("[ERROR]: create_drg variable can not be true if drg_id is provided.]") : true
+  ssh_key_arg = var.ssh_private_key_path == "none" ? "" : " -i ${var.ssh_private_key_path}"
 }
