@@ -17,6 +17,6 @@ data "oci_containerengine_cluster_kube_config" "kube_config" {
 }
 
 data "oci_core_image" "worker_images" {
-  count    = length(local.enabled_worker_group_image_ids)
-  image_id = local.enabled_worker_group_image_ids[count.index]
+  count    = length(local.enabled_worker_pool_image_ids)
+  image_id = local.enabled_worker_pool_image_ids[count.index]
 }

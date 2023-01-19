@@ -50,7 +50,7 @@ locals {
     nongpu   = [for k, v in local.parsed_images : k if !v.is_gpu]
   }
 
-  worker_groups_default = {
+  worker_pools_default = {
     mode             = var.mode
     size             = var.size
     shape            = var.shape
@@ -71,60 +71,60 @@ locals {
     node_labels      = {}
   }
 
-  # Filter worker_groups map variable for enabled entries
-  worker_groups_enabled = {
-    for k, v in var.worker_groups : k => merge(local.worker_groups_default, v) if lookup(v, "enabled", var.enabled)
+  # Filter worker_pools map variable for enabled entries
+  worker_pools_enabled = {
+    for k, v in var.worker_pools : k => merge(local.worker_pools_default, v) if lookup(v, "enabled", var.enabled)
   }
 
-  worker_compartments = distinct(compact([for k, v in local.worker_groups_enabled : lookup(v, "compartment_id", "")]))
+  worker_compartments = distinct(compact([for k, v in local.worker_pools_enabled : lookup(v, "compartment_id", "")]))
 
-  # Number of nodes expected from enabled worker groups
-  expected_node_count = length(local.worker_groups_enabled) == 0 ? 0 : sum([for k, v in local.worker_groups_enabled : lookup(v, "size", 0)])
+  # Number of nodes expected from enabled worker pools
+  expected_node_count = length(local.worker_pools_enabled) == 0 ? 0 : sum([for k, v in local.worker_pools_enabled : lookup(v, "size", 0)])
 
-  # Filter worker_groups map variable for entries with image_id defined, returning a distinct list
-  enabled_worker_group_image_ids = distinct([
-    for v in local.worker_groups_enabled : v.image_id if contains(keys(v), "image_id")
+  # Filter worker_pools map variable for entries with image_id defined, returning a distinct list
+  enabled_worker_pool_image_ids = distinct([
+    for v in local.worker_pools_enabled : v.image_id if contains(keys(v), "image_id")
   ])
 
   # Intermediate worker image result from data source
-  enabled_worker_group_images = data.oci_core_image.worker_images
+  enabled_worker_pool_images = data.oci_core_image.worker_images
 
-  # Filter enabled worker_group map entries for node pools
+  # Filter enabled worker_pool map entries for node pools
   enabled_node_pools = {
-    for k, v in local.worker_groups_enabled : k => v if lookup(v, "mode", "") == "node-pool"
+    for k, v in local.worker_pools_enabled : k => v if lookup(v, "mode", "") == "node-pool"
   }
 
-  # Filter enabled worker_group map entries for instance pools
+  # Filter enabled worker_pool map entries for instance pools
   enabled_instance_configs = {
-    for k, v in local.worker_groups_enabled : k => v
+    for k, v in local.worker_pools_enabled : k => v
     if contains(["cluster-network", "instance-pool"], lookup(v, "mode", ""))
   }
 
-  # Filter enabled worker_group map entries for instance pools
+  # Filter enabled worker_pool map entries for instance pools
   enabled_instance_pools = {
-    for k, v in local.worker_groups_enabled : k => v if lookup(v, "mode", "") == "instance-pool"
+    for k, v in local.worker_pools_enabled : k => v if lookup(v, "mode", "") == "instance-pool"
   }
 
-  # Filter enabled worker_group map entries for cluster networks
+  # Filter enabled worker_pool map entries for cluster networks
   enabled_cluster_networks = {
-    for k, v in local.worker_groups_enabled : k => v if lookup(v, "mode", "") == "cluster-network"
+    for k, v in local.worker_pools_enabled : k => v if lookup(v, "mode", "") == "cluster-network"
   }
 
-  # Worker group OCI resources enriched with desired/custom parameters
-  worker_node_pools       = { for k, v in oci_containerengine_node_pool.node_pools : k => merge(v, lookup(local.worker_groups_enabled, k, {})) }
-  worker_instance_pools   = { for k, v in oci_core_instance_pool.instance_pools : k => merge(v, lookup(local.worker_groups_enabled, k, {})) }
-  worker_cluster_networks = { for k, v in oci_core_cluster_network.cluster_networks : k => merge(v, lookup(local.worker_groups_enabled, k, {})) }
+  # Worker pool OCI resources enriched with desired/custom parameters
+  worker_node_pools       = { for k, v in oci_containerengine_node_pool.node_pools : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
+  worker_instance_pools   = { for k, v in oci_core_instance_pool.instance_pools : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
+  worker_cluster_networks = { for k, v in oci_core_cluster_network.cluster_networks : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
 
-  # Intermediate reference to the enabled worker group NLBs to be reconciled
-  enabled_worker_group_nlbs = [
-    for k, v in local.worker_groups_enabled : {
+  # Intermediate reference to the enabled worker pool NLBs to be reconciled
+  enabled_worker_pool_nlbs = [
+    for k, v in local.worker_pools_enabled : {
       for lb_k, lb_v in(contains(keys(v), "load_balancers") ? v.load_balancers : {}) : lb_k => lb_v
     } if contains(keys(v), "load_balancers")
   ]
 
-  # Sanitized worker_groups output; some conditionally-used defaults would be misleading
-  worker_groups_enabled_out = {
-    for k, v in local.worker_groups_enabled : k => { for a, b in v : a => b
+  # Sanitized worker_pools output; some conditionally-used defaults would be misleading
+  worker_pools_enabled_out = {
+    for k, v in local.worker_pools_enabled : k => { for a, b in v : a => b
       if a != "enabled"                                                                # implied
       && !(a == "node_labels" && b == {})                                              # exclude empty
       && !(contains(["os", "os_version"], a) && v.image_type == "custom")              # unused defaults for custom
@@ -134,7 +134,7 @@ locals {
   }
 
   # Group resource outputs
-  worker_groups_active = merge(
+  worker_pools_active = merge(
     local.worker_cluster_networks,
     local.worker_instance_pools,
     local.worker_node_pools,

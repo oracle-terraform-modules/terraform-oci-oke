@@ -9,7 +9,7 @@ variable "cloudinit" {
 
 variable "image_id" {
   default     = ""
-  description = "Default image OCID for worker groups when unspecified and image_type = custom"
+  description = "Default image OCID for worker pools when unspecified and image_type = custom"
   type        = string
 }
 

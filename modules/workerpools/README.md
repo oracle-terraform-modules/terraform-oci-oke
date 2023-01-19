@@ -1,25 +1,25 @@
-# Worker groups
+# Worker pools
 
 This sub-module supports different modes of OKE worker node management with advanced configuration.
 
 ## Usage
-Worker groups are configured with the optional `worker_groups` array.
+Worker pools are configured with the optional `worker_pools` array.
 
-The module is implemented in the parent module for general use, and can also be used directly by running `terraform init/apply` in this directory or with a separate state. In this case, the `workergroup` module adds pools to an existing cluster.
+The module is implemented in the parent module for general use, and can also be used directly by running `terraform init/apply` in this directory or with a separate state. In this case, the `worker_pools` module adds pools to an existing cluster.
 
 1. `cp vars-profile.auto.tfvars.example vars-profile.auto.tfvars`
 1. Define `Required parameters`
-1. Review defaults and `worker_groups`
+1. Review defaults and `worker_pools`
 1. `terraform init`, `terraform apply` - *update *
-1. *e.g.* change `worker_groups[x]` *size from `1` -> `10` - scale up group*
-1. *e.g.* change `worker_groups[y]` *size from `1` -> `0` - suspend group, retain instance configuration, pool resources*
-1. *e.g.* change `worker_groups[z]` *create from `true` -> `false` - destroy group, retain definition*
-1. *e.g.* add `worker_groups[a]` - *create new group*
-1. *e.g.* remove `worker_groups[x]` - *destroy group*
+1. *e.g.* change `worker_pools[x]` *size from `1` -> `10` - scale up group*
+1. *e.g.* change `worker_pools[y]` *size from `1` -> `0` - suspend group, retain instance configuration, pool resources*
+1. *e.g.* change `worker_pools[z]` *create from `true` -> `false` - destroy group, retain definition*
+1. *e.g.* add `worker_pools[a]` - *create new group*
+1. *e.g.* remove `worker_pools[x]` - *destroy group*
 1. *e.g.* `terraform refresh` *update convenience variables e.g. worker_primary_ips*
 
 ### Mode
-The `mode` parameter determines the mechanism used to provision and manage nodes in the worker group. Currently the only available mode is `node-pool`.
+The `mode` parameter determines the mechanism used to provision and manage nodes in the worker pool. Currently the only available mode is `node-pool`.
 
 #### **`node-pool`** _(default)_
 See [Scaling Kubernetes Clusters and Node Pools](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengscalingkubernetesclustersnodepools.htm) for more information.
@@ -36,21 +36,21 @@ example-pool = {
 ```
 
 ### Defaults
-Many parameters to a worker group can be defined at multiple levels, taken in priority: `Group > Variable > built-in default`. This enables sparse definition of worker groups that share many traits.
+Many parameters to a worker pool can be defined at multiple levels, taken in priority: `Group > Variable > built-in default`. This enables sparse definition of worker pools that share many traits.
 ```yaml
 label_prefix                   = ""
-worker_group_enabled           = true
-worker_group_size              = 0
-worker_group_image_id          = "ocid1.image..." # Required here and/or on group
-worker_group_mode              = "node-pool"
-worker_group_shape             = "VM.Standard.E4.Flex"
-worker_group_ocpus             = 2
-worker_group_memory            = 16
-worker_group_boot_volume_size  = 100
+worker_pool_enabled           = true
+worker_pool_size              = 0
+worker_pool_image_id          = "ocid1.image..." # Required here and/or on group
+worker_pool_mode              = "node-pool"
+worker_pool_shape             = "VM.Standard.E4.Flex"
+worker_pool_ocpus             = 2
+worker_pool_memory            = 16
+worker_pool_boot_volume_size  = 100
 worker_nsg_ids                 = []
 worker_compartment_id          = "" # Defaults to compartment_id when empty
-worker_group_primary_subnet_id = "" # Defaults to Terraform-managed when empty
-worker_groups                  = [
+worker_pool_subnet_id = "" # Defaults to Terraform-managed when empty
+worker_pools                  = [
   np0 = {}, # All defaults
   np1 = { mode = "node-pool", nsg_ids = ["ocid1.networksecuritygroup..."] },
   np2 = { mode = "node-pool", enabled = false },
@@ -107,12 +107,12 @@ terraform-docs markdown table --hide-empty=true --hide=modules,providers --outpu
 | <a name="input_enabled"></a> [enabled](#input\_enabled) | Default for whether to apply resources for a group | `bool` | `true` | no |
 | <a name="input_freeform_tags"></a> [freeform\_tags](#input\_freeform\_tags) | Tags to apply to created resources | `map(string)` | `{}` | no |
 | <a name="input_home_region"></a> [home\_region](#input\_home\_region) | The tenancy's home region. Required to perform identity operations. | `string` | `""` | no |
-| <a name="input_image_id"></a> [image\_id](#input\_image\_id) | Default image OCID for worker groups when unspecified and image\_type = custom | `string` | `""` | no |
+| <a name="input_image_id"></a> [image\_id](#input\_image\_id) | Default image OCID for worker pools when unspecified and image\_type = custom | `string` | `""` | no |
 | <a name="input_image_type"></a> [image\_type](#input\_image\_type) | Whether to use a Platform, OKE or custom image. When custom is set, the image\_id must be specified. | `string` | `"custom"` | no |
 | <a name="input_kubeproxy_mode"></a> [kubeproxy\_mode](#input\_kubeproxy\_mode) | The kube-proxy mode to use for a worker node. | `string` | `"iptables"` | no |
 | <a name="input_label_prefix"></a> [label\_prefix](#input\_label\_prefix) | A string that will be prepended to all resources | `string` | `""` | no |
 | <a name="input_memory"></a> [memory](#input\_memory) | Default memory in GB for flex shapes | `number` | `16` | no |
-| <a name="input_mode"></a> [mode](#input\_mode) | Default management mode for worker groups when unspecified | `string` | `"node-pool"` | no |
+| <a name="input_mode"></a> [mode](#input\_mode) | Default management mode for worker pools when unspecified | `string` | `"node-pool"` | no |
 | <a name="input_network_compartment_id"></a> [network\_compartment\_id](#input\_network\_compartment\_id) | The compartment id where network resources will be created. | `string` | `""` | no |
 | <a name="input_ocpus"></a> [ocpus](#input\_ocpus) | Default ocpus for flex shapes | `number` | `1` | no |
 | <a name="input_os"></a> [os](#input\_os) | The name of image to use. | `string` | `"Oracle Linux"` | no |
@@ -122,7 +122,7 @@ terraform-docs markdown table --hide-empty=true --hide=modules,providers --outpu
 | <a name="input_primary_subnet_id"></a> [primary\_subnet\_id](#input\_primary\_subnet\_id) | The subnet OCID used for instances | `string` | n/a | yes |
 | <a name="input_region"></a> [region](#input\_region) | The OCI region where OKE resources will be created. | `string` | `"us-ashburn-1"` | no |
 | <a name="input_shape"></a> [shape](#input\_shape) | Default shape for instance pools | `string` | `"VM.Standard.E4.Flex"` | no |
-| <a name="input_size"></a> [size](#input\_size) | Default number of desired nodes for created worker groups | `number` | `0` | no |
+| <a name="input_size"></a> [size](#input\_size) | Default number of desired nodes for created worker pools | `number` | `0` | no |
 | <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key) | n/a | `string` | `""` | no |
 | <a name="input_ssh_public_key_path"></a> [ssh\_public\_key\_path](#input\_ssh\_public\_key\_path) | n/a | `string` | `""` | no |
 | <a name="input_tenancy_id"></a> [tenancy\_id](#input\_tenancy\_id) | The tenancy id of the OCI Cloud Account in which to create the resources. | `string` | `""` | no |
@@ -131,8 +131,8 @@ terraform-docs markdown table --hide-empty=true --hide=modules,providers --outpu
 | <a name="input_use_volume_encryption"></a> [use\_volume\_encryption](#input\_use\_volume\_encryption) | Whether to use OCI KMS to encrypt Kubernetes Nodepool's boot/block volume. | `bool` | `false` | no |
 | <a name="input_user_id"></a> [user\_id](#input\_user\_id) | The id of the user that terraform will use to create the resources. | `string` | `""` | no |
 | <a name="input_volume_kms_key_id"></a> [volume\_kms\_key\_id](#input\_volume\_kms\_key\_id) | The OCID of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption. | `string` | `""` | no |
-| <a name="input_worker_compartment_id"></a> [worker\_compartment\_id](#input\_worker\_compartment\_id) | The compartment id where worker group resources will be created. | `string` | `""` | no |
-| <a name="input_worker_groups"></a> [worker\_groups](#input\_worker\_groups) | Tuple of OKE worker groups where each key maps to the OCID of an OCI resource, and value contains its definition | `any` | `{}` | no |
+| <a name="input_worker_compartment_id"></a> [worker\_compartment\_id](#input\_worker\_compartment\_id) | The compartment id where worker pool resources will be created. | `string` | `""` | no |
+| <a name="input_worker_pools"></a> [worker\_groups](#input\_worker\_groups) | Tuple of OKE worker pools where each key maps to the OCID of an OCI resource, and value contains its definition | `any` | `{}` | no |
 | <a name="input_worker_nsg_ids"></a> [worker\_nsg\_ids](#input\_worker\_nsg\_ids) | An additional list of network security groups (NSG) OCIDs for node security | `list(string)` | `[]` | no |
 
 ## Outputs
@@ -143,10 +143,10 @@ terraform-docs markdown table --hide-empty=true --hide=modules,providers --outpu
 | <a name="output_cloudinit_node_pool"></a> [cloudinit\_node\_pool](#output\_cloudinit\_node\_pool) | Node pool worker cloud-init |
 | <a name="output_cluster"></a> [cluster](#output\_cluster) | OKE cluster |
 | <a name="output_cluster_ca_cert"></a> [cluster\_ca\_cert](#output\_cluster\_ca\_cert) | OKE cluster CA certificate |
-| <a name="output_enabled_worker_groups"></a> [enabled\_worker\_groups](#output\_enabled\_worker\_groups) | Enabled worker groups |
+| <a name="output_enabled_worker_pools"></a> [enabled\_worker\_groups](#output\_enabled\_worker\_groups) | Enabled worker pools |
 | <a name="output_kubeconfig"></a> [kubeconfig](#output\_kubeconfig) | OKE cluster kubeconfig |
 | <a name="output_np_options"></a> [np\_options](#output\_np\_options) | OKE node pool options |
 | <a name="output_worker_availability_domains"></a> [worker\_availability\_domains](#output\_worker\_availability\_domains) | Worker availability domains |
-| <a name="output_worker_group_ids"></a> [worker\_group\_ids](#output\_worker\_group\_ids) | OKE worker group OCIDs |
-| <a name="output_worker_groups_active"></a> [worker\_groups\_active](#output\_worker\_groups\_active) | OKE cluster CA certificate |
+| <a name="output_worker_pool_ids"></a> [worker\_group\_ids](#output\_worker\_group\_ids) | OKE worker pool OCIDs |
+| <a name="output_worker_pools_active"></a> [worker\_groups\_active](#output\_worker\_groups\_active) | OKE cluster CA certificate |
 <!-- END_TF_DOCS -->
