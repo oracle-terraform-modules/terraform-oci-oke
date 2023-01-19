@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Dynamic resource block for Node Pool groups defined in worker_pools
-resource "oci_containerengine_node_pool" "node_pools" {
+resource "oci_containerengine_node_pool" "workers" {
   # Create an OKE node pool resource for each enabled entry of the worker_pools map with that mode.
   for_each           = local.enabled_node_pools
   compartment_id     = each.value.compartment_id
