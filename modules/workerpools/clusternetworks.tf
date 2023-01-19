@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Dynamic resource block for Cluster Network groups defined in worker_pools
-resource "oci_core_cluster_network" "cluster_networks" {
+resource "oci_core_cluster_network" "workers" {
   # Create an OCI Cluster Network resource for each enabled entry of the worker_pools map with that mode.
   for_each       = local.enabled_cluster_networks
   compartment_id = each.value.compartment_id
@@ -11,7 +11,7 @@ resource "oci_core_cluster_network" "cluster_networks" {
   freeform_tags  = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
   instance_pools {
-    instance_configuration_id = oci_core_instance_configuration.instance_configuration[each.key].id
+    instance_configuration_id = oci_core_instance_configuration.workers[each.key].id
     display_name              = join("-", compact([lookup(each.value, "label_prefix", var.label_prefix), each.key]))
     size                      = each.value.size
     defined_tags              = merge(coalesce(local.defined_tags, {}), contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
@@ -35,10 +35,14 @@ resource "oci_core_cluster_network" "cluster_networks" {
       instance_pools["display_name"], instance_pools["defined_tags"], instance_pools["freeform_tags"],
       placement_configuration["availability_domain"],
     ]
+    precondition {
+      condition     = var.cni_type == "flannel"
+      error_message = "Cluster Networks require a cluster with `cni_type = flannel`."
+    }
   }
 
   depends_on = [
-    oci_core_instance_configuration.instance_configuration,
+    oci_core_instance_configuration.workers,
   ]
 
   # First-boot hardware config for bare metal instances takes extra time

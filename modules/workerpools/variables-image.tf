@@ -25,12 +25,16 @@ variable "image_type" {
 
 variable "os" {
   default     = "Oracle Linux"
-  description = "The name of image to use."
+  description = "The name of image to use. Must be 'Oracle Linux'."
   type        = string
+  validation {
+    condition     = contains(["Oracle Linux"], var.os)
+    error_message = "Only Oracle Linux is supported for `os` on worker nodes."
+  }
 }
 
 variable "os_version" {
-  default     = "7.9"
+  default     = "8"
   description = "The version of operating system to use for the worker nodes."
   type        = string
 }

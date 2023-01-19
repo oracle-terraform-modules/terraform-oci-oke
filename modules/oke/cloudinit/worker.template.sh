@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2012, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 # shellcheck disable=SC1083,SC2309,SC2125,SC2154,SC2157,SC2034,SC2242 # Ignore templated/escaped/unused file variables
 set -o pipefail
