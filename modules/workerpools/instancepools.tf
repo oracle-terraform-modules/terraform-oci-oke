@@ -2,13 +2,13 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Dynamic resource block for Instance Pool groups defined in worker_pools
-resource "oci_core_instance_pool" "instance_pools" {
+resource "oci_core_instance_pool" "workers" {
   # Create an OCI Instance Pool resource for each enabled entry of the worker_pools map with that mode.
   for_each                  = local.enabled_instance_pools
   compartment_id            = each.value.compartment_id
   display_name              = "${each.value.label_prefix}-${each.key}"
   size                      = each.value.size
-  instance_configuration_id = oci_core_instance_configuration.instance_configuration[each.key].id
+  instance_configuration_id = oci_core_instance_configuration.workers[each.key].id
   defined_tags              = merge(local.defined_tags, contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
   freeform_tags             = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
@@ -32,6 +32,10 @@ resource "oci_core_instance_pool" "instance_pools" {
       display_name, defined_tags, freeform_tags,
       placement_configurations,
     ]
+    precondition {
+      condition     = var.cni_type == "flannel"
+      error_message = "Instance Pools require a cluster with `cni_type = flannel`."
+    }
   }
 
   dynamic "load_balancers" {
@@ -53,6 +57,6 @@ resource "oci_core_instance_pool" "instance_pools" {
   }
 
   depends_on = [
-    oci_core_instance_configuration.instance_configuration,
+    oci_core_instance_configuration.workers,
   ]
 }

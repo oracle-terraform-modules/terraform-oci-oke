@@ -15,7 +15,7 @@ variable "apiserver_public_host" {
 
 variable "cluster_dns" {
   default     = "10.96.5.5"
-  description = "Cluster DNS resolver IP address"
+  description = "Cluster DNS resolver IP address. The provided value used with default `servicesCidr` 10.96.0.0/16 should only require modification in the case of conflict."
   type        = string
 }
 

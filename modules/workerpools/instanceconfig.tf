@@ -1,7 +1,7 @@
 # Copyright (c) 2022, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-resource "oci_core_instance_configuration" "instance_configuration" {
+resource "oci_core_instance_configuration" "workers" {
   # Create an OCI Instance Configuration resource for each enabled entry of the worker_pools map with a mode that uses one.
   for_each       = local.enabled_instance_configs
   compartment_id = each.value.compartment_id
@@ -11,13 +11,6 @@ resource "oci_core_instance_configuration" "instance_configuration" {
     instance_type = "compute"
 
     launch_details {
-      # Define each configured availability domain for placement, with bounds on # available
-      # Configured AD numbers e.g. [1,2,3] are converted into tenancy/compartment-specific names
-      availability_domain = lookup(local.ad_number_to_name, (
-        contains(keys(each.value), "placement_ads")
-        ? element(tolist(setintersection(each.value.placement_ads, local.ad_numbers)), 1)
-        : element(local.ad_numbers, 1)
-      ), "")
       compartment_id = each.value.compartment_id
       defined_tags = merge(
         local.defined_tags,
