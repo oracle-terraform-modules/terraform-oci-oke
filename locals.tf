@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  worker_image_id = (length(var.worker_group_image_id) > 0 ? var.worker_group_image_id
+  worker_image_id = (length(var.worker_pool_image_id) > 0 ? var.worker_pool_image_id
   : var.node_pool_image_id != "none" ? var.node_pool_image_id : "")
-  worker_image_type = (length(var.worker_group_image_type) > 0 ? var.worker_group_image_type
+  worker_image_type = (length(var.worker_pool_image_type) > 0 ? var.worker_pool_image_type
   : var.node_pool_image_type != "none" ? var.node_pool_image_type : "")
 
   bastion_public_ip                      = var.create_bastion_host == true ? module.bastion[0].bastion_public_ip : var.bastion_public_ip != "" ? var.bastion_public_ip : ""
@@ -17,7 +17,7 @@ locals {
 
   validate_drg_input = var.create_drg && (var.drg_id != null) ? tobool("[ERROR]: create_drg variable can not be true if drg_id is provided.]") : true
 
-  worker_group_primary_subnet_id = coalesce(
-    var.worker_group_primary_subnet_id,
+  worker_pool_subnet_id = coalesce(
+    var.worker_pool_subnet_id,
   lookup(module.network.subnet_ids, "workers", ""))
 }

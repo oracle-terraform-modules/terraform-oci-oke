@@ -409,7 +409,7 @@ module "extensions" {
 
   # check worker nodes are active
   check_node_active   = var.check_node_active
-  expected_node_count = module.workergroup.expected_node_count + module.oke.expected_node_count
+  expected_node_count = module.worker_pools.expected_node_count + module.oke.expected_node_count
 
   # oke upgrade
   upgrade_nodepool        = var.upgrade_nodepool
@@ -423,7 +423,7 @@ module "extensions" {
     module.network,
     module.operator,
     module.oke,
-    module.workergroup
+    module.worker_pools
   ]
 
   providers = {

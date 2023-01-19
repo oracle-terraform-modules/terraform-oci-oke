@@ -6,24 +6,24 @@ output "worker_availability_domains" {
   value       = local.ad_number_to_name
 }
 
-output "worker_groups_enabled" {
-  description = "Worker groups enabled in configuration"
-  value       = local.worker_groups_enabled_out
+output "worker_pools_enabled" {
+  description = "Worker pools enabled in configuration"
+  value       = local.worker_pools_enabled_out
 }
 
-output "worker_groups_active" {
-  description = "Worker groups provisioned in Terraform state"
-  value       = local.worker_groups_active
+output "worker_pools_active" {
+  description = "Worker pools provisioned in Terraform state"
+  value       = local.worker_pools_active
 }
 
 output "expected_node_count" {
-  description = "# of nodes expected from enabled worker groups"
+  description = "# of nodes expected from enabled worker pools"
   value       = local.expected_node_count
 }
 
-output "worker_group_ids" {
-  description = "OKE worker group OCIDs"
-  value       = { for k, v in local.worker_groups_active : k => v.id }
+output "worker_pool_ids" {
+  description = "OKE worker pool OCIDs"
+  value       = { for k, v in local.worker_pools_active : k => v.id }
 }
 
 output "worker_node_pools" {
