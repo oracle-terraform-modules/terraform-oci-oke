@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 resource "oci_core_instance_configuration" "instance_configuration" {
-  # Create an OCI Instance Configuration resource for each enabled entry of the worker_groups map with a mode that uses one.
+  # Create an OCI Instance Configuration resource for each enabled entry of the worker_pools map with a mode that uses one.
   for_each       = local.enabled_instance_configs
   compartment_id = each.value.compartment_id
   display_name   = "${each.value.label_prefix}-${each.key}"
@@ -23,7 +23,7 @@ resource "oci_core_instance_configuration" "instance_configuration" {
         local.defined_tags,
         lookup(each.value, "defined_tags", {}),
       )
-      freeform_tags = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_group = each.key })
+      freeform_tags = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
       instance_options {
         are_legacy_imds_endpoints_disabled = false

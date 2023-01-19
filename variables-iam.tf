@@ -60,7 +60,7 @@ variable "compartment_ocid" {
 # Overrides compartment_[oc]id
 variable "worker_compartment_id" {
   default     = ""
-  description = "The compartment id where worker group resources will be created."
+  description = "The compartment id where worker pool resources will be created."
   type        = string
 }
 
