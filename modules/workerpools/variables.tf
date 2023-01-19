@@ -9,7 +9,7 @@ variable "enabled" {
 
 variable "mode" {
   default     = "node-pool"
-  description = "Default management mode for worker groups when unspecified"
+  description = "Default management mode for worker pools when unspecified"
   type        = string
   validation {
     condition     = contains(["node-pool", "instance-pool", "cluster-network"], var.mode)
@@ -19,11 +19,11 @@ variable "mode" {
 
 variable "size" {
   default     = 0
-  description = "Default number of desired nodes for created worker groups"
+  description = "Default number of desired nodes for created worker pools"
   type        = number
   validation {
     condition     = var.size >= 0
-    error_message = "Default worker group size must be >= 0"
+    error_message = "Default worker pool size must be >= 0"
   }
 }
 
@@ -41,7 +41,7 @@ variable "freeform_tags" {
 
 variable "node_labels" {
   default     = {}
-  description = "Default Kubernetes node labels applied to worker groups, merged with group-level labels."
+  description = "Default Kubernetes node labels applied to worker pools, merged with group-level labels."
   type        = map(string)
 }
 

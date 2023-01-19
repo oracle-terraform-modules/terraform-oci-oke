@@ -1,16 +1,16 @@
 # Copyright (c) 2022, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Dynamic resource block for Node Pool groups defined in worker_groups
+# Dynamic resource block for Node Pool groups defined in worker_pools
 resource "oci_containerengine_node_pool" "node_pools" {
-  # Create an OKE node pool resource for each enabled entry of the worker_groups map with that mode.
+  # Create an OKE node pool resource for each enabled entry of the worker_pools map with that mode.
   for_each           = local.enabled_node_pools
   compartment_id     = each.value.compartment_id
   cluster_id         = var.cluster_id
   kubernetes_version = var.kubernetes_version
   name               = "${each.value.label_prefix}-${each.key}"
   defined_tags       = merge(local.defined_tags, contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
-  freeform_tags      = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_group = each.key })
+  freeform_tags      = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
   node_config_details {
     size                                = each.value.size
@@ -54,7 +54,7 @@ resource "oci_containerengine_node_pool" "node_pools" {
       local.defined_tags,
       lookup(each.value, "defined_tags", {}),
     )
-    freeform_tags = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_group = each.key })
+    freeform_tags = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
   }
 
   node_metadata = {
