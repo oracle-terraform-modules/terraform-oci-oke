@@ -111,9 +111,9 @@ locals {
   }
 
   # Worker pool OCI resources enriched with desired/custom parameters
-  worker_node_pools       = { for k, v in oci_containerengine_node_pool.node_pools : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
-  worker_instance_pools   = { for k, v in oci_core_instance_pool.instance_pools : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
-  worker_cluster_networks = { for k, v in oci_core_cluster_network.cluster_networks : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
+  worker_node_pools       = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
+  worker_instance_pools   = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
+  worker_cluster_networks = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_enabled, k, {})) }
 
   # Intermediate reference to the enabled worker pool NLBs to be reconciled
   enabled_worker_pool_nlbs = [

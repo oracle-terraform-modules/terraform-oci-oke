@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 # shellcheck disable=SC1083,SC2309,SC2154,SC2157,SC2034 # Ignore templated/escaped/unused file variables
 export ALL_FILE=~/all_node.active ONE_FILE=~/one_node.active

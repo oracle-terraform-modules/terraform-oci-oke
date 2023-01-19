@@ -3,7 +3,7 @@
 
 variable "enabled" {
   default     = true
-  description = "Default for whether to apply resources for a group"
+  description = "Whether to apply resources for a worker pool when unspecified on its definition"
   type        = bool
 }
 
