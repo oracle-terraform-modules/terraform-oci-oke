@@ -6,24 +6,28 @@ resource "oci_core_instance_pool" "workers" {
   # Create an OCI Instance Pool resource for each enabled entry of the worker_pools map with that mode.
   for_each                  = local.enabled_instance_pools
   compartment_id            = each.value.compartment_id
-  display_name              = "${each.value.label_prefix}-${each.key}"
+  display_name              = each.key
   size                      = each.value.size
   instance_configuration_id = oci_core_instance_configuration.workers[each.key].id
   defined_tags              = merge(local.defined_tags, contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
   freeform_tags             = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
   dynamic "placement_configurations" {
-    # Define each configured availability domain for placement, with bounds on # available
-    # Configured AD numbers e.g. [1,2,3] are converted into tenancy/compartment-specific names
-    iterator = ad_number
-    for_each = (contains(keys(each.value), "placement_ads")
-      ? tolist(setintersection(each.value.placement_ads, local.ad_numbers))
-      : local.ad_numbers
-    )
+    for_each = each.value.availability_domains
+    iterator = ad
 
     content {
-      availability_domain = lookup(local.ad_number_to_name, ad_number.value, local.first_ad_name)
+      availability_domain = ad.value
       primary_subnet_id   = each.value.subnet_id
+
+      dynamic "secondary_vnic_subnets" {
+        for_each = lookup(each.value, "secondary_vnics", {})
+        iterator = vnic
+        content {
+          display_name = vnic.key
+          subnet_id    = lookup(vnic.value, "subnet_id", each.value.subnet_id)
+        }
+      }
     }
   }
 

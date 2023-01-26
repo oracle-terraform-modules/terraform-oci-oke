@@ -8,26 +8,24 @@ resource "oci_containerengine_node_pool" "workers" {
   compartment_id     = each.value.compartment_id
   cluster_id         = var.cluster_id
   kubernetes_version = var.kubernetes_version
-  name               = "${each.value.label_prefix}-${each.key}"
+  name               = each.key
   defined_tags       = merge(local.defined_tags, contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
   freeform_tags      = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
   node_config_details {
     size                                = each.value.size
-    is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
+    is_pv_encryption_in_transit_enabled = each.value.pv_encryption
     kms_key_id                          = var.volume_kms_key_id
     nsg_ids                             = each.value.worker_nsgs
 
     dynamic "placement_configs" {
       # Define each configured availability domain for placement, with bounds on # available
       # Configured AD numbers e.g. [1,2,3] are converted into tenancy/compartment-specific names
-      iterator = ad_number
-      for_each = (contains(keys(each.value), "placement_ads")
-        ? tolist(setintersection(each.value.placement_ads, local.ad_numbers))
-      : local.ad_numbers)
+      for_each = each.value.availability_domains
+      iterator = ad
 
       content {
-        availability_domain = lookup(local.ad_number_to_name, ad_number.value, local.first_ad_name)
+        availability_domain = ad.value
         subnet_id           = each.value.subnet_id
       }
     }

@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2022, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
@@ -173,7 +173,7 @@ control_plane_type           = "private"
 control_plane_allowed_cidrs  = ["0.0.0.0/0"]
 control_plane_nsgs           = []
 dashboard_enabled            = false
-kubernetes_version           = "v1.23.4"
+kubernetes_version           = "v1.25.4"
 pods_cidr                    = "10.244.0.0/16"
 services_cidr                = "10.96.0.0/16"
 
