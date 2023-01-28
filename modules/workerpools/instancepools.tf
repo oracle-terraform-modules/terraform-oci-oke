@@ -36,9 +36,15 @@ resource "oci_core_instance_pool" "workers" {
       display_name, defined_tags, freeform_tags,
       placement_configurations,
     ]
+
     precondition {
       condition     = var.cni_type == "flannel"
       error_message = "Instance Pools require a cluster with `cni_type = flannel`."
+    }
+
+    precondition {
+      condition = coalesce(each.value.image_id, "none") != "none"
+      error_message = "Missing image_id for pool ${each.key}. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'."
     }
   }
 

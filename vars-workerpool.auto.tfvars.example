@@ -14,12 +14,6 @@ worker_pool_subnet_id = ""    # Defaults to Terraform-managed when empty
 
 worker_nsgs = [] # Defaults to VCN workers NSG when empty/missing
 
-# Ignored when image type != "custom"
-# worker_pool_image_id = "ocid1.image..." 
-
-# Ignored when image type != "custom"; defaults to node_pool_image_id when unspecified
-worker_pool_image_type = "oke" # Defaults to node_pool_image_type when unspecified
-
 # Definitions for worker pools, with any fields set overriding defaults above
 #   The "worker_pool_" prefix is omitted for parameters at the group level
 #   All value fields may be omitted to accept defaults for a sparse definition

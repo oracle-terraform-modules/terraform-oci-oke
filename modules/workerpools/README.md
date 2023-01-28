@@ -41,7 +41,7 @@ Many parameters to a worker pool can be defined at multiple levels, taken in pri
 label_prefix                   = ""
 worker_pool_enabled           = true
 worker_pool_size              = 0
-worker_pool_image_id          = "ocid1.image..." # Required here and/or on group
+worker_image_id          = "ocid1.image..." # Required here and/or on group
 worker_pool_mode              = "node-pool"
 worker_pool_shape             = "VM.Standard.E4.Flex"
 worker_pool_ocpus             = 2

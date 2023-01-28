@@ -268,11 +268,11 @@ node_pools = {
   #   placement_ads    = [1]
   # }
 }
-node_pool_image_id    = "none"
-node_pool_image_type  = "oke"
+worker_image_id    = "none"
+worker_image_type  = "oke"
 node_pool_name_prefix = "np"
-node_pool_os          = "Oracle Linux"
-node_pool_os_version  = "7.9"
+worker_image_os          = "Oracle Linux"
+worker_image_os_version  = "7.9"
 worker_nsgs           = []
 worker_type           = "private"
 

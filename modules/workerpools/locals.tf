@@ -22,9 +22,7 @@ locals {
   freeform_tags = merge(coalesce(var.freeform_tags, {}), { "role" = "worker" })
 
   # OKE managed node pool images
-  node_pool_images = try(data.oci_containerengine_node_pool_option.np_options.sources, [{
-    source_type = "IMAGE"
-  }])
+  node_pool_images = try(data.oci_containerengine_node_pool_option.np_options.sources, [])
 
   # Parse platform/operating system information from node pool image names
   parsed_images = {
@@ -83,6 +81,14 @@ locals {
       ])
       block_volume_type = y.mode == "cluster-network" ? "iscsi" : var.block_volume_type
       pv_encryption     = var.enable_pv_encryption_in_transit && y.block_volume_type == "paravirtualized" && y.mode != "cluster-network"
+      image_id = (y.image_type == "custom" ? y.image_id : element(tolist(setintersection([
+        lookup(local.image_ids, y.image_type, null),
+        length(regexall("GPU", y.shape)) > 0 ? local.image_ids.gpu : local.image_ids.nongpu,
+        length(regexall("A1", y.shape)) > 0 ? local.image_ids.aarch64 : local.image_ids.x86_64,
+        [for parsed_image_id, iv in local.parsed_images : parsed_image_id
+          if length(regexall(iv.os, y.os)) > 0 && trimprefix(iv.os_version, y.os_version) != iv.os_version
+        ],
+      ]...)), 0))
     })
   }
 
@@ -90,14 +96,6 @@ locals {
 
   # Number of nodes expected from enabled worker pools
   expected_node_count = length(local.worker_pools_enabled) == 0 ? 0 : sum([for k, v in local.worker_pools_enabled : lookup(v, "size", 0)])
-
-  # Filter worker_pools map variable for entries with image_id defined, returning a distinct list
-  enabled_worker_pool_image_ids = distinct([
-    for v in local.worker_pools_enabled : v.image_id if contains(keys(v), "image_id")
-  ])
-
-  # Intermediate worker image result from data source
-  enabled_worker_pool_images = data.oci_core_image.worker_images
 
   # Filter enabled worker_pool map entries for node pools
   enabled_node_pools = {

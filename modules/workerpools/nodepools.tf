@@ -73,22 +73,10 @@ resource "oci_containerengine_node_pool" "workers" {
     }
   }
 
-  dynamic "node_source_details" {
-    for_each = length(local.parsed_images) > 0 ? [1] : []
-    content {
-      source_type             = local.node_pool_images[0].source_type
-      boot_volume_size_in_gbs = each.value.boot_volume_size
-      image_id = (each.value.image_type == "custom" ? each.value.image_id
-        : element(tolist(setintersection([
-          lookup(local.image_ids, each.value.image_type, null),
-          length(regexall("GPU", each.value.shape)) > 0 ? local.image_ids.gpu : local.image_ids.nongpu,
-          length(regexall("A1", each.value.shape)) > 0 ? local.image_ids.aarch64 : local.image_ids.x86_64,
-          [for k, v in local.parsed_images : k
-            if length(regexall(v.os, each.value.os)) > 0
-            && trimprefix(v.os_version, each.value.os_version) != v.os_version
-          ],
-      ]...)), 0))
-    }
+  node_source_details {
+    boot_volume_size_in_gbs = each.value.boot_volume_size
+    image_id                = each.value.image_id
+    source_type             = "image"
   }
 
   ssh_public_key = (var.ssh_public_key != "") ? var.ssh_public_key : (var.ssh_public_key_path != "none") ? file(var.ssh_public_key_path) : ""
@@ -101,6 +89,11 @@ resource "oci_containerengine_node_pool" "workers" {
       node_config_details["placement_configs"], # dynamic placement configs
       node_source_details,                      # dynamic image lookup
     ]
+
+    precondition {
+      condition = coalesce(each.value.image_id, "none") != "none"
+      error_message = "Missing image_id for pool ${each.key}. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'."
+    }
   }
 
   dynamic "initial_node_labels" {

@@ -53,7 +53,7 @@ variable "worker_pool_size" {
   type        = number
 }
 
-variable "worker_pool_image_id" {
+variable "worker_image_id" {
   default     = ""
   description = "Default image for worker pools when unspecified"
   type        = string
@@ -77,14 +77,26 @@ variable "worker_pool_memory" {
   type        = number
 }
 
-variable "worker_pool_image_type" {
+variable "worker_image_type" {
   default     = "custom"
-  description = "Whether to use a Platform, OKE or custom image. When custom is set, the worker_pool_image_id must be specified."
+  description = "Whether to use a Platform, OKE or custom image. When custom is set, the worker_image_id must be specified."
   type        = string
   validation {
-    condition     = contains(["custom", "oke", "platform"], var.worker_pool_image_type)
+    condition     = contains(["custom", "oke", "platform"], var.worker_image_type)
     error_message = "Accepted values are custom, oke, platform"
   }
+}
+
+variable "worker_image_os" {
+  default     = "Oracle Linux"
+  description = "Default worker base image operating system name when worker_image_type = 'oke' or 'platform'."
+  type        = string
+}
+
+variable "worker_image_os_version" {
+  default     = "8"
+  description = "Default worker base image operating system version when worker_image_type = 'oke' or 'platform'."
+  type        = string
 }
 
 variable "worker_pool_subnet_id" {
