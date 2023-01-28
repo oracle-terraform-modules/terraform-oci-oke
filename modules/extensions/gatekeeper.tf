@@ -1,24 +1,32 @@
-# Copyright 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2021, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+locals {
+  gatekeeper_template = templatefile("${path.module}/scripts/install_gatekeeper.template.sh", {
+    enable_gatekeeper  = var.enable_gatekeeper
+    gatekeeper_version = var.gatekeeper_version
+    }
+  )
+}
 
 resource "null_resource" "enable_gatekeeper" {
   connection {
     host        = var.operator_private_ip
-    private_key = local.ssh_private_key
+    private_key = var.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
     user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = local.ssh_private_key
+    bastion_private_key = var.ssh_private_key
   }
 
-  depends_on = [null_resource.install_k8stools_on_operator, null_resource.write_kubeconfig_on_operator]
+  depends_on = [null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
     content     = local.gatekeeper_template
-    destination = "/home/opc/enable_gatekeeper.sh"
+    destination = "/home/${var.operator_user}/enable_gatekeeper.sh"
   }
 
   provisioner "remote-exec" {
@@ -27,5 +35,5 @@ resource "null_resource" "enable_gatekeeper" {
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.enable_gatekeeper == true ? 1 : 0
+  count = var.enable_gatekeeper ? 1 : 0
 }

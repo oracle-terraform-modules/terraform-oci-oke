@@ -32,7 +32,6 @@ user_id    = ""
 
 # general oci parameters
 compartment_id = ""
-label_prefix   = "dev"
 
 ssh_private_key_path = "~/.ssh/id_rsa"
 ssh_public_key_path = "~/.ssh/id_rsa.pub"

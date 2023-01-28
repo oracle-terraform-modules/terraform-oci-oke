@@ -1,6 +1,14 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+locals {
+  check_active_worker_template = templatefile("${path.module}/scripts/check_worker_active.template.sh", {
+    check_node_active   = var.check_node_active
+    expected_node_count = var.expected_node_count
+    }
+  )
+}
+
 resource "null_resource" "check_worker_active" {
   triggers = {
     expected_node_count = var.expected_node_count
@@ -8,28 +16,28 @@ resource "null_resource" "check_worker_active" {
 
   connection {
     host        = var.operator_private_ip
-    private_key = local.ssh_private_key
+    private_key = var.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
     user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = local.ssh_private_key
+    bastion_private_key = var.ssh_private_key
   }
 
   depends_on = [null_resource.write_kubeconfig_on_operator]
 
   provisioner "file" {
     content     = local.check_active_worker_template
-    destination = "/home/opc/check_active_worker.sh"
+    destination = "/home/${var.operator_user}/check_active_worker.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "if [ -f \"$HOME/check_active_worker.sh\" ]; then bash \"$HOME/check_active_worker.sh\"; rm -f \"$HOME/check_active_worker.sh\";fi",
+      "bash \"/home/${var.operator_user}/check_active_worker.sh\"",
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.check_node_active != "none" ? 1 : 0
+  count = var.check_node_active != "none" && var.expected_node_count > 0 ? 1 : 0
 }

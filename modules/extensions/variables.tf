@@ -1,167 +1,64 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# oci provider
-variable "tenancy_id" {}
+# Common
+variable "compartment_id" { type = string }
+variable "region" { type = string }
 
-# general oci parameters
-variable "compartment_id" {}
+# Connection
+variable "bastion_public_ip" { type = string }
+variable "bastion_user" { type = string }
+variable "operator_private_ip" { type = string }
+variable "operator_user" { type = string }
+variable "ssh_private_key" { type = string }
 
-variable "label_prefix" {}
+# Cluster
+variable "cluster_id" { type = string }
+variable "cni_type" { type = string }
 
-variable "region" {}
+# Calico
+variable "calico_apiserver_enabled" { type = bool }
+variable "calico_mode" { type = string }
+variable "calico_mtu" { type = number }
+variable "calico_staging_dir" { type = string }
+variable "calico_url" { type = string }
+variable "calico_version" { type = string }
+variable "enable_calico" { type = bool }
+variable "pods_cidr" { type = string }
+variable "typha_enabled" { type = bool }
+variable "typha_replicas" { type = number }
 
-# ssh keys
-variable "ssh_private_key" {}
+# Gatekeeper
+variable "enable_gatekeeper" { type = bool }
+variable "gatekeeper_version" { type = string }
 
-variable "ssh_private_key_path" {}
+# Service account
+variable "create_service_account" { type = bool }
+variable "service_account_cluster_role_binding" { type = string }
+variable "service_account_name" { type = string }
+variable "service_account_namespace" { type = string }
 
-variable "ssh_public_key" {}
+# OCIR
+variable "email_address" { type = string }
+variable "secret_id" { type = string }
+variable "secret_name" { type = string }
+variable "secret_namespace" { type = string }
+variable "username" { type = string }
 
-variable "ssh_public_key_path" {}
+# Node readiness check
+variable "check_node_active" { type = string }
+variable "expected_node_count" { type = number }
 
-# bastion
-variable "create_bastion_host" {
-  type = bool
-}
+# Metrics server
+variable "enable_metric_server" { type = bool }
+variable "enable_vpa" { type = bool }
+variable "vpa_version" { type = string }
 
-variable "bastion_public_ip" {}
+# Worker draining
+# TODO move to workers
+variable "node_pools_to_drain" { type = list(string) }
+variable "upgrade_nodepool" { type = bool }
 
-variable "bastion_user" {}
-
-variable "bastion_state" {}
-
-# operator
-variable "create_operator" {
-  type = bool
-}
-
-variable "operator_private_ip" {}
-
-variable "operator_user" {}
-
-variable "operator_state" {}
-
-variable "operator_dynamic_group" {
-  description = "name of dynamic group to allow updating dynamic-groups"
-  type        = string
-}
-
-variable "enable_operator_instance_principal" {
-  type = bool
-}
-variable "operator_os_version" {}
-
-# oke
-variable "cluster_id" {}
-
-variable "cluster_name" {}
-
-variable "pods_cidr" {}
-
-# encryption
-variable "use_cluster_encryption" {
-  type = bool
-}
-
-variable "cluster_kms_key_id" {}
-
-
-variable "cluster_kms_dynamic_group_id" {}
-
-variable "create_policies" {
-  type = bool
-}
-
-# ocir
-variable "email_address" {}
-
-variable "secret_id" {}
-
-variable "secret_name" {}
-
-variable "secret_namespace" {}
-
-variable "username" {}
-
-# calico
-variable "calico_version" {}
-
-variable "install_calico" {
-  type = bool
-}
-
-variable "cni_type" {}
-variable "calico_mode" {}
-variable "calico_mtu" {}
-variable "calico_url" {}
-variable "calico_apiserver_enabled" {}
-variable "typha_enabled" {}
-variable "typha_replicas" {}
-variable "calico_staging_dir" {}
-
-#metricserver
-
-variable "enable_metric_server" {
-  default = false
-  type    = bool
-}
-
-variable "enable_gatekeeper" {
-  type    = bool
-  default = false
-}
-
-variable "gatekeeper_version" {
-  type = string
-
-}
-variable "enable_vpa" {
-  type = bool
-}
-variable "vpa_version" {}
-
-# service account
-variable "create_service_account" {
-  type = bool
-}
-
-variable "service_account_name" {}
-
-variable "service_account_namespace" {}
-
-variable "service_account_cluster_role_binding" {}
-
-variable "check_node_active" {
-  description = "check worker node is active"
-  type        = string
-  default     = "none"
-
-  validation {
-    condition     = contains(["none", "one", "all"], var.check_node_active)
-    error_message = "Accepted values are none, one or all."
-  }
-}
-
-variable "expected_node_count" {
-  description = "# of expected worker nodes, used to block until cluster is ready to schedule workloads when check_node_active != 'none'."
-  default     = 0
-  type        = number
-}
-
-# upgrade
-variable "upgrade_nodepool" {
-  type = bool
-}
-
-variable "nodepool_upgrade_method" {
-  type = string
-}
-
-variable "node_pools_to_drain" {
-  type = list(string)
-}
-
-variable "debug_mode" {
-  type = bool
-}
+# Cluster autoscaler
+variable "deploy_cluster_autoscaler" { type = bool }
+variable "autoscaling_groups" { type = any }

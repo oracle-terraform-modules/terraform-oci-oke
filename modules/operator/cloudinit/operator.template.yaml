@@ -1,0 +1,46 @@
+#cloud-config
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+timezone: ${timezone}
+
+yum_repos:
+  ol8_developer_EPEL:
+    name: Oracle Linux $releasever EPEL Packages for Development ($basearch)
+    baseurl: https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/developer/EPEL/$basearch/
+    gpgkey: file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle
+    gpgcheck: true
+    enabled: true
+
+package_update: true
+package_upgrade: ${upgrade}
+packages:
+  - git
+  - jq
+  - python3-oci-cli
+
+runcmd:
+  - echo "export OCI_CLI_AUTH=instance_principal" >> /home/${user}/.bashrc
+  - curl -L https://dl.k8s.io/release/${kubernetes_version}/bin/linux/amd64/kubectl -o /usr/bin/kubectl
+  - chmod +x /usr/bin/kubectl
+  - echo "source <(kubectl completion bash)" >> /home/${user}/.bashrc
+  - echo "alias k='kubectl'" >> /home/${user}/.bashrc
+  - curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+  - mv /usr/local/bin/helm /usr/bin/helm
+  - echo "source <(helm completion bash)" >> /home/${user}/.bashrc
+  - echo "alias h='helm'" >> /home/${user}/.bashrc
+  - git clone https://github.com/ahmetb/kubectx /opt/kubectx
+  - ln -s /opt/kubectx/kubectx /usr/bin/kubectx
+  - echo "alias ktx='kubectx'" >> /home/${user}/.bashrc
+  - ln -s /opt/kubectx/kubens /usr/bin/kubens
+  - echo "alias kns='kubens'" >> /home/${user}/.bashrc
+  - curl -LO https://github.com/derailed/k9s/releases/download/v0.27.2/k9s_Linux_amd64.tar.gz
+  - tar -xvzf k9s_Linux_amd64.tar.gz && mv ./k9s /usr/bin/k9s
+  - echo "export TERM=xterm-256color" >> /home/${user}/.bashrc
+
+final_message: |
+  cloud-init has finished
+  version: $version
+  timestamp: $timestamp
+  datasource: $datasource
+  uptime: $uptime
