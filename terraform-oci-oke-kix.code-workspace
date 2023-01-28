@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "../terraform-oci-oke-kix"
+		},
+		{
+			"path": "../terraform-oci-oke-iam"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../terraform-oci-operator"
+		},
+		{
+			"path": "../tfociop"
+		}
+	],
+	"settings": {}
+}
