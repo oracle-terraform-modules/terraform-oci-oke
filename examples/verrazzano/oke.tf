@@ -9,7 +9,6 @@ module "oke" {
 
   # general oci parameters
   compartment_id = var.compartment_id
-  label_prefix   = "dev"
 
   # ssh keys
   ssh_private_key_path = "~/.ssh/id_rsa"
@@ -26,7 +25,7 @@ module "oke" {
 
   # bastion host
   create_bastion_host = true
-  upgrade_bastion     = false
+  bastion_upgrade     = false
 
   # operator host
   create_operator                    = true
