@@ -4,6 +4,7 @@ OWNERS # have admin access and can merge code to main:
 
 - @hyder
 - @markxnelson
+- @devoncrouse
 
 CONTRIBUTORS
 

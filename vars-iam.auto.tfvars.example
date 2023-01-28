@@ -1,0 +1,21 @@
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# General
+config_file_profile = "DEFAULT"
+home_region         = "us-ashburn-1"
+tenancy_id          = "ocid1.tenancy..."
+compartment_id      = "ocid1.compartment..."
+region              = "ap-osaka-1"
+
+# Policies
+create_autoscaler_policy = "auto" # never/*auto/always
+create_kms_policy        = "auto" # never/*auto/always
+create_operator_policy   = "auto" # never/*auto/always
+create_worker_policy     = "auto" # never/*auto/always
+
+# Defined tags
+create_tag_namespace = false # true/*false
+create_defined_tags  = false # true/*false
+tag_namespace        = "oke"
+use_defined_tags     = false # true/*false

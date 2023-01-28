@@ -1,86 +1,38 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# general oci parameters
-variable "compartment_id" {}
+# Common
+variable "compartment_id" { type = string }
+variable "state_id" { type = string }
 
-variable "label_prefix" {}
+# Tags
+variable "defined_tags" { type = map(string) }
+variable "freeform_tags" { type = map(string) }
+variable "tag_namespace" { type = string }
+variable "use_defined_tags" { type = bool }
 
-# networking parameters
-variable "ig_route_id" {}
-
-variable "nat_route_id" {}
-
-variable "subnets" {
-  type = map(any)
-}
-
-variable "vcn_id" {}
-
-# cluster endpoint
-
-variable "cni_type" {}
-
-variable "control_plane_type" {
-  type = string
-}
-
-variable "control_plane_allowed_cidrs" {
-  type = list(string)
-}
-
-# oke workers
-
-variable "allow_node_port_access" {
-  type = bool
-}
-
-variable "allow_worker_internet_access" {
-  type = bool
-}
-
-variable "allow_pod_internet_access" {
-  type = bool
-}
-
-variable "allow_worker_ssh_access" {
-  type = bool
-}
-
-variable "assign_dns" {
-  type = bool
-}
-
-variable "worker_type" {}
-
-# load balancers
-
-variable "enable_waf" {
-  type = bool
-}
-
-variable "load_balancers" {
-  type = string
-}
-
-# internal load balancers
-variable "internal_lb_allowed_cidrs" {
-  type = list(any)
-}
-
-variable "internal_lb_allowed_ports" {
-  type = list(any)
-}
-
-# public load balancers
-variable "public_lb_allowed_cidrs" {
-  type = list(any)
-}
-
-variable "public_lb_allowed_ports" {
-  type = list(any)
-}
-
-variable "create_fss" {
-  type = bool
-}
+# Network
+variable "allow_node_port_access" { type = bool }
+variable "allow_pod_internet_access" { type = bool }
+variable "allow_rules_internal_lb" { type = any }
+variable "allow_rules_public_lb" { type = any }
+variable "allow_worker_internet_access" { type = bool }
+variable "allow_worker_ssh_access" { type = bool }
+variable "assign_dns" { type = bool }
+variable "bastion_allowed_cidrs" { type = set(string) }
+variable "bastion_type" { type = string }
+variable "cni_type" { type = string }
+variable "control_plane_allowed_cidrs" { type = set(string) }
+variable "control_plane_type" { type = string }
+variable "create_bastion" { type = bool }
+variable "create_fss" { type = bool }
+variable "create_nsgs" { type = bool }
+variable "create_operator" { type = bool }
+variable "enable_waf" { type = bool }
+variable "ig_route_table_id" { type = string }
+variable "load_balancers" { type = string }
+variable "nat_route_table_id" { type = string }
+variable "subnets" { type = any }
+variable "vcn_cidrs" { type = list(string) }
+variable "vcn_id" { type = string }
+variable "worker_type" { type = string }

@@ -8,9 +8,9 @@ function clean_node_active() {
   rm -f "$${ALL_FILE}" "$${ONE_FILE}"
 }
 
-function get_actual_node_count() {
+function get_actual_node_count() (
   (kubectl get --no-headers nodes | grep -v NotReady | awk '{print $1}' | wc -l) 2>/dev/null || echo '0'
-}
+)
 
 function wait_for_active() {
   clean_node_active
@@ -22,16 +22,16 @@ function wait_for_active() {
     if [[ $${actual_node_count} -ge 1 ]]; then touch one_node.active; fi
 
     if [[ -f "$${ONE_FILE}" ]] && [[ "${check_node_active}" == 'one' ]]; then
-      echo "Ready with $${actual_node_count} node(s)"
+      echo "$(date): Ready with $${actual_node_count} node(s)" >&2
       break
     fi
 
     if [[ -f "$${ALL_FILE}" ]] && [[ "${check_node_active}" == 'all' ]]; then
-      echo "Ready with $${actual_node_count} node(s)"
+      echo "$(date): Ready with $${actual_node_count} node(s)" >&2
       break
     fi
 
-    echo "$(date): Waiting for ${check_node_active} of ${expected_node_count} node(s) to become ready ($${actual_node_count} found)"
+    echo "$(date): Waiting for ${check_node_active} of ${expected_node_count} node(s) to become ready ($${actual_node_count} found)" >&2
     sleep 30
   done
 }

@@ -1,38 +1,58 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+locals {
+  generate_kubeconfig_template = templatefile("${path.module}/scripts/generate_kubeconfig.template.sh", {
+    cluster-id = var.cluster_id
+    region     = var.region
+    }
+  )
+
+  set_credentials_template = templatefile("${path.module}/scripts/kubeconfig_set_credentials.template.sh", {
+    cluster-id    = var.cluster_id
+    cluster-id-11 = substr(var.cluster_id, (length(var.cluster_id) - 11), length(var.cluster_id))
+    region        = var.region
+    }
+  )
+
+  token_helper_template = templatefile("${path.module}/scripts/token_helper.template.sh", {
+    cluster-id = var.cluster_id
+    region     = var.region
+    }
+  )
+}
+
 resource "null_resource" "write_kubeconfig_on_operator" {
   connection {
     host        = var.operator_private_ip
-    private_key = local.ssh_private_key
+    private_key = var.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
     user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = local.ssh_private_key
+    bastion_private_key = var.ssh_private_key
   }
-
-  depends_on = [null_resource.install_k8stools_on_operator]
 
   provisioner "file" {
     content     = local.generate_kubeconfig_template
-    destination = "/home/opc/generate_kubeconfig.sh"
+    destination = "/home/${var.operator_user}/generate_kubeconfig.sh"
   }
 
   provisioner "file" {
     content     = local.token_helper_template
-    destination = "/home/opc/token_helper.sh"
+    destination = "/home/${var.operator_user}/token_helper.sh"
   }
 
   provisioner "file" {
     content     = local.set_credentials_template
-    destination = "/home/opc/kubeconfig_set_credentials.sh"
+    destination = "/home/${var.operator_user}/kubeconfig_set_credentials.sh"
   }
 
   provisioner "remote-exec" {
     inline = [
+      "cloud-init status --wait &> /dev/null",
       "if [ -f \"$HOME/generate_kubeconfig.sh\" ]; then bash \"$HOME/generate_kubeconfig.sh\"; rm -f \"$HOME/generate_kubeconfig.sh\";fi",
       "mkdir $HOME/bin",
       "chmod +x $HOME/token_helper.sh",
@@ -44,6 +64,4 @@ resource "null_resource" "write_kubeconfig_on_operator" {
   lifecycle {
     ignore_changes = all
   }
-
-  count = local.post_provisioning_ops == true ? 1 : 0
 }

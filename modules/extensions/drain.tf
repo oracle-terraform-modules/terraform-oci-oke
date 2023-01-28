@@ -1,27 +1,26 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+locals {
+  drain_template = templatefile("${path.module}/scripts/drain.template.sh", {})
+}
 
 resource "null_resource" "drain_nodes" {
   connection {
     host        = var.operator_private_ip
-    private_key = local.ssh_private_key
+    private_key = var.ssh_private_key
     timeout     = "40m"
     type        = "ssh"
     user        = var.operator_user
 
     bastion_host        = var.bastion_public_ip
     bastion_user        = var.bastion_user
-    bastion_private_key = local.ssh_private_key
-  }
-
-  provisioner "file" {
-    content     = local.drain_list_template
-    destination = "/home/opc/drainlist.py"
+    bastion_private_key = var.ssh_private_key
   }
 
   provisioner "file" {
     content     = local.drain_template
-    destination = "/home/opc/drain.sh"
+    destination = "/home/${var.operator_user}/drain.sh"
   }
 
   provisioner "remote-exec" {
@@ -32,5 +31,5 @@ resource "null_resource" "drain_nodes" {
     ]
   }
 
-  count = local.post_provisioning_ops == true && var.upgrade_nodepool == true ? 1 : 0
+  count = var.upgrade_nodepool ? 1 : 0
 }

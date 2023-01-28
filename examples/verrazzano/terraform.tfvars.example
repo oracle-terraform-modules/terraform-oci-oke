@@ -12,7 +12,6 @@ user_id    = ""
 
 # general oci parameters
 compartment_id = ""
-label_prefix   = "dev"
 
 ssh_private_key_path = "~/.ssh/id_rsa"
 ssh_public_key_path  = "~/.ssh/id_rsa.pub"
@@ -21,7 +20,6 @@ verrazzano_version = "1.0.3"
 verrazzano_name    = "v8o"
 
 create_vcn                   = false
-vcn_display_name             = ""
 vcn_id                       = ""
 ig_route_table_display_name  = ""
 ig_route_table_id            = ""

@@ -37,12 +37,6 @@ variable "compartment_id" {
   type        = string
 }
 
-variable "label_prefix" {
-  default     = "none"
-  description = "A string that will be prepended to all resources."
-  type        = string
-}
-
 # ssh keys
 variable "ssh_private_key_path" {
   default     = "none"
