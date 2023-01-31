@@ -8,5 +8,7 @@ spec:
           value: "${POD_CIDR}"
         - name: "CALICO_IPV4POOL_VXLAN"
           value: "${IPV4POOL_VXLAN}"
+        - name: "CALICO_MANAGE_CNI"
+          value: "true"
         - name: "FELIX_IPTABLESBACKEND"
           value: "${IPTABLES_BACKEND}"
