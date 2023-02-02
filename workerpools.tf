@@ -12,10 +12,10 @@ module "worker_pools" {
   cluster_id                      = coalesce(var.cluster_id, module.oke.cluster_id)
   apiserver_private_host          = try(split(":", module.oke.endpoints[0].private_endpoint)[0], "")
   apiserver_public_host           = try(split(":", module.oke.endpoints[0].public_endpoint)[0], "")
-  image_id                        = local.worker_image_id
-  image_type                      = local.worker_image_type
-  os                              = var.node_pool_os
-  os_version                      = var.node_pool_os_version
+  image_id                        = var.worker_image_id
+  image_type                      = var.worker_image_type
+  os                              = var.worker_image_os
+  os_version                      = var.worker_image_os_version
   enabled                         = var.worker_pool_enabled
   mode                            = var.worker_pool_mode
   boot_volume_size                = var.worker_pool_boot_volume_size

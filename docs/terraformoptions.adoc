@@ -802,25 +802,25 @@ node_pools = {
 }
 |{}
 
-|node_pool_image_id
-|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the node_pool_os and node_pool_os_version to identify an image to provision the worker nodes.
+|worker_image_id
+|The OCID of custom image to use when provisioning worker nodes. When no OCID is specified, the worker nodes will use the worker_image_os and worker_image_os_version to identify an image to provision the worker nodes.
 |
 |"none"
 
-|node_pool_image_type
-|Whether to use a Platform, OKE or custom image. When custom is set, the node_pool_image_id *must* be specified. Using an OKE image minimizes the time it takes to provision worker nodes at runtime when compared to platform images and custom images. OKE images are optimized for use as worker node base images, with all the necessary configurations and required software. The use of OKE images reduces worker node provisioning time by more than half when compared to platform images. OKE images are provided by Oracle and built on top of platform images.
+|worker_image_type
+|Whether to use a Platform, OKE or custom image. When custom is set, the worker_image_id *must* be specified. Using an OKE image minimizes the time it takes to provision worker nodes at runtime when compared to platform images and custom images. OKE images are optimized for use as worker node base images, with all the necessary configurations and required software. The use of OKE images reduces worker node provisioning time by more than half when compared to platform images. OKE images are provided by Oracle and built on top of platform images.
 | "custom","oke","platform"
 |"oke"
 
-|node_pool_os
+|worker_image_os
 |The name of the Operating System image to use to provision the worker nodes.
 |
 |Oracle Linux
 
-|node_pool_os_version
+|worker_image_os_version
 |The corresponding version of the Operating System image to use to provision the worker nodes.
 |
-|7.9
+|8
 
 |cloudinit_nodepool_common
 |cloud-init common for all nodepools when no specific script mentioned for nodepool in cloudinit_nodepool.

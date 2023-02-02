@@ -6,27 +6,30 @@ resource "oci_core_cluster_network" "workers" {
   # Create an OCI Cluster Network resource for each enabled entry of the worker_pools map with that mode.
   for_each       = local.enabled_cluster_networks
   compartment_id = each.value.compartment_id
-  display_name   = "${each.value.label_prefix}-${each.key}"
+  display_name   = each.key
   defined_tags   = merge(local.defined_tags, contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
   freeform_tags  = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
   instance_pools {
     instance_configuration_id = oci_core_instance_configuration.workers[each.key].id
-    display_name              = join("-", compact([lookup(each.value, "label_prefix", var.label_prefix), each.key]))
+    display_name              = each.key
     size                      = each.value.size
     defined_tags              = merge(coalesce(local.defined_tags, {}), contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
     freeform_tags             = merge(coalesce(local.freeform_tags, {}), contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
   }
 
   placement_configuration {
-    # Define the configured availability domain for placement, bounded to a single value
-    # The configured AD number e.g. 2 is converted into a tenancy/compartment-specific name
-    availability_domain = lookup(local.ad_number_to_name, (
-      contains(keys(each.value), "placement_ads")
-      ? element(tolist(setintersection(each.value.placement_ads, local.ad_numbers)), 1)
-      : element(local.ad_numbers, 1)
-    ), local.first_ad_name)
-    primary_subnet_id = each.value.subnet_id
+    availability_domain = element(each.value.availability_domains, 1)
+    primary_subnet_id   = each.value.subnet_id
+
+    dynamic "secondary_vnic_subnets" {
+      for_each = lookup(each.value, "secondary_vnics", {})
+      iterator = vnic
+      content {
+        display_name = vnic.key
+        subnet_id    = lookup(vnic.value, "subnet_id", each.value.subnet_id)
+      }
+    }
   }
 
   lifecycle {
@@ -35,9 +38,15 @@ resource "oci_core_cluster_network" "workers" {
       instance_pools["display_name"], instance_pools["defined_tags"], instance_pools["freeform_tags"],
       placement_configuration["availability_domain"],
     ]
+
     precondition {
       condition     = var.cni_type == "flannel"
       error_message = "Cluster Networks require a cluster with `cni_type = flannel`."
+    }
+
+    precondition {
+      condition = coalesce(each.value.image_id, "none") != "none"
+      error_message = "Missing image_id for pool ${each.key}. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'."
     }
   }
 
