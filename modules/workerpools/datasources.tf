@@ -15,8 +15,3 @@ data "oci_containerengine_node_pool_option" "np_options" {
 data "oci_containerengine_cluster_kube_config" "kube_config" {
   cluster_id = var.cluster_id
 }
-
-data "oci_core_image" "worker_images" {
-  count    = length(local.enabled_worker_pool_image_ids)
-  image_id = local.enabled_worker_pool_image_ids[count.index]
-}

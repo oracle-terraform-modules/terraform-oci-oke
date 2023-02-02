@@ -493,7 +493,7 @@ variable "dashboard_enabled" {
 }
 
 variable "kubernetes_version" {
-  default     = "v1.24.1"
+  default     = "v1.25.4"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
@@ -589,37 +589,9 @@ variable "node_pools" {
   type        = any
 }
 
-variable "node_pool_image_id" {
-  default     = "none"
-  description = "The ocid of a custom image to use for worker node."
-  type        = string
-}
-
-variable "node_pool_image_type" {
-  default     = "oke"
-  description = "Whether to use a Platform, OKE or custom image. When custom is set, the node_pool_image_id must be specified."
-  type        = string
-  validation {
-    condition     = contains(["custom", "oke", "platform"], var.node_pool_image_type)
-    error_message = "Accepted values are custom, oke, platform."
-  }
-}
-
 variable "node_pool_name_prefix" {
   default     = "np"
   description = "The prefix of the node pool name."
-  type        = string
-}
-
-variable "node_pool_os" {
-  default     = "Oracle Linux"
-  description = "The name of image to use."
-  type        = string
-}
-
-variable "node_pool_os_version" {
-  default     = "7.9"
-  description = "The version of operating system to use for the worker nodes."
   type        = string
 }
 
