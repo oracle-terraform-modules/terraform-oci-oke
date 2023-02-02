@@ -5,13 +5,17 @@ resource "oci_core_instance_configuration" "workers" {
   # Create an OCI Instance Configuration resource for each enabled entry of the worker_pools map with a mode that uses one.
   for_each       = local.enabled_instance_configs
   compartment_id = each.value.compartment_id
-  display_name   = "${each.value.label_prefix}-${each.key}"
+  display_name   = each.key
 
   instance_details {
     instance_type = "compute"
 
+
+
     launch_details {
-      compartment_id = each.value.compartment_id
+      availability_domain = element(each.value.availability_domains, 1)
+      compartment_id      = each.value.compartment_id
+
       defined_tags = merge(
         local.defined_tags,
         lookup(each.value, "defined_tags", {}),
@@ -61,19 +65,47 @@ resource "oci_core_instance_configuration" "workers" {
         source_type             = "image"
       }
 
-      is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
+      is_pv_encryption_in_transit_enabled = each.value.pv_encryption
     }
 
-    block_volumes {
-      attach_details {
-        type                                = var.block_volume_type
-        is_pv_encryption_in_transit_enabled = var.block_volume_type == "paravirtualized" && var.enable_pv_encryption_in_transit
-      }
+    dynamic "block_volumes" {
+      for_each = each.value.availability_domains
+      iterator = ad
+      content {
+        attach_details {
+          type                                = each.value.block_volume_type
+          is_pv_encryption_in_transit_enabled = each.value.pv_encryption
+        }
 
-      create_details {
-        display_name   = "${each.value.label_prefix}-${each.key}"
-        kms_key_id     = var.volume_kms_key_id
-        compartment_id = each.value.compartment_id
+        create_details {
+          availability_domain = ad.value
+          compartment_id      = each.value.compartment_id
+          display_name        = each.key
+          kms_key_id          = var.volume_kms_key_id
+        }
+      }
+    }
+
+    dynamic "secondary_vnics" {
+      for_each = lookup(each.value, "secondary_vnics", {})
+      iterator = vnic
+
+      content {
+        display_name = vnic.key
+        nic_index    = lookup(vnic.value, "nic_index", null)
+
+        create_vnic_details {
+          assign_private_dns_record = lookup(vnic.value, "assign_private_dns_record", null)
+          assign_public_ip          = lookup(vnic.value, "assign_public_ip", null)
+          display_name              = vnic.key
+          defined_tags              = lookup(vnic.value, "defined_tags", null)
+          freeform_tags             = lookup(vnic.value, "freeform_tags", null)
+          hostname_label            = lookup(vnic.value, "hostname_label", null)
+          nsg_ids                   = lookup(vnic.value, "nsg_ids", null)
+          private_ip                = lookup(vnic.value, "private_ip", null)
+          skip_source_dest_check    = lookup(vnic.value, "skip_source_dest_check", null)
+          subnet_id                 = lookup(vnic.value, "subnet_id", each.value.subnet_id)
+        }
       }
     }
   }

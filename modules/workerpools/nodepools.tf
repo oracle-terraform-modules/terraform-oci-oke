@@ -8,26 +8,24 @@ resource "oci_containerengine_node_pool" "workers" {
   compartment_id     = each.value.compartment_id
   cluster_id         = var.cluster_id
   kubernetes_version = var.kubernetes_version
-  name               = "${each.value.label_prefix}-${each.key}"
+  name               = each.key
   defined_tags       = merge(local.defined_tags, contains(keys(each.value), "defined_tags") ? each.value.defined_tags : {})
   freeform_tags      = merge(local.freeform_tags, contains(keys(each.value), "freeform_tags") ? each.value.freeform_tags : { worker_pool = each.key })
 
   node_config_details {
     size                                = each.value.size
-    is_pv_encryption_in_transit_enabled = var.enable_pv_encryption_in_transit
+    is_pv_encryption_in_transit_enabled = each.value.pv_encryption
     kms_key_id                          = var.volume_kms_key_id
     nsg_ids                             = each.value.worker_nsgs
 
     dynamic "placement_configs" {
       # Define each configured availability domain for placement, with bounds on # available
       # Configured AD numbers e.g. [1,2,3] are converted into tenancy/compartment-specific names
-      iterator = ad_number
-      for_each = (contains(keys(each.value), "placement_ads")
-        ? tolist(setintersection(each.value.placement_ads, local.ad_numbers))
-      : local.ad_numbers)
+      for_each = each.value.availability_domains
+      iterator = ad
 
       content {
-        availability_domain = lookup(local.ad_number_to_name, ad_number.value, local.first_ad_name)
+        availability_domain = ad.value
         subnet_id           = each.value.subnet_id
       }
     }
@@ -75,22 +73,10 @@ resource "oci_containerengine_node_pool" "workers" {
     }
   }
 
-  dynamic "node_source_details" {
-    for_each = length(local.parsed_images) > 0 ? [1] : []
-    content {
-      source_type             = local.node_pool_images[0].source_type
-      boot_volume_size_in_gbs = each.value.boot_volume_size
-      image_id = (each.value.image_type == "custom" ? each.value.image_id
-        : element(tolist(setintersection([
-          lookup(local.image_ids, each.value.image_type, null),
-          length(regexall("GPU", each.value.shape)) > 0 ? local.image_ids.gpu : local.image_ids.nongpu,
-          length(regexall("A1", each.value.shape)) > 0 ? local.image_ids.aarch64 : local.image_ids.x86_64,
-          [for k, v in local.parsed_images : k
-            if length(regexall(v.os, each.value.os)) > 0
-            && trimprefix(v.os_version, each.value.os_version) != v.os_version
-          ],
-      ]...)), 0))
-    }
+  node_source_details {
+    boot_volume_size_in_gbs = each.value.boot_volume_size
+    image_id                = each.value.image_id
+    source_type             = "image"
   }
 
   ssh_public_key = (var.ssh_public_key != "") ? var.ssh_public_key : (var.ssh_public_key_path != "none") ? file(var.ssh_public_key_path) : ""
@@ -103,6 +89,11 @@ resource "oci_containerengine_node_pool" "workers" {
       node_config_details["placement_configs"], # dynamic placement configs
       node_source_details,                      # dynamic image lookup
     ]
+
+    precondition {
+      condition = coalesce(each.value.image_id, "none") != "none"
+      error_message = "Missing image_id for pool ${each.key}. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'."
+    }
   }
 
   dynamic "initial_node_labels" {

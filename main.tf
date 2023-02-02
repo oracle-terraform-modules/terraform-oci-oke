@@ -268,10 +268,10 @@ module "oke" {
   max_pods_per_node               = var.max_pods_per_node
   node_pools                      = var.node_pools
   node_pool_name_prefix           = var.node_pool_name_prefix
-  node_pool_image_id              = var.node_pool_image_id
-  node_pool_image_type            = var.node_pool_image_type
-  node_pool_os                    = var.node_pool_os
-  node_pool_os_version            = var.node_pool_os_version
+  node_pool_image_id              = var.worker_image_id
+  node_pool_image_type            = var.worker_image_type
+  node_pool_os                    = var.worker_image_os
+  node_pool_os_version            = var.worker_image_os_version
   node_pool_timezone              = var.node_pool_timezone
   enable_pv_encryption_in_transit = var.enable_pv_encryption_in_transit
   use_node_pool_volume_encryption = var.use_node_pool_volume_encryption

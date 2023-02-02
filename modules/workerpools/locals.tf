@@ -8,7 +8,6 @@ locals {
   ad_number_to_name = local.ads != null ? {
     for ad in local.ads : parseint(substr(ad.name, -1, -1), 10) => ad.name
   } : { -1 : "" } # Fallback handles failure when unavailable but not required
-  first_ad_name = local.ad_number_to_name[1]
 
   k8s_version_length = length(var.kubernetes_version)
   k8s_version_only   = substr(var.kubernetes_version, 1, local.k8s_version_length)
@@ -23,9 +22,7 @@ locals {
   freeform_tags = merge(coalesce(var.freeform_tags, {}), { "role" = "worker" })
 
   # OKE managed node pool images
-  node_pool_images = try(data.oci_containerengine_node_pool_option.np_options.sources, [{
-    source_type = "IMAGE"
-  }])
+  node_pool_images = try(data.oci_containerengine_node_pool_option.np_options.sources, [])
 
   # Parse platform/operating system information from node pool image names
   parsed_images = {
@@ -51,43 +48,54 @@ locals {
   }
 
   worker_pools_default = {
-    mode             = var.mode
-    size             = var.size
-    shape            = var.shape
-    image_id         = var.image_id
-    image_type       = var.image_type
-    os               = var.os
-    os_version       = var.os_version
-    boot_volume_size = var.boot_volume_size
-    memory           = var.memory
-    ocpus            = var.ocpus
-    compartment_id   = local.worker_compartment_id
-    subnet_id        = var.subnet_id
-    pod_subnet_id    = var.pod_subnet_id
-    pod_nsgs         = var.pod_nsg_ids
-    worker_nsgs      = var.worker_nsg_ids
-    assign_public_ip = var.assign_public_ip
-    label_prefix     = var.label_prefix # TODO Deprecate
-    node_labels      = {}
+    mode              = var.mode
+    size              = var.size
+    shape             = var.shape
+    image_id          = var.image_id
+    image_type        = var.image_type
+    os                = var.os
+    os_version        = var.os_version
+    boot_volume_size  = var.boot_volume_size
+    memory            = var.memory
+    ocpus             = var.ocpus
+    compartment_id    = local.worker_compartment_id
+    placement_ads     = local.ad_numbers
+    block_volume_type = var.block_volume_type
+    pv_encryption     = var.enable_pv_encryption_in_transit
+    subnet_id         = var.subnet_id
+    pod_subnet_id     = var.pod_subnet_id
+    pod_nsgs          = var.pod_nsg_ids
+    worker_nsgs       = var.worker_nsg_ids
+    assign_public_ip  = var.assign_public_ip
+    node_labels       = {}
   }
 
   # Filter worker_pools map variable for enabled entries
-  worker_pools_enabled = {
+  worker_pools_enabled = { for x, y in { # Final dynamic configuration for pool requirements
+    # Merge desired pool configuration onto defaults
     for k, v in var.worker_pools : k => merge(local.worker_pools_default, v) if lookup(v, "enabled", var.enabled)
+    } : x => merge(y, {
+      # Translate configured + available  AD numbers e.g. 2 into a tenancy/compartment-specific name
+      availability_domains = compact([for ad_number in tolist(setintersection(y.placement_ads, local.ad_numbers)) :
+        lookup(local.ad_number_to_name, ad_number, null)
+      ])
+      block_volume_type = y.mode == "cluster-network" ? "iscsi" : var.block_volume_type
+      pv_encryption     = var.enable_pv_encryption_in_transit && y.block_volume_type == "paravirtualized" && y.mode != "cluster-network"
+      image_id = (y.image_type == "custom" ? y.image_id : element(tolist(setintersection([
+        lookup(local.image_ids, y.image_type, null),
+        length(regexall("GPU", y.shape)) > 0 ? local.image_ids.gpu : local.image_ids.nongpu,
+        length(regexall("A1", y.shape)) > 0 ? local.image_ids.aarch64 : local.image_ids.x86_64,
+        [for parsed_image_id, iv in local.parsed_images : parsed_image_id
+          if length(regexall(iv.os, y.os)) > 0 && trimprefix(iv.os_version, y.os_version) != iv.os_version
+        ],
+      ]...)), 0))
+    })
   }
 
   worker_compartments = distinct(compact([for k, v in local.worker_pools_enabled : lookup(v, "compartment_id", "")]))
 
   # Number of nodes expected from enabled worker pools
   expected_node_count = length(local.worker_pools_enabled) == 0 ? 0 : sum([for k, v in local.worker_pools_enabled : lookup(v, "size", 0)])
-
-  # Filter worker_pools map variable for entries with image_id defined, returning a distinct list
-  enabled_worker_pool_image_ids = distinct([
-    for v in local.worker_pools_enabled : v.image_id if contains(keys(v), "image_id")
-  ])
-
-  # Intermediate worker image result from data source
-  enabled_worker_pool_images = data.oci_core_image.worker_images
 
   # Filter enabled worker_pool map entries for node pools
   enabled_node_pools = {
