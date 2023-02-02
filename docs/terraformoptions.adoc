@@ -696,7 +696,7 @@ EOT
 
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
-|v1.20.8, v1.20.11, v1.21.5, v1.22.5, v1.23.4, 
+|v1.22.5, v1.23.4, v1.24.1, v1.25.4
 |v1.23.4
 
 |pods_cidr
@@ -726,6 +726,8 @@ EOT
 
 |cluster_kms_key_id
 |The id of the OCI KMS key to be used as the master encryption key for encrypting Kubernetes' etcd . *Required* if _use_cluster_encryption_ is set to *true*
+|
+|
 
 |create_policies
 |Whether to create dynamic group for cluster with policies to access {uri-oci-kms}[OCI KMS] when using encryption.
