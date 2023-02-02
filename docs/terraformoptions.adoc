@@ -696,8 +696,8 @@ EOT
 
 |`kubernetes_version`
 |The version of Kubernetes to provision. This is based on the available versions in OKE. By default, the latest version is selected. The use of 'LATEST' is no longer permitted in order to facilitate upgrades.
-|v1.20.8, v1.20.11, v1.21.5, v1.22.5, v1.23.4, 
-|v1.23.4
+|v1.22.5, v1.23.4, v1.24.1, v1.25.4
+|v1.24.1
 
 |pods_cidr
 |The CIDR for the Kubernetes POD network for flannel networking. CIDR blocks for pods must not overlap with the CIDR blocks for workers and load balancer subnets (calculated using vcn_cidr, newbits and subnets parameters).
