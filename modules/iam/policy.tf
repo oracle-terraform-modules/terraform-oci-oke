@@ -19,7 +19,7 @@ locals {
 
 resource "oci_identity_policy" "cluster" {
   provider       = oci.home
-  count          = var.create_iam_resources && local.has_policy_statements ? 1 : 0
+  count          = local.has_policy_statements ? 1 : 0
   compartment_id = var.compartment_id
   description    = "Policies for OKE Terraform state ${var.state_id}"
   name           = local.cluster_group_name

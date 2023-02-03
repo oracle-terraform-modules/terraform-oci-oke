@@ -22,11 +22,11 @@ locals {
     "Allow dynamic-group %s to inspect compartments in compartment id %s",
   ]
 
-  autoscaler_policy_statements = tolist([
+  autoscaler_policy_statements = var.create_iam_autoscaler_policy ? tolist([
     for statement in local.autoscaler_templates : formatlist(statement,
       local.autoscaler_group_name, local.worker_compartments,
     )
-  ])
+  ]) : []
 }
 
 resource "oci_identity_dynamic_group" "autoscaling" {
