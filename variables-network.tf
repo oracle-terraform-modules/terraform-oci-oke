@@ -189,3 +189,9 @@ variable "enable_waf" {
   type        = bool
   default     = false
 }
+
+variable "output_network_detail" {
+  default     = false
+  description = "Whether to include detailed output for cluster configuration."
+  type        = bool
+}

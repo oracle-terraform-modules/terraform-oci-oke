@@ -185,3 +185,7 @@ output "vcn_id" {
   description = "VCN ID"
   value       = local.vcn_id
 }
+
+output "network_security_rules" {
+  value = var.output_network_detail ? module.network.network_security_rules : null
+}

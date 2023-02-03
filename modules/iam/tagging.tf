@@ -2,6 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_identity_tag_namespaces" "oke" {
+  count          = var.create_iam_resources ? 1 : 0
   provider       = oci.home
   compartment_id = var.compartment_id
   filter {
@@ -12,20 +13,28 @@ data "oci_identity_tag_namespaces" "oke" {
 }
 
 locals {
-  tag_namespace = var.create_tag_namespace ? one(oci_identity_tag_namespace.oke[*].id) : one(data.oci_identity_tag_namespaces.oke.tag_namespaces[*].id)
-  tags = var.create_defined_tags ? {
+  # Refer to the created namespace ID if creation is enabled, look it up by name if disabled but used, else unused
+  tag_namespace = (var.create_iam_tag_namespace
+    ? one(oci_identity_tag_namespace.oke[*].id)
+    : var.use_defined_tags ? one(data.oci_identity_tag_namespaces.oke[*].tag_namespaces[*].id) : "none"
+  )
+
+  # Map of standard tags & descriptions to be created if enabled
+  tags = var.create_iam_resources && var.create_iam_defined_tags ? {
     "role"               = "Functional role of a resource"
     "state_id"           = "Terraform state ID associated with a resource"
     "cluster_autoscaler" = "Granted permissions for Kubernetes cluster autoscaler"
     "pool"               = "Named group of resources with shared configuration"
   } : {}
 
+  # Standard tags as defined if enabled for use
   defined_tags = merge(var.defined_tags, var.use_defined_tags ? {
     "${var.tag_namespace}.state_id" = var.state_id,
     "${var.tag_namespace}.role"     = "policy",
     } : {},
   )
 
+  # Standard tags as freeform if defined tags are disabled
   freeform_tags = merge(var.freeform_tags, !var.use_defined_tags ? {
     "state_id" = var.state_id,
     "role"     = "policy",
@@ -35,7 +44,7 @@ locals {
 
 resource "oci_identity_tag_namespace" "oke" {
   provider       = oci.home
-  count          = var.create_tag_namespace ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_tag_namespace ? 1 : 0
   compartment_id = var.compartment_id
   description    = "Tag namespace for OKE resources"
   name           = var.tag_namespace

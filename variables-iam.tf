@@ -118,59 +118,65 @@ variable "config_file_profile" {
   type        = string
 }
 
-variable "create_autoscaler_policy" {
-  default     = "auto"
-  description = "Whether to create IAM policy for Cluster Autoscaler management."
-  type        = string
-  validation {
-    condition     = contains(["never", "auto", "always"], var.create_autoscaler_policy)
-    error_message = "Accepted values are never, auto, or always"
-  }
-}
-
-variable "create_kms_policy" {
-  default     = "auto"
-  description = "Whether to create IAM policy for cluster autoscaler."
-  type        = string
-  validation {
-    condition     = contains(["never", "auto", "always"], var.create_kms_policy)
-    error_message = "Accepted values are never, auto, or always"
-  }
-}
-
-variable "create_operator_policy" {
-  default     = "auto"
-  description = "Whether to create IAM policy for operator access to the OKE control plane."
-  type        = string
-  validation {
-    condition     = contains(["never", "auto", "always"], var.create_operator_policy)
-    error_message = "Accepted values are never, auto, or always"
-  }
-}
-
-variable "create_worker_policy" {
-  default     = "auto"
-  description = "Whether to create IAM policy for self-managed worker nodes."
-  type        = string
-  validation {
-    condition     = contains(["never", "auto", "always"], var.create_worker_policy)
-    error_message = "Accepted values are never, auto, or always"
-  }
-}
-
-variable "create_tag_namespace" {
+variable "create_iam_resources" {
   default     = false
-  description = "Whether to create a namespace for defined tags used for IAM policy and tracking."
+  description = "Whether to create IAM dynamic groups, policies, and tags. Resources for components may be controlled individually with 'create_iam_*' variables when enabled. Ignored when 'create_iam_resources' is false."
   type        = bool
 }
 
-variable "create_defined_tags" { # Renamed to create_defined_tags
+variable "create_iam_autoscaler_policy" {
+  default     = "auto"
+  description = "Whether to create an IAM dynamic group and policy rules for Cluster Autoscaler management. Depends on configuration of associated component when set to 'auto'. Ignored when 'create_iam_resources' is false."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.create_iam_autoscaler_policy)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "create_iam_kms_policy" {
+  default     = "auto"
+  description = "Whether to create an IAM dynamic group and policy rules for cluster autoscaler. Depends on configuration of associated components when set to 'auto'. Ignored when 'create_iam_resources' is false."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.create_iam_kms_policy)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "create_iam_operator_policy" {
+  default     = "auto"
+  description = "Whether to create an IAM dynamic group and policy rules for operator access to the OKE control plane. Depends on configuration of associated components when set to 'auto'. Ignored when 'create_iam_resources' is false."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.create_iam_operator_policy)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "create_iam_worker_policy" {
+  default     = "auto"
+  description = "Whether to create an IAM dynamic group and policy rules for self-managed worker nodes. Depends on configuration of associated components when set to 'auto'. Ignored when 'create_iam_resources' is false."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.create_iam_worker_policy)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "create_iam_tag_namespace" {
   default     = false
-  description = "Whether to create defined tags used for IAM policy and tracking."
+  description = "Whether to create a namespace for defined tags used for IAM policy and tracking. Ignored when 'create_iam_resources' is false."
   type        = bool
 }
 
-variable "use_defined_tags" { # Rename to use_defined_tags
+variable "create_iam_defined_tags" {
+  default     = false
+  description = "Whether to create defined tags used for IAM policy and tracking. Ignored when 'create_iam_resources' is false."
+  type        = bool
+}
+
+variable "use_defined_tags" {
   default     = false
   description = "Whether to apply defined tags to created resources for IAM policy and tracking."
   type        = bool
