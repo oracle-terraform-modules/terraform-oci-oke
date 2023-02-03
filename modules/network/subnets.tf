@@ -6,16 +6,19 @@ locals {
   # See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#vcnconfig
   vcn_cidr = element(var.vcn_cidrs, 1)
 
+  # Filter configured subnets eligible for resource creation
   new_subnet_cidrs = {
     for k, v in var.subnets : k => v
     if lookup(v, "id", null) == null && lookup(v, "create", "auto") != "never"
   }
 
+  # Generate CIDR ranges for subnets to be created
   subnet_cidrs = {
     for k, v in local.new_subnet_cidrs :
     k => cidrsubnet(local.vcn_cidr, lookup(v, "newbits"), lookup(v, "netnum"))
   }
 
+  # Map of subnets for standard components with additional configuration derived
   subnet_info = {
     bastion  = { create = var.create_bastion, public = var.bastion_type == "public" }
     cp       = { public = var.control_plane_type == "public" }
@@ -35,8 +38,13 @@ locals {
 }
 
 resource "oci_core_subnet" "oke" {
+  # Create subnets if when all are true:
+  # - Associated component is enabled OR configured with create == 'always'
+  # - Subnet CIDR is configured with newbits & netnum
+  # - Not configured with create == 'never'
+  # - Not configured with an existing 'id'
   for_each = { for k, v in local.subnet_info : k => v
-    if (tobool(lookup(v, "create", true)) || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
+    if(tobool(lookup(v, "create", true)) || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
     && contains(keys(local.subnet_cidrs), k)
     && lookup(var.subnets, "create", "auto") != "never"
     && lookup(var.subnets, "id", "") == ""
@@ -59,6 +67,8 @@ resource "oci_core_subnet" "oke" {
   }
 }
 
+# Create an associated security list for subnets when enabled
+# e.g. for load balancers to prevent CCM management of default security list
 resource "oci_core_security_list" "oke" {
   for_each = { for k, v in local.subnet_info : k => v
     if tobool(lookup(v, "create", true)) && tobool(lookup(v, "create_seclist", false))
@@ -75,6 +85,7 @@ resource "oci_core_security_list" "oke" {
   }
 }
 
+# Return configured/created subnet IDs when applicable
 output "subnet_ids" {
   value = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)

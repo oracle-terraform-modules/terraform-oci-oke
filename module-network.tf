@@ -1,72 +1,23 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "oci_core_vcns" "all" {
-  count          = var.create_vcn ? 0 : 1
-  compartment_id = local.compartment_id
-  display_name   = var.vcn_name
-  state          = "AVAILABLE"
-}
-
 data "oci_core_vcn" "oke" {
   count  = var.create_vcn ? 0 : 1
   vcn_id = var.vcn_id
 }
 
-data "oci_core_nat_gateways" "all" {
-  compartment_id = local.compartment_id
-  display_name   = var.nat_gateway_display_name
-  state          = "AVAILABLE"
-  vcn_id         = local.vcn_id
-}
-
-data "oci_core_internet_gateways" "all" {
-  compartment_id = local.compartment_id
-  display_name   = var.internet_gateway_display_name
-  state          = "AVAILABLE"
-  vcn_id         = local.vcn_id
-}
-
-data "oci_core_route_tables" "all" {
-  compartment_id = local.compartment_id
-  state          = "AVAILABLE"
-  vcn_id         = local.vcn_id
-}
-
 locals {
-  vcn_id = (var.create_vcn ? one(module.vcn[*].vcn_id)
-    : coalesce(var.vcn_id, "none") != "none" ? var.vcn_id
-    : one(one(data.oci_core_vcns.all[*].virtual_networks)[*].id)
-  )
+  # Created VCN if enabled, else var.vcn_id
+  vcn_id = var.create_vcn ? one(module.vcn[*].vcn_id) : var.vcn_id
 
-  # Created VCN if enabled -> var.vcn_id if provided -> discovered VCN if matched
-  vcn_cidrs = coalescelist(var.vcn_cidrs, flatten(data.oci_core_vcn.oke[*].cidr_blocks))
+  # Configured VCN CIDRs if creating, else from provided vcn_id
+  vcn_cidrs = var.create_vcn ? var.vcn_cidrs : flatten(data.oci_core_vcn.oke[*].cidr_blocks)
 
-  # Created route table if enabled -> var.ig_route_table_id if provided -> discovered route table if matched
-  internet_gateways = data.oci_core_internet_gateways.all.gateways[*].id
-  nat_gateways      = data.oci_core_nat_gateways.all.nat_gateways[*].id
+  # Created route table if enabled, else var.ig_route_table_id
+  ig_route_table_id = var.create_vcn ? one(module.vcn[*].ig_route_id) : var.ig_route_table_id
 
-  # Filter route tables associated with a matching internet gateway
-  ig_route_tables = [for table in data.oci_core_route_tables.all.route_tables : table.id
-    if anytrue([for rule in lookup(table, "route_rules", []) : contains(local.internet_gateways, rule.network_entity_id)])
-  ]
-
-  # Filter route tables associated with a matching NAT gateway
-  nat_route_tables = [for table in data.oci_core_route_tables.all.route_tables : table.id
-    if anytrue([for rule in lookup(table, "route_rules", []) : contains(local.nat_gateways, rule.network_entity_id)])
-  ]
-
-  # Created route table if enabled -> var.ig_route_table_id if provided -> discovered route table if matched
-  ig_route_table_id = (var.create_vcn ? one(module.vcn[*].ig_route_id)
-    : coalesce(var.ig_route_table_id, "none") != "none" ? var.ig_route_table_id
-    : try(element(local.ig_route_tables, 1), null)
-  )
-
-  # Created route table if enabled -> var.nat_route_table_id if provided -> discovered route table if matched
-  nat_route_table_id = (var.create_vcn ? one(module.vcn[*].nat_route_id)
-    : coalesce(var.nat_route_table_id, "none") != "none" ? var.nat_route_table_id
-    : try(element(local.nat_route_tables, 1), null)
-  )
+  # Created route table if enabled, else var.nat_route_table_id
+  nat_route_table_id = var.create_vcn ? one(module.vcn[*].nat_route_id) : var.nat_route_table_id
 }
 
 module "vcn" {
