@@ -36,7 +36,7 @@ locals {
 
 resource "oci_core_subnet" "oke" {
   for_each = { for k, v in local.subnet_info : k => v
-    if(lookup(v, "create", true) == true || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
+    if (tobool(lookup(v, "create", true)) || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
     && contains(keys(local.subnet_cidrs), k)
     && lookup(var.subnets, "create", "auto") != "never"
     && lookup(var.subnets, "id", "") == ""
@@ -47,8 +47,8 @@ resource "oci_core_subnet" "oke" {
   cidr_block                 = lookup(local.subnet_cidrs, each.key)
   display_name               = "${each.key}-${var.state_id}"
   dns_label                  = var.assign_dns ? lookup(var.subnets, "id", substr(each.key, 0, 2)) : null
-  prohibit_public_ip_on_vnic = lookup(each.value, "public", false) == false
-  route_table_id             = lookup(each.value, "public", false) == false ? var.nat_route_table_id : var.ig_route_table_id
+  prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "public", false))
+  route_table_id             = !tobool(lookup(each.value, "public", false)) ? var.nat_route_table_id : var.ig_route_table_id
   security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
   defined_tags               = local.defined_tags
   freeform_tags              = local.freeform_tags
@@ -61,7 +61,7 @@ resource "oci_core_subnet" "oke" {
 
 resource "oci_core_security_list" "oke" {
   for_each = { for k, v in local.subnet_info : k => v
-    if lookup(v, "create", true) == true && lookup(v, "create_seclist", false) == true
+    if tobool(lookup(v, "create", true)) && tobool(lookup(v, "create_seclist", false))
   }
 
   compartment_id = var.compartment_id

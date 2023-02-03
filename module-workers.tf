@@ -7,18 +7,18 @@ locals {
   # Distinct list of compartments for enabled worker pools
   worker_compartments = distinct(compact([
     for k, v in var.worker_pools : lookup(v, "compartment_id", local.compartment_id)
-    if lookup(v, "enabled", var.worker_pool_enabled) == true
+    if tobool(lookup(v, "enabled", var.worker_pool_enabled))
   ]))
 
   # Worker pools with cluster autoscaler management enabled
   autoscaler_compartments = distinct(compact([
     for k, v in var.worker_pools : lookup(v, "compartment_id", local.compartment_id)
-    if lookup(v, "enabled", var.worker_pool_enabled) == true && lookup(v, "allow_autoscaler", false) == true
+    if tobool(lookup(v, "enabled", var.worker_pool_enabled)) && tobool(lookup(v, "allow_autoscaler", false))
   ]))
 
   # Distinct list of compartments for cluster autoscaler-enabled worker pools
   autoscaling_groups = var.create_cluster ? {
-    for k, v in one(module.workers[*].worker_pools) : k => v if lookup(v, "autoscale", false) == true
+    for k, v in one(module.workers[*].worker_pools) : k => v if tobool(lookup(v, "autoscale", false))
   } : {}
 }
 
