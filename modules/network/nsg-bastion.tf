@@ -10,13 +10,13 @@ locals {
       }
     },
     {
-      "Allow SSH egress from bastion to workers" : {
+      "Allow SSH egress from bastion to workers" = {
         protocol = local.tcp_protocol, port = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
         enabled  = var.allow_worker_ssh_access,
       },
     },
     var.create_operator ? {
-      "Allow SSH egress from bastion to operator" : {
+      "Allow SSH egress from bastion to operator" = {
         protocol = local.tcp_protocol, port = local.ssh_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},

@@ -31,7 +31,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "autoscaling" {
   provider       = oci.home
-  count          = var.create_autoscaler_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_autoscaler_policy ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = "Dynamic group of cluster autoscaler-capable worker nodes for OKE Terraform state ${var.state_id}"
   matching_rule  = local.autoscaler_group_rules

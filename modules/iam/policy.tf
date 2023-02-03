@@ -9,17 +9,17 @@ locals {
     local.autoscaler_policy_statements,
   ])))
 
-  has_policy_statements = anytrue([
-    var.create_autoscaler_policy,
-    var.create_kms_policy,
-    var.create_operator_policy,
-    var.create_worker_policy,
+  has_policy_statements = var.create_iam_resources && anytrue([
+    var.create_iam_autoscaler_policy,
+    var.create_iam_kms_policy,
+    var.create_iam_operator_policy,
+    var.create_iam_worker_policy,
   ])
 }
 
 resource "oci_identity_policy" "cluster" {
   provider       = oci.home
-  count          = local.has_policy_statements ? 1 : 0
+  count          = var.create_iam_resources && local.has_policy_statements ? 1 : 0
   compartment_id = var.compartment_id
   description    = "Policies for OKE Terraform state ${var.state_id}"
   name           = local.cluster_group_name

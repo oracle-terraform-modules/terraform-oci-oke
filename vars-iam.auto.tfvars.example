@@ -9,13 +9,13 @@ compartment_id      = "ocid1.compartment..."
 region              = "ap-osaka-1"
 
 # Policies
-create_autoscaler_policy = "auto" # never/*auto/always
-create_kms_policy        = "auto" # never/*auto/always
-create_operator_policy   = "auto" # never/*auto/always
-create_worker_policy     = "auto" # never/*auto/always
+create_iam_autoscaler_policy = "auto" # never/*auto/always
+create_iam_kms_policy        = "auto" # never/*auto/always
+create_iam_operator_policy   = "auto" # never/*auto/always
+create_iam_worker_policy     = "auto" # never/*auto/always
 
 # Defined tags
-create_tag_namespace = false # true/*false
-create_defined_tags  = false # true/*false
+create_iam_tag_namespace = false # true/*false
+create_iam_defined_tags  = false # true/*false
 tag_namespace        = "oke"
 use_defined_tags     = false # true/*false

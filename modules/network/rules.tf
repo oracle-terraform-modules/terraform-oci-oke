@@ -17,7 +17,7 @@ locals {
     { for k, v in local.pods_rules : k => merge(v, { "nsg_id" = local.pod_nsg_id }) },
     { for k, v in local.operator_rules : k => merge(v, { "nsg_id" = local.operator_nsg_id }) },
     { for k, v in local.fss_rules : k => merge(v, { "nsg_id" = local.fss_nsg_id }) },
-  ) : x => y if var.create_nsgs && lookup(y, "enabled", true) == true }
+  ) : x => y if var.create_nsgs && tobool(lookup(y, "enabled", "true")) }
 }
 
 resource "oci_core_network_security_group_security_rule" "oke" {
@@ -34,7 +34,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
 
   dynamic "tcp_options" {
     for_each = (each.value.protocol == local.tcp_protocol &&
-      lookup(each.value, "port", 0) != local.all_ports ? [each.value] : []
+      tonumber(lookup(each.value, "port", 0)) != local.all_ports ? [each.value] : []
     )
     content {
       destination_port_range {
@@ -46,7 +46,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
 
   dynamic "udp_options" {
     for_each = (each.value.protocol == local.udp_protocol &&
-      lookup(each.value, "port", 0) != local.all_ports ? [each.value] : []
+      tonumber(lookup(each.value, "port", 0)) != local.all_ports ? [each.value] : []
     )
     content {
       destination_port_range {
@@ -82,4 +82,8 @@ resource "oci_core_network_security_group_security_rule" "oke" {
       error_message = "TCP/UDP ports must be numeric: '${each.key}'"
     }
   }
+}
+
+output "network_security_rules" {
+  value = local.all_rules
 }

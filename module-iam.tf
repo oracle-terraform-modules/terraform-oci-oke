@@ -2,30 +2,30 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  create_worker_policy = anytrue([
-    var.create_worker_policy == "always",
-    var.create_worker_policy == "auto" && var.create_cluster && anytrue([for k, v in var.worker_pools :
-      lookup(v, "enabled", var.worker_pool_enabled) == true &&
+  create_iam_worker_policy = anytrue([
+    var.create_iam_worker_policy == "always",
+    var.create_iam_worker_policy == "auto" && var.create_cluster && anytrue([for k, v in var.worker_pools :
+      tobool(lookup(v, "enabled", var.worker_pool_enabled)) &&
       lookup(v, "mode", var.worker_pool_mode) != "node-pool"
     ])
   ])
 
-  create_autoscaler_policy = anytrue([
-    var.create_autoscaler_policy == "always",
-    var.create_autoscaler_policy == "auto" && var.create_cluster && anytrue([for k, v in var.worker_pools :
-      lookup(v, "enabled", var.worker_pool_enabled) == true &&
-      lookup(v, "allow_autoscaler", false) == true
+  create_iam_autoscaler_policy = anytrue([
+    var.create_iam_autoscaler_policy == "always",
+    var.create_iam_autoscaler_policy == "auto" && var.create_cluster && anytrue([for k, v in var.worker_pools :
+      tobool(lookup(v, "enabled", var.worker_pool_enabled)) &&
+      tobool(lookup(v, "allow_autoscaler", false))
     ])
   ])
 
-  create_operator_policy = anytrue([
-    var.create_operator_policy == "always",
-    var.create_operator_policy == "auto" && local.operator_enabled
+  create_iam_operator_policy = anytrue([
+    var.create_iam_operator_policy == "always",
+    var.create_iam_operator_policy == "auto" && local.operator_enabled
   ])
 
-  create_kms_policy = anytrue([
-    var.create_kms_policy == "always",
-    var.create_kms_policy == "auto" && anytrue([
+  create_iam_kms_policy = anytrue([
+    var.create_iam_kms_policy == "always",
+    var.create_iam_kms_policy == "auto" && anytrue([
       coalesce(var.worker_volume_kms_key_id, "none") != "none",
       coalesce(var.cluster_kms_key_id, "none") != "none",
     ])
@@ -34,22 +34,23 @@ locals {
 
 # Default IAM sub-module implementation for OKE cluster
 module "iam" {
-  source                   = "./modules/iam"
-  compartment_id           = local.compartment_id
-  state_id                 = random_id.state_id.id
-  tenancy_id               = local.tenancy_id
-  cluster_id               = local.cluster_id
-  create_autoscaler_policy = local.create_autoscaler_policy
-  create_kms_policy        = local.create_kms_policy
-  create_operator_policy   = local.create_operator_policy
-  create_worker_policy     = local.create_worker_policy
+  source                       = "./modules/iam"
+  compartment_id               = local.compartment_id
+  state_id                     = random_id.state_id.id
+  tenancy_id                   = local.tenancy_id
+  cluster_id                   = local.cluster_id
+  create_iam_resources         = var.create_iam_resources
+  create_iam_autoscaler_policy = local.create_iam_autoscaler_policy
+  create_iam_kms_policy        = local.create_iam_kms_policy
+  create_iam_operator_policy   = local.create_iam_operator_policy
+  create_iam_worker_policy     = local.create_iam_worker_policy
 
-  create_tag_namespace = var.create_tag_namespace
-  create_defined_tags  = var.create_defined_tags
-  defined_tags         = lookup(var.defined_tags, "policy", {})
-  freeform_tags        = lookup(var.freeform_tags, "policy", {})
-  tag_namespace        = var.tag_namespace
-  use_defined_tags     = var.use_defined_tags
+  create_iam_tag_namespace = var.create_iam_tag_namespace
+  create_iam_defined_tags  = var.create_iam_defined_tags
+  defined_tags             = lookup(var.defined_tags, "policy", {})
+  freeform_tags            = lookup(var.freeform_tags, "policy", {})
+  tag_namespace            = var.tag_namespace
+  use_defined_tags         = var.use_defined_tags
 
   cluster_kms_key_id         = var.cluster_kms_key_id
   operator_volume_kms_key_id = var.operator_volume_kms_key_id
@@ -61,6 +62,11 @@ module "iam" {
   providers = {
     oci.home = oci.home
   }
+}
+
+moved {
+  from = module.policy
+  to   = module.iam
 }
 
 output "availability_domains" {
