@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  boot_volume_size = lookup(var.shape, "boot_volume_size", 50)
-  memory           = lookup(var.shape, "memory", 4)
-  ocpus            = max(1, lookup(var.shape, "ocpus", 1))
+  boot_volume_size = tonumber(lookup(var.shape, "boot_volume_size", 50))
+  memory           = tonumber(lookup(var.shape, "memory", 4))
+  ocpus            = max(1, tonumber(lookup(var.shape, "ocpus", 1)))
   shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
 
   defined_tags = merge(var.defined_tags, var.use_defined_tags ? {

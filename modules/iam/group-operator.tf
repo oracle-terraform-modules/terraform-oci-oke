@@ -26,7 +26,7 @@ locals {
     format(statement, var.compartment_id, var.operator_volume_kms_key_id)
   ]) : []
 
-  operator_policy_statements = var.create_operator_policy ? concat(
+  operator_policy_statements = var.create_iam_operator_policy ? concat(
     [local.cluster_manage_statement],
     local.operator_kms_volume_statements,
   ) : []
@@ -34,7 +34,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "operator" {
   provider       = oci.home
-  count          = var.create_operator_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_operator_policy ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = "Dynamic group of operator instance(s) for OKE Terraform state ${var.state_id}"
   matching_rule  = local.operator_group_rules

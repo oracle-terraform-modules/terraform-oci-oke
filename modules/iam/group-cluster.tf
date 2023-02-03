@@ -18,7 +18,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "cluster" {
   provider       = oci.home
-  count          = var.create_kms_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_kms_policy ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = "Dynamic group with cluster for OKE Terraform state ${var.state_id}"
   matching_rule  = local.cluster_rule

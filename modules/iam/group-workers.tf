@@ -14,7 +14,7 @@ locals {
 
   cluster_join_where_clause = format("ALL {%s}", join(", ", compact([
     "target.resource.kind = 'cluster'",
-    var.create_worker_policy ? "target.cluster.id = '${var.cluster_id}'" : null,
+    var.create_iam_worker_policy ? "target.cluster.id = '${var.cluster_id}'" : null,
   ])))
 
   cluster_join_statements = formatlist(
@@ -35,7 +35,7 @@ locals {
     formatlist(statement, local.worker_compartments, var.worker_volume_kms_key_id)
   ]) : []
 
-  worker_policy_statements = var.create_worker_policy ? concat(
+  worker_policy_statements = var.create_iam_worker_policy ? concat(
     local.cluster_join_statements,
     local.worker_kms_volume_statements,
   ) : []
@@ -43,7 +43,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "workers" {
   provider       = oci.home
-  count          = var.create_worker_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_worker_policy ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = "Dynamic group of self-managed worker nodes for OKE Terraform state ${var.state_id}"
   matching_rule  = local.worker_group_rules
