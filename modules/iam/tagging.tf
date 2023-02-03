@@ -16,7 +16,7 @@ locals {
   # Refer to the created namespace ID if creation is enabled, look it up by name if disabled but used, else unused
   tag_namespace = (var.create_iam_tag_namespace
     ? one(oci_identity_tag_namespace.oke[*].id)
-    : var.use_defined_tags ? one(data.oci_identity_tag_namespaces.oke[*].tag_namespaces[*].id) : "none"
+    : var.use_defined_tags ? one(one(data.oci_identity_tag_namespaces.oke[*].tag_namespaces)[*].id) : "none"
   )
 
   # Map of standard tags & descriptions to be created if enabled
