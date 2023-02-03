@@ -87,14 +87,14 @@ variable "nat_gateway_public_ip_id" {
 
 variable "subnets" {
   default = {
-    bastion  = { create = "auto", netnum = 0, newbits = 13, id = "" }
-    operator = { create = "auto", netnum = 1, newbits = 13, id = "" }
-    cp       = { create = "auto", netnum = 2, newbits = 13, id = "" }
-    int_lb   = { create = "auto", netnum = 16, newbits = 11, id = "" }
-    pub_lb   = { create = "auto", netnum = 17, newbits = 11, id = "" }
-    workers  = { create = "auto", netnum = 1, newbits = 2, id = "" }
-    pods     = { create = "auto", netnum = 2, newbits = 2, id = "" }
-    fss      = { create = "auto", netnum = 18, newbits = 11, id = "" }
+    bastion  = { create = "auto", netnum = 0, newbits = 13, id = null }
+    operator = { create = "auto", netnum = 1, newbits = 13, id = null }
+    cp       = { create = "auto", netnum = 2, newbits = 13, id = null }
+    int_lb   = { create = "auto", netnum = 16, newbits = 11, id = null }
+    pub_lb   = { create = "auto", netnum = 17, newbits = 11, id = null }
+    workers  = { create = "auto", netnum = 1, newbits = 2, id = null }
+    pods     = { create = "auto", netnum = 2, newbits = 2, id = null }
+    fss      = { create = "auto", netnum = 18, newbits = 11, id = null }
   }
   description = "parameters to cidrsubnet function to calculate subnet masks within the VCN."
   type        = any
