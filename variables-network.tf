@@ -25,21 +25,9 @@ variable "vcn_id" {
   type        = string
 }
 
-variable "internet_gateway_display_name" {
-  default     = null
-  description = "Optional name of existing internet gateway if > 1 in VCN."
-  type        = string
-}
-
 variable "ig_route_table_id" {
   default     = null
   description = "Optional ID of existing internet gateway in VCN."
-  type        = string
-}
-
-variable "nat_gateway_display_name" {
-  default     = null
-  description = "Optional name of existing NAT gateway if > 1 in VCN."
   type        = string
 }
 
