@@ -44,14 +44,20 @@ locals {
   # Filter worker_pools map for enabled entries and add derived configuration
   enabled_worker_pools = { for pool_name, pool in local.worker_pools_with_defaults :
     pool_name => merge(pool, {
-      block_volume_type     = pool.mode == "cluster-network" ? "iscsi" : var.block_volume_type
-      pv_transit_encryption = var.pv_transit_encryption && pool.block_volume_type == "paravirtualized" && pool.mode != "cluster-network"
+      # Bare metal instances must use iSCSI block volume attachments, not paravirtualized
+      block_volume_type = length(regexall("^BM", pool.shape)) > 0 ? "iscsi" : var.block_volume_type
+      pv_transit_encryption = alltrue([
+        var.pv_transit_encryption,
+        pool.block_volume_type == "paravirtualized",
+        length(regexall("^VM", pool.shape)) > 0
+      ])
 
       # Translate configured + available AD numbers e.g. 2 into tenancy/compartment-specific names
       availability_domains = compact([for ad_number in tolist(setintersection(pool.placement_ads, var.ad_numbers)) :
         lookup(var.ad_numbers_to_names, ad_number, null)
       ])
 
+      # Use provided image_id for 'custom' type, or first match for all shape + OS criteria
       image_id = (pool.image_type == "custom" ? pool.image_id : element(tolist(setintersection([
         lookup(var.image_ids, pool.image_type, null),
         length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
@@ -59,6 +65,7 @@ locals {
         lookup(var.image_ids, "${pool.os} ${split(".", pool.os_version)[0]}", null),
       ]...)), 0))
 
+      # Standard tags as defined if enabled for use
       defined_tags = merge(var.defined_tags, lookup(pool, "defined_tags", {}), var.use_defined_tags ? {
         "${var.tag_namespace}.state_id"           = var.state_id,
         "${var.tag_namespace}.role"               = "worker",
@@ -67,6 +74,7 @@ locals {
         } : {},
       )
 
+      # Standard tags as freeform if defined tags are disabled
       freeform_tags = merge(var.freeform_tags, lookup(pool, "freeform_tags", {}), !var.use_defined_tags ? {
         "state_id"           = var.state_id,
         "role"               = "worker",
