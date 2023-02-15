@@ -51,7 +51,7 @@ module "workers" {
   assign_dns            = var.assign_dns
   assign_public_ip      = var.worker_type == "public"
   block_volume_type     = var.worker_block_volume_type
-  cloudinit             = var.worker_cloudinit
+  cloud_init            = var.worker_cloud_init
   cni_type              = var.cni_type
   image_id              = var.worker_image_id
   image_ids             = local.image_ids
