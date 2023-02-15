@@ -157,15 +157,10 @@ variable "worker_shape" {
   type        = map(any)
 }
 
-variable "worker_cloudinit" {
-  default     = null
-  description = "Base64-encoded cloud init script to run on worker node boot."
-  type        = string
-
-  validation {
-    condition     = var.worker_cloudinit == null || can(base64decode(var.worker_cloudinit))
-    error_message = "Must be valid base64-encoded string if provided."
-  }
+variable "worker_cloud_init" {
+  default     = []
+  description = "List of maps containing cloud init MIME part configuration. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."
+  type        = list(map(string))
 }
 
 variable "worker_volume_kms_key_id" {

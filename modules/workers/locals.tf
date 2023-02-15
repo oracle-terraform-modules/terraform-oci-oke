@@ -13,7 +13,7 @@ locals {
     autoscale             = false
     block_volume_type     = var.block_volume_type
     boot_volume_size      = local.boot_volume_size
-    cloudinit             = var.cloudinit
+    cloud_init            = [] # empty pool-specific default
     compartment_id        = var.compartment_id
     drain                 = false
     enabled               = var.worker_pool_enabled
