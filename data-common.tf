@@ -24,3 +24,7 @@ locals {
   // Used to intersect desired AD lists against presence in region
   ad_numbers = local.ads != null ? sort(keys(local.ad_numbers_to_names)) : []
 }
+
+output "state_id" {
+  value = random_id.state_id.id
+}
