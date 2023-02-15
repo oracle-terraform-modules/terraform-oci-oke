@@ -64,11 +64,6 @@ module "iam" {
   }
 }
 
-moved {
-  from = module.policy
-  to   = module.iam
-}
-
 output "availability_domains" {
   description = "Availability domains for tenancy & region"
   value       = local.ad_numbers_to_names
