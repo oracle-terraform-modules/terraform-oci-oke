@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 output "cluster_id" {
@@ -15,4 +15,8 @@ output "nodepool_ids" {
 
 output "endpoints" {
   value = oci_containerengine_cluster.k8s_cluster.endpoints
+}
+
+output "autoscaling_nodepools" {
+  value = local.autoscaling_nodepools
 }

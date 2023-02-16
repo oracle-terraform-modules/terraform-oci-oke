@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Identity and access parameters
@@ -208,7 +208,7 @@ node_pools = {
   #   boot_volume_size = 150,
   #   label            = { app = "frontend", pool = "np2" },
   # }
-  # # node pool with freeform tags 
+  # # node pool with freeform tags
   # np3 = {
   #   shape                  = "VM.Standard.E4.Flex",
   #   ocpus                  = 2,
@@ -267,7 +267,18 @@ node_pools = {
   #   boot_volume_size = 150,
   #   placement_ads    = [1]
   # }
+  # # node pool managed by Kubernetes Cluster Autoscaler
+  # np12 = {
+  #   shape              = "VM.Standard.E4.Flex",
+  #   ocpus              = 2,
+  #   memory             = 32,
+  #   node_pool_size     = 1,
+  #   max_node_pool_size = 5,
+  #   boot_volume_size   = 150,
+  #   autoscale          = true,
+  # }
 }
+
 node_pool_image_id    = "none"
 node_pool_image_type  = "oke"
 node_pool_name_prefix = "np"
@@ -361,7 +372,7 @@ freeform_tags = {
   #   }
   #   persistent_volume = {
   #     environment = "dev"
-  #   }    
+  #   }
   #   service_lb = {
   #     environment = "dev"
   #     role        = "load balancer"
@@ -391,7 +402,7 @@ defined_tags = {
   #   }
   #   persistent_volume = {
   #     "cn.environment" = "dev"
-  #   }    
+  #   }
   #   service_lb = {
   #     "cn.environment" = "dev"
   #     "cn.role"        = "load balancer"
@@ -405,6 +416,13 @@ defined_tags = {
   #     "cn.role"        = "worker"
   #   }
   # }
+}
+
+# cluster autoscaler
+enable_cluster_autoscaler = false
+autoscaler_pools = {
+  # only 1 pool is needed at a time unless during upgrade
+  asp_v124 = {}
 }
 
 # placeholder variable for debugging scripts. To be implemented in future

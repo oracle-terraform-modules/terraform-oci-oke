@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -31,6 +31,16 @@ locals {
 
   # kubernetes string version length
   k8s_version_length = length(var.cluster_kubernetes_version)
-  k8s_version_only = substr(var.cluster_kubernetes_version,1,local.k8s_version_length)
+  k8s_version_only   = substr(var.cluster_kubernetes_version, 1, local.k8s_version_length)
 
+  # build a list  of nodepools to autoscale in the format expected by cluster autoscaler:
+  # - --nodes:min:max:nodepool_id
+  autoscaling_nodepools = [
+    for nodepool_name, nodepool_parameters in var.node_pools : { 
+      "name" = "${nodepool_name}", 
+      "node_pool_size" = "${nodepool_parameters.node_pool_size}", 
+      "max_node_pool_size" = "${nodepool_parameters.max_node_pool_size}", 
+      "id" = "${lookup(lookup(oci_containerengine_node_pool.nodepools, nodepool_name), "id")}"       
+    } if nodepool_parameters.autoscale == true
+  ]
 }

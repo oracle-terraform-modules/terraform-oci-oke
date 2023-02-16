@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # OCI Provider parameters
@@ -174,7 +174,7 @@ variable "drg_display_name" {
   default     = "drg"
 }
 
-variable "drg_id" {
+variable "drg_id"  {
   description = "ID of an external created Dynamic Routing Gateway to be attached to the VCN"
   type        = string
   default     = null
@@ -1092,6 +1092,22 @@ variable "defined_tags" {
     vcn = map(any),
     oke = map(any)
   })
+}
+
+# Cluster autoscaler
+variable "enable_cluster_autoscaler" {
+  description = "Enable Kubernetes Cluster Autoscaler"
+  type        = bool
+  default     = false
+}
+
+variable "autoscaler_pools" {
+  description = "Node pool for the Kubernetes Cluster Autoscaler"
+  type        = any
+  default = {
+    # 1 autoscaler pool by Kubernetes version
+    asp_v123 = {}
+  }
 }
 
 # placeholder variable for debugging scripts. To be implemented in future

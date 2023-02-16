@@ -95,6 +95,23 @@ locals {
     }
   )
 
+  taint_autoscaler_pool_template = templatefile("${path.module}/scripts/taint_autoscaler_pool.template.sh", {})
+
+  create_autoscaler_pool_taint_list_template = templatefile("${path.module}/scripts/create_autoscaler_pool_taint_list.py",
+    {
+      cluster_id     = var.cluster_id
+      compartment_id = var.compartment_id
+      region         = var.region
+      pools_to_taint = var.label_prefix == "none" ? trim(join(",", formatlist("'%s'", keys(var.autoscaler_pools))), "'") : trim(join(",", formatlist("'%s-%s'", var.label_prefix, keys(var.autoscaler_pools))), "'")
+    }
+  )
+
+  cluster_autoscaler_yaml_template = templatefile("${path.module}/resources/clusterautoscaler.template.yaml",
+    {
+      autoscaling_nodepools = var.autoscaling_nodepools
+    }
+  )
+
   token_helper_template = templatefile("${path.module}/scripts/token_helper.template.sh",
     {
       cluster-id = var.cluster_id

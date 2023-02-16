@@ -1,0 +1,310 @@
+= Using the Oracle Container Engine for Kubernetes Cluster Autoscaler
+:idprefix:
+:idseparator: -
+:sectlinks:
+:sectnums:
+:toc: auto
+
+
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
+:uri-docs: {uri-rel-file-base}/docs
+:uri-cluster-autoscaler-parameters: https://github.com/kubernetes/autoscaler/blob/master/cluster-autoscaler/FAQ.md#what-are-the-parameters-to-ca
+:uri-instructions: {uri-docs}/instructions.adoc
+:uri-oci-keys: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm
+:uri-oci-ocids: https://docs.cloud.oracle.com/iaas/Content/API/Concepts/apisigningkey.htm#five
+:uri-oci-okepolicy: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengpolicyconfig.htm#PolicyPrerequisitesService
+:uri-oci-cluster-autoscaler: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingclusterautoscaler.htm#Working_with_the_Cluster_Autoscaler
+:uri-terraform: https://www.terraform.io
+:uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
+:uri-terraform-options: {uri-docs}/terraformoptions.adoc
+:uri-topology: {uri-docs}/topology.adoc
+:uri-upgrade-oke: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengupgradingk8sworkernode.htm
+:uri-variables: {uri-rel-file-base}/variables.tf
+
+This section documents how to deploy the Oracle Container Engine for Kubernetes (OKE) Cluster Autoscaler when using this project. At a high level, deploying the Kubernetes Cluster Autoscaler consists of 3 steps:
+
+1. Deploy an _unmanaged_ node pool i.e. a node pool that is not managed by the Kubernetes Cluster Autoscaler. We'll refer to this node pool as the _autoscaler_ node pool.
+2. Create a dynamic group and policy to allow worker nodes to manage node pools. The dynamic group uses defined tags to add worker nodes from the autoscaler node pool to the managed node pools.
+3. Configure and deploy the Kubernetes Cluster Autoscaler.
+
+== Prerequisites
+
+=== Tag namespace and tag key
+
+. Create a tag namespace named `oke` .
+. Create a tag key named `pool` in the `oke` tag namespace:
+.. Set the description to "Tag key to indicate node pool purpose"
+.. Set the value type to "String"
+.. Set the value to `autoscaler` which assigns any node pool with this tag to the Kubernetes Cluster Autoscaler.
+
+To use this list to indicate other purposes besides the Kubernetes Cluster Autoscaler, set the value type to "A list of values" instead of "String" and add your own customer purposes. 
+
+
+. bastion host is created
+. operator host is created
+. instance_principal is enabled on operator
+. set `enable_cluster_autoscaler=true`
+
+== Create required OCI resources
+
+The Kubernetes Cluster Autoscaler is installed to the `autoscaler` node pool and the required Oracle Identity and Access Management policies are created to allow the Kubernetes Cluster Autoscaler to resize the managed node pools based on application workload.
+
+=== Create the `autoscaler` node pool
+
+. Add the following configuration parameters to your `terraform.tfvars`:
+
++
+----
+enable_cluster_autoscaler = true
+autoscaler_pools = {
+  # only 1 pool is needed at a time unless:
+  # 1. you are in the process of upgrading of your cluster
+  # 2. you are running multiple Kubernetes versions of node pools after a cluster upgrade
+  asp_v124 = {}
+}
+----
+. The `_v124` suffix to the node pool name indicates the version of Kubernetes running in that node pool.
+	. Run `terraform apply` to create the `autoscaler` node pools.
+	. Verify that the `asp_v124` node pool of three nodes has been created. Each node in the pool should have the `oke.pool = autoscaler` tag assigned.
+
+
+=== Create an OCI dynamic group
+
+. Create a dynamic group `cluster-autoscaler-group` which contains the following matching rule:
+
++
+----
+tag.oke.pool.value='autoscaler'
+----
+
+=== Create an OCI policy
+
+. Replace `<compartment-name>` in the following policy statements with the name of the compartment in which the managed node pools must be or have been created.
+. Create a policy named `cluster-autoscaler-policy` in the root of your tenancy with the policy statements created in the previous step. 
+
++
+----
+Allow dynamic-group cluster-autoscaler-group to manage cluster-node-pools in compartment <compartment-name>
+Allow dynamic-group cluster-autoscaler-group to manage instance-family in compartment <compartment-name>
+Allow dynamic-group cluster-autoscaler-group to use subnets in compartment <compartment-name>
+Allow dynamic-group cluster-autoscaler-group to read virtual-network-family in compartment <compartment-name>
+Allow dynamic-group cluster-autoscaler-group to use vnics in compartment <compartment-name>
+Allow dynamic-group cluster-autoscaler-group to inspect compartments in compartment <compartment-name>
+----
+
+== Deploy the Kubernetes Cluster Autoscaler
+
+=== Create a Kubernetes manifest
+
+To simplify deployment, only Kubernetes v1.24 and higher are tested with this module. Using the module with an older version of Kubernetes requires amending the OCI provider configuration and applying a valid image tag as documented in the {uri-oci-cluster-autoscaler}[cluster autoscaler documentation].
+
+. On the operator host, a file called `cluster-autoscaler.yaml` will be created. It will only include the list of that should be automatically scaled by the Kubernetes Cluster Autoscaler:
+
++
+----
+  # node pool not managed by Kubernetes Cluster Autoscaler
+  np1 = {
+    shape              = "VM.Standard.E4.Flex",
+    ocpus              = 2,
+    memory             = 32,
+    node_pool_size     = 1,
+    max_node_pool_size = 5,
+    boot_volume_size   = 150,
+    autoscale          = false,
+  }
+
+  # node pool managed by Kubernetes Cluster Autoscaler
+  np2 = {
+    shape              = "VM.Standard.E4.Flex",
+    ocpus              = 2,
+    memory             = 32,
+    node_pool_size     = 1,
+    max_node_pool_size = 5,
+    boot_volume_size   = 150,
+    autoscale          = true,
+  }  
+----
+
+. The `cluster-autoscaler.yaml` file can be used to configure other {uri-cluster-autoscaler-parameters}[Kubernetes Cluster Autoscaler parameters], if required e.g.
+
++
+----
+--scale-down-unneeded-time=5m
+----
+
+. The following parameters are not currently supported by the Kubernetes Cluster Autoscaler:
+	.. `--node-group-auto-discovery`
+	.. `--node-autoprovisioning-enabled=true`
+	.. `--gpu-total`
+	.. `--expander=price`
+
+== Upgrading the OKE cluster when cluster autoscaler is deployed
+
+Assume the following cluster:
+
+- Cluster version: 1.24.1
+- Node pools : np1, np2 (1.24.1)
+- Autoscaler pools : asp_v124 (1.24.1)
+
+and we need to upgade to 1.25.1.
+
+****
+Note that at this time, OKE is not yet supporting Kubernetes 1.25. This is just to illustrate the procedure.
+****
+
+=== Upgrading the control plane nodes
+
+. Locate your `kubernetes_version` in your Terraform variable file and change:
+
++
+----
+kubernetes_version = "v1.24.1" 
+----
+to 
+
++
+----
+kubernetes_version = "v1.25.1"
+----
+
+. Run terraform:
+
++
+----
+terraform apply
+----
+
+This will upgrade the control plane nodes. You can verify this in the OCI Console.
+
+****
+If you have modified the default resources e.g. security lists, you will need to use a targeted apply:
+
+----
+terraform apply --target=module.oke.k8s_cluster
+----
+****
+
+=== Add new node pools
+1. Add new node pools in your list of node pools e.g. change
++
+[source,bash]
+----
+node_pools = {
+  np1 = {
+    ...
+  }
+  np2 = {
+    ...
+  }
+}
+----
+to
+
++
+----
+node_pools = {
+  np1 = {
+    ...
+  }
+  np2 = {
+    ...
+  }
+  np3 = {
+    ...
+  }
+  np4 = {
+    ...
+  }  
+}
+----
+
+and run `terraform apply` again. (See note above about targeted apply). If you are using Kubernetes labels or defined tags for your existing applications, you will need to ensure the new node pools also have the same labels. Refer to the `terraform.tfvars.example` file for the format to specify the labels.
+
+When node pools 3 and 4 are created, they will be created with the newer cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.25.1`, node pools 3 and 4 will be running Kubernetes v1.25.1.
+
+=== Add 1 new autoscaler pool
+1. Add 1 new autoscaler pool in your autoscaler_pools e.g. change
++
+[source,bash]
+----
+autoscaler_pools = {
+  asp_v124 = {
+    ...
+  }
+}
+----
+to
+
++
+----
+autoscaler_pools = {
+  asp_v124 = {
+    ...
+  }
+  asp_v125 = {
+    ...
+  }
+}
+----
+
+and run `terraform apply` again.
+
+When node pools asp_v125 is created, it will be created with the newer cluster version of Kubernetes. Since you have already upgrade your cluster to `v1.25.1`, node pool asp_v125 will be running Kubernetes v1.25.1.
+
+=== Drain the node pools
+
+. Set `upgrade_nodepool=true`. This will instruct the OKE cluster that some node pools will be drained.
+
+. Provide the list of node pools to drain. This should usually be only the old node pools. You don't need to upgrade all the node pools at once.
+
++
+----
+node_pools_to_drain = [ "np1", "np2", "asp_v124"] 
+----
+
+. Run `terraform apply` (see note above about targeted apply):
+
++
+----
+terraform apply
+----
+
+. This will ensure that the all the node pools from 1.24 have been drained.
+
+=== Destroy old node pools
+
+When you are ready, you can now delete the old node pools by removing them from the list of node pools:
+
++
+----
+node_pools = {
+  np3 = {
+    ...
+  }
+  np4 = {
+    ...
+  }
+  asp_v124 = {}
+}
+----
+
+. Run terraform again:
+
++
+----
+terraform apply
+----
+
+=== Upgrade the cluster autoscaler
+
+1. Modify the `cluster-autoscaler.yaml`
+
+2. Change the image version to the corresponding Kubernetes version
+
+3. Change the OCIDs of the node pools to manage to those of np3 and np4.
+
+4. Run Terraform apply again.
+
+. This completes the upgrade process. Now, set ```upgrade_nodepool = false``` to prevent draining from current nodes by mistake.
