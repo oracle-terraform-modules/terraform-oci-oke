@@ -41,6 +41,6 @@ locals {
       "node_pool_size" = "${nodepool_parameters.node_pool_size}", 
       "max_node_pool_size" = "${nodepool_parameters.max_node_pool_size}", 
       "id" = "${lookup(lookup(oci_containerengine_node_pool.nodepools, nodepool_name), "id")}"       
-    } if nodepool_parameters.autoscale == true
+    } if !tobool(lookup(nodepool_parameters, "autoscale", false))
   ]
 }
