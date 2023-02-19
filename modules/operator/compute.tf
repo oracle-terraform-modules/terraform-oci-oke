@@ -26,24 +26,6 @@ output "private_ip" {
   value = oci_core_instance.operator.private_ip
 }
 
-data "cloudinit_config" "operator" {
-  gzip          = false
-  base64_encode = true
-
-  part {
-    filename     = "operator.yaml"
-    content_type = "text/cloud-config"
-    content = templatefile(
-      "${path.module}/cloudinit/operator.template.yaml", {
-        kubernetes_version = var.kubernetes_version
-        timezone           = var.timezone,
-        upgrade            = var.upgrade,
-        user               = var.user,
-      }
-    )
-  }
-}
-
 resource "oci_core_instance" "operator" {
   availability_domain                 = var.availability_domain
   compartment_id                      = var.compartment_id
@@ -102,7 +84,7 @@ resource "oci_core_instance" "operator" {
   }
 
   lifecycle {
-    ignore_changes = [availability_domain, defined_tags, freeform_tags, metadata, source_details]
+    ignore_changes = [defined_tags, freeform_tags]
 
     precondition {
       condition     = coalesce(var.image_id, "none") != "none"

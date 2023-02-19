@@ -26,14 +26,23 @@ module "operator" {
   state_id       = random_id.state_id.id
   compartment_id = local.compartment_id
 
+  # Bastion (to await cloud-init completion)
+  bastion_host = local.bastion_public_ip
+  bastion_user = var.bastion_user
+
   # Operator
   assign_dns            = var.assign_dns
   availability_domain   = coalesce(var.operator_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
+  cloud_init            = var.operator_cloud_init
   image_id              = local.operator_image_id
+  install_helm          = var.operator_install_helm
+  install_k9s           = var.operator_install_k9s
+  kubeconfig            = yamlencode(local.kubeconfig_private)
   kubernetes_version    = var.kubernetes_version
   nsg_ids               = concat(var.operator_nsg_ids, var.create_nsgs ? [module.network.operator_nsg_id] : [])
   pv_transit_encryption = var.operator_pv_transit_encryption
   shape                 = var.operator_shape
+  ssh_private_key       = local.ssh_private_key # to await cloud-init completion
   ssh_public_key        = local.ssh_public_key
   subnet_id             = lookup(module.network.subnet_ids, "operator", lookup(module.network.subnet_ids, "workers"))
   timezone              = var.timezone

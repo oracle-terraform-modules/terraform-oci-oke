@@ -7,11 +7,12 @@ module "extensions" {
   compartment_id = local.compartment_id
   region         = var.region
 
-  ssh_private_key     = local.ssh_private_key
-  bastion_public_ip   = local.bastion_public_ip
-  bastion_user        = var.bastion_user
-  operator_private_ip = local.operator_private_ip
-  operator_user       = var.operator_user
+  # Bastion/operator connection
+  ssh_private_key = local.ssh_private_key
+  bastion_host    = local.bastion_public_ip
+  bastion_user    = var.bastion_user
+  operator_host   = local.operator_private_ip
+  operator_user   = var.operator_user
 
   # OKE cluster
   cluster_id = one(module.cluster[*].cluster_id)
