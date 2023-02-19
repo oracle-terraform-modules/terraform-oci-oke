@@ -13,6 +13,12 @@ variable "operator_availability_domain" {
   type        = string
 }
 
+variable "operator_cloud_init" {
+  default     = []
+  description = "List of maps containing cloud init MIME part configuration for operator host. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."
+  type        = list(map(string))
+}
+
 variable "operator_nsg_ids" {
   description = "An optional and updatable list of network security groups that the operator will be part of."
   default     = []
@@ -51,6 +57,18 @@ variable "operator_image_type" {
     condition     = contains(["custom", "platform"], var.operator_image_type)
     error_message = "Accepted values are custom or platform"
   }
+}
+
+variable "operator_install_helm" {
+  default     = true
+  description = "Whether to install Helm on the created operator host."
+  type        = bool
+}
+
+variable "operator_install_k9s" {
+  default     = false
+  description = "Whether to install k9s on the created operator host."
+  type        = bool
 }
 
 variable "operator_shape" {

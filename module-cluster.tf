@@ -2,15 +2,23 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Used to retrieve cluster CA certificate or configure local kube context
-data "oci_containerengine_cluster_kube_config" "oke" {
+data "oci_containerengine_cluster_kube_config" "public" {
   count      = var.create_cluster || coalesce(var.cluster_id, "none") != "none" ? 1 : 0
   cluster_id = local.cluster_id
+  endpoint   = "PUBLIC_ENDPOINT"
+}
+
+data "oci_containerengine_cluster_kube_config" "private" {
+  count      = var.create_cluster || coalesce(var.cluster_id, "none") != "none" ? 1 : 0
+  cluster_id = local.cluster_id
+  endpoint   = "PRIVATE_ENDPOINT"
 }
 
 locals {
   cluster_id          = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
-  kubeconfig          = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.oke), "content", "")), { "error" : "yamldecode" })
-  kubeconfig_clusters = try(lookup(local.kubeconfig, "clusters", []), [])
+  kubeconfig_public   = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", "")), { "error" : "yamldecode" })
+  kubeconfig_private  = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", "")), { "error" : "yamldecode" })
+  kubeconfig_clusters = try(lookup(local.kubeconfig_private, "clusters", []), [])
   kubeconfig_ca_cert  = try(lookup(lookup(local.kubeconfig_clusters[0], "cluster", {}), "certificate-authority-data", ""), "none")
   cluster_ca_cert     = coalesce(var.cluster_ca_cert, local.kubeconfig_ca_cert)
 }
@@ -63,7 +71,9 @@ output "cluster_endpoints" {
 
 output "cluster_kubeconfig" {
   description = "OKE kubeconfig"
-  value       = var.output_detail && length(local.kubeconfig) > 0 ? local.kubeconfig : null
+  value = var.output_detail ? (
+    var.control_plane_type == "public" ? local.kubeconfig_public : local.kubeconfig_private
+  ) : null
 }
 
 output "cluster_ca_cert" {

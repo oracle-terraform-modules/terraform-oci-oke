@@ -29,11 +29,10 @@ data "cloudinit_config" "workers" {
 
   # Set timezone
   part {
-    # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#timezone
     content_type = "text/cloud-config"
-    content      = format("timezone: %s", lookup(each.value, "timezone", var.timezone))
-    filename     = "timezone.yml"
-    merge_type   = local.default_cloud_init_merge_type
+    # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#timezone
+    content  = jsonencode({ timezone = var.timezone })
+    filename = "10-timezone.yml"
   }
 
   # Expand root filesystem to fill available space on volume
@@ -53,7 +52,7 @@ data "cloudinit_config" "workers" {
       # Resize logical LVM root volume when utility is present
       bootcmd = ["if [[ -f /usr/libexec/oci-growfs ]]; then /usr/libexec/oci-growfs -y; fi"]
     })
-    filename   = "growpart.yml"
+    filename   = "10-growpart.yml"
     merge_type = local.default_cloud_init_merge_type
   }
 
@@ -73,7 +72,7 @@ data "cloudinit_config" "workers" {
         },
       ]
     })
-    filename   = "oke-config.yml"
+    filename   = "50-oke-config.yml"
     merge_type = local.default_cloud_init_merge_type
   }
 
@@ -81,7 +80,7 @@ data "cloudinit_config" "workers" {
   part {
     content_type = "text/x-shellscript"
     content      = file("${path.module}/cloudinit-oke.sh")
-    filename     = "oke.sh"
+    filename     = "50-oke.sh"
     merge_type   = local.default_cloud_init_merge_type
   }
 

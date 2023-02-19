@@ -18,21 +18,6 @@ locals {
   } : {})
 }
 
-data "cloudinit_config" "bastion" {
-  gzip          = false
-  base64_encode = true
-
-  part {
-    filename     = "bastion.sh"
-    content_type = "text/x-shellscript"
-    content = templatefile("${path.module}/cloudinit/bastion.template.yaml", {
-      timezone = var.timezone
-      upgrade  = var.upgrade
-      user     = var.user
-    })
-  }
-}
-
 output "id" {
   value = oci_core_instance.bastion.id
 }
