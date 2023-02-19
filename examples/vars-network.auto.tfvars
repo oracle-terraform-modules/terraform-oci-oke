@@ -1,6 +1,8 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+# All configuration for network sub-module w/ defaults
+
 # Virtual Cloud Network (VCN)
 assign_dns               = true # *true/false
 create_vcn               = true # *true/false
@@ -25,10 +27,10 @@ subnets = { # netnum/newbits if create = true, or id required
 
 # Security
 create_nsgs                  = true          # *true/false
-allow_node_port_access       = true          # true/*false
-allow_pod_internet_access    = true          # true/*false
-allow_worker_internet_access = true          # true/*false
-allow_worker_ssh_access      = true          # true/*false
+allow_node_port_access       = true          # *true/false
+allow_pod_internet_access    = true          # *true/false
+allow_worker_internet_access = false         # true/*false
+allow_worker_ssh_access      = false         # true/*false
 control_plane_allowed_cidrs  = ["0.0.0.0/0"] # e.g. "0.0.0.0/0"
 control_plane_nsg_ids        = []            # Additional NSGs combined with created
 control_plane_type           = "public"      # public/*private

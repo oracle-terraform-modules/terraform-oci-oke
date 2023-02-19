@@ -15,8 +15,8 @@ locals {
     boot_volume_size      = local.boot_volume_size
     cloud_init            = [] # empty pool-specific default
     compartment_id        = var.compartment_id
+    create                = true
     drain                 = false
-    enabled               = var.worker_pool_enabled
     image_id              = var.image_id
     image_type            = var.image_type
     memory                = local.memory
@@ -96,7 +96,7 @@ locals {
         "cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
         } : {},
       )
-    }) if pool.enabled == true
+    }) if pool.create == true
   }
 
   # Number of nodes expected from enabled worker pools
@@ -128,7 +128,7 @@ locals {
   # Sanitized worker_pools output; some conditionally-used defaults would be misleading
   enabled_worker_pools_out = {
     for pool_name, pool in local.enabled_worker_pools : pool_name => { for a, b in pool : a => b
-      if a != "enabled"                                                                   # implied
+      if a != "create"                                                                    # implied
       && b != null && !(b == "" || b == {} || try(length(b), 0) == 0 || b == false)       # exclude empty/disabled values
       && !(contains(["os", "os_version"], a) && pool.image_type == "custom")              # unused defaults for custom
       && !(contains(["pod_nsg_ids", "pod_subnet_id"], a) && var.cni_type != "npn")        # unused defaults for NPN

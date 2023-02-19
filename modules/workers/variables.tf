@@ -29,7 +29,6 @@ variable "worker_nsg_ids" { type = list(string) }
 variable "worker_subnet_id" { type = string }
 
 # Worker pools
-variable "worker_pool_enabled" { type = bool }
 variable "worker_pool_mode" { type = string }
 variable "worker_pool_size" { type = number }
 variable "worker_pools" { type = any }

@@ -3,8 +3,8 @@
 
 locals {
   check_active_worker_template = templatefile("${path.module}/scripts/check_worker_active.template.sh", {
-    check_node_active   = var.check_node_active
-    expected_node_count = var.expected_node_count
+    await_node_readiness = var.await_node_readiness
+    expected_node_count  = var.expected_node_count
     }
   )
 }
@@ -39,5 +39,5 @@ resource "null_resource" "check_worker_active" {
     ]
   }
 
-  count = var.check_node_active != "none" && var.expected_node_count > 0 ? 1 : 0
+  count = var.await_node_readiness != "none" && var.expected_node_count > 0 ? 1 : 0
 }
