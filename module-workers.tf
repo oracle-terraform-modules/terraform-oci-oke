@@ -7,13 +7,13 @@ locals {
   # Distinct list of compartments for enabled worker pools
   worker_compartments = distinct(compact([
     for k, v in var.worker_pools : lookup(v, "compartment_id", local.compartment_id)
-    if tobool(lookup(v, "enabled", var.worker_pool_enabled))
+    if tobool(lookup(v, "create", true))
   ]))
 
   # Worker pools with cluster autoscaler management enabled
   autoscaler_compartments = distinct(compact([
     for k, v in var.worker_pools : lookup(v, "compartment_id", local.compartment_id)
-    if tobool(lookup(v, "enabled", var.worker_pool_enabled)) && tobool(lookup(v, "allow_autoscaler", false))
+    if tobool(lookup(v, "create", true)) && tobool(lookup(v, "allow_autoscaler", false))
   ]))
 
   # Distinct list of compartments for cluster autoscaler-enabled worker pools
@@ -42,10 +42,9 @@ module "workers" {
   kubernetes_version     = var.kubernetes_version
 
   # Worker pools
-  worker_pool_enabled = var.worker_pool_enabled
-  worker_pool_mode    = var.worker_pool_mode
-  worker_pool_size    = var.worker_pool_size
-  worker_pools        = var.worker_pools
+  worker_pool_mode = var.worker_pool_mode
+  worker_pool_size = var.worker_pool_size
+  worker_pools     = var.worker_pools
 
   # Workers
   assign_dns            = var.assign_dns
@@ -97,7 +96,7 @@ module "workers" {
 
 output "worker_pools" {
   description = "Enabled worker pools"
-  value       = var.output_worker_detail && local.worker_count_expected > 0 ? one(module.workers[*].worker_pools) : null
+  value       = var.output_detail && local.worker_count_expected > 0 ? one(module.workers[*].worker_pools) : null
 }
 
 output "worker_pool_ids" {

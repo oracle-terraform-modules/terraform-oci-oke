@@ -21,17 +21,17 @@ function wait_for_active() {
     if [[ $${actual_node_count} -ge ${expected_node_count} ]]; then touch all_node.active; fi
     if [[ $${actual_node_count} -ge 1 ]]; then touch one_node.active; fi
 
-    if [[ -f "$${ONE_FILE}" ]] && [[ "${check_node_active}" == 'one' ]]; then
+    if [[ -f "$${ONE_FILE}" ]] && [[ "${await_node_readiness}" == 'one' ]]; then
       echo "$(date): Ready with $${actual_node_count} node(s)" >&2
       break
     fi
 
-    if [[ -f "$${ALL_FILE}" ]] && [[ "${check_node_active}" == 'all' ]]; then
+    if [[ -f "$${ALL_FILE}" ]] && [[ "${await_node_readiness}" == 'all' ]]; then
       echo "$(date): Ready with $${actual_node_count} node(s)" >&2
       break
     fi
 
-    echo "$(date): Waiting for ${check_node_active} of ${expected_node_count} node(s) to become ready ($${actual_node_count} found)" >&2
+    echo "$(date): Waiting for ${await_node_readiness} of ${expected_node_count} node(s) to become ready ($${actual_node_count} found)" >&2
     sleep 30
   done
 }

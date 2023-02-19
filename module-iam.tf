@@ -5,7 +5,7 @@ locals {
   create_iam_worker_policy = anytrue([
     var.create_iam_worker_policy == "always",
     var.create_iam_worker_policy == "auto" && var.create_cluster && anytrue([for k, v in var.worker_pools :
-      tobool(lookup(v, "enabled", var.worker_pool_enabled)) &&
+      tobool(lookup(v, "create", true)) &&
       lookup(v, "mode", var.worker_pool_mode) != "node-pool"
     ])
   ])
@@ -13,7 +13,7 @@ locals {
   create_iam_autoscaler_policy = anytrue([
     var.create_iam_autoscaler_policy == "always",
     var.create_iam_autoscaler_policy == "auto" && var.create_cluster && anytrue([for k, v in var.worker_pools :
-      tobool(lookup(v, "enabled", var.worker_pool_enabled)) &&
+      tobool(lookup(v, "create", true)) &&
       tobool(lookup(v, "allow_autoscaler", false))
     ])
   ])

@@ -1,6 +1,8 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+# All configuration for cluster sub-module w/ defaults
+
 create_cluster     = true # *true/false
 cluster_dns        = "10.96.5.5"
 cluster_kms_key_id = null
