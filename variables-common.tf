@@ -16,6 +16,12 @@ locals {
   )
 }
 
+variable "output_detail" {
+  default     = false
+  description = "Whether to include detailed output in state."
+  type        = bool
+}
+
 variable "timezone" {
   default     = "Etc/UTC"
   description = "The preferred timezone for the worker nodes."

@@ -138,5 +138,5 @@ output "vcn_id" {
 }
 
 output "network_security_rules" {
-  value = var.output_network_detail ? module.network.network_security_rules : null
+  value = var.output_detail ? module.network.network_security_rules : null
 }

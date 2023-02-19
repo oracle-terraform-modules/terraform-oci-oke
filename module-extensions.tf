@@ -52,8 +52,8 @@ module "extensions" {
   service_account_cluster_role_binding = var.service_account_cluster_role_binding
 
   # Worker node readiness
-  check_node_active   = var.check_node_active
-  expected_node_count = local.worker_count_expected
+  await_node_readiness = var.await_node_readiness
+  expected_node_count  = local.worker_count_expected
 
   # OKE upgrade
   upgrade_nodepool    = var.upgrade_nodepool

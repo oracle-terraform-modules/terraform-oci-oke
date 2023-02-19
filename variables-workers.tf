@@ -33,12 +33,6 @@ variable "worker_pools" {
   type        = any
 }
 
-variable "worker_pool_enabled" {
-  default     = true
-  description = "Whether to apply resources for a group when unspecified."
-  type        = bool
-}
-
 variable "worker_pool_mode" {
   default     = "node-pool"
   description = "Default management mode for worker pools when unspecified. Only 'node-pool' is currently supported."
@@ -53,12 +47,6 @@ variable "worker_pool_size" {
   default     = 0
   description = "Default size for worker pools when unspecified."
   type        = number
-}
-
-variable "output_worker_detail" {
-  default     = false
-  description = "Whether to include detailed output for worker pool configuration."
-  type        = bool
 }
 
 #
@@ -159,7 +147,7 @@ variable "worker_shape" {
 
 variable "worker_cloud_init" {
   default     = []
-  description = "List of maps containing cloud init MIME part configuration. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."
+  description = "List of maps containing cloud init MIME part configuration for worker nodes. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."
   type        = list(map(string))
 }
 
