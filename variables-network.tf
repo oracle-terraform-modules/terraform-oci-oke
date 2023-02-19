@@ -160,18 +160,6 @@ variable "control_plane_allowed_cidrs" {
   type        = list(string)
 }
 
-variable "pods_cidr" {
-  default     = "10.244.0.0/16"
-  description = "The CIDR range used for IP addresses by the pods. A /16 CIDR is generally sufficient. This CIDR should not overlap with any subnet range in the VCN (it can also be outside the VCN CIDR range)."
-  type        = string
-}
-
-variable "services_cidr" {
-  default     = "10.96.0.0/16"
-  description = "The CIDR range used by exposed Kubernetes services (ClusterIPs). This CIDR should not overlap with the VCN CIDR range."
-  type        = string
-}
-
 variable "enable_waf" {
   description = "Whether to enable WAF monitoring of load balancers."
   type        = bool
