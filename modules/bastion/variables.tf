@@ -12,6 +12,7 @@ variable "image_id" { type = string }
 variable "nsg_ids" { type = list(string) }
 variable "public" { type = bool }
 variable "shape" { type = map(any) }
+variable "ssh_private_key" { type = string }
 variable "ssh_public_key" { type = string }
 variable "subnet_id" { type = string }
 variable "timezone" { type = string }

@@ -5,6 +5,7 @@
 
 create_operator                = true # *true/false
 operator_availability_domain   = null
+operator_cloud_init            = []
 operator_image_id              = null           # Ignored when operator_image_type = "platform"
 operator_image_os              = "Oracle Linux" # Ignored when operator_image_type = "custom"
 operator_image_os_version      = "8"            # Ignored when operator_image_type = "custom"
