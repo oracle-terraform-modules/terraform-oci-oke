@@ -24,7 +24,7 @@ variable "output_detail" {
 
 variable "timezone" {
   default     = "Etc/UTC"
-  description = "The preferred timezone for the worker nodes."
+  description = "The preferred timezone for workers, operator, and bastion instances."
   type        = string
 }
 

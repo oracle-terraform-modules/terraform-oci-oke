@@ -78,5 +78,10 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
 
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
+
+    precondition {
+      condition     = !var.use_signed_images || length(var.image_signing_keys) > 0
+      error_message = "Must provide at least 1 image signing key when use_signed_images is enabled."
+    }
   }
 }

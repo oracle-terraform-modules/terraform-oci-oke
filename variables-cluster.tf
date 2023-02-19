@@ -24,6 +24,12 @@ variable "control_plane_type" {
   }
 }
 
+variable "control_plane_nsg_ids" {
+  default     = []
+  description = "An additional list of network security groups (NSG) ids for the cluster endpoint."
+  type        = set(string)
+}
+
 variable "cni_type" {
   default     = "flannel"
   description = "The CNI for the cluster: 'flannel' or 'npn'. See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm."
@@ -59,20 +65,14 @@ variable "cluster_kms_key_id" {
 }
 
 variable "use_signed_images" {
-  description = "Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys."
   default     = false
+  description = "Whether to enforce the use of signed images. If set to true, at least 1 RSA key must be provided through image_signing_keys."
   type        = bool
 }
 
 variable "image_signing_keys" {
+  default     = []
   description = "A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm."
-  type        = set(string)
-  default     = []
-}
-
-variable "control_plane_nsg_ids" {
-  default     = []
-  description = "An additional list of network security groups (NSG) ids for the cluster endpoint."
   type        = set(string)
 }
 
