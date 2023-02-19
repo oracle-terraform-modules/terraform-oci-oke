@@ -46,7 +46,7 @@ variable "secret_namespace" { type = string }
 variable "username" { type = string }
 
 # Node readiness check
-variable "check_node_active" { type = string }
+variable "await_node_readiness" { type = string }
 variable "expected_node_count" { type = number }
 
 # Metrics server

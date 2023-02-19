@@ -63,10 +63,10 @@ output "cluster_endpoints" {
 
 output "cluster_kubeconfig" {
   description = "OKE kubeconfig"
-  value       = var.output_cluster_detail && length(local.kubeconfig) > 0 ? local.kubeconfig : null
+  value       = var.output_detail && length(local.kubeconfig) > 0 ? local.kubeconfig : null
 }
 
 output "cluster_ca_cert" {
   description = "OKE cluster CA certificate"
-  value       = var.output_cluster_detail && length(local.cluster_ca_cert) > 0 ? local.cluster_ca_cert : null
+  value       = var.output_detail && length(local.cluster_ca_cert) > 0 ? local.cluster_ca_cert : null
 }

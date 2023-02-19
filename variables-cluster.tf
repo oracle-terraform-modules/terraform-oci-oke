@@ -85,9 +85,3 @@ variable "preferred_load_balancer" {
     error_message = "Accepted values are public or internal."
   }
 }
-
-variable "output_cluster_detail" {
-  default     = false
-  description = "Whether to include detailed output for cluster configuration."
-  type        = bool
-}

@@ -38,7 +38,6 @@ example-pool = {
 ### Defaults
 Many parameters to a worker pool can be defined at multiple levels, taken in priority: `Group > Variable > built-in default`. This enables sparse definition of worker pools that share many traits.
 ```yaml
-worker_pool_enabled           = true
 worker_pool_size              = 0
 worker_image_id          = "ocid1.image..." # Required here and/or on group
 worker_pool_mode              = "node-pool"
@@ -52,8 +51,8 @@ worker_pool_subnet_id = "" # Defaults to Terraform-managed when empty
 worker_pools                  = [
   np0 = {}, # All defaults
   np1 = { mode = "node-pool", nsg_ids = ["ocid1.networksecuritygroup..."] },
-  np2 = { mode = "node-pool", enabled = false },
-  np3 = { mode = "node-pool", enabled = false,
+  np2 = { mode = "node-pool", create = false },
+  np3 = { mode = "node-pool", create = false,
     shape = "VM.Standard.E4.Flex", ocpus = 4, memory = 32, boot_volume_size = 150 }
 ]
 ```

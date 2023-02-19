@@ -1,15 +1,16 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+# All configuration for workers sub-module w/ defaults
+
 # Worker pool defaults
-worker_pool_enabled = false # true/*false
-worker_pool_size    = 0
-worker_pool_mode    = "node-pool" # Must be node-pool
+worker_pool_size = 0
+worker_pool_mode = "node-pool" # Must be node-pool
 
 # Worker defaults
-output_worker_detail         = false
+await_node_readiness         = "none"
 worker_block_volume_type     = "paravirtualized"
-worker_cloudinit             = null
+worker_cloud_init            = []
 worker_compartment_id        = null
 worker_image_id              = null
 worker_image_os              = "Oracle Linux" # Ignored when worker_image_type = "custom"
@@ -28,24 +29,7 @@ worker_shape = {
   boot_volume_size = 50
 }
 
-worker_pools = {
-  np-vm-ol7 = {
-    description = "OKE-managed Node Pool with OKE Oracle Linux 7 image", enabled = true,
-    mode        = "node-pool", size = 1, size_max = 2, os = "Oracle Linux", os_version = "7", autoscale = true,
-  },
-  np-vm-ol8 = {
-    description = "OKE-managed Node Pool with OKE Oracle Linux 8 image", enabled = true,
-    mode        = "node-pool", size = 1, size_max = 3, os = "Oracle Linux", os_version = "8", autoscale = true,
-  },
-  np-vm-custom = {
-    description = "OKE-managed Node Pool with custom image", enabled = true,
-    mode        = "node-pool", image_type = "custom", size = 1, allow_autoscaler = true,
-  },
-}
-
-# Other
-check_node_active = "all"
-upgrade_nodepool  = false
+worker_pools = {}
 
 # FSS
 create_fss            = false # true/*false
