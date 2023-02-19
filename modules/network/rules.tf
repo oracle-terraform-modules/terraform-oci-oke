@@ -33,7 +33,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
   stateless                 = false
 
   dynamic "tcp_options" {
-    for_each = (each.value.protocol == local.tcp_protocol &&
+    for_each = (tostring(each.value.protocol) == tostring(local.tcp_protocol) &&
       tonumber(lookup(each.value, "port", 0)) != local.all_ports ? [each.value] : []
     )
     content {
@@ -45,7 +45,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
   }
 
   dynamic "udp_options" {
-    for_each = (each.value.protocol == local.udp_protocol &&
+    for_each = (tostring(each.value.protocol) == tostring(local.udp_protocol) &&
       tonumber(lookup(each.value, "port", 0)) != local.all_ports ? [each.value] : []
     )
     content {
@@ -66,7 +66,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
 
   lifecycle {
     precondition {
-      condition = each.value.protocol == local.icmp_protocol || contains(keys(each.value), "port") || (
+      condition = tostring(each.value.protocol) == tostring(local.icmp_protocol) || contains(keys(each.value), "port") || (
         contains(keys(each.value), "port_min") && contains(keys(each.value), "port_max")
       )
       error_message = "TCP/UDP rule must contain a port or port range: '${each.key}'"
@@ -74,7 +74,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
 
     precondition {
       condition = (
-        each.value.protocol == local.icmp_protocol
+        tostring(each.value.protocol) == tostring(local.icmp_protocol)
         || can(tonumber(each.value.port))
         || (can(tonumber(each.value.port_min)) && can(tonumber(each.value.port_max)))
       )
