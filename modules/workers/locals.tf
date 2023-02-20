@@ -80,21 +80,25 @@ locals {
       ]...)), 0))
 
       # Standard tags as defined if enabled for use
-      defined_tags = merge(var.defined_tags, lookup(pool, "defined_tags", {}), var.use_defined_tags ? {
+      # User-provided freeform tags are merged and take precedence
+      defined_tags = merge(var.use_defined_tags ? {
         "${var.tag_namespace}.state_id"           = var.state_id,
         "${var.tag_namespace}.role"               = "worker",
         "${var.tag_namespace}.pool"               = pool_name,
         "${var.tag_namespace}.cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
         } : {},
+        var.defined_tags, lookup(pool, "defined_tags", {}),
       )
 
       # Standard tags as freeform if defined tags are disabled
-      freeform_tags = merge(var.freeform_tags, lookup(pool, "freeform_tags", {}), !var.use_defined_tags ? {
+      # User-provided freeform tags are merged and take precedence
+      freeform_tags = merge(!var.use_defined_tags ? {
         "state_id"           = var.state_id,
         "role"               = "worker",
         "pool"               = pool_name,
         "cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
         } : {},
+        var.freeform_tags, lookup(pool, "freeform_tags", {}),
       )
     }) if pool.create == true
   }
