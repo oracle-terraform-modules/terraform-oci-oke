@@ -35,7 +35,7 @@ variable "worker_pools" {
 
 variable "worker_pool_mode" {
   default     = "node-pool"
-  description = "Default management mode for worker pools when unspecified. Only 'node-pool' is currently supported."
+  description = "Default management mode for workers when unspecified on a pool. Only 'node-pool' is currently supported."
   type        = string
   validation {
     condition     = contains(["node-pool", "instance-pool", "cluster-network"], var.worker_pool_mode)
@@ -45,7 +45,7 @@ variable "worker_pool_mode" {
 
 variable "worker_pool_size" {
   default     = 0
-  description = "Default size for worker pools when unspecified."
+  description = "Default size for worker pools when unspecified on a pool."
   type        = number
 }
 
@@ -55,7 +55,7 @@ variable "worker_pool_size" {
 
 variable "worker_type" {
   default     = "private"
-  description = "Whether to provision public or private workers."
+  description = "Whether to provision public or private workers by default when unspecified on a pool."
   type        = string
   validation {
     condition     = contains(["public", "private"], var.worker_type)
@@ -65,19 +65,19 @@ variable "worker_type" {
 
 variable "worker_nsg_ids" {
   default     = []
-  description = "An additional list of network security group (NSG) IDs for node security."
+  description = "An additional list of network security group (NSG) IDs for node security. Combined with 'nsg_ids' specified on each pool."
   type        = list(string)
 }
 
 variable "pod_nsg_ids" {
   default     = []
-  description = "An additional list of network security group (NSG) IDs for pod security."
+  description = "An additional list of network security group (NSG) IDs for pod security. Combined with 'pod_nsg_ids' specified on each pool."
   type        = list(string)
 }
 
 variable "kubeproxy_mode" {
   default     = "iptables"
-  description = "The mode in which to run kube-proxy."
+  description = "The mode in which to run kube-proxy when unspecified on a pool."
   type        = string
 
   validation {
@@ -92,7 +92,7 @@ variable "kubeproxy_mode" {
 
 variable "worker_block_volume_type" {
   default     = "paravirtualized"
-  description = "The default block volume attachment type for Instance Configurations."
+  description = "Default block volume attachment type for Instance Configurations when unspecified on a pool."
   type        = string
   validation {
     condition     = contains(["iscsi", "paravirtualized"], var.worker_block_volume_type)
@@ -108,13 +108,13 @@ variable "worker_node_labels" {
 
 variable "worker_image_id" {
   default     = null
-  description = "Default image for worker pools when unspecified"
+  description = "Default image for worker pools  when unspecified on a pool."
   type        = string
 }
 
 variable "worker_image_type" {
   default     = "oke"
-  description = "Whether to use a platform, OKE, or custom image for worker nodes by default. When custom is set, the worker_image_id must be specified."
+  description = "Whether to use a platform, OKE, or custom image for worker nodes by default when unspecified on a pool. When custom is set, the worker_image_id must be specified."
   type        = string
   validation {
     condition     = contains(["custom", "oke", "platform"], var.worker_image_type)
@@ -124,13 +124,13 @@ variable "worker_image_type" {
 
 variable "worker_image_os" {
   default     = "Oracle Linux"
-  description = "Default worker image operating system name when worker_image_type = 'oke' or 'platform'."
+  description = "Default worker image operating system name when worker_image_type = 'oke' or 'platform' and unspecified on a pool."
   type        = string
 }
 
 variable "worker_image_os_version" {
   default     = "8"
-  description = "Default worker image operating system version when worker_image_type = 'oke' or 'platform'."
+  description = "Default worker image operating system version when worker_image_type = 'oke' or 'platform' and unspecified on a pool."
   type        = string
 }
 
@@ -141,31 +141,31 @@ variable "worker_shape" {
     memory           = 16,
     boot_volume_size = 50
   }
-  description = "Default shape of the created worker instance."
+  description = "Default shape of the created worker instance when unspecified on a pool."
   type        = map(any)
 }
 
 variable "worker_cloud_init" {
   default     = []
-  description = "List of maps containing cloud init MIME part configuration for worker nodes. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."
+  description = "List of maps containing cloud init MIME part configuration for worker nodes. Merged with pool-specific definitions. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."
   type        = list(map(string))
 }
 
 variable "worker_volume_kms_key_id" {
   default     = null
-  description = "The ID of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption."
+  description = "The ID of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption by default when unspecified on a pool."
   type        = string
 }
 
 variable "worker_pv_transit_encryption" {
   default     = false
-  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment."
+  description = "Whether to enable in-transit encryption for the data volume's paravirtualized attachment by default when unspecified on a pool."
   type        = bool
 }
 
 variable "max_pods_per_node" {
   default     = 31
-  description = "The maximum number of pods to deploy per node. Absolute maximum is 110. Ignored when when cni_type != 'npn'."
+  description = "The default maximum number of pods to deploy per node when unspecified on a pool. Absolute maximum is 110. Ignored when when cni_type != 'npn'."
   type        = number
 
   validation {
