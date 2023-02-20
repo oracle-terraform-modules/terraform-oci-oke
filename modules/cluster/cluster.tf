@@ -4,20 +4,24 @@
 locals {
   roles = ["cluster", "persistent_volume", "service_lb"]
 
+  # Standard tags as defined if enabled for use
+  # User-provided defined tags are merged and take precedence
   defined_tags = { for role in local.roles : role => merge(
-    lookup(var.defined_tags, role, {}),
     var.use_defined_tags ? {
       "${var.tag_namespace}.state_id" = var.state_id,
       "${var.tag_namespace}.role"     = role,
-    } : {}
+    } : {},
+    lookup(var.defined_tags, role, {}),
   ) }
 
+  # Standard tags as freeform if defined tags are disabled
+  # User-provided freeform tags are merged and take precedence
   freeform_tags = { for role in local.roles : role => merge(
-    lookup(var.freeform_tags, role, {}),
     !var.use_defined_tags ? {
       "state_id" = var.state_id,
       "role"     = role,
-    } : {}
+    } : {},
+    lookup(var.freeform_tags, role, {}),
   ) }
 }
 
