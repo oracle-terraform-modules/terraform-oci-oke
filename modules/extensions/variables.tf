@@ -54,11 +54,3 @@ variable "enable_metric_server" { type = bool }
 variable "enable_vpa" { type = bool }
 variable "vpa_version" { type = string }
 
-# Worker draining
-# TODO move to workers
-variable "node_pools_to_drain" { type = list(string) }
-variable "upgrade_nodepool" { type = bool }
-
-# Cluster autoscaler
-variable "deploy_cluster_autoscaler" { type = bool }
-variable "autoscaling_groups" { type = any }

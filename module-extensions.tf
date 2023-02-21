@@ -7,6 +7,11 @@ module "extensions" {
   compartment_id = local.compartment_id
   region         = var.region
 
+  # Cluster
+  await_node_readiness = var.await_node_readiness
+  expected_node_count  = local.worker_count_expected
+  worker_pools         = one(module.workers[*].worker_pools)
+
   # Bastion/operator connection
   ssh_private_key = local.ssh_private_key
   bastion_host    = local.bastion_public_ip
@@ -51,18 +56,6 @@ module "extensions" {
   service_account_name                 = var.service_account_name
   service_account_namespace            = var.service_account_namespace
   service_account_cluster_role_binding = var.service_account_cluster_role_binding
-
-  # Worker node readiness
-  await_node_readiness = var.await_node_readiness
-  expected_node_count  = local.worker_count_expected
-
-  # OKE upgrade
-  upgrade_nodepool    = var.upgrade_nodepool
-  node_pools_to_drain = var.node_pools_to_drain
-
-  # Cluster autoscaler
-  deploy_cluster_autoscaler = var.deploy_cluster_autoscaler
-  autoscaling_groups        = local.autoscaling_groups
 
   providers = {
     oci.home = oci.home
