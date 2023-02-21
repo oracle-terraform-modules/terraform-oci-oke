@@ -15,27 +15,15 @@ data "cloudinit_config" "workers" {
   gzip          = true
   base64_encode = true
 
-  # Include global custom cloud init MIME parts
-  dynamic "part" {
-    for_each = var.cloud_init
-    iterator = global_part
-    content {
-      content      = lookup(global_part.value, "content", "")
-      content_type = lookup(global_part.value, "content_type", local.default_cloud_init_content_type)
-      filename     = lookup(global_part.value, "filename", null)
-      merge_type   = lookup(global_part.value, "merge_type", local.default_cloud_init_merge_type)
-    }
-  }
-
-  # Include pool-specific custom cloud init MIME parts
+  # Include global and pool-specific custom cloud init MIME parts
   dynamic "part" {
     for_each = each.value.cloud_init
-    iterator = pool_part
+    iterator = part
     content {
-      content      = lookup(pool_part.value, "content", "")
-      content_type = lookup(pool_part.value, "content_type", local.default_cloud_init_content_type)
-      filename     = lookup(pool_part.value, "filename", null)
-      merge_type   = lookup(pool_part.value, "merge_type", local.default_cloud_init_merge_type)
+      content      = lookup(part.value, "content", "")
+      content_type = lookup(part.value, "content_type", local.default_cloud_init_content_type)
+      filename     = lookup(part.value, "filename", null)
+      merge_type   = lookup(part.value, "merge_type", local.default_cloud_init_merge_type)
     }
   }
 
@@ -61,6 +49,9 @@ data "cloudinit_config" "workers" {
 
       # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#resizefs
       resize_rootfs = true
+
+      # Resize logical LVM root volume when utility is present
+      bootcmd = ["if [[ -f /usr/libexec/oci-growfs ]]; then /usr/libexec/oci-growfs -y; fi"]
     })
     filename   = "growpart.yml"
     merge_type = local.default_cloud_init_merge_type
