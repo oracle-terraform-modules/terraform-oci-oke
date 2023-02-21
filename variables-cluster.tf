@@ -13,15 +13,10 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "control_plane_type" {
-  default     = "public"
-  description = "Whether to allow public or private access to the control plane endpoint"
-  type        = string
-
-  validation {
-    condition     = contains(["public", "private"], var.control_plane_type)
-    error_message = "Accepted values are public, or private."
-  }
+variable "control_plane_is_public" {
+  default     = true
+  description = "Whether the Kubernetes control plane endpoint should be allocated a public IP address."
+  type        = bool
 }
 
 variable "control_plane_nsg_ids" {

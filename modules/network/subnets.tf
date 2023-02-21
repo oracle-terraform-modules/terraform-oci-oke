@@ -19,10 +19,11 @@ locals {
   }
 
   # Map of subnets for standard components with additional configuration derived
+  # TODO enumerate worker pools for public/private overrides, conditional subnets for both
   subnet_info = {
-    bastion  = { create = var.create_bastion, public = var.bastion_type == "public" }
-    cp       = { public = var.control_plane_type == "public" }
-    workers  = { public = var.worker_type == "public" }
+    bastion  = { create = var.create_bastion, is_public = var.bastion_is_public }
+    cp       = { is_public = var.control_plane_is_public }
+    workers  = { is_public = var.worker_is_public }
     pods     = { create = var.cni_type == "npn" }
     operator = { create = var.create_operator }
     fss      = { create = var.create_fss }
@@ -32,7 +33,7 @@ locals {
     }
     pub_lb = {
       create         = var.load_balancers == "public" || var.load_balancers == "both",
-      create_seclist = true, public = true, dns_label = "plb",
+      create_seclist = true, is_public = true, dns_label = "plb",
     }
   }
 }
@@ -55,8 +56,8 @@ resource "oci_core_subnet" "oke" {
   cidr_block                 = lookup(local.subnet_cidrs, each.key)
   display_name               = "${each.key}-${var.state_id}"
   dns_label                  = var.assign_dns ? lookup(var.subnets, "id", substr(each.key, 0, 2)) : null
-  prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "public", false))
-  route_table_id             = !tobool(lookup(each.value, "public", false)) ? var.nat_route_table_id : var.ig_route_table_id
+  prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
+  route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
   security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
   defined_tags               = local.defined_tags
   freeform_tags              = local.freeform_tags

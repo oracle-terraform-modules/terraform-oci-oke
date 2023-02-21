@@ -53,14 +53,10 @@ variable "worker_pool_size" {
 # Workers: network
 #
 
-variable "worker_type" {
-  default     = "private"
-  description = "Whether to provision public or private workers by default when unspecified on a pool."
-  type        = string
-  validation {
-    condition     = contains(["public", "private"], var.worker_type)
-    error_message = "Accepted values are public or private."
-  }
+variable "worker_is_public" {
+  default     = false
+  description = "Whether to provision workers with public IPs allocated by default when unspecified on a pool."
+  type        = bool
 }
 
 variable "worker_nsg_ids" {

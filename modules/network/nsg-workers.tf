@@ -26,16 +26,16 @@ locals {
       },
 
       "Allow TCP egress from workers to Kubernetes API server" : {
-        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.cp_nsg_id, destination_type = local.rule_type_nsg,
+        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow TCP egress from workers to OKE control plane" : {
-        protocol = local.tcp_protocol, port = local.oke_port, destination = local.cp_nsg_id, destination_type = local.rule_type_nsg,
+        protocol = local.tcp_protocol, port = local.oke_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow TCP ingress to workers for health check from OKE control plane" : {
-        protocol = local.tcp_protocol, port = local.kubelet_api_port, destination = local.cp_nsg_id, destination_type = local.rule_type_nsg,
+        protocol = local.tcp_protocol, port = local.kubelet_api_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow ALL ingress to workers from Kubernetes control plane for webhooks served by workers" : {
-        protocol = local.all_protocols, port = local.all_ports, source = local.cp_nsg_id, source_type = local.rule_type_nsg,
+        protocol = local.all_protocols, port = local.all_ports, source = local.control_plane_nsg_id, source_type = local.rule_type_nsg,
       },
 
       "Allow ALL egress from workers to internet" : {
@@ -52,14 +52,14 @@ locals {
 
       "Allow SSH ingress to workers from internet" : {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.anywhere, source_type = local.rule_type_cidr,
-        enabled  = var.allow_worker_ssh_access && var.allow_worker_internet_access && var.worker_type == "public",
+        enabled  = var.allow_worker_ssh_access && var.allow_worker_internet_access && var.worker_is_public,
       },
     },
 
     { for cidr in var.vcn_cidrs :
       "Allow SSH ingress to workers from VCN ${cidr}" => {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.anywhere, source_type = local.rule_type_cidr,
-        enabled  = var.allow_worker_ssh_access && !var.create_bastion && var.worker_type == "private",
+        enabled  = var.allow_worker_ssh_access && !var.create_bastion && !var.worker_is_public,
       }
     },
 
@@ -81,7 +81,7 @@ locals {
       },
     } : {},
 
-    var.create_bastion && var.allow_worker_ssh_access && var.worker_type == "private" ? {
+    var.create_bastion && var.allow_worker_ssh_access && !var.worker_is_public ? {
       "Allow SSH ingress to workers from bastion" : {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
       }

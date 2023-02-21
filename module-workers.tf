@@ -30,7 +30,7 @@ module "workers" {
   ad_numbers_to_names = local.ad_numbers_to_names
 
   # Cluster
-  apiserver_private_host = try(split(":", one(module.cluster[*].endpoints.private_endpoint))[0], "")
+  apiserver_private_host = local.apiserver_private_host
   cluster_ca_cert        = local.cluster_ca_cert
   cluster_dns            = var.cluster_dns
   cluster_id             = coalesce(var.cluster_id, one(module.cluster[*].cluster_id))
@@ -43,7 +43,7 @@ module "workers" {
 
   # Workers
   assign_dns            = var.assign_dns
-  assign_public_ip      = var.worker_type == "public"
+  assign_public_ip      = var.worker_is_public
   block_volume_type     = var.worker_block_volume_type
   cloud_init            = var.worker_cloud_init
   cni_type              = var.cni_type
