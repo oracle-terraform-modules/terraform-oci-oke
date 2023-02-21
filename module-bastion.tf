@@ -26,7 +26,7 @@ module "bastion" {
   availability_domain = coalesce(var.bastion_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
   image_id            = local.bastion_image_id
   nsg_ids             = concat(var.bastion_nsg_ids, var.create_nsgs ? [module.network.bastion_nsg_id] : [])
-  public              = var.bastion_type == "public"
+  is_public           = var.bastion_is_public
   shape               = var.bastion_shape
   ssh_private_key     = local.ssh_private_key # to await cloud-init completion
   ssh_public_key      = local.ssh_public_key
