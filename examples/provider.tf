@@ -3,6 +3,7 @@
 
 # Provider configurations for resource + home regions w/ some automatically derived values
 
+# tflint-ignore: terraform_required_providers
 provider "oci" {
   config_file_profile  = var.config_file_profile
   fingerprint          = var.api_fingerprint
@@ -13,6 +14,7 @@ provider "oci" {
   user_ocid            = local.user_id
 }
 
+# tflint-ignore: terraform_required_providers
 provider "oci" {
   alias                = "home"
   config_file_profile  = var.config_file_profile
