@@ -46,7 +46,7 @@ resource "oci_core_instance" "bastion" {
   }
 
   create_vnic_details {
-    assign_public_ip = var.public
+    assign_public_ip = var.is_public
     display_name     = "bastion-${var.state_id}"
     hostname_label   = var.assign_dns ? "b-${var.state_id}" : null
     nsg_ids          = var.nsg_ids

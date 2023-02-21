@@ -2,8 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  cp_nsg_id = one(oci_core_network_security_group.cp[*].id)
-  cp_rules = merge(
+  control_plane_nsg_id = one(oci_core_network_security_group.cp[*].id)
+  control_plane_rules = merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
@@ -20,10 +20,10 @@ locals {
       },
 
       "Allow TCP egress for Kubernetes control plane inter-communication" : {
-        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.cp_nsg_id, destination_type = local.rule_type_nsg,
+        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow TCP ingress for Kubernetes control plane inter-communication" : {
-        protocol = local.tcp_protocol, port = local.apiserver_port, source = local.cp_nsg_id, source_type = local.rule_type_nsg,
+        protocol = local.tcp_protocol, port = local.apiserver_port, source = local.control_plane_nsg_id, source_type = local.rule_type_nsg,
       },
       "Allow TCP ingress to kube-apiserver from worker nodes" : {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
@@ -76,6 +76,6 @@ resource "oci_core_network_security_group" "cp" {
   }
 }
 
-output "cp_nsg_id" {
-  value = local.cp_nsg_id
+output "control_plane_nsg_id" {
+  value = local.control_plane_nsg_id
 }

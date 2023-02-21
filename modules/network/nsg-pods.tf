@@ -16,10 +16,10 @@ locals {
     },
 
     "Allow TCP egress from pods to Kubernetes API server" : {
-      protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.cp_nsg_id, destination_type = local.rule_type_nsg,
+      protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
     },
     "Allow ALL ingress to pods from Kubernetes control plane for webhooks served by pods" : {
-      protocol = local.all_protocols, port = local.all_ports, source = local.cp_nsg_id, source_type = local.rule_type_nsg,
+      protocol = local.all_protocols, port = local.all_ports, source = local.control_plane_nsg_id, source_type = local.rule_type_nsg,
     },
 
     "Allow ALL egress from pods for cross-node pod communication when using NodePorts or hostNetwork: true" : {
