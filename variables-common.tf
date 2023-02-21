@@ -29,26 +29,26 @@ variable "timezone" {
 }
 
 variable "ssh_private_key" {
-  default     = ""
+  default     = null
   description = "The contents of the SSH private key file, optionally base64-encoded. May be provided via SSH agent when unset."
   sensitive   = true
   type        = string
 }
 
 variable "ssh_private_key_path" {
-  default     = "none"
+  default     = null
   description = "A path on the local filesystem to the SSH private key. May be provided via SSH agent when unset."
   type        = string
 }
 
 variable "ssh_public_key" {
-  default     = ""
+  default     = null
   description = "The contents of the SSH public key file, optionally base64-encoded. Used to allow login for workers/bastion/operator with corresponding private key."
   type        = string
 }
 
 variable "ssh_public_key_path" {
-  default     = "none"
+  default     = null
   description = "A path on the local filesystem to the SSH public key. Used to allow login for workers/bastion/operator with corresponding private key."
   type        = string
 }

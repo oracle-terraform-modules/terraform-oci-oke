@@ -2,15 +2,14 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "extensions" {
-  count          = local.operator_enabled ? 1 : 0
-  source         = "./modules/extensions"
-  compartment_id = local.compartment_id
-  region         = var.region
+  source = "./modules/extensions"
+  count  = local.operator_enabled ? 1 : 0
+  region = var.region
 
   # Cluster
-  await_node_readiness = var.await_node_readiness
-  expected_node_count  = local.worker_count_expected
-  worker_pools         = one(module.workers[*].worker_pools)
+  kubernetes_version  = var.kubernetes_version
+  expected_node_count = local.worker_count_expected
+  worker_pools        = one(module.workers[*].worker_pools)
 
   # Bastion/operator connection
   ssh_private_key = local.ssh_private_key
@@ -19,45 +18,44 @@ module "extensions" {
   operator_host   = local.operator_private_ip
   operator_user   = var.operator_user
 
-  # OKE cluster
-  cluster_id = one(module.cluster[*].cluster_id)
-  pods_cidr  = var.pods_cidr
-
-  # OCIR
-  email_address    = var.email_address
-  secret_id        = var.secret_id
-  secret_name      = var.secret_name
-  secret_namespace = var.secret_namespace
-  username         = var.username
-
   # Calico
-  enable_calico            = var.enable_calico
-  calico_version           = var.calico_version
-  calico_mode              = var.calico_mode
-  cni_type                 = var.cni_type
-  calico_mtu               = var.calico_mtu
-  calico_url               = var.calico_url
+  calico_enabled           = var.calico_enabled
   calico_apiserver_enabled = var.calico_apiserver_enabled
+  calico_mode              = var.calico_mode
+  calico_mtu               = var.calico_mtu
   calico_staging_dir       = var.calico_staging_dir
-  typha_enabled            = var.typha_enabled
-  typha_replicas           = var.typha_replicas
+  calico_typha_enabled     = var.calico_typha_enabled
+  calico_typha_replicas    = var.calico_typha_replicas
+  calico_url               = var.calico_url
+  calico_version           = var.calico_version
+  cni_type                 = var.cni_type
+  pods_cidr                = var.pods_cidr
 
-  # Metric server
-  enable_metric_server = var.enable_metric_server
-  enable_vpa           = var.enable_vpa
-  vpa_version          = var.vpa_version
+  # Metrics server
+  metrics_server_enabled           = var.metrics_server_enabled
+  metrics_server_namespace         = var.metrics_server_namespace
+  metrics_server_helm_version      = var.metrics_server_helm_version
+  metrics_server_helm_values       = var.metrics_server_helm_values
+  metrics_server_helm_values_files = var.metrics_server_helm_values_files
+
+  # Cluster autoscaler
+  cluster_autoscaler_enabled           = var.cluster_autoscaler_enabled
+  cluster_autoscaler_namespace         = var.cluster_autoscaler_namespace
+  cluster_autoscaler_helm_version      = var.cluster_autoscaler_helm_version
+  cluster_autoscaler_helm_values       = var.cluster_autoscaler_helm_values
+  cluster_autoscaler_helm_values_files = var.cluster_autoscaler_helm_values_files
 
   # Gatekeeper
-  enable_gatekeeper  = var.enable_gatekeeper
-  gatekeeper_version = var.gatekeeper_version
+  gatekeeper_enabled           = var.gatekeeper_enabled
+  gatekeeper_namespace         = var.gatekeeper_namespace
+  gatekeeper_helm_version      = var.gatekeeper_helm_version
+  gatekeeper_helm_values       = var.gatekeeper_helm_values
+  gatekeeper_helm_values_files = var.gatekeeper_helm_values_files
 
-  # Service account
-  create_service_account               = var.create_service_account
-  service_account_name                 = var.service_account_name
-  service_account_namespace            = var.service_account_namespace
-  service_account_cluster_role_binding = var.service_account_cluster_role_binding
-
-  providers = {
-    oci.home = oci.home
-  }
+  # Prometheus
+  prometheus_enabled           = var.prometheus_enabled
+  prometheus_namespace         = var.prometheus_namespace
+  prometheus_helm_version      = var.prometheus_helm_version
+  prometheus_helm_values       = var.prometheus_helm_values
+  prometheus_helm_values_files = var.prometheus_helm_values_files
 }

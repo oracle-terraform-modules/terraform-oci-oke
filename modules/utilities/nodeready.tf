@@ -2,13 +2,13 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  node_ready_template = templatefile("${path.module}/scripts/await_node_readiness.tpl.sh",
+  node_ready_script = "/home/${var.operator_user}/await_node_ready.sh"
+  node_ready_template = templatefile("${path.module}/resources/await_node_readiness.tpl.sh",
     {
       await_node_readiness = var.await_node_readiness
       expected_node_count  = var.expected_node_count
     }
   )
-  node_ready_script = "/home/${var.operator_user}/await_node_ready.sh"
 }
 
 resource "null_resource" "await_node_readiness" {

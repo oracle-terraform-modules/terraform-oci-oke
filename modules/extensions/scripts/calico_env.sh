@@ -10,5 +10,5 @@ POD_CIDR=${pod_cidr}
 MTU=${mtu}
 URL=${url}
 APISERVER_ENABLED=${apiserver_enabled}
-TYPHA_ENABLED=${typha_enabled}
-TYPHA_REPLICAS=${typha_replicas}
+calico_typha_enabled=${calico_typha_enabled}
+calico_typha_replicas=${calico_typha_replicas}

@@ -1,51 +1,150 @@
 # Copyright (c) 2022, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+# https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler
+# https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengautoscalingclusters.htm
+
 locals {
-  oke_autoscaling_configs = { # Repeatable --nodes argument values with `oci-oke` cloud provider for node pools
-    for k, v in var.autoscaling_groups : k => "${lookup(v, "size_min", v.size)}:${lookup(v, "size_max", v.size)}:${v.id}"
-    if v.mode == "node-pool"
+  # Active worker pools that should be managed by the cluster autoscaler
+  worker_pools_autoscaling = { for k, v in var.worker_pools : k => v if tobool(lookup(v, "autoscale", false)) }
+
+  # Whether to enable cluster autoscaler deployment based on configuration, active nodes, and autoscaling pools
+  cluster_autoscaler_enabled = alltrue([
+    var.cluster_autoscaler_enabled,
+    var.expected_node_count > 0,
+    length(local.worker_pools_autoscaling) > 0,
+  ])
+
+  # Templated Helm manifest values
+  cluster_autoscaler_manifest      = one(data.helm_template.cluster_autoscaler[*].manifest)
+  cluster_autoscaler_manifest_path = join("/", [local.helm_manifest_path, "cluster_autoscaler.yaml"])
+  cluster_autoscaler_defaults = {
+    "cloudProvider"                              = "oci-oke",
+    "extraArgs.logtostderr"                      = "true",
+    "extraArgs.v"                                = "4",
+    "extraArgs.stderrthreshold"                  = "info",
+    "extraArgs.max-node-provision-time"          = "25m",
+    "extraArgs.scale-down-unneeded-time"         = "2m",
+    "extraArgs.unremovable-node-recheck-timeout" = "5m",
+    "extraArgs.balance-similar-node-groups"      = "true",
+    "extraArgs.balancing-ignore-label"           = "displayName",
+    "extraArgs.balancing-ignore-label"           = "hostname",
+    "extraArgs.balancing-ignore-label"           = "internal_addr",
+    "extraArgs.balancing-ignore-label"           = "oci.oraclecloud.com/fault-domain",
+    "extraEnv.OCI_REGION"                        = var.region,
+    "extraEnv.OCI_USE_INSTANCE_PRINCIPAL"        = "true",
+    "extraEnv.OKE_USE_INSTANCE_PRINCIPAL"        = "true",
+    "extraEnv.OCI_SDK_APPEND_USER_AGENT"         = "oci-oke-cluster-autoscaler",
+    "image.repository"                           = "iad.ocir.io/oracle/oci-cluster-autoscaler",
+    "image.tag"                                  = "1.24.0-5",
   }
-  oke_ca_yaml_template = templatefile("${path.module}/resources/clusterautoscaler.yaml.tpl", {
-    region              = var.region
-    cloud_provider      = "oci-oke"
-    autoscaling_configs = local.oke_autoscaling_configs
-  })
-  oke_ca_yaml_remote_path = "/home/${var.operator_user}/cluster-autoscaler_oke.yaml"
-  oke_ca_yaml_checksum    = md5(local.oke_ca_yaml_template)
 }
 
-resource "null_resource" "deploy_cluster_autoscaler" {
-  count = var.deploy_cluster_autoscaler ? 1 : 0
+data "helm_template" "cluster_autoscaler" {
+  count        = local.cluster_autoscaler_enabled ? 1 : 0
+  chart        = "cluster-autoscaler"
+  repository   = "https://kubernetes.github.io/autoscaler"
+  version      = var.cluster_autoscaler_helm_version
+  kube_version = var.kubernetes_version
 
-  connection {
-    host        = var.operator_private_ip
-    private_key = var.ssh_private_key
-    timeout     = "40m"
-    type        = "ssh"
-    user        = var.operator_user
+  name             = "cluster-autoscaler"
+  namespace        = var.cluster_autoscaler_namespace
+  create_namespace = true
+  include_crds     = true
+  skip_tests       = true
 
-    bastion_host        = var.bastion_public_ip
-    bastion_user        = var.bastion_user
-    bastion_private_key = var.ssh_private_key
+  values = length(var.cluster_autoscaler_helm_values_files) > 0 ? [
+    for path in var.cluster_autoscaler_helm_values_files : file(path)
+  ] : null
+
+  set {
+    name  = "nodeSelector.oke\\.oraclecloud\\.com/cluster_autoscaler"
+    value = "allowed"
   }
 
-  provisioner "file" {
-    content     = local.oke_ca_yaml_template
-    destination = local.oke_ca_yaml_remote_path
+  dynamic "set" {
+    for_each = local.cluster_autoscaler_defaults
+    iterator = helm_value
+    content {
+      name  = helm_value.key
+      value = helm_value.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.cluster_autoscaler_helm_values
+    iterator = helm_value
+    content {
+      name  = helm_value.key
+      value = helm_value.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.worker_pools_autoscaling
+    iterator = pool
+    content {
+      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].name"
+      value = lookup(pool.value, "id")
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.worker_pools_autoscaling
+    iterator = pool
+    content {
+      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].minSize"
+      value = lookup(pool.value, "min_size", lookup(pool.value, "size"))
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.worker_pools_autoscaling
+    iterator = pool
+    content {
+      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].maxSize"
+      value = lookup(pool.value, "max_size", lookup(pool.value, "size"))
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition = alltrue([for path in var.cluster_autoscaler_helm_values_files : fileexists(path)])
+      error_message = format("Missing Helm values files in configuration: %s",
+        jsonencode([for path in var.cluster_autoscaler_helm_values_files : path if !fileexists(path)])
+      )
+    }
+  }
+}
+
+resource "null_resource" "cluster_autoscaler" {
+  count = local.cluster_autoscaler_enabled ? 1 : 0
+
+  triggers = {
+    "manifest_md5" = try(md5(local.cluster_autoscaler_manifest), null)
+  }
+
+  connection {
+    bastion_host        = var.bastion_host
+    bastion_user        = var.bastion_user
+    bastion_private_key = var.ssh_private_key
+    host                = var.operator_host
+    user                = var.operator_user
+    private_key         = var.ssh_private_key
+    timeout             = "40m"
+    type                = "ssh"
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "kubectl apply -f \"${local.oke_ca_yaml_remote_path}\"",
-    ]
+    inline = ["mkdir -p ${local.helm_manifest_path}"]
   }
 
-  depends_on = [
-    null_resource.write_kubeconfig_on_operator
-  ]
+  provisioner "file" {
+    content     = local.cluster_autoscaler_manifest
+    destination = local.cluster_autoscaler_manifest_path
+  }
 
-  triggers = merge(local.oke_autoscaling_configs, {
-    deployment_checksum = local.oke_ca_yaml_checksum,
-  })
+  provisioner "remote-exec" {
+    inline = ["kubectl apply -f ${local.cluster_autoscaler_manifest_path}"]
+  }
 }
