@@ -2,38 +2,74 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  metric_server_template = templatefile("${path.module}/scripts/install_metricserver.template.sh", {
-    enable_vpa  = var.enable_vpa
-    vpa_version = var.vpa_version
-    }
-  )
+  metrics_server_enabled       = var.metrics_server_enabled && var.expected_node_count > 0
+  metrics_server_manifest      = one(data.helm_template.metrics_server[*].manifest)
+  metrics_server_manifest_path = join("/", [local.helm_manifest_path, "metrics_server.yaml"])
 }
 
-resource "null_resource" "enable_metric_server" {
-  connection {
-    host        = var.operator_private_ip
-    private_key = var.ssh_private_key
-    timeout     = "40m"
-    type        = "ssh"
-    user        = var.operator_user
+data "helm_template" "metrics_server" {
+  count        = local.metrics_server_enabled ? 1 : 0
+  chart        = "metrics-server"
+  repository   = "https://kubernetes-sigs.github.io/metrics-server"
+  version      = var.metrics_server_helm_version
+  kube_version = var.kubernetes_version
 
-    bastion_host        = var.bastion_public_ip
-    bastion_user        = var.bastion_user
-    bastion_private_key = var.ssh_private_key
+  name             = "metrics-server"
+  namespace        = var.metrics_server_namespace
+  create_namespace = true
+  include_crds     = true
+  skip_tests       = true
+  values = length(var.metrics_server_helm_values_files) > 0 ? [
+    for path in var.metrics_server_helm_values_files : file(path)
+  ] : null
+
+  dynamic "set" {
+    for_each = var.metrics_server_helm_values
+    iterator = helm_value
+    content {
+      name  = helm_value.key
+      value = helm_value.value
+    }
   }
 
-  depends_on = [null_resource.write_kubeconfig_on_operator]
+  lifecycle {
+    precondition {
+      condition = alltrue([for path in var.metrics_server_helm_values_files : fileexists(path)])
+      error_message = format("Missing Helm values files in configuration: %s",
+        jsonencode([for path in var.metrics_server_helm_values_files : path if !fileexists(path)])
+      )
+    }
+  }
+}
 
-  provisioner "file" {
-    content     = local.metric_server_template
-    destination = "/home/${var.operator_user}/enable_metric_server.sh"
+resource "null_resource" "metrics_server" {
+  count = local.metrics_server_enabled ? 1 : 0
+
+  triggers = {
+    "manifest_md5" = try(md5(local.metrics_server_manifest), null)
+  }
+
+  connection {
+    bastion_host        = var.bastion_host
+    bastion_user        = var.bastion_user
+    bastion_private_key = var.ssh_private_key
+    host                = var.operator_host
+    user                = var.operator_user
+    private_key         = var.ssh_private_key
+    timeout             = "40m"
+    type                = "ssh"
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "if [ -f \"$HOME/enable_metric_server.sh\" ]; then bash \"$HOME/enable_metric_server.sh\"; rm -f \"$HOME/enable_metric_server.sh\";fi",
-    ]
+    inline = ["mkdir -p ${local.helm_manifest_path}"]
   }
 
-  count = var.enable_metric_server ? 1 : 0
+  provisioner "file" {
+    content     = local.metrics_server_manifest
+    destination = local.metrics_server_manifest_path
+  }
+
+  provisioner "remote-exec" {
+    inline = ["kubectl apply -f ${local.metrics_server_manifest_path}"]
+  }
 }
