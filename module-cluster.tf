@@ -3,19 +3,22 @@
 
 # Used to retrieve cluster CA certificate or configure local kube context
 data "oci_containerengine_cluster_kube_config" "public" {
-  count      = var.create_cluster || coalesce(var.cluster_id, "none") != "none" ? 1 : 0
+  count      = local.cluster_enabled ? 1 : 0
   cluster_id = local.cluster_id
   endpoint   = "PUBLIC_ENDPOINT"
 }
 
 data "oci_containerengine_cluster_kube_config" "private" {
-  count      = var.create_cluster || coalesce(var.cluster_id, "none") != "none" ? 1 : 0
+  count      = local.cluster_enabled ? 1 : 0
   cluster_id = local.cluster_id
   endpoint   = "PRIVATE_ENDPOINT"
 }
 
 locals {
-  cluster_id          = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
+  cluster_enabled        = var.create_cluster || coalesce(var.cluster_id, "none") != "none"
+  cluster_id             = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
+  apiserver_private_host = local.cluster_enabled ? try(split(":", one(module.cluster[*].endpoints.private_endpoint))[0], "") : null
+
   kubeconfig_public   = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", "")), { "error" : "yamldecode" })
   kubeconfig_private  = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", "")), { "error" : "yamldecode" })
   kubeconfig_clusters = try(lookup(local.kubeconfig_private, "clusters", []), [])
@@ -31,9 +34,9 @@ module "cluster" {
 
   # Network
   cni_type                = var.cni_type
-  control_plane_nsg_ids   = setunion(var.control_plane_nsg_ids, var.create_nsgs ? [module.network.cp_nsg_id] : [])
+  control_plane_is_public = var.control_plane_is_public
+  control_plane_nsg_ids   = setunion(var.control_plane_nsg_ids, var.create_nsgs ? [module.network.control_plane_nsg_id] : [])
   control_plane_subnet_id = lookup(module.network.subnet_ids, "cp")
-  control_plane_type      = var.control_plane_type
   pods_cidr               = var.pods_cidr
   service_lb_subnet_id    = lookup(module.network.subnet_ids, var.preferred_load_balancer == "public" ? "pub_lb" : "int_lb")
   services_cidr           = var.services_cidr
@@ -72,7 +75,7 @@ output "cluster_endpoints" {
 output "cluster_kubeconfig" {
   description = "OKE kubeconfig"
   value = var.output_detail ? (
-    var.control_plane_type == "public" ? local.kubeconfig_public : local.kubeconfig_private
+    var.control_plane_is_public ? local.kubeconfig_public : local.kubeconfig_private
   ) : null
 }
 

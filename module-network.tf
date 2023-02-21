@@ -29,8 +29,8 @@ module "vcn" {
   freeform_tags  = var.freeform_tags["vcn"]
 
   attached_drg_id              = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
-  create_internet_gateway      = !(var.load_balancers == "internal" && !var.create_bastion && var.control_plane_type == "private")
-  create_nat_gateway           = var.worker_type == "private" || var.create_operator || var.load_balancers == "internal" || var.load_balancers == "both"
+  create_internet_gateway      = !(var.load_balancers == "internal" && !var.create_bastion && !var.control_plane_is_public)
+  create_nat_gateway           = !var.worker_is_public || var.create_operator || var.load_balancers == "internal" || var.load_balancers == "both"
   create_service_gateway       = true
   internet_gateway_route_rules = var.internet_gateway_route_rules
   local_peering_gateways       = var.local_peering_gateways
@@ -76,10 +76,10 @@ module "network" {
   allow_worker_ssh_access      = var.allow_worker_ssh_access
   assign_dns                   = var.assign_dns
   bastion_allowed_cidrs        = var.bastion_allowed_cidrs
-  bastion_type                 = var.bastion_type
+  bastion_is_public            = var.bastion_is_public
   cni_type                     = var.cni_type
   control_plane_allowed_cidrs  = var.control_plane_allowed_cidrs
-  control_plane_type           = var.control_plane_type
+  control_plane_is_public      = var.control_plane_is_public
   create_bastion               = var.create_bastion
   create_fss                   = var.create_fss
   create_nsgs                  = var.create_nsgs
@@ -91,7 +91,7 @@ module "network" {
   subnets                      = var.subnets
   vcn_cidrs                    = local.vcn_cidrs
   vcn_id                       = local.vcn_id
-  worker_type                  = var.worker_type
+  worker_is_public             = var.worker_is_public
 
   providers = {
     oci.home = oci.home
@@ -112,7 +112,7 @@ output "nsg_ids" {
   description = "Map of network security group IDs by role for the cluster and associated resources."
   value = var.create_nsgs ? {
     "bastion"  = module.network.bastion_nsg_id
-    "cp"       = module.network.cp_nsg_id
+    "cp"       = module.network.control_plane_nsg_id
     "fss"      = module.network.fss_nsg_id
     "int_lb"   = module.network.int_lb_nsg_id
     "operator" = module.network.operator_nsg_id

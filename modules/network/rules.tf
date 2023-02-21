@@ -10,7 +10,7 @@ locals {
 
   all_rules = { for x, y in merge(
     { for k, v in local.bastion_rules : k => merge(v, { "nsg_id" = local.bastion_nsg_id }) },
-    { for k, v in local.cp_rules : k => merge(v, { "nsg_id" = local.cp_nsg_id }) },
+    { for k, v in local.control_plane_rules : k => merge(v, { "nsg_id" = local.control_plane_nsg_id }) },
     { for k, v in local.int_lb_rules : k => merge(v, { "nsg_id" = local.int_lb_nsg_id }) },
     { for k, v in local.pub_lb_rules : k => merge(v, { "nsg_id" = local.pub_lb_nsg_id }) },
     { for k, v in local.workers_rules : k => merge(v, { "nsg_id" = local.worker_nsg_id }) },

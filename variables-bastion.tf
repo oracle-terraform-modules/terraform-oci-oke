@@ -76,15 +76,10 @@ variable "bastion_shape" {
   type        = map(any)
 }
 
-variable "bastion_type" {
-  default     = "public"
-  description = "Whether to create a public or private bastion host and subnet."
-  type        = string
-
-  validation {
-    condition     = contains(["public", "private"], var.bastion_type)
-    error_message = "Accepted values are public or private."
-  }
+variable "bastion_is_public" {
+  default     = true
+  description = "Whether to create allocate a public IP and subnet for the created bastion host."
+  type        = bool
 }
 
 variable "bastion_upgrade" {

@@ -9,7 +9,7 @@ locals {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
       },
       "Allow TCP egress from operator to Kubernetes API server" : {
-        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.cp_nsg_id, destination_type = local.rule_type_nsg,
+        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow ALL egress from operator to internet" : {
         protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
