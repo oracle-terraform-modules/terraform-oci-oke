@@ -100,7 +100,15 @@ locals {
         } : {},
         var.freeform_tags, lookup(pool, "freeform_tags", {}),
       )
-    }) if pool.create == true
+
+      # Add a node label for cluster autoscaler where scheduling is supported
+      node_labels = merge(
+        pool.allow_autoscaler ? {
+          "oke.oraclecloud.com/cluster_autoscaler" = "allowed"
+        } : {},
+        var.node_labels,
+      )
+    }) if tobool(pool.create)
   }
 
   # Number of nodes expected from enabled worker pools
@@ -130,10 +138,10 @@ locals {
   }
 
   # Sanitized worker_pools output; some conditionally-used defaults would be misleading
-  enabled_worker_pools_out = {
+  worker_pools_final = {
     for pool_name, pool in local.enabled_worker_pools : pool_name => { for a, b in pool : a => b
       if a != "create"                                                                    # implied
-      && b != null && !(b == "" || b == {} || try(length(b), 0) == 0 || b == false)       # exclude empty/disabled values
+      && b != null && try(length(b), -1) != 0 && try(!!tobool(b), true)                   # exclude empty/disabled values
       && !(contains(["os", "os_version"], a) && pool.image_type == "custom")              # unused defaults for custom
       && !(contains(["pod_nsg_ids", "pod_subnet_id"], a) && var.cni_type != "npn")        # unused defaults for NPN
       && !(contains(["ocpus", "memory"], a) && length(regexall("Flex", pool.shape)) == 0) # unused defaults for non-Flex shapes
@@ -141,15 +149,9 @@ locals {
   }
 
   # Worker pool OCI resources enriched with desired/custom parameters
-  worker_node_pools       = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.enabled_worker_pools, k, {})) }
-  worker_instance_pools   = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.enabled_worker_pools, k, {})) }
-  worker_cluster_networks = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.enabled_worker_pools, k, {})) }
-
-  # Group resource outputs
-  worker_pool_ids = { for k, v in merge(
-    local.worker_cluster_networks,
-    local.worker_instance_pools,
-    local.worker_node_pools,
-    ) : k => v.id
-  }
+  worker_node_pools       = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_instance_pools   = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_cluster_networks = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_pools_output     = merge(local.worker_node_pools, local.worker_instance_pools, local.worker_cluster_networks)
+  worker_pool_ids         = { for k, v in local.worker_pools_output : k => v.id }
 }

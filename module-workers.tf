@@ -15,11 +15,6 @@ locals {
     for k, v in var.worker_pools : lookup(v, "compartment_id", local.compartment_id)
     if tobool(lookup(v, "create", true)) && tobool(lookup(v, "allow_autoscaler", false))
   ]))
-
-  # Distinct list of compartments for cluster autoscaler-enabled worker pools
-  autoscaling_groups = var.create_cluster ? {
-    for k, v in one(module.workers[*].worker_pools) : k => v if tobool(lookup(v, "autoscale", false))
-  } : {}
 }
 
 # Default workers sub-module implementation for OKE cluster
