@@ -52,6 +52,20 @@ locals {
         length(regexall("^VM", pool.shape)) > 0
       ])
 
+      # Combine global and pool-specific cloud init parts
+      cloud_init = [for part in concat(var.cloud_init, pool.cloud_init) :
+        {
+          # Load content from file if local path, attempt base64 decode, or use raw value
+          content = contains(keys(part), "content") ? (
+            fileexists(lookup(part, "content")) ? file(lookup(part, "content"))
+            : try(base64decode(lookup(part, "content")), lookup(part, "content"))
+          ) : ""
+          content_type = lookup(part, "content_type", local.default_cloud_init_content_type)
+          filename     = lookup(part, "filename", null)
+          merge_type   = lookup(part, "merge_type", local.default_cloud_init_merge_type)
+        }
+      ]
+
       # Translate configured + available AD numbers e.g. 2 into tenancy/compartment-specific names
       availability_domains = compact([for ad_number in tolist(setintersection(pool.placement_ads, var.ad_numbers)) :
         lookup(var.ad_numbers_to_names, ad_number, null)
