@@ -2,41 +2,48 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  calico_env_template = templatefile("${path.module}/scripts/calico_env.sh", {
-    mode              = var.calico_mode
-    version           = var.calico_version
-    cni_type          = var.cni_type
-    mtu               = var.calico_mtu
-    pod_cidr          = var.pods_cidr
-    url               = var.calico_url
-    apiserver_enabled = var.calico_apiserver_enabled
-    typha_enabled     = var.typha_enabled || var.expected_node_count > 50
+  calico_env_template = templatefile("${path.module}/scripts/calico_env.sh",
+    {
+      mode                 = var.calico_mode
+      version              = var.calico_version
+      cni_type             = var.cni_type
+      mtu                  = var.calico_mtu
+      pod_cidr             = var.pods_cidr
+      url                  = var.calico_url
+      apiserver_enabled    = var.calico_apiserver_enabled
+      calico_typha_enabled = var.calico_typha_enabled || var.expected_node_count > 50
 
-    # Use provided value if set, otherwise use 1 replica for every 50 nodes with a min of 1 if enabled, and max of 20 replicas
-    typha_replicas = (var.typha_replicas > 0) ? var.typha_replicas : max(min(20, floor(var.expected_node_count / 50)), var.typha_enabled ? 1 : 0)
+      # Use provided value if set, otherwise use 1 replica for every 50 nodes with a min of 1 if enabled, and max of 20 replicas
+      calico_typha_replicas = (var.calico_typha_replicas > 0) ? var.calico_typha_replicas : max(min(20, floor(var.expected_node_count / 50)), var.calico_typha_enabled ? 1 : 0)
     }
   )
 }
 
-resource "null_resource" "install_calico" {
-  connection {
-    host        = var.operator_private_ip
-    private_key = var.ssh_private_key
-    timeout     = "40m"
-    type        = "ssh"
-    user        = var.operator_user
-
-    bastion_host        = var.bastion_public_ip
-    bastion_user        = var.bastion_user
-    bastion_private_key = var.ssh_private_key
+resource "null_resource" "calico_enabled" {
+  count = alltrue([var.calico_enabled, var.expected_node_count > 0]) ? 1 : 0
+  triggers = {
+    calico_mode              = var.calico_mode
+    calico_mtu               = var.calico_mtu
+    calico_url               = var.calico_url
+    calico_version           = var.calico_version
+    calico_apiserver_enabled = var.calico_apiserver_enabled
+    calico_typha_enabled     = var.calico_typha_enabled
+    calico_typha_replicas    = var.calico_typha_replicas
   }
 
-  depends_on = [null_resource.write_kubeconfig_on_operator]
+  connection {
+    bastion_host        = var.bastion_host
+    bastion_user        = var.bastion_user
+    bastion_private_key = var.ssh_private_key
+    host                = var.operator_host
+    user                = var.operator_user
+    private_key         = var.ssh_private_key
+    timeout             = "40m"
+    type                = "ssh"
+  }
 
   provisioner "remote-exec" {
-    inline = [
-      "mkdir -p ${var.calico_staging_dir}"
-    ]
+    inline = ["mkdir -p ${var.calico_staging_dir}"]
   }
 
   provisioner "file" {
@@ -60,20 +67,6 @@ resource "null_resource" "install_calico" {
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "bash ${var.calico_staging_dir}/calico_install.sh && rm -r ${var.calico_staging_dir}"
-    ]
+    inline = ["bash ${var.calico_staging_dir}/calico_install.sh && rm -r ${var.calico_staging_dir}"]
   }
-
-  triggers = {
-    calico_mode              = var.calico_mode
-    calico_mtu               = var.calico_mtu
-    calico_url               = var.calico_url
-    calico_version           = var.calico_version
-    calico_apiserver_enabled = var.calico_apiserver_enabled
-    typha_enabled            = var.typha_enabled
-    typha_replicas           = var.typha_replicas
-  }
-
-  count = var.enable_calico ? 1 : 0
 }

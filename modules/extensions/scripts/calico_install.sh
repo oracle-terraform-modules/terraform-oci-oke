@@ -18,8 +18,8 @@ MTU="${MTU:-0}"
 VERSION=${VERSION:-3.24.5}
 URL="${URL:-}"
 APISERVER_ENABLED="${APISERVER_ENABLED:-false}"
-TYPHA_ENABLED="${TYPHA_ENABLED:-false}"
-TYPHA_REPLICAS="${TYPHA_REPLICAS:-1}"
+calico_typha_enabled="${calico_typha_enabled:-false}"
+calico_typha_replicas="${calico_typha_replicas:-1}"
 NUMBER_OF_NODES="${NUMBER_OF_NODES:-1}"
 BASE_DIR="${BASE_DIR:-$(mktemp -t -d terraform-oci-oke_calico-XXXXXX)}"
 SKIP_CLEANUP="${SKIP_CLEANUP:-false}"
@@ -168,9 +168,9 @@ function configure_configmap_native() {
 
 # Update Typha Deployment configuration
 function configure_typha() {
-  TYPHA_REPLICAS_PATCH="[{\"op\": \"replace\", \"path\": \"/spec/replicas\", \"value\": ${TYPHA_REPLICAS}}]"
+  calico_typha_replicas_PATCH="[{\"op\": \"replace\", \"path\": \"/spec/replicas\", \"value\": ${calico_typha_replicas}}]"
   echo "${1}" | kubectl patch --dry-run='client' \
-    -f - --type='json' --patch="${TYPHA_REPLICAS_PATCH}" -o yaml
+    -f - --type='json' --patch="${calico_typha_replicas_PATCH}" -o yaml
 }
 
 # Determine latest OS release (e.g. Oracle Linux 7.x/8.x) for nodes
@@ -224,7 +224,7 @@ if [ "${ACTION}" = 'apply' ]; then
 fi
 
 INSTALL_TYPHA=false
-if [ "${CNI_TYPE}" = 'flannel' ] && [[ ${TYPHA_ENABLED} = true || ${NUMBER_OF_NODES} -gt 50 ]] && \
+if [ "${CNI_TYPE}" = 'flannel' ] && [[ ${calico_typha_enabled} = true || ${NUMBER_OF_NODES} -gt 50 ]] && \
    [[ -f "${APPLY_DIR}/calico-typha.deployment.yaml" ]]; then
   INSTALL_TYPHA=true
 fi
@@ -262,13 +262,13 @@ echo "${CONFIGMAP_OUTPUT}" > "${CONFIGMAP_FILE}"
 
 # Conditionally prepare Typha resources on Flannel only (not respecting interfacePrefix for NPN)
 if [ ${INSTALL_TYPHA} = true ]; then
-  log "Enabling Typha for ${NUMBER_OF_NODES} node(s) with ${TYPHA_REPLICAS} replica(s) (forced: ${TYPHA_ENABLED})"
+  log "Enabling Typha for ${NUMBER_OF_NODES} node(s) with ${calico_typha_replicas} replica(s) (forced: ${calico_typha_enabled})"
   typha_input=$(cat "${APPLY_DIR}"/calico-typha.deployment.yaml)
   typha_output=$(configure_typha "${typha_input}")
   rm -f "${APPLY_DIR}"/calico-typha.deployment.yaml
   echo "${typha_output}" > "${APPLY_DIR}"/calico-typha.deployment.yaml
 else
-  log "Typha is disabled (${NUMBER_OF_NODES} node(s); forced: ${TYPHA_ENABLED})"
+  log "Typha is disabled (${NUMBER_OF_NODES} node(s); forced: ${calico_typha_enabled})"
   rm -f "${APPLY_DIR}"/calico-typha.*.yaml
 fi
 
