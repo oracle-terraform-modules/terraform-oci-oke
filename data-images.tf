@@ -21,7 +21,7 @@ locals {
       {
         arch        = length(regexall("aarch64", v.source_name)) > 0 ? "aarch64" : "x86_64"
         image_type  = length(regexall("OKE", v.source_name)) > 0 ? "oke" : "platform"
-        is_gpu      = length(regexall("GPU", v.source_name)) > 0 ? true : false
+        is_gpu      = length(regexall("GPU", v.source_name)) > 0
         os          = trimspace(replace(element(regexall("^[a-zA-Z-]+", v.source_name), 0), "-", " "))
         os_version  = element(regexall("[0-9\\.]+", v.source_name), 0)
         source_name = v.source_name
