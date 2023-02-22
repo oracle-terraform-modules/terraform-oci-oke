@@ -6,6 +6,7 @@ locals {
 }
 
 resource "null_resource" "drain_workers" {
+  count = false && var.expected_node_count > 0 ? 1 : 0 # TODO Implement
   triggers = {
     drain_count = jsonencode(keys(local.worker_pools_draining))
   }
