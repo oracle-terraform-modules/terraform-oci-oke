@@ -64,21 +64,16 @@ resource "oci_core_instance_configuration" "workers" {
       is_pv_encryption_in_transit_enabled = each.value.pv_transit_encryption
     }
 
-    dynamic "block_volumes" {
-      for_each = each.value.availability_domains
-      iterator = ad
-      content {
-        attach_details {
-          type                                = each.value.block_volume_type
-          is_pv_encryption_in_transit_enabled = each.value.pv_transit_encryption
-        }
+    block_volumes {
+      attach_details {
+        type                                = each.value.block_volume_type
+        is_pv_encryption_in_transit_enabled = each.value.pv_transit_encryption
+      }
 
-        create_details {
-          availability_domain = ad.value
-          compartment_id      = each.value.compartment_id
-          display_name        = each.key
-          kms_key_id          = each.value.volume_kms_key_id
-        }
+      create_details {
+        compartment_id = each.value.compartment_id
+        display_name   = each.key
+        kms_key_id     = each.value.volume_kms_key_id
       }
     }
 
