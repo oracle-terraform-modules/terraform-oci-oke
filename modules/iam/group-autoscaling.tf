@@ -15,6 +15,7 @@ locals {
 
   autoscaler_templates = [
     "Allow dynamic-group %s to manage cluster-node-pools in compartment id %s",
+    "Allow dynamic-group %s to manage compute-management-family in compartment id %s",
     "Allow dynamic-group %s to manage instance-family in compartment id %s",
     "Allow dynamic-group %s to use subnets in compartment id %s",
     "Allow dynamic-group %s to read virtual-network-family in compartment id %s",
