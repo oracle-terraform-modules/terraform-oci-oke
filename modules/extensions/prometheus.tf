@@ -53,7 +53,7 @@ resource "null_resource" "prometheus" {
   count = local.prometheus_enabled ? 1 : 0
 
   triggers = {
-    "manifest_md5" = try(md5(local.prometheus_helm_manifest), null)
+    manifest_md5 = try(md5(local.prometheus_helm_manifest), null)
   }
 
   connection {

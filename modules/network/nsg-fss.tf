@@ -2,8 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  fss_nsg_id = one(oci_core_network_security_group.fss[*].id)
-  fss_rules = var.create_fss ? {
+  fss_nsg_enabled = (var.create_nsgs && var.create_fss) || var.create_nsgs_always
+  fss_nsg_id      = one(oci_core_network_security_group.fss[*].id)
+  fss_rules = local.fss_nsg_enabled ? {
     # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
     # Ingress
     "Allow UDP ingress for NFS portmapper from workers" : {
@@ -33,7 +34,7 @@ locals {
 }
 
 resource "oci_core_network_security_group" "fss" {
-  count          = var.create_nsgs && var.create_fss ? 1 : 0
+  count          = local.fss_nsg_enabled ? 1 : 0
   compartment_id = var.compartment_id
   display_name   = "fss-${var.state_id}"
   vcn_id         = var.vcn_id

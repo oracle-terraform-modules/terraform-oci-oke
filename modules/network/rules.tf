@@ -8,6 +8,7 @@ locals {
     }
   } : {}
 
+  # Dynamic map of all NSG rules for enabled NSGs
   all_rules = { for x, y in merge(
     { for k, v in local.bastion_rules : k => merge(v, { "nsg_id" = local.bastion_nsg_id }) },
     { for k, v in local.control_plane_rules : k => merge(v, { "nsg_id" = local.control_plane_nsg_id }) },
@@ -17,20 +18,41 @@ locals {
     { for k, v in local.pods_rules : k => merge(v, { "nsg_id" = local.pod_nsg_id }) },
     { for k, v in local.operator_rules : k => merge(v, { "nsg_id" = local.operator_nsg_id }) },
     { for k, v in local.fss_rules : k => merge(v, { "nsg_id" = local.fss_nsg_id }) },
-  ) : x => y if var.create_nsgs && tobool(lookup(y, "enabled", "true")) }
+    ) : x => merge(y, {
+      description               = x
+      network_security_group_id = lookup(y, "nsg_id")
+      direction                 = contains(keys(y), "source") ? "INGRESS" : "EGRESS"
+      protocol                  = lookup(y, "protocol")
+      source                    = lookup(y, "source", null)
+      source_type               = lookup(y, "source_type", null)
+      destination               = lookup(y, "destination", null)
+      destination_type          = lookup(y, "destination_type", null)
+  }) if var.create_nsgs }
+
+  # Dynamic map of all NSG IDs for enabled NSGs
+  all_nsg_ids = { for x, y in merge(
+    local.bastion_nsg_enabled ? { "bastion" = local.bastion_nsg_id } : {},
+    local.control_plane_nsg_enabled ? { "cp" = local.control_plane_nsg_id } : {},
+    local.int_lb_nsg_enabled ? { "int_lb" = local.int_lb_nsg_id } : {},
+    local.pub_lb_nsg_enabled ? { "pub_lb" = local.pub_lb_nsg_id } : {},
+    local.worker_nsg_enabled ? { "workers" = local.worker_nsg_id } : {},
+    local.pod_nsg_enabled ? { "pods" = local.pod_nsg_id } : {},
+    local.operator_nsg_enabled ? { "operator" = local.operator_nsg_id } : {},
+    local.fss_nsg_enabled ? { "fss" = local.fss_nsg_id } : {},
+  ) : x => y if var.create_nsgs }
 }
 
 resource "oci_core_network_security_group_security_rule" "oke" {
   for_each                  = local.all_rules
-  network_security_group_id = lookup(each.value, "nsg_id")
-  description               = each.key
-  direction                 = contains(keys(each.value), "source") ? "INGRESS" : "EGRESS"
-  protocol                  = lookup(each.value, "protocol")
-  source                    = lookup(each.value, "source", null)
-  source_type               = lookup(each.value, "source_type", null)
-  destination               = lookup(each.value, "destination", null)
-  destination_type          = lookup(each.value, "destination_type", null)
   stateless                 = false
+  description               = each.value.description
+  destination               = each.value.destination
+  destination_type          = each.value.destination_type
+  direction                 = each.value.direction
+  network_security_group_id = each.value.network_security_group_id
+  protocol                  = each.value.protocol
+  source                    = each.value.source
+  source_type               = each.value.source_type
 
   dynamic "tcp_options" {
     for_each = (tostring(each.value.protocol) == tostring(local.tcp_protocol) &&
@@ -81,9 +103,23 @@ resource "oci_core_network_security_group_security_rule" "oke" {
 
       error_message = "TCP/UDP ports must be numeric: '${each.key}'"
     }
+
+    precondition {
+      condition     = each.value.direction == "EGRESS" || coalesce(each.value.source, "none") != "none"
+      error_message = "Ingress rule must have a source: '${each.key}'"
+    }
+
+    precondition {
+      condition     = each.value.direction == "INGRESS" || coalesce(each.value.destination, "none") != "none"
+      error_message = "Egress rule must have a destination: '${each.key}'"
+    }
   }
 }
 
 output "network_security_rules" {
   value = local.all_rules
+}
+
+output "nsg_ids" {
+  value = length(local.all_nsg_ids) > 0 ? local.all_nsg_ids : null
 }

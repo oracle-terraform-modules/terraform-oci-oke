@@ -9,15 +9,30 @@ data "oci_identity_tag_namespaces" "oke" {
     name   = "name"
     values = [var.tag_namespace]
   }
+
   state = "ACTIVE" // TODO Support reactivation of retired namespace w/ update
 }
 
+data "oci_identity_tags" "oke" {
+  count            = var.create_iam_resources ? 1 : 0
+  provider         = oci.home
+  tag_namespace_id = local.tag_namespace_id_found
+  state            = "ACTIVE" // TODO Support reactivation of retired tag w/ update
+}
+
 locals {
-  # Refer to the created namespace ID if creation is enabled, look it up by name if disabled but used, else unused
-  tag_namespace = (var.create_iam_tag_namespace
-    ? one(oci_identity_tag_namespace.oke[*].id)
-    : var.use_defined_tags ? one(one(data.oci_identity_tag_namespaces.oke[*].tag_namespaces)[*].id) : "none"
+  # Filtered value from data source (only 1 by name, or null)
+  # Identified tag namespace ID when not created and used
+  tag_namespace_id_found = one(
+    one(data.oci_identity_tag_namespaces.oke[*].tag_namespaces)[*].id
   )
+
+  create_iam_tag_namespace = alltrue([
+    var.create_iam_resources,
+    var.create_iam_tag_namespace,
+    local.tag_namespace_id_found == null,
+    one(data.oci_identity_tags.oke[*].tags) == null,
+  ])
 
   # Map of standard tags & descriptions to be created if enabled
   tags = var.create_iam_resources && var.create_iam_defined_tags ? {
@@ -27,28 +42,28 @@ locals {
     "pool"               = "Named group of resources with shared configuration"
   } : {}
 
-  # Standard tags as defined if enabled for use
-  defined_tags = merge(var.defined_tags, var.use_defined_tags ? {
-    "${var.tag_namespace}.state_id" = var.state_id,
-    "${var.tag_namespace}.role"     = "policy",
-    } : {},
-  )
-
   # Standard tags as freeform if defined tags are disabled
   freeform_tags = merge(var.freeform_tags, !var.use_defined_tags ? {
     "state_id" = var.state_id,
     "role"     = "policy",
     } : {},
   )
+
+  # Standard tags as defined if enabled for use
+  defined_tags = merge(var.defined_tags, var.use_defined_tags ? {
+    "${var.tag_namespace}.state_id" = var.state_id,
+    "${var.tag_namespace}.role"     = "policy",
+    } : {},
+  )
 }
 
 resource "oci_identity_tag_namespace" "oke" {
   provider       = oci.home
-  count          = var.create_iam_resources && var.create_iam_tag_namespace ? 1 : 0
+  count          = local.create_iam_tag_namespace ? 1 : 0
   compartment_id = var.compartment_id
   description    = "Tag namespace for OKE resources"
   name           = var.tag_namespace
-  defined_tags   = local.defined_tags
+  defined_tags   = var.defined_tags
   freeform_tags  = local.freeform_tags
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
@@ -57,12 +72,13 @@ resource "oci_identity_tag_namespace" "oke" {
 
 resource "oci_identity_tag" "oke" {
   provider         = oci.home
-  for_each         = local.tags
+  for_each         = local.create_iam_tag_namespace ? local.tags : {} #{ for k, v in oci_identity_tag_namespace.oke : k => local.tags } # local.create_iam_tag_namespace ? local.tags : {}
   description      = each.value
   name             = each.key
-  tag_namespace_id = local.tag_namespace
-  defined_tags     = local.defined_tags
+  defined_tags     = var.defined_tags
   freeform_tags    = local.freeform_tags
+  tag_namespace_id = one(oci_identity_tag_namespace.oke[*].id)
+
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
   }
