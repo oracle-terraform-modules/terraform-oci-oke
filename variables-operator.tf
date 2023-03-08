@@ -67,7 +67,13 @@ variable "operator_install_helm" {
 
 variable "operator_install_k9s" {
   default     = false
-  description = "Whether to install k9s on the created operator host."
+  description = "Whether to install k9s on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
+variable "operator_install_kubectx" {
+  default     = true
+  description = "Whether to install kubectx/kubens on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 

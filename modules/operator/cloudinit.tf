@@ -34,6 +34,13 @@ data "cloudinit_config" "operator" {
           gpgcheck = true
           enabled  = true
         }
+        ol8_olcne13 = {
+          name     = "Oracle Linux Cloud Native Environment 1.3 ($basearch)"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/olcne13/$basearch/"
+          gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
+          gpgcheck = true
+          enabled  = true
+        }
       }
     })
     filename   = "10-packages.yml"
@@ -77,20 +84,34 @@ data "cloudinit_config" "operator" {
     merge_type = local.default_cloud_init_merge_type
   }
 
-  # kubectl/kubectx/kubens installation
+  # kubectl installation
   part {
     content_type = "text/cloud-config"
     content = jsonencode({
       runcmd = [
         "curl -L https://dl.k8s.io/release/${var.kubernetes_version}/bin/linux/amd64/kubectl -o /usr/bin/kubectl",
         "chmod +x /usr/bin/kubectl",
-        "git clone https://github.com/ahmetb/kubectx /opt/kubectx",
-        "ln -s /opt/kubectx/kubectx /usr/bin/kubectx",
-        "ln -s /opt/kubectx/kubens /usr/bin/kubens",
       ]
     })
     filename   = "20-kubectl.yml"
     merge_type = local.default_cloud_init_merge_type
+  }
+
+  # kubectx/kubens installation
+  dynamic "part" {
+    for_each = var.install_kubectx ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "git clone https://github.com/ahmetb/kubectx /opt/kubectx",
+          "ln -s /opt/kubectx/kubectx /usr/bin/kubectx",
+          "ln -s /opt/kubectx/kubens /usr/bin/kubens",
+        ]
+      })
+      filename   = "20-kubectl.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
   }
 
   # Optional Helm installation

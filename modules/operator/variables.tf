@@ -16,6 +16,7 @@ variable "cloud_init" { type = list(map(string)) }
 variable "image_id" { type = string }
 variable "install_helm" { type = bool }
 variable "install_k9s" { type = bool }
+variable "install_kubectx" { type = bool }
 variable "kubeconfig" { type = string }
 variable "kubernetes_version" { type = string }
 variable "nsg_ids" { type = list(string) }
