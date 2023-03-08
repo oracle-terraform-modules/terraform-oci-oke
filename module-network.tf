@@ -140,3 +140,8 @@ output "vcn_id" {
 output "network_security_rules" {
   value = var.output_detail ? module.network.network_security_rules : null
 }
+
+output "subnet_cidrs" {
+  description = "Map of provided/calculated subnet CIDR ranges by role for the cluster."
+  value       = module.network.subnet_cidrs
+}
