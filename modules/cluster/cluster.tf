@@ -87,5 +87,14 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       condition     = !var.use_signed_images || length(var.image_signing_keys) > 0
       error_message = "Must provide at least 1 image signing key when use_signed_images is enabled."
     }
+
+    precondition {
+      condition     = var.service_lb_subnet_id != null
+      error_message = <<-EOT
+      Must have a service load balancer subnet ID for the preferred load balancer type.
+        control_plane_is_public: ${coalesce(var.control_plane_is_public, "none")}
+        service_lb_subnet_id: ${coalesce(var.service_lb_subnet_id, "none")}
+      EOT
+    }
   }
 }

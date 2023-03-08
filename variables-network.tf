@@ -7,9 +7,15 @@ variable "create_vcn" {
   type        = bool
 }
 
-variable "create_nsgs" {
+variable "create_nsgs" { // TODO Align with subnets declaration in map
   default     = true
   description = "Whether to create standard network security groups."
+  type        = bool
+}
+
+variable "create_nsgs_always" { // TODO Align with subnets declaration, never/auto/always
+  default     = false
+  description = "Whether to create standard network security groups when associated components will not be."
   type        = bool
 }
 
@@ -194,4 +200,10 @@ variable "enable_waf" {
   description = "Whether to enable WAF monitoring of load balancers."
   type        = bool
   default     = false
+}
+
+variable "drg_attachments" {
+  description = "DRG attachment configurations."
+  type        = any
+  default     = {}
 }

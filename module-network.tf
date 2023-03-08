@@ -68,15 +68,9 @@ module "drg" {
   version        = "1.0.3"
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
-  drg_id           = var.drg_id # existing DRG ID or null
-  drg_display_name = var.drg_display_name
-  drg_vcn_attachments = {
-    (random_id.state_id.id) : {
-      vcn_id                    = local.vcn_id
-      vcn_transit_routing_rt_id = null
-      drg_route_table_id        = null
-    }
-  }
+  drg_id              = var.drg_id # existing DRG ID or null
+  drg_display_name    = var.drg_display_name
+  drg_vcn_attachments = var.drg_attachments
 }
 
 module "network" {
@@ -100,11 +94,13 @@ module "network" {
   cni_type                     = var.cni_type
   control_plane_allowed_cidrs  = var.control_plane_allowed_cidrs
   control_plane_is_public      = var.control_plane_is_public
-  create_bastion               = var.create_bastion
   create_cluster               = var.create_cluster
+  create_bastion               = var.create_bastion
   create_fss                   = var.create_fss
   create_nsgs                  = var.create_nsgs
+  create_nsgs_always           = var.create_nsgs_always
   create_operator              = local.operator_enabled
+  drg_attachments              = var.drg_attachments
   enable_waf                   = var.enable_waf
   ig_route_table_id            = local.ig_route_table_id
   load_balancers               = var.load_balancers
@@ -119,50 +115,108 @@ module "network" {
   }
 }
 
+# VCN
+output "vcn_id" {
+  description = "VCN ID"
+  value       = local.vcn_id
+}
 output "ig_route_table_id" {
   description = "Internet gateway route table ID"
   value       = local.ig_route_table_id
 }
-
 output "nat_route_table_id" {
   description = "NAT gateway route table ID"
   value       = local.nat_route_table_id
 }
 
-output "nsg_ids" {
-  description = "Map of network security group IDs by role for the cluster and associated resources."
-  value = var.create_nsgs ? {
-    "bastion"  = module.network.bastion_nsg_id
-    "cp"       = module.network.control_plane_nsg_id
-    "fss"      = module.network.fss_nsg_id
-    "int_lb"   = module.network.int_lb_nsg_id
-    "operator" = module.network.operator_nsg_id
-    "pods"     = module.network.pod_nsg_id
-    "pub_lb"   = module.network.pub_lb_nsg_id
-    "workers"  = module.network.worker_nsg_id
-  } : null
-}
-
+# Subnets
 output "subnet_ids" {
   description = "Map of subnet ids by role for the cluster and associated resources."
   value       = module.network.subnet_ids
 }
-
-output "drg_id" {
-  description = "Dynamic routing gateway ID"
-  value       = one(module.drg[*].drg_id)
+output "subnet_cidrs" {
+  description = "Map of provided/calculated subnet CIDR ranges by role for the cluster."
+  value       = module.network.subnet_cidrs
+}
+output "bastion_subnet_id" {
+  value = lookup(module.network.subnet_ids, "bastion", null)
+}
+output "operator_subnet_id" {
+  value = lookup(module.network.subnet_ids, "operator", null)
+}
+output "control_plane_subnet_id" {
+  value = lookup(module.network.subnet_ids, "cp", null)
+}
+output "worker_subnet_id" {
+  value = lookup(module.network.subnet_ids, "workers", null)
+}
+output "pod_subnet_id" {
+  value = lookup(module.network.subnet_ids, "pods", null)
+}
+output "int_lb_subnet_id" {
+  value = lookup(module.network.subnet_ids, "int_lb", null)
+}
+output "pub_lb_subnet_id" {
+  value = lookup(module.network.subnet_ids, "pub_lb", null)
+}
+output "fss_subnet_id" {
+  value = lookup(module.network.subnet_ids, "fss", null)
 }
 
-output "vcn_id" {
-  description = "VCN ID"
-  value       = local.vcn_id
+# NSGs
+output "nsg_ids" {
+  description = "Map of network security group IDs by role for the cluster and associated resources."
+  value = var.create_nsgs ? {
+    "bastion"  = module.network.bastion_nsg_id
+    "operator" = module.network.operator_nsg_id
+    "cp"       = module.network.control_plane_nsg_id
+    "int_lb"   = module.network.int_lb_nsg_id
+    "pub_lb"   = module.network.pub_lb_nsg_id
+    "workers"  = module.network.worker_nsg_id
+    "pods"     = module.network.pod_nsg_id
+    "fss"      = module.network.fss_nsg_id
+  } : null
+}
+
+output "bastion_nsg_id" {
+  description = "Network Security Group for bastion host(s)."
+  value       = module.network.bastion_nsg_id
+}
+output "operator_nsg_id" {
+  description = "Network Security Group for operator host(s)."
+  value       = module.network.operator_nsg_id
+}
+output "control_plane_nsg_id" {
+  description = "Network Security Group for Kubernetes control plane(s)."
+  value       = module.network.control_plane_nsg_id
+}
+output "int_lb_nsg_id" {
+  description = "Network Security Group for internal load balancers."
+  value       = module.network.int_lb_nsg_id
+}
+output "pub_lb_nsg_id" {
+  description = "Network Security Group for public load balancers."
+  value       = module.network.pub_lb_nsg_id
+}
+output "worker_nsg_id" {
+  description = "Network Security Group for worker nodes."
+  value       = module.network.worker_nsg_id
+}
+output "pod_nsg_id" {
+  description = "Network Security Group for pods."
+  value       = module.network.pod_nsg_id
+}
+output "fss_nsg_id" {
+  description = "Network Security Group for File Storage Service resources."
+  value       = module.network.fss_nsg_id
 }
 
 output "network_security_rules" {
   value = var.output_detail ? module.network.network_security_rules : null
 }
 
-output "subnet_cidrs" {
-  description = "Map of provided/calculated subnet CIDR ranges by role for the cluster."
-  value       = module.network.subnet_cidrs
+# DRG
+output "drg_id" {
+  description = "Dynamic routing gateway ID"
+  value       = one(module.drg[*].drg_id)
 }
