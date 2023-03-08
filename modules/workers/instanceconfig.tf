@@ -71,9 +71,11 @@ resource "oci_core_instance_configuration" "workers" {
       }
 
       create_details {
-        compartment_id = each.value.compartment_id
-        display_name   = each.key
-        kms_key_id     = each.value.volume_kms_key_id
+        // Limit to first candidate placement AD for cluster-network; undefined for all otherwise
+        availability_domain = each.value.mode == "cluster-network" ? element(each.value.availability_domains, 1) : null
+        compartment_id      = each.value.compartment_id
+        display_name        = each.key
+        kms_key_id          = each.value.volume_kms_key_id
       }
     }
 
