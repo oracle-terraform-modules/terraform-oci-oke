@@ -84,8 +84,8 @@ resource "oci_core_instance" "operator" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags]
-
+    ignore_changes       = [defined_tags, freeform_tags, metadata]
+    replace_triggered_by = [null_resource.operator_changed]
     precondition {
       condition     = coalesce(var.image_id, "none") != "none"
       error_message = "Missing image_id for operator. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'platform'."
@@ -94,5 +94,12 @@ resource "oci_core_instance" "operator" {
 
   timeouts {
     create = "60m"
+  }
+}
+
+resource "null_resource" "operator_changed" {
+  triggers = {
+    "cloudinit_md5"  = try(md5(data.cloudinit_config.operator.rendered), null)
+    "ssh_public_key" = var.ssh_public_key
   }
 }
