@@ -1,27 +1,39 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+// Used to retrieve available operator images
+data "oci_core_images" "operator" {
+  compartment_id           = local.compartment_id
+  operating_system         = var.operator_image_os
+  operating_system_version = var.operator_image_os_version
+  shape                    = lookup(var.operator_shape, "shape", "VM.Standard.E4.Flex")
+  state                    = "AVAILABLE"
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
+}
+
 locals {
-  operator_private_ip = (var.create_cluster && var.create_operator
+  // The private IP of the operator instance, whether created in this TF state or existing provided by ID
+  operator_private_ip = (local.cluster_enabled && var.create_operator
     ? one(module.operator[*].private_ip)
     : var.operator_private_ip
   )
 
+  // Whether the operator is enabled, i.e. created in this TF state or existing provided by ID
   operator_enabled = alltrue([
-    (var.create_cluster || coalesce(var.cluster_id, "none") != "none"),
+    (local.cluster_enabled || coalesce(var.cluster_id, "none") != "none"),
     (var.create_operator || coalesce(var.operator_private_ip, "none") != "none"),
   ])
 
-  operator_image_id = (var.operator_image_type == "custom"
-    ? var.operator_image_id : element(tolist(setintersection([
-      lookup(local.image_ids, format("%s %s", var.operator_image_os, split(".", var.operator_image_os_version)[0]), null),
-      local.image_ids.nongpu, local.image_ids.x86_64,
-    ]...)), 0)
-  )
+  // The resolved image ID for the created operator instance
+  operator_image_id = var.create_operator ? (var.operator_image_type == "custom"
+    ? var.operator_image_id
+    : element(coalescelist(data.oci_core_images.operator.images[*].id, ["none"]), 0)
+  ) : null
 }
 
 module "operator" {
-  count          = local.operator_enabled ? 1 : 0
+  count          = var.create_operator ? 1 : 0
   source         = "./modules/operator"
   state_id       = random_id.state_id.id
   compartment_id = local.compartment_id
@@ -37,6 +49,7 @@ module "operator" {
   image_id              = local.operator_image_id
   install_helm          = var.operator_install_helm
   install_k9s           = var.operator_install_k9s
+  install_kubectx       = var.operator_install_kubectx
   kubeconfig            = yamlencode(local.kubeconfig_private)
   kubernetes_version    = var.kubernetes_version
   nsg_ids               = concat(var.operator_nsg_ids, var.create_nsgs ? [module.network.operator_nsg_id] : [])
