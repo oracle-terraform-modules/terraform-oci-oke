@@ -66,5 +66,7 @@ output "bastion_public_ip" {
 
 output "ssh_to_bastion" {
   description = "SSH command for bastion host"
-  value       = var.create_bastion ? "ssh${local.ssh_key_arg} ${var.bastion_user}@${local.bastion_public_ip}" : null
+  value = (!var.create_bastion || local.bastion_public_ip == null ? null
+    : "ssh${local.ssh_key_arg} ${var.bastion_user}@${local.bastion_public_ip}"
+  )
 }

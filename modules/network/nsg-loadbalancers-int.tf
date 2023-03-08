@@ -2,8 +2,12 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
+  int_lb_nsg_enabled = alltrue([
+    var.create_cluster, var.create_nsgs,
+    var.load_balancers == "internal" || var.load_balancers == "both",
+  ]) || var.create_nsgs_always
   int_lb_nsg_id = one(oci_core_network_security_group.int_lb[*].id)
-  int_lb_rules = var.load_balancers == "internal" || var.load_balancers == "both" ? merge(
+  int_lb_rules = local.int_lb_nsg_enabled ? merge(
     {
       "Allow TCP egress from internal load balancers to workers for Node Ports" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
@@ -15,13 +19,13 @@ locals {
         protocol = local.tcp_protocol, port = local.health_check_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     },
-    var.enable_waf ? local.waf_rules : {},
+    (var.enable_waf || var.create_nsgs_always) ? local.waf_rules : {},
     var.allow_rules_internal_lb,
   ) : {}
 }
 
 resource "oci_core_network_security_group" "int_lb" {
-  count          = var.create_nsgs && (var.load_balancers == "internal" || var.load_balancers == "both") ? 1 : 0
+  count          = local.int_lb_nsg_enabled ? 1 : 0
   compartment_id = var.compartment_id
   display_name   = "int_lb-${var.state_id}"
   vcn_id         = var.vcn_id

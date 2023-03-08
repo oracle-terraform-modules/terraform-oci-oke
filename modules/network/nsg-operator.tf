@@ -2,8 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  operator_nsg_id = one(oci_core_network_security_group.operator[*].id)
-  operator_rules = var.create_operator ? merge(
+  operator_nsg_enabled = (var.create_nsgs && var.create_operator) || var.create_nsgs_always
+  operator_nsg_id      = one(oci_core_network_security_group.operator[*].id)
+  operator_rules = local.operator_nsg_enabled ? merge(
     {
       "Allow TCP egress from operator to OCI services" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
@@ -19,7 +20,7 @@ locals {
       }
     },
 
-    var.create_bastion ? {
+    (var.create_bastion || var.create_nsgs_always) ? {
       "Allow SSH ingress to operator from bastion" : {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
       }
@@ -28,7 +29,7 @@ locals {
 }
 
 resource "oci_core_network_security_group" "operator" {
-  count          = var.create_nsgs && var.create_operator ? 1 : 0
+  count          = local.operator_nsg_enabled ? 1 : 0
   compartment_id = var.compartment_id
   display_name   = "operator-${var.state_id}"
   vcn_id         = var.vcn_id
