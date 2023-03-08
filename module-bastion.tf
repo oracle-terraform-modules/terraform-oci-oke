@@ -1,6 +1,17 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+// Used to retrieve available bastion images
+data "oci_core_images" "bastion" {
+  compartment_id           = local.compartment_id
+  operating_system         = var.bastion_image_os
+  operating_system_version = var.bastion_image_os_version
+  shape                    = lookup(var.bastion_shape, "shape", "VM.Standard.E4.Flex")
+  state                    = "AVAILABLE"
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
+}
+
 locals {
   bastion_public_ip = (var.create_bastion
     ? one(module.bastion[*].public_ip)
@@ -8,10 +19,7 @@ locals {
   )
 
   bastion_image_id = (var.bastion_image_type == "custom"
-    ? var.bastion_image_id : element(tolist(setintersection([
-      lookup(local.image_ids, format("%s %s", var.bastion_image_os, split(".", var.bastion_image_os_version)[0]), null),
-      local.image_ids.nongpu, local.image_ids.x86_64,
-    ]...)), 0)
+    ? var.bastion_image_id : element(coalescelist(data.oci_core_images.bastion.images[*].id, ["none"]), 0)
   )
 }
 

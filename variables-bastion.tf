@@ -54,13 +54,13 @@ variable "bastion_image_type" {
 }
 
 variable "bastion_image_os" {
-  default     = "Oracle Linux"
+  default     = "Oracle Autonomous Linux"
   description = "Bastion image operating system name when bastion_image_type = 'platform'."
   type        = string
 }
 
 variable "bastion_image_os_version" {
-  default     = "8"
+  default     = "8.7"
   description = "Bastion image operating system version when bastion_image_type = 'platform'."
   type        = string
 }
