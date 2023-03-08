@@ -3,7 +3,7 @@
 
 # Used to retrieve cluster CA certificate or configure local kube context
 data "oci_containerengine_cluster_kube_config" "public" {
-  count      = local.cluster_enabled ? 1 : 0
+  count      = local.cluster_enabled && var.control_plane_is_public ? 1 : 0
   cluster_id = local.cluster_id
   endpoint   = "PUBLIC_ENDPOINT"
 }
@@ -19,7 +19,7 @@ locals {
   cluster_id             = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
   apiserver_private_host = local.cluster_enabled ? try(split(":", one(module.cluster[*].endpoints.private_endpoint))[0], "") : null
 
-  kubeconfig_public   = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", "")), { "error" : "yamldecode" })
+  kubeconfig_public   = var.control_plane_is_public ? try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", "")), { "error" : "yamldecode" }) : null
   kubeconfig_private  = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", "")), { "error" : "yamldecode" })
   kubeconfig_clusters = try(lookup(local.kubeconfig_private, "clusters", []), [])
   kubeconfig_ca_cert  = try(lookup(lookup(local.kubeconfig_clusters[0], "cluster", {}), "certificate-authority-data", ""), "none")
