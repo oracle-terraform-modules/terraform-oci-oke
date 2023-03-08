@@ -24,6 +24,7 @@ variable "bastion_is_public" { type = bool }
 variable "cni_type" { type = string }
 variable "control_plane_allowed_cidrs" { type = set(string) }
 variable "control_plane_is_public" { type = bool }
+variable "create_cluster" { type = bool }
 variable "create_bastion" { type = bool }
 variable "create_fss" { type = bool }
 variable "create_nsgs" { type = bool }
