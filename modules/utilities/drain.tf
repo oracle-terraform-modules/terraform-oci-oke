@@ -2,13 +2,16 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  worker_pools_draining = { for k, v in var.worker_pools : k => v if tobool(lookup(v, "drain", false)) }
+  drain_enabled = var.expected_node_count > 0 && var.worker_pools != null
+  worker_pools_draining = (local.drain_enabled
+    ? { for k, v in var.worker_pools : k => v if tobool(lookup(v, "drain", false)) } : {}
+  )
 }
 
 resource "null_resource" "drain_workers" {
-  count = false && var.expected_node_count > 0 ? 1 : 0 # TODO Implement
+  count = local.drain_enabled ? 1 : 0
   triggers = {
-    drain_count = jsonencode(keys(local.worker_pools_draining))
+    drain_workers = jsonencode(sort(keys(local.worker_pools_draining)))
   }
 
   connection {
