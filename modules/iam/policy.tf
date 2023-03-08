@@ -30,10 +30,3 @@ resource "oci_identity_policy" "cluster" {
     ignore_changes = [defined_tags, freeform_tags]
   }
 }
-
-resource "time_sleep" "await_iam_policy" { # Allow policies to take effect globally before continuing
-  count            = local.has_policy_statements ? 1 : 0
-  create_duration  = "30s"
-  destroy_duration = "0s"
-  depends_on       = [oci_identity_policy.cluster]
-}

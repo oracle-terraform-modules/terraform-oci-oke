@@ -2,8 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  worker_nsg_id = one(oci_core_network_security_group.workers[*].id)
-  workers_rules = merge(
+  worker_nsg_enabled = (var.create_nsgs && var.create_cluster) || var.create_nsgs_always
+  worker_nsg_id      = one(oci_core_network_security_group.workers[*].id)
+  workers_rules = local.worker_nsg_enabled ? merge(
     {
       "Allow TCP egress from workers to OCI Services" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
@@ -14,15 +15,6 @@ locals {
       },
       "Allow ALL ingress to workers from other workers" : {
         protocol = local.all_protocols, port = local.all_ports, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
-      },
-
-      "Allow ALL egress from workers to pods" : {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg,
-        enabled  = var.cni_type == "npn",
-      },
-      "Allow ALL ingress to workers from pods" : {
-        protocol = local.all_protocols, port = local.all_ports, source = local.pod_nsg_id, source_type = local.rule_type_nsg,
-        enabled  = var.cni_type == "npn",
       },
 
       "Allow TCP egress from workers to Kubernetes API server" : {
@@ -37,31 +29,28 @@ locals {
       "Allow ALL ingress to workers from Kubernetes control plane for webhooks served by workers" : {
         protocol = local.all_protocols, port = local.all_ports, source = local.control_plane_nsg_id, source_type = local.rule_type_nsg,
       },
-
-      "Allow ALL egress from workers to internet" : {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
-        enabled  = var.allow_worker_internet_access,
-      },
-
       "Allow ICMP egress from workers for path discovery" : {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
       },
       "Allow ICMP ingress to workers for path discovery" : {
         protocol = local.icmp_protocol, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr,
       },
+    },
 
-      "Allow SSH ingress to workers from internet" : {
-        protocol = local.tcp_protocol, port = local.ssh_port, source = local.anywhere, source_type = local.rule_type_cidr,
-        enabled  = var.allow_worker_ssh_access && var.allow_worker_internet_access && var.worker_is_public,
+    var.cni_type == "npn" ? {
+      "Allow ALL egress from workers to pods" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg,
       },
-    },
+      "Allow ALL ingress to workers from pods" : {
+        protocol = local.all_protocols, port = local.all_ports, source = local.pod_nsg_id, source_type = local.rule_type_nsg,
+      },
+    } : {},
 
-    { for cidr in var.vcn_cidrs :
-      "Allow SSH ingress to workers from VCN ${cidr}" => {
-        protocol = local.tcp_protocol, port = local.ssh_port, source = local.anywhere, source_type = local.rule_type_cidr,
-        enabled  = var.allow_worker_ssh_access && !var.create_bastion && !var.worker_is_public,
-      }
-    },
+    var.allow_worker_internet_access ? {
+      "Allow ALL egress from workers to internet" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
+      },
+    } : {},
 
     var.allow_node_port_access && (var.load_balancers == "internal" || var.load_balancers == "both") ? {
       "Allow TCP ingress to workers from internal load balancers" : {
@@ -81,13 +70,13 @@ locals {
       },
     } : {},
 
-    var.create_bastion && var.allow_worker_ssh_access && !var.worker_is_public ? {
+    (var.create_bastion || var.create_nsgs_always) && var.allow_worker_ssh_access ? {
       "Allow SSH ingress to workers from bastion" : {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
       }
     } : {},
 
-    var.create_fss ? {
+    (var.create_fss || var.create_nsgs_always) ? {
       # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
       # Ingress
       "Allow TCP ingress to workers for NFS portmapper from FSS mounts" : {
@@ -113,11 +102,11 @@ locals {
       "Allow UDP egress from workers for NFS to FSS mounts" : {
         protocol = local.udp_protocol, port = local.fss_nfs_port_min, destination = local.fss_nsg_id, destination_type = local.rule_type_nsg,
       },
-  } : {})
+  } : {}) : {}
 }
 
 resource "oci_core_network_security_group" "workers" {
-  count          = var.create_nsgs ? 1 : 0
+  count          = local.worker_nsg_enabled ? 1 : 0
   compartment_id = var.compartment_id
   display_name   = "workers-${var.state_id}"
   vcn_id         = var.vcn_id

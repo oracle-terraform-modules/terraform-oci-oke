@@ -14,5 +14,6 @@ generated/**
 
 # visual code
 **/.vscode/*
+**/.metals*
 
 .terraform.lock.hcl

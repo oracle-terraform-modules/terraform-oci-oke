@@ -99,7 +99,10 @@ resource "oci_core_instance" "operator" {
 
 resource "null_resource" "operator_changed" {
   triggers = {
-    "cloudinit_md5"  = try(md5(data.cloudinit_config.operator.rendered), null)
-    "ssh_public_key" = var.ssh_public_key
+    image_id        = var.image_id
+    install_helm    = var.install_helm
+    install_k9s     = var.install_k9s
+    install_kubectx = var.install_kubectx
+    ssh_public_key  = var.ssh_public_key
   }
 }

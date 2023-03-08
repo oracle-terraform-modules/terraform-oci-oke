@@ -2,6 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "utilities" {
+  count  = local.cluster_enabled && local.operator_enabled ? 1 : 0
   source = "./modules/utilities"
   region = var.region
 

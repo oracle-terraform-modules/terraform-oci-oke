@@ -46,7 +46,7 @@ resource "oci_containerengine_node_pool" "workers" {
         max_pods_per_node = min(max(var.max_pods_per_node, 1), 110)
         # pick the 1st pod nsg here until https://github.com/oracle/terraform-provider-oci/issues/1662 is clarified and resolved
         pod_nsg_ids    = slice(each.value.pod_nsg_ids, 0, min(1, length(each.value.pod_nsg_ids)))
-        pod_subnet_ids = tolist([coalesce(each.value.pod_subnet_id, var.subnet_id)])
+        pod_subnet_ids = compact(tolist([each.value.pod_subnet_id]))
       }
     }
   }
@@ -94,6 +94,14 @@ resource "oci_containerengine_node_pool" "workers" {
     precondition {
       condition     = coalesce(each.value.image_id, "none") != "none"
       error_message = "Missing image_id for pool ${each.key}. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'."
+    }
+
+    precondition {
+      condition = anytrue([
+        contains(["instance-pool", "cluster-network"], each.value.mode), # supported modes
+        length(lookup(each.value, "secondary_vnics", {})) == 0,          # unrestricted when empty/unset
+      ])
+      error_message = "Unsupported option for mode: '${each.value.mode}'; var: 'secondary_vnics'"
     }
   }
 
