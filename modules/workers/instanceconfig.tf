@@ -31,17 +31,21 @@ resource "oci_core_instance_configuration" "workers" {
         freeform_tags             = each.value.freeform_tags
       }
 
-      metadata = {
-        apiserver_host           = var.apiserver_private_host
-        cluster_ca_cert          = var.cluster_ca_cert
-        kubedns_svc_ip           = var.cluster_dns
-        oke-k8version            = var.kubernetes_version
-        oke-kubeproxy-proxy-mode = var.kubeproxy_mode
-        oke-tenancy-id           = var.tenancy_id
-        oke-initial-node-labels  = join(",", [for k, v in each.value.node_labels : "${k}=${v}"])
-        ssh_authorized_keys      = var.ssh_public_key
-        user_data                = lookup(lookup(data.cloudinit_config.workers, each.key, {}), "rendered", "")
-      }
+      metadata = merge(
+        {
+          apiserver_host           = var.apiserver_private_host
+          cluster_ca_cert          = var.cluster_ca_cert
+          oke-k8version            = var.kubernetes_version
+          oke-kubeproxy-proxy-mode = var.kubeproxy_mode
+          oke-tenancy-id           = var.tenancy_id
+          oke-initial-node-labels  = join(",", [for k, v in each.value.node_labels : "${k}=${v}"])
+          ssh_authorized_keys      = var.ssh_public_key
+          user_data                = lookup(lookup(data.cloudinit_config.workers, each.key, {}), "rendered", "")
+        },
+
+        # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
+        coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns }
+      )
 
       shape = each.value.shape
 

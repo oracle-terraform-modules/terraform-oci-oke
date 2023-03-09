@@ -18,8 +18,8 @@ variable "cluster_ca_cert" {
 }
 
 variable "cluster_dns" {
-  default     = "10.96.5.5"
-  description = "Cluster DNS resolver IP address. The provided value used with default 'servicesCidr' 10.96.0.0/16 should only require modification in the case of conflict."
+  default     = null
+  description = "Cluster DNS resolver IP address. Determined automatically when not set (recommended)."
   type        = string
 }
 
