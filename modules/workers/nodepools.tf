@@ -51,12 +51,16 @@ resource "oci_containerengine_node_pool" "workers" {
     }
   }
 
-  node_metadata = {
-    apiserver_host           = var.apiserver_private_host
-    kubedns_svc_ip           = var.cluster_dns
-    oke-kubeproxy-proxy-mode = var.kubeproxy_mode
-    user_data                = lookup(lookup(data.cloudinit_config.workers, each.key, {}), "rendered", "")
-  }
+  node_metadata = merge(
+    {
+      apiserver_host           = var.apiserver_private_host
+      oke-kubeproxy-proxy-mode = var.kubeproxy_mode
+      user_data                = lookup(lookup(data.cloudinit_config.workers, each.key, {}), "rendered", "")
+    },
+
+    # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
+    coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns }
+  )
 
   dynamic "node_shape_config" {
     for_each = length(regexall("Flex", each.value.shape)) > 0 ? [1] : []
