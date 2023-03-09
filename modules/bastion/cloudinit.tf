@@ -37,6 +37,10 @@ resource "null_resource" "await_cloudinit" {
     type        = "ssh"
   }
 
+  lifecycle {
+    replace_triggered_by = [oci_core_instance.bastion]
+  }
+
   provisioner "remote-exec" {
     inline = ["cloud-init status --wait &> /dev/null"]
   }
