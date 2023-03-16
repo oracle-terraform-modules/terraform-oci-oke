@@ -44,7 +44,9 @@ resource "oci_core_instance_configuration" "workers" {
         },
 
         # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
-        coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns }
+        coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns },
+
+        var.node_metadata, # Extra user-defined fields merged last
       )
 
       shape = each.value.shape

@@ -102,6 +102,12 @@ variable "worker_node_labels" {
   type        = map(string)
 }
 
+variable "worker_node_metadata" {
+  default     = {}
+  description = "Map of additional worker node instance metadata. Merged with metadata defined on each pool."
+  type        = map(string)
+}
+
 variable "worker_image_id" {
   default     = null
   description = "Default image for worker pools  when unspecified on a pool."
