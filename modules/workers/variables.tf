@@ -46,6 +46,7 @@ variable "image_type" { type = string }
 variable "kubeproxy_mode" { type = string }
 variable "max_pods_per_node" { type = number }
 variable "node_labels" { type = map(string) }
+variable "node_metadata" { type = map(string) }
 variable "pv_transit_encryption" { type = bool }
 variable "shape" { type = map(any) }
 variable "ssh_public_key" { type = string }
