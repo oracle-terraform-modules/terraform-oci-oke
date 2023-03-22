@@ -403,7 +403,7 @@ module "extensions" {
   vpa_version          = var.vpa_version
 
   #Gatekeeper
-  enable_gatekeeper   = var.enable_gatekeeper
+  enable_gatekeeper  = var.enable_gatekeeper
   gatekeeper_version = var.gatekeeper_version
 
   # service account

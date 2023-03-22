@@ -174,7 +174,7 @@ variable "drg_display_name" {
   default     = "drg"
 }
 
-variable "drg_id"  {
+variable "drg_id" {
   description = "ID of an external created Dynamic Routing Gateway to be attached to the VCN"
   type        = string
   default     = null
@@ -694,7 +694,7 @@ variable "kubeproxy_mode" {
   }
 }
 variable "node_pools" {
-  default = {}
+  default     = {}
   description = "Tuple of node pools. Each key maps to a node pool. Each value is a tuple of shape (string),ocpus(number) , node_pool_size(number) and boot_volume_size(number)"
   type        = any
 }
@@ -936,7 +936,7 @@ variable "calico_mode" {
   validation {
     condition     = contains(["policy-only", "canal", "vxlan", "ipip", "flannel-migration"], var.calico_mode)
     error_message = "Accepted values are policy-only, canal, vxlan, ipip, or flannel-migration."
-  }  
+  }
 }
 
 variable "calico_mtu" {
@@ -965,8 +965,8 @@ variable "typha_enabled" {
 
 variable "typha_replicas" {
   description = "The number of replicas for the Typha deployment (0 = auto)"
-  default = 0
-  type    = number
+  default     = 0
+  type        = number
 }
 
 variable "calico_staging_dir" {

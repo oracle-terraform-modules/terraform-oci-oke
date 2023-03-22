@@ -36,11 +36,11 @@ locals {
   # build a list  of nodepools to autoscale in the format expected by cluster autoscaler:
   # - --nodes:min:max:nodepool_id
   autoscaling_nodepools = [
-    for nodepool_name, nodepool_parameters in var.node_pools : { 
-      "name" = "${nodepool_name}", 
-      "node_pool_size" = "${nodepool_parameters.node_pool_size}", 
-      "max_node_pool_size" = "${lookup(nodepool_parameters,"max_node_pool_size",lookup(nodepool_parameters,"node_pool_size"))}", 
-      "id" = "${lookup(lookup(oci_containerengine_node_pool.nodepools, nodepool_name), "id")}"       
+    for nodepool_name, nodepool_parameters in var.node_pools : {
+      "name"               = "${nodepool_name}",
+      "node_pool_size"     = "${nodepool_parameters.node_pool_size}",
+      "max_node_pool_size" = "${lookup(nodepool_parameters, "max_node_pool_size", lookup(nodepool_parameters, "node_pool_size"))}",
+      "id"                 = "${lookup(lookup(oci_containerengine_node_pool.nodepools, nodepool_name), "id")}"
     } if !tobool(lookup(nodepool_parameters, "autoscale", false))
   ]
 }
