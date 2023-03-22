@@ -21,11 +21,13 @@ data "cloudinit_config" "operator" {
       # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
       package_update  = true
       package_upgrade = var.upgrade
-      packages = [
+      packages = compact([
         "git",
         "jq",
+        "kubectl",
         "python3-oci-cli",
-      ]
+        var.install_helm ? "helm" : null,
+      ])
       yum_repos = {
         ol8_developer_EPEL = {
           name     = "Oracle Linux $releasever EPEL Packages for Development ($basearch)"
@@ -34,12 +36,19 @@ data "cloudinit_config" "operator" {
           gpgcheck = true
           enabled  = true
         }
-        ol8_olcne13 = {
-          name     = "Oracle Linux Cloud Native Environment 1.3 ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/olcne13/$basearch/"
+        ol8_olcne15 = {
+          name     = "Oracle Linux Cloud Native Environment 1.5 ($basearch)"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/olcne15/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = true
+        }
+        ol8_developer_olcne = {
+          name     = "Developer Preview for Oracle Linux Cloud Native Environment ($basearch)"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/developer/olcne/$basearch/"
+          gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
+          gpgcheck = true
+          enabled  = false
         }
       }
     })
@@ -84,19 +93,6 @@ data "cloudinit_config" "operator" {
     merge_type = local.default_cloud_init_merge_type
   }
 
-  # kubectl installation
-  part {
-    content_type = "text/cloud-config"
-    content = jsonencode({
-      runcmd = [
-        "curl -L https://dl.k8s.io/release/${var.kubernetes_version}/bin/linux/amd64/kubectl -o /usr/bin/kubectl",
-        "chmod +x /usr/bin/kubectl",
-      ]
-    })
-    filename   = "20-kubectl.yml"
-    merge_type = local.default_cloud_init_merge_type
-  }
-
   # kubectx/kubens installation
   dynamic "part" {
     for_each = var.install_kubectx ? [1] : []
@@ -109,23 +105,7 @@ data "cloudinit_config" "operator" {
           "ln -s /opt/kubectx/kubens /usr/bin/kubens",
         ]
       })
-      filename   = "20-kubectl.yml"
-      merge_type = local.default_cloud_init_merge_type
-    }
-  }
-
-  # Optional Helm installation
-  dynamic "part" {
-    for_each = var.install_helm ? [1] : []
-    content {
-      content_type = "text/cloud-config"
-      content = jsonencode({
-        runcmd = [
-          "curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash",
-          "mv /usr/local/bin/helm /usr/bin/helm",
-        ]
-      })
-      filename   = "20-helm.yml"
+      filename   = "20-kubectx.yml"
       merge_type = local.default_cloud_init_merge_type
     }
   }
