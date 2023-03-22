@@ -64,6 +64,12 @@ resource "oci_containerengine_node_pool" "nodepools" {
     defined_tags  = merge(lookup(var.defined_tags, "node", {}), lookup(each.value, "node_defined_tags", {}))
   }
 
+  node_eviction_node_pool_settings {
+    #Optional
+    eviction_grace_duration              = format("PT%sM",lookup(each.value, "eviction_grace_duration", 0))
+    is_force_delete_after_grace_duration = lookup(each.value, "force_node_delete", true)
+  }
+
   # setting shape
   dynamic "node_shape_config" {
     for_each = length(regexall("Flex", lookup(each.value, "shape", "VM.Standard.E4.Flex"))) > 0 ? [1] : []

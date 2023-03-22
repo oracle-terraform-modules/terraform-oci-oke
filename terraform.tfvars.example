@@ -198,6 +198,8 @@ node_pools = {
   #  memory           = 32,
   #  node_pool_size   = 1,
   #  boot_volume_size = 150,
+  #  eviction_grace_duration = 2,
+  #  force_node_delete       = true  
   #}
   # # node pool with initial node labels
   # np2 = {
