@@ -22,7 +22,7 @@ locals {
     memory                = local.memory
     mode                  = var.worker_pool_mode
     node_labels           = var.node_labels
-    nsg_ids               = var.worker_nsg_ids
+    nsg_ids               = [] # empty pool-specific default
     ocpus                 = local.ocpus
     os                    = var.image_os
     os_version            = var.image_os_version
@@ -100,6 +100,9 @@ locals {
         } : {},
         var.freeform_tags, lookup(pool, "freeform_tags", {}),
       )
+
+      # Combine global and pool-specific NSGs
+      nsg_ids = compact(concat(var.worker_nsg_ids, pool.nsg_ids))
 
       # Add a node label for cluster autoscaler where scheduling is supported
       node_labels = merge(
