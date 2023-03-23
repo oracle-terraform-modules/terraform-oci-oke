@@ -10,13 +10,13 @@ locals {
   vcn_cidr = element(data.oci_core_vcn.vcn.cidr_blocks, 0)
 
   # subnet cidrs - used by subnets
-  bastion_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["bastion"], "newbits"), lookup(var.subnets["bastion"], "netnum"))
-
-  cp_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["cp"], "newbits"), lookup(var.subnets["cp"], "netnum"))
+  bastion_subnet = var.create_bastion ? cidrsubnet(local.vcn_cidr, lookup(var.subnets["bastion"], "newbits",13), lookup(var.subnets["bastion"], "netnum",0)) : ""
+  
+  cp_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["cp"], "newbits",13), lookup(var.subnets["cp"], "netnum",1))
 
   int_lb_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["int_lb"], "newbits"), lookup(var.subnets["int_lb"], "netnum"))
 
-  operator_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["operator"], "newbits"), lookup(var.subnets["operator"], "netnum"))
+  operator_subnet = var.create_operator ? cidrsubnet(local.vcn_cidr, lookup(var.subnets["operator"], "newbits"), lookup(var.subnets["operator"], "netnum")) : ""
 
   pub_lb_subnet = cidrsubnet(local.vcn_cidr, lookup(var.subnets["pub_lb"], "newbits"), lookup(var.subnets["pub_lb"], "netnum"))
 

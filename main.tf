@@ -189,11 +189,13 @@ module "network" {
   label_prefix   = var.label_prefix
 
   # oke networking parameters
-  assign_dns   = var.assign_dns
-  ig_route_id  = local.ig_route_id
-  nat_route_id = local.nat_route_id
-  subnets      = var.subnets
-  vcn_id       = local.vcn_id
+  assign_dns      = var.assign_dns
+  ig_route_id     = local.ig_route_id
+  nat_route_id    = local.nat_route_id
+  subnets         = var.subnets
+  create_bastion  = var.create_bastion_host
+  create_operator = var.create_operator
+  vcn_id          = local.vcn_id
 
 
   # control plane endpoint parameters

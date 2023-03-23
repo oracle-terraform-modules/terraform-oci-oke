@@ -15,6 +15,14 @@ variable "subnets" {
   type = map(any)
 }
 
+variable "create_bastion" {
+  type = bool
+}
+
+variable "create_operator" {
+  type = bool
+}
+
 variable "vcn_id" {}
 
 # cluster endpoint
