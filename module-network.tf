@@ -81,6 +81,7 @@ module "network" {
   control_plane_allowed_cidrs  = var.control_plane_allowed_cidrs
   control_plane_is_public      = var.control_plane_is_public
   create_bastion               = var.create_bastion
+  create_cluster               = var.create_cluster
   create_fss                   = var.create_fss
   create_nsgs                  = var.create_nsgs
   create_operator              = local.operator_enabled
