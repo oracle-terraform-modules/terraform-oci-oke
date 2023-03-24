@@ -33,7 +33,11 @@ resource "oci_core_cluster_network" "workers" {
   }
 
   lifecycle {
-    ignore_changes = [display_name, defined_tags, freeform_tags]
+    ignore_changes = [
+      display_name, defined_tags, freeform_tags,
+      instance_pools[0].defined_tags,
+      instance_pools[0].freeform_tags,
+    ]
 
     precondition {
       condition     = coalesce(each.value.image_id, "none") != "none"
