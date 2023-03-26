@@ -10,13 +10,15 @@ locals {
   autoscaler_group_rules = var.use_defined_tags ? format("ALL {%s}", join(", ", [
     "tag.${var.tag_namespace}.role.value='worker'",
     "tag.${var.tag_namespace}.cluster_autoscaler.value='allowed'",
-    "tag.${var.tag_namespace}.state_id.value='${var.state_id}'",
+    local.autoscaler_compartment_rule,
+    # "tag.${var.tag_namespace}.state_id.value='${var.state_id}'", # TODO optional use w/ config
   ])) : local.autoscaler_compartment_rule
 
   autoscaler_templates = [
     "Allow dynamic-group %s to manage cluster-node-pools in compartment id %s",
     "Allow dynamic-group %s to manage compute-management-family in compartment id %s",
     "Allow dynamic-group %s to manage instance-family in compartment id %s",
+    "Allow dynamic-group %s to manage volume-family in compartment id %s",
     "Allow dynamic-group %s to use subnets in compartment id %s",
     "Allow dynamic-group %s to read virtual-network-family in compartment id %s",
     "Allow dynamic-group %s to use vnics in compartment id %s",
