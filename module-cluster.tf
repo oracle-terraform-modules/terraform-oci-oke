@@ -17,6 +17,7 @@ data "oci_containerengine_cluster_kube_config" "private" {
 locals {
   cluster_enabled        = var.create_cluster || coalesce(var.cluster_id, "none") != "none"
   cluster_id             = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
+  cluster_name           = coalesce(var.cluster_name, "oke-${local.state_id}")
   apiserver_private_host = local.cluster_enabled ? try(split(":", one(module.cluster[*].endpoints.private_endpoint))[0], "") : null
 
   kubeconfig_public  = var.control_plane_is_public ? try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", "")), tomap({})) : null
@@ -34,18 +35,21 @@ module "cluster" {
   state_id       = local.state_id
 
   # Network
+  vcn_id                  = local.vcn_id
   cni_type                = var.cni_type
   control_plane_is_public = var.control_plane_is_public
   control_plane_nsg_ids   = setunion(var.control_plane_nsg_ids, var.create_nsgs ? [module.network.control_plane_nsg_id] : [])
   control_plane_subnet_id = lookup(module.network.subnet_ids, "cp")
   pods_cidr               = var.pods_cidr
-  service_lb_subnet_id    = lookup(module.network.subnet_ids, var.preferred_load_balancer == "public" ? "pub_lb" : "int_lb")
   services_cidr           = var.services_cidr
-  vcn_id                  = local.vcn_id
+  service_lb_subnet_id = (var.preferred_load_balancer == "public"
+    ? lookup(module.network.subnet_ids, "pub_lb")
+    : lookup(module.network.subnet_ids, "int_lb")
+  )
 
   # Cluster
   cluster_kms_key_id = var.cluster_kms_key_id
-  cluster_name       = var.cluster_name
+  cluster_name       = local.cluster_name
   cluster_type = lookup({
     "basic"    = "BASIC_CLUSTER",
     "enhanced" = "ENHANCED_CLUSTER"
@@ -68,12 +72,12 @@ module "cluster" {
 }
 
 output "cluster_id" {
-  description = "ID of the Kubernetes cluster"
+  description = "ID of the OKE cluster"
   value       = one(module.cluster[*].cluster_id)
 }
 
 output "cluster_endpoints" {
-  description = "Endpoints for the Kubernetes cluster"
+  description = "Endpoints for the OKE cluster"
   value       = var.create_cluster ? one(module.cluster[*].endpoints) : null
 }
 

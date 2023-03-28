@@ -96,8 +96,8 @@ resource "oci_containerengine_node_pool" "workers" {
       kubernetes_version, # e.g. if changed as part of an upgrade
       name, defined_tags, freeform_tags,
       node_metadata["user_data"],               # templated cloud-init
-      node_config_details["placement_configs"], # dynamic placement configs
-      node_source_details,                      # dynamic image lookup
+      node_config_details[0].placement_configs, # dynamic placement configs
+      node_source_details[0],                   # dynamic image lookup
     ]
 
     precondition {
@@ -110,7 +110,7 @@ resource "oci_containerengine_node_pool" "workers" {
         contains(["instance-pool", "cluster-network"], each.value.mode), # supported modes
         length(lookup(each.value, "secondary_vnics", {})) == 0,          # unrestricted when empty/unset
       ])
-      error_message = "Unsupported option for mode: '${each.value.mode}'; var: 'secondary_vnics'"
+      error_message = "Unsupported option for mode=${each.value.mode}: secondary_vnics"
     }
   }
 
