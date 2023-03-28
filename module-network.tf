@@ -58,8 +58,8 @@ module "vcn" {
   nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
   nat_gateway_route_rules      = var.nat_gateway_route_rules
   vcn_cidrs                    = local.vcn_cidrs
-  vcn_dns_label                = var.assign_dns ? var.vcn_dns_label : null
-  vcn_name                     = var.vcn_name
+  vcn_dns_label                = var.assign_dns ? coalesce(var.vcn_dns_label, local.state_id) : null
+  vcn_name                     = coalesce(var.vcn_name, "oke-${local.state_id}")
 }
 
 module "drg" {
@@ -69,7 +69,7 @@ module "drg" {
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
   drg_id              = var.drg_id # existing DRG ID or null
-  drg_display_name    = var.drg_display_name
+  drg_display_name    = coalesce(var.drg_display_name, "oke-${local.state_id}")
   drg_vcn_attachments = var.drg_attachments
 }
 

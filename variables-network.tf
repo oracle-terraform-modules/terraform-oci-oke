@@ -20,8 +20,8 @@ variable "create_nsgs_always" { // TODO Align with subnets declaration, never/au
 }
 
 variable "vcn_name" {
-  default     = "oke"
-  description = "Name of created VCN when `create_vcn = true`, or optional filter when `create_vcn = false`."
+  default     = null
+  description = "Display name for the created VCN. Defaults to 'oke' suffixed with the generated Terraform 'state_id' value."
   type        = string
 }
 
@@ -75,13 +75,13 @@ variable "nat_route_table_id" {
 
 variable "create_drg" {
   default     = false
-  description = "whether to create Dynamic Routing Gateway. If set to true, creates a Dynamic Routing Gateway and attach it to the VCN."
+  description = "Whether to create a Dynamic Routing Gateway and attach it to the VCN."
   type        = bool
 }
 
 variable "drg_display_name" {
-  default     = "drg"
-  description = "(Updatable) Name of Dynamic Routing Gateway. Does not have to be unique."
+  default     = null
+  description = "(Updatable) Name of the created Dynamic Routing Gateway. Does not have to be unique. Defaults to 'oke' suffixed with the generated Terraform 'state_id' value."
   type        = string
 }
 
@@ -143,14 +143,14 @@ variable "vcn_cidrs" {
 }
 
 variable "vcn_dns_label" {
-  default     = "oke"
-  description = "A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. DNS resolution of hostnames in the VCN is disabled when null."
+  default     = null
+  description = "A DNS label for the VCN, used in conjunction with the VNIC's hostname and subnet's DNS label to form a fully qualified domain name (FQDN) for each VNIC within this subnet. Defaults to the generated Terraform 'state_id' value."
   type        = string
 }
 
 variable "assign_dns" {
   default     = true
-  description = "Whether to assign DNS records to created instances."
+  description = "Whether to assign DNS records to created instances or disable DNS resolution of hostnames in the VCN."
   type        = bool
 }
 
