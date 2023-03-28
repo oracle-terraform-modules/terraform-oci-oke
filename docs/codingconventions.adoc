@@ -11,6 +11,7 @@ endif::[]
 
 :uri-terraform-standard-module-structure: https://www.terraform.io/docs/language/modules/develop/structure.html
 :uri-oci-security-guide: https://docs.oracle.com/en-us/iaas/Content/Security/Concepts/security_guide.htm
+:uri-tflint: https://github.com/terraform-linters/tflint
 
 This project adheres to the following conventions:
 
@@ -86,6 +87,12 @@ Links that are used multiple times must be defined in the header using the `:uri
 - Use `snake_case` when naming Terraform files, variables and resources
 - If you need a new .tf file for better clarity, use this naming scheme: `<resources_group>`: e.g. `subnets.tf`, `nsgs.tf`
 - If your variable is controlling a behaviour, use imperative style to name it: e.g. `create_internet_gateway`, `use_cluster_encryption`
+
+=== Formatting/
+
+The following should be performed as needed before committing changes:
+- Run `terraform fmt -recursive` from the project root directory.
+- Run `tflint --recursive` from the project root directory (see {uri-tflint}[documentation here]) and address new warnings.
 
 === Variable blocks
 

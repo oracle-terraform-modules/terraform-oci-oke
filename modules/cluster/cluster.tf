@@ -77,11 +77,16 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       freeform_tags = lookup(local.freeform_tags, "service_lb", {})
     }
 
-    service_lb_subnet_ids = [var.service_lb_subnet_id]
+    service_lb_subnet_ids = compact([var.service_lb_subnet_id])
   }
 
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
+
+    precondition {
+      condition     = var.service_lb_subnet_id != null
+      error_message = "Missing service load balancer subnet."
+    }
 
     precondition {
       condition     = !var.use_signed_images || length(var.image_signing_keys) > 0
