@@ -19,7 +19,7 @@ locals {
 
 # Default workers sub-module implementation for OKE cluster
 module "workers" {
-  count  = var.create_cluster ? 1 : 0
+  count  = local.cluster_enabled ? 1 : 0
   source = "./modules/workers"
 
   # Common
@@ -99,6 +99,11 @@ output "worker_pools" {
 output "worker_pool_ids" {
   description = "Enabled worker pool IDs"
   value       = local.worker_count_expected > 0 ? one(module.workers[*].worker_pool_ids) : null
+}
+
+output "worker_instance_ids" {
+  description = "Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances."
+  value       = one(module.workers[*].worker_instance_ids)
 }
 
 output "fss_id" {
