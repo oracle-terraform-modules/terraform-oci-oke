@@ -31,6 +31,12 @@ variable "calico_typha_replicas" { type = number }
 variable "calico_url" { type = string }
 variable "calico_version" { type = string }
 
+# CNI: Multus
+variable "multus_install" { type = bool }
+variable "multus_namespace" { type = string }
+variable "multus_daemonset_url" { type = string }
+variable "multus_version" { type = string }
+
 # Metrics server
 variable "metrics_server_install" { type = bool }
 variable "metrics_server_namespace" { type = string }
