@@ -25,6 +25,36 @@ variable "vcn_id" {
   type        = string
 }
 
+variable "vcn_create_nat_gateway" {
+  default     = "auto"
+  description = "Whether to create a NAT gateway with the VCN. Defaults to automatic creation when private network resources are expected to utilize it."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.vcn_create_nat_gateway)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "vcn_create_internet_gateway" {
+  default     = "auto"
+  description = "Whether to create an internet gateway with the VCN. Defaults to automatic creation when public network resources are expected to utilize it."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.vcn_create_internet_gateway)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "vcn_create_service_gateway" {
+  default     = "always"
+  description = "Whether to create a service gateway with the VCN. Defaults to always created."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.vcn_create_service_gateway)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
 variable "ig_route_table_id" {
   default     = null
   description = "Optional ID of existing internet gateway in VCN."
