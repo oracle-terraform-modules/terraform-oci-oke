@@ -1,0 +1,57 @@
+= SSH
+:idprefix:
+:idseparator: -
+:sectlinks:
+:toc: auto
+:toclevels: 4
+
+.See also:
+* https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/testingconnection.htm#connecting[Connecting to Your Linux Instance Using SSH]
+* https://docs.oracle.com/en/cloud/cloud-at-customer/occ-get-started/log-vm-using-ssh.html[Log In to a VM Using SSH]
+
+== Configure SSH
+
+.SSH keys must be configured for access to instances through the bastion host:
+----
+ssh_private_key_path = "~/.ssh/id_rsa"
+ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+----
+
+.Private keys may also be managed by the SSH agent:
+----
+ssh-add -L                     # show current keys
+chmod 600 <private key>        # ensure correct permissions on key
+ssh-add <private key>          # add private key
+ssh -J opc@bastion opc@target  # `-i <private key>` not needed
+----
+
+.SSH tfvars
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required 
+
+|[[input_ssh_private_key]] <<input_ssh_private_key,ssh_private_key>>
+|The contents of the SSH private key file, optionally base64-encoded. May be provided via SSH agent when unset.
+|`string`
+|`null`
+|no
+
+|[[input_ssh_private_key_path]] <<input_ssh_private_key_path,ssh_private_key_path>>
+|A path on the local filesystem to the SSH private key. May be provided via SSH agent when unset.
+|`string`
+|`null`
+|no
+
+|[[input_ssh_public_key]] <<input_ssh_public_key,ssh_public_key>>
+|The contents of the SSH public key file, optionally base64-encoded. Used to allow login for workers/bastion/operator with corresponding private key.
+|`string`
+|`null`
+|no
+
+|[[input_ssh_public_key_path]] <<input_ssh_public_key_path,ssh_public_key_path>>
+|A path on the local filesystem to the SSH public key. Used to allow login for workers/bastion/operator with corresponding private key.
+|`string`
+|`null`
+|no
+
+|===
