@@ -9,26 +9,201 @@
 :uri-ca-oracle: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengautoscalingclusters.htm
 :uri-gatekeeper: https://open-policy-agent.github.io/gatekeeper
 
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
+
+:uri-docs-net-calico: link:networking.adoc#net_calico
+:uri-docs-net-cilium: link:networking.adoc#net_cilium
+:uri-docs-net-multus: link:networking.adoc#net_multus
+
 WARNING: The following options are provided as a reference for evaluation only, and may install software to the cluster that is not supported by or sourced from Oracle. These features should be enabled with caution as their operation is not guaranteed!
+
+== Multus
+
+See {uri-docs-net-multus}[Networking/Multus].
 
 == Calico
 
-NOTE: Documentation pending
+See {uri-docs-net-calico}[Networking/Calico].
 
-== Cluster autoscaler
+NOTE: TODO Pending validation in 5.x
+
+== Cilium
+
+See {uri-docs-net-cilium}[Networking/Cilium].
+
+NOTE: TODO Pending validation in 5.x
+
+== [[ext_ca]] Cluster autoscaler
 Deployed using the {uri-ca-github}[cluster-autoscaler Helm chart] with configuration from `worker_pools`.
 
-The following parameters may be added on each pool definition to enable management or scheduling of the cluster autoscaler:
+.See also:
+* {uri-ca-github}[cluster-autoscaler Github repository]
+* {uri-ca-oracle}[Autoscaling Kubernetes Node Pools and Pods]
 
+.The following parameters may be added on each pool definition to enable management or scheduling of the cluster autoscaler:
 * `allow_autoscaler`: Enable scheduling of the cluster autoscaler deployment on a pool by adding a node label matching the deployment's nodeSelector, and an OCI tag for use with {uri-tag-policies}[IAM tag-based policies] granting access to the instances.
 * `autoscale`: Enable cluster autoscaler management of the pool by including a `--nodes` argument for it.
 * `minSize`: Define the minimum scale of a pool managed by the cluster autoscaler. Defaults to `size` when not provided.
 * `maxSize`: Define the minimum scale of a pool managed by the cluster autoscaler. Defaults to `size` when not provided.
 
-== Metrics server
+.Cluster autoscaler extension tfvars
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required 
 
-NOTE: Documentation pending
+|[[input_cluster_autoscaler_enabled]] <<input_cluster_autoscaler_enabled,cluster_autoscaler_enabled>>
+|Whether to deploy the Kubernetes Cluster Autoscaler Helm chart. See https://github.com/kubernetes/autoscaler. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk.
+|`bool`
+|`false`
+|no
+
+|[[input_cluster_autoscaler_helm_values]] <<input_cluster_autoscaler_helm_values,cluster_autoscaler_helm_values>>
+|Map of individual Helm chart values. See https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template.
+|`map(string)`
+|`{}`
+|no
+
+|[[input_cluster_autoscaler_helm_values_files]] <<input_cluster_autoscaler_helm_values_files,cluster_autoscaler_helm_values_files>>
+|Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`.
+|`list(string)`
+|`[]`
+|no
+
+|[[input_cluster_autoscaler_helm_version]] <<input_cluster_autoscaler_helm_version,cluster_autoscaler_helm_version>>
+|Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`.
+|`string`
+|`"9.24.0"`
+|no
+
+|[[input_cluster_autoscaler_namespace]] <<input_cluster_autoscaler_namespace,cluster_autoscaler_namespace>>
+|Kubernetes namespace for deployed resources.
+|`string`
+|`"kube-system"`
+|no
+
+|===
+
+== Metrics server
+.Metrics server extension tfvars
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required 
+
+|[[input_metrics_server_enabled]] <<input_metrics_server_enabled,metrics_server_enabled>>
+|Whether to deploy the Kubernetes Metrics Server Helm chart. See https://github.com/kubernetes-sigs/metrics-server. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk.
+|`bool`
+|`false`
+|no
+
+|[[input_metrics_server_helm_values]] <<input_metrics_server_helm_values,metrics_server_helm_values>>
+|Map of individual Helm chart values. See https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template.
+|`map(string)`
+|`{}`
+|no
+
+|[[input_metrics_server_helm_values_files]] <<input_metrics_server_helm_values_files,metrics_server_helm_values_files>>
+|Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`.
+|`list(string)`
+|`[]`
+|no
+
+|[[input_metrics_server_helm_version]] <<input_metrics_server_helm_version,metrics_server_helm_version>>
+|Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`.
+|`string`
+|`"3.8.3"`
+|no
+
+|[[input_metrics_server_namespace]] <<input_metrics_server_namespace,metrics_server_namespace>>
+|Kubernetes namespace for deployed resources.
+|`string`
+|`"metrics"`
+|no
+
+|===
 
 == Prometheus
+.Prometheus extension tfvars
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required 
 
-NOTE: Documentation pending
+|[[input_prometheus_enabled]] <<input_prometheus_enabled,prometheus_enabled>>
+|Whether to deploy the Prometheus Helm chart. See https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk.
+|`bool`
+|`false`
+|no
+
+|[[input_prometheus_helm_values]] <<input_prometheus_helm_values,prometheus_helm_values>>
+|Map of individual Helm chart values. See https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template.
+|`map(string)`
+|`{}`
+|no
+
+|[[input_prometheus_helm_values_files]] <<input_prometheus_helm_values_files,prometheus_helm_values_files>>
+|Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`.
+|`list(string)`
+|`[]`
+|no
+
+|[[input_prometheus_helm_version]] <<input_prometheus_helm_version,prometheus_helm_version>>
+|Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`.
+|`string`
+|`"45.2.0"`
+|no
+
+|[[input_prometheus_namespace]] <<input_prometheus_namespace,prometheus_namespace>>
+|Kubernetes namespace for deployed resources.
+|`string`
+|`"metrics"`
+|no
+
+|[[input_prometheus_reapply]] <<input_prometheus_reapply,prometheus_reapply>>
+|Whether to force reapply of the Prometheus Helm chart when no changes are detected, e.g. with state modified externally.
+|`bool`
+|`false`
+|no
+
+|===
+
+== Gatekeeper
+
+.See also:
+* {uri-gatekeeper}[Gatekeeper Introduction]
+
+.Gatekeeper extension tfvars
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required 
+
+|[[input_gatekeeper_enabled]] <<input_gatekeeper_enabled,gatekeeper_enabled>>
+|Whether to deploy the Gatekeeper Helm chart. See https://github.com/open-policy-agent/gatekeeper. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk.
+|`bool`
+|`false`
+|no
+
+|[[input_gatekeeper_helm_values]] <<input_gatekeeper_helm_values,gatekeeper_helm_values>>
+|Map of individual Helm chart values. See https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template.
+|`map(string)`
+|`{}`
+|no
+
+|[[input_gatekeeper_helm_values_files]] <<input_gatekeeper_helm_values_files,gatekeeper_helm_values_files>>
+|Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`.
+|`list(string)`
+|`[]`
+|no
+
+|[[input_gatekeeper_helm_version]] <<input_gatekeeper_helm_version,gatekeeper_helm_version>>
+|Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`.
+|`string`
+|`"3.11.0"`
+|no
+
+|[[input_gatekeeper_namespace]] <<input_gatekeeper_namespace,gatekeeper_namespace>>
+|Kubernetes namespace for deployed resources.
+|`string`
+|`"kube-system"`
+|no
+
+|===

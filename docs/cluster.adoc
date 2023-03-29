@@ -1,0 +1,105 @@
+= Cluster
+:idprefix:
+:idseparator: -
+:sectlinks:
+:toc: auto
+:toclevels: 4
+
+:uri-oci-network: https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm
+:uri-oci-vcns: https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/VCNs.htm
+
+:uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
+
+
+:uri-rel-file-base: link:{uri-repo}/blob/main
+:uri-rel-tree-base: link:{uri-repo}/tree/main
+
+:uri-ig-docs: https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/managingIGs.htm
+:uri-nat-docs: https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/NATgateway.htm
+
+.See also:
+* https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm[Creating a Kubernetes Cluster]
+
+The OKE parameters concern mainly the following:
+
+* whether you want your OKE control plane to be public or private
+* whether you want to deploy public or private worker nodes
+* whether you want to allow NodePort or ssh access to the worker nodes
+* Kubernetes options such as dashboard, networking
+* number of node pools and their respective size of the cluster
+* services and pods cidr blocks
+* whether to use encryption
+
+****
+If you need to change the default services and pods' CIDRs, note the following:
+
+* The CIDR block you specify for the VCN *must not* overlap with the CIDR block you specify for the Kubernetes services.
+* The CIDR blocks you specify for pods running in the cluster *must not* overlap with CIDR blocks you specify for worker node and load balancer subnets.
+****
+
+.OKE Cluster tfvars
+[cols="a,a,a,a,a",options="header,autowidth"]
+|===
+|Name |Description |Type |Default |Required 
+
+|[[input_create_cluster]] <<input_create_cluster,create_cluster>>
+|Whether to create the OKE cluster and dependent resources.
+|`bool`
+|`true`
+|no
+
+|[[input_cluster_id]] <<input_cluster_id,cluster_id>>
+|An existing OKE cluster OCID when `create_cluster = false`.
+|`string`
+|`null`
+|no
+
+|[[input_cluster_name]] <<input_cluster_name,cluster_name>>
+|The name of oke cluster.
+|`string`
+|`"oke"`
+|no
+
+|[[input_cni_type]] <<input_cni_type,cni_type>>
+|The CNI for the cluster: 'flannel' or 'npn'. See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm.
+|`string`
+|`"flannel"`
+|no
+
+|[[input_control_plane_allowed_cidrs]] <<input_control_plane_allowed_cidrs,control_plane_allowed_cidrs>>
+|The list of CIDR blocks from which the control plane can be accessed.
+|`list(string)`
+|`[]`
+|no
+
+|[[input_control_plane_is_public]] <<input_control_plane_is_public,control_plane_is_public>>
+|Whether the Kubernetes control plane endpoint should be allocated a public IP address.
+|`bool`
+|`true`
+|no
+
+|[[input_control_plane_nsg_ids]] <<input_control_plane_nsg_ids,control_plane_nsg_ids>>
+|An additional list of network security groups (NSG) ids for the cluster endpoint.
+|`set(string)`
+|`[]`
+|no
+
+|[[input_cluster_dns]] <<input_cluster_dns,cluster_dns>>
+|Cluster DNS resolver IP address. Determined automatically when not set (recommended).
+|`string`
+|`null`
+|no
+
+|[[input_cluster_kms_key_id]] <<input_cluster_kms_key_id,cluster_kms_key_id>>
+|The id of the OCI KMS key to be used as the master encryption key for Kubernetes secrets encryption.
+|`string`
+|`""`
+|no
+
+|[[input_image_signing_keys]] <<input_image_signing_keys,image_signing_keys>>
+|A list of KMS key ids used by the worker nodes to verify signed images. The keys must use RSA algorithm.
+|`set(string)`
+|`[]`
+|no
+
+|===
