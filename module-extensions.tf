@@ -26,14 +26,11 @@ module "extensions" {
 
   # CNI: Calico
   calico_install           = var.calico_install
-  calico_apiserver_install = var.calico_apiserver_install
-  calico_mode              = var.calico_mode
-  calico_mtu               = var.calico_mtu
-  calico_staging_dir       = var.calico_staging_dir
-  calico_typha_install     = var.calico_typha_install
-  calico_typha_replicas    = var.calico_typha_replicas
-  calico_url               = var.calico_url
-  calico_version           = var.calico_version
+  calico_reapply           = var.calico_reapply
+  calico_namespace         = var.calico_namespace
+  calico_helm_version      = var.calico_helm_version
+  calico_helm_values       = var.calico_helm_values
+  calico_helm_values_files = var.calico_helm_values_files
 
   # CNI: Multus
   multus_install       = var.multus_install

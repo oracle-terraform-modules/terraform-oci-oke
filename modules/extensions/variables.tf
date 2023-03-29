@@ -21,15 +21,12 @@ variable "cni_type" { type = string }
 variable "pods_cidr" { type = string }
 
 # CNI: Calico
-variable "calico_apiserver_install" { type = bool }
 variable "calico_install" { type = bool }
-variable "calico_mode" { type = string }
-variable "calico_mtu" { type = number }
-variable "calico_staging_dir" { type = string }
-variable "calico_typha_install" { type = bool }
-variable "calico_typha_replicas" { type = number }
-variable "calico_url" { type = string }
-variable "calico_version" { type = string }
+variable "calico_reapply" { type = bool }
+variable "calico_namespace" { type = string }
+variable "calico_helm_version" { type = string }
+variable "calico_helm_values" { type = map(string) }
+variable "calico_helm_values_files" { type = list(string) }
 
 # CNI: Multus
 variable "multus_install" { type = bool }

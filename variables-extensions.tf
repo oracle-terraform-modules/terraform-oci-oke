@@ -5,60 +5,38 @@
 
 variable "calico_install" {
   default     = false
-  description = "Whether to install calico for network pod security policy. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  description = "Whether to install the Calico Helm chart. See <a href=></a>. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
-variable "calico_version" {
-  default     = "3.24.1"
-  description = "The version of Calico to install."
-  type        = string
-}
-
-variable "calico_mode" {
-  default     = "policy-only"
-  description = "The type of Calico manifest to install. The default of 'policy-only' is recommended."
-  type        = string
-  validation {
-    condition     = contains(["policy-only", "canal", "vxlan", "ipip", "flannel-migration"], var.calico_mode)
-    error_message = "Accepted values are policy-only, canal, vxlan, ipip, or flannel-migration."
-  }
-}
-
-variable "calico_mtu" {
-  default     = 0
-  description = "Interface MTU for Calico device(s) (0 = auto)."
-  type        = number
-}
-
-variable "calico_url" {
-  default     = ""
-  description = "Optionally override the Calico manifest URL (empty string = auto)."
-  type        = string
-}
-
-variable "calico_apiserver_install" {
+variable "calico_reapply" {
   default     = false
-  description = "Whether to enable the Calico apiserver."
+  description = "Whether to force reapply of the Calico Helm chart when no changes are detected, e.g. with state modified externally."
   type        = bool
 }
 
-variable "calico_typha_install" {
-  default     = false
-  description = "Whether to enable Typha (automatically enabled for > 50 nodes)."
-  type        = bool
-}
-
-variable "calico_typha_replicas" {
-  default     = 0
-  description = "The number of replicas for the Typha deployment (0 = auto)."
-  type        = number
-}
-
-variable "calico_staging_dir" {
-  default     = "/tmp/calico_install"
-  description = "Directory on the operator instance to stage Calico install files."
+variable "calico_namespace" {
+  default     = "network"
+  description = "Kubernetes namespace for deployed resources."
   type        = string
+}
+
+variable "calico_helm_version" {
+  default     = "v3.26.1"
+  description = "Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`."
+  type        = string
+}
+
+variable "calico_helm_values" {
+  default     = {}
+  description = "Map of individual Helm chart values. See <a href=https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template>helm_template</a>."
+  type        = map(string)
+}
+
+variable "calico_helm_values_files" {
+  default     = []
+  description = "Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`."
+  type        = list(string)
 }
 
 # CNI: Multus
