@@ -11,8 +11,6 @@
 :uri-rel-tree-base: link:{uri-repo}/tree/main
 :uri-docs: {uri-rel-file-base}/docs
 
-:uri-calico: https://www.projectcalico.org/
-:uri-calico-policy: https://docs.projectcalico.org/v3.8/getting-started/kubernetes/installation/other
 :uri-changelog: {uri-rel-file-base}/CHANGELOG.adoc
 :uri-contribute: {uri-rel-file-base}/CONTRIBUTING.adoc
 :uri-contributors: {uri-rel-file-base}/CONTRIBUTORS.adoc
@@ -42,23 +40,20 @@
 :uri-terraform-cidrsubnet-desconstructed: http://blog.itsjustcode.net/blog/2017/11/18/terraform-cidrsubnet-deconstructed/
 :uri-terraform-oci: https://www.terraform.io/docs/providers/oci/index.html
 :uri-terraform-oke-sample: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine
-:uri-terraform-options: {uri-docs}/terraformoptions.adoc
 :uri-topology: {uri-docs}/topology.adoc
 :uri-cloudinit: {uri-docs}/cloudinit.adoc
+
+:uri-docs-extensions: link:extensions.adoc
+:uri-docs-workers: link:workers.adoc
+:uri-docs-bastion: link:bastion.adoc
+:uri-docs-operator: link:operator.adoc
+:uri-docs-networking: link:networking.adoc
 
 == Assumptions
 
 This section assumes you have completed all the {uri-prereqs}[Prerequisites].
 
-== Configure the variable file
-
-A sample variable file (terraform.tfvars.example) with all the configuration options is available. Create a terraform variable file by copying the terraform.tfvars.example:
-
-----
-cp terraform.tfvars.example terraform.tfvars
-----
-
-== Configure identity parameters
+== Configure Identity
 
 Enter the values for the following parameters in the terraform.tfvars file:
 
@@ -84,39 +79,19 @@ You would have obtained your values when doing the {uri-prereqs}[Prerequisites].
 
 {uri-terraform-options}#identity-and-access[Reference]
 
-== Configure ssh keys
 
-If you intend to use the bastion host, you must supply the ssh keys:
-
-----
-ssh_private_key_path = "~/.ssh/id_rsa"
-
-ssh_public_key_path = "~/.ssh/id_rsa.pub"
-----
-
-If your private ssh key has a different name or path than the default "~/.ssh/id_*" e.g "~/.ssh/dev_rsa", you will need to add the private key to your ssh agent:
-
-----
-eval $(ssh-agent -s)
-ssh-add ~/.ssh/dev_rsa
-----
-
-{uri-terraform-options}#ssh-keys[Reference]
 
 == Configure OCI parameters
 
 The 3 OCI parameters here mainly concern:
 
 * `compartment_id`: is the compartment where all the resources will be created in
-* `label_prefix`: this will prepend a string to the name of every resource created
 * `region`: this allows you to select the region where you want the OKE cluster deployed
-
 
 e.g.
 
 ----
 compartment_id = "compartment_id = "ocid1.compartment...."
-label_prefix   = "dev"
 home_region = "us-phoenix-1"
 region = "ap-sydney-1"
 ----
@@ -130,36 +105,9 @@ The list of regions can be found {uri-oci-region}[here].
 
 {uri-terraform-options}#general-oci[Reference]
 
-== Configure OCI Networking parameters
+== Configure operator
 
-The networking parameters concern the VCN and the subnets network configuration as well as whether to enable some specific features such as the NAT Gateway.
-
-You can leave most of the default options. However, you may want to change the following parameters:
-
-* assign_dns: disable DNS resolution of hostnames if `false`. Defaults to `true`.
-* vcn_dns_label: this is the internal dns domain for resources created, or null to disable DNS resolution of hostnames in the VCN.
-* vcn_name: this is the name of the vcn that will be appended to the label prefix.
-
-****
-If you need to change the default VCN's CIDR, note the following:
-
-* The CIDR block you specify for the VCN *must not* overlap with the CIDR block you specify for the Kubernetes services.
-* The CIDR blocks you specify for pods running in the cluster *must not* overlap with CIDR blocks you specify for worker node and load balancer subnets.
-****
-
-{uri-terraform-options}#oci-networking[Reference]
-
-== Configure bastion host parameters
-
-The bastion host parameters concern:
-
-. whether you want to enable the bastion
-. from where you can access the bastion
-. the different parameters about the bastion host e.g. shape, image id etc.
-
-Please note that the bastion host is different from the OCI Bastion service.
-
-== Configure operator host parameters
+_See {uri-docs-operator}[Operator]._
 
 The operator host parameters concern:
 
@@ -173,49 +121,11 @@ Read {uri-instructions}#enabling-instance_principal-on-the-operator-host[more] a
 
 {uri-terraform-options}#operator-host[Reference]
 
-== Configure OKE parameters
+== Configure cluster extensions
 
-The OKE parameters concern mainly the following:
+_See {uri-docs-extensions}[Extensions]._
 
-* whether you want your OKE control plane to be public or private
-* whether you want to deploy public or private worker nodes
-* whether you want to allow NodePort or ssh access to the worker nodes
-* Kubernetes options such as dashboard, networking
-* number of node pools and their respective size of the cluster
-* services and pods cidr blocks
-* whether to use encryption
-
-****
-If you need to change the default services and pods' CIDRs, note the following:
-
-* The CIDR block you specify for the VCN *must not* overlap with the CIDR block you specify for the Kubernetes services.
-* The CIDR blocks you specify for pods running in the cluster *must not* overlap with CIDR blocks you specify for worker node and load balancer subnets.
-****
-
-Refer to {uri-topology}[topology] for more thorough examples.
-
-{uri-terraform-options}#oke[Reference]
-
-== Configure OKE Node Pool parameters
-
-The OKE Node Pool parameters control the following:
-
-. the number of node pools to be created
-. the size of each node pool
-. the shape of the worker node in each node pool
-. the boot volume size in GB
-. the number of OCPUs in each worker node
-. the memory for each worker node in GB
-. the node pool name prefix
-. whether to use a custom image id. Else, the major.minor version of Oracle Linux to use
-
-An empty value for boot volume size will default the boot volume to 50GB. This value is updatable. However the effect will be effective in newly created nodes _only_.
-
-Refer to {uri-cloudinit}[cloudinit] for specifying how to configure cloud-init scripts for nodepools.
-
-Refer to {uri-topology}[topology] for more thorough examples.
-
-== Configure OKE Load Balancer parameters
+== Configure OKE Load Balancer
 
 The OKE Load Balancer parameters concern mainly the following:
 
@@ -228,29 +138,7 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 {uri-terraform-options}#oke-load-balancers[Reference]
 
-== Configure OCIR parameters
 
-The {uri-oci-authtoken}#[Auth Token] must first be manually created and stored in {uri-oci-secret}#[OCI Secret in Vault]. It will subsequently be used to create a Kubernetes secret, which can then be used as an imagePullSecrets in a deployment. If you do not need to use private OCIR repositories, then leave the *secret_id* parameter empty. Refer to the {uri-instructions}#creating-a-secret-for-ocir[instructions] for how to create the Auth Token and the Secret in Vault.
-
-The secret is created in the "default" namespace. To copy it to your namespace, use the following command:
-
-----
-kubectl --namespace=default get secret ocirsecret --export -o yaml | kubectl apply --namespace=<newnamespace> -f -
-----
-
-{uri-terraform-options}#ocir[Reference]
-
-== Configure Calico parameters
-
-The Calico parameters control the installation of {uri-calico}[Calico] for {uri-calico-policy}[network policy].
-
-{uri-terraform-options}#calico[Reference]
-
-== Configure Kubernetes Metrics Server parameters
-
-The Kubernetes Metrics Server parameter controls the installation of {uri-metrics-server}[Kubernetes Metrics Server]. *Required* for {uri-kubernetes-hpa}[Horizontal Pod Autoscaling].
-
-{uri-terraform-options}#kubernetes-metrics-server[Reference]
 
 == Configure KMS Integration parameters
 
@@ -289,8 +177,3 @@ image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
 ----
 {uri-terraform-options}#kms-integration[Reference]
 
-== Configure defined tags
-
-The {uri-oci-tags-overview}#[defined tags] *must* first be manually created before using them as input parameters. 
-If a tag is a list type, you must specify one of the predefined options when applying it. 
-Please refer to the {uri-oci-tags-management}[instructions] for how to assign the required permissions and to manage them.
