@@ -10,24 +10,24 @@ locals {
       mtu                  = var.calico_mtu
       pod_cidr             = var.pods_cidr
       url                  = var.calico_url
-      apiserver_enabled    = var.calico_apiserver_enabled
-      calico_typha_enabled = var.calico_typha_enabled || var.expected_node_count > 50
+      apiserver_enabled    = var.calico_apiserver_install
+      calico_typha_enabled = var.calico_typha_install || var.expected_node_count > 50
 
       # Use provided value if set, otherwise use 1 replica for every 50 nodes with a min of 1 if enabled, and max of 20 replicas
-      calico_typha_replicas = (var.calico_typha_replicas > 0) ? var.calico_typha_replicas : max(min(20, floor(var.expected_node_count / 50)), var.calico_typha_enabled ? 1 : 0)
+      calico_typha_replicas = (var.calico_typha_replicas > 0) ? var.calico_typha_replicas : max(min(20, floor(var.expected_node_count / 50)), var.calico_typha_install ? 1 : 0)
     }
   )
 }
 
 resource "null_resource" "calico_enabled" {
-  count = alltrue([var.calico_enabled, var.expected_node_count > 0]) ? 1 : 0
+  count = alltrue([var.calico_install, var.expected_node_count > 0]) ? 1 : 0
   triggers = {
     calico_mode              = var.calico_mode
     calico_mtu               = var.calico_mtu
     calico_url               = var.calico_url
     calico_version           = var.calico_version
-    calico_apiserver_enabled = var.calico_apiserver_enabled
-    calico_typha_enabled     = var.calico_typha_enabled
+    calico_apiserver_enabled = var.calico_apiserver_install
+    calico_typha_enabled     = var.calico_typha_install
     calico_typha_replicas    = var.calico_typha_replicas
   }
 

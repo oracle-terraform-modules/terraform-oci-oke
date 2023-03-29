@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  metrics_server_enabled       = var.metrics_server_enabled && var.expected_node_count > 0
+  metrics_server_enabled       = var.metrics_server_install && var.expected_node_count > 0
   metrics_server_manifest      = one(data.helm_template.metrics_server[*].manifest)
-  metrics_server_manifest_path = join("/", [local.helm_manifest_path, "metrics_server.yaml"])
+  metrics_server_manifest_path = join("/", [local.yaml_manifest_path, "metrics_server.manifest.yaml"])
 }
 
 data "helm_template" "metrics_server" {
@@ -61,7 +61,7 @@ resource "null_resource" "metrics_server" {
   }
 
   provisioner "remote-exec" {
-    inline = ["mkdir -p ${local.helm_manifest_path}"]
+    inline = ["mkdir -p ${local.yaml_manifest_path}"]
   }
 
   provisioner "file" {
@@ -70,6 +70,10 @@ resource "null_resource" "metrics_server" {
   }
 
   provisioner "remote-exec" {
-    inline = ["kubectl apply -f ${local.metrics_server_manifest_path}"]
+    inline = compact([
+      (contains(["kube-system", "default"], var.metrics_server_namespace) ? null
+      : format(local.kubectl_create_missing_ns, var.metrics_server_namespace)),
+      format(local.kubectl_apply_server_file, local.metrics_server_manifest_path),
+    ])
   }
 }
