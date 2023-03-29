@@ -28,10 +28,30 @@ module "vcn" {
   defined_tags   = var.defined_tags["vcn"]
   freeform_tags  = var.freeform_tags["vcn"]
 
-  attached_drg_id              = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
-  create_internet_gateway      = !(var.load_balancers == "internal" && !var.create_bastion && !var.control_plane_is_public)
-  create_nat_gateway           = !var.worker_is_public || var.create_operator || var.load_balancers == "internal" || var.load_balancers == "both"
-  create_service_gateway       = true
+  attached_drg_id = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
+
+  create_internet_gateway = alltrue([
+    var.vcn_create_internet_gateway != "never",    # always disable
+    anytrue([                                      # enable for configurations that generally utilize it
+      var.vcn_create_internet_gateway == "always", # always enable
+      var.create_bastion && var.bastion_is_public, # enable for public bastion
+      var.control_plane_is_public,                 # enable for cluster w/ public endpoint
+      var.load_balancers != "internal",            # enable for cluster w/ public load balancers
+    ])
+  ])
+
+  create_nat_gateway = alltrue([
+    var.vcn_create_nat_gateway != "never",                # always disable
+    anytrue([                                             # enable for configurations that generally utilize it
+      var.vcn_create_nat_gateway == "always",             # always enable
+      !var.worker_is_public,                              # enable for private workers
+      var.create_operator,                                # enable for operator
+      !var.control_plane_is_public,                       # enable for cluster w/ private endpoint
+      contains(["internal", "both"], var.load_balancers), # enable for cluster w/ private load balancers
+    ])
+  ])
+
+  create_service_gateway       = var.vcn_create_service_gateway != "never"
   internet_gateway_route_rules = var.internet_gateway_route_rules
   local_peering_gateways       = var.local_peering_gateways
   lockdown_default_seclist     = var.lockdown_default_seclist
