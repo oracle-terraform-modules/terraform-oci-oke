@@ -10,14 +10,14 @@ locals {
 
   # Whether to enable cluster autoscaler deployment based on configuration, active nodes, and autoscaling pools
   cluster_autoscaler_enabled = alltrue([
-    var.cluster_autoscaler_enabled,
+    var.cluster_autoscaler_install,
     var.expected_node_count > 0,
     length(local.worker_pools_autoscaling) > 0,
   ])
 
   # Templated Helm manifest values
   cluster_autoscaler_manifest      = one(data.helm_template.cluster_autoscaler[*].manifest)
-  cluster_autoscaler_manifest_path = join("/", [local.helm_manifest_path, "cluster_autoscaler.yaml"])
+  cluster_autoscaler_manifest_path = join("/", [local.yaml_manifest_path, "cluster_autoscaler.yaml"])
   cluster_autoscaler_defaults = {
     "cloudProvider"                              = "oci-oke",
     "extraArgs.logtostderr"                      = "true",
@@ -136,7 +136,7 @@ resource "null_resource" "cluster_autoscaler" {
   }
 
   provisioner "remote-exec" {
-    inline = ["mkdir -p ${local.helm_manifest_path}"]
+    inline = ["mkdir -p ${local.yaml_manifest_path}"]
   }
 
   provisioner "file" {
