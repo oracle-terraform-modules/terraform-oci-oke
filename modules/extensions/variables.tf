@@ -3,6 +3,7 @@
 
 # Common
 variable "region" { type = string }
+variable "state_id" { type = string }
 variable "worker_pools" { type = any }
 variable "kubernetes_version" { type = string }
 variable "expected_node_count" { type = number }
