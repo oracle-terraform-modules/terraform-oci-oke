@@ -61,6 +61,32 @@ variable "calico_staging_dir" {
   type        = string
 }
 
+# CNI: Multus
+
+variable "multus_install" {
+  default     = false
+  description = "Whether to deploy Multus. See https://github.com/k8snetworkplumbingwg/multus-cni. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
+variable "multus_namespace" {
+  default     = "network"
+  description = "Kubernetes namespace for deployed resources."
+  type        = string
+}
+
+variable "multus_daemonset_url" {
+  default     = null
+  description = "The URL path to the Multus manifest. Leave unset for tags of https://github.com/k8snetworkplumbingwg/multus-cni using multus_version."
+  type        = string
+}
+
+variable "multus_version" {
+  default     = "3.9.3"
+  description = "Version of Multus to install. Ignored when an explicit value for multus_daemonset_url is provided."
+  type        = string
+}
+
 # Metrics server
 
 variable "metrics_server_install" {

@@ -5,7 +5,7 @@ module "extensions" {
   source   = "./modules/extensions"
   count    = local.operator_enabled ? 1 : 0
   region   = var.region
-  state_id = random_id.state_id.id
+  state_id = local.state_id
 
   # Cluster
   kubernetes_version  = var.kubernetes_version
@@ -34,6 +34,12 @@ module "extensions" {
   calico_typha_replicas    = var.calico_typha_replicas
   calico_url               = var.calico_url
   calico_version           = var.calico_version
+
+  # CNI: Multus
+  multus_install       = var.multus_install
+  multus_namespace     = var.multus_namespace
+  multus_daemonset_url = var.multus_daemonset_url
+  multus_version       = var.multus_version
 
   # Metrics server
   metrics_server_install           = var.metrics_server_install
