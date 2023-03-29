@@ -1,9 +1,9 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# Calico
+# CNI: Calico
 
-variable "calico_enabled" {
+variable "calico_install" {
   default     = false
   description = "Whether to install calico for network pod security policy. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
@@ -37,13 +37,13 @@ variable "calico_url" {
   type        = string
 }
 
-variable "calico_apiserver_enabled" {
+variable "calico_apiserver_install" {
   default     = false
   description = "Whether to enable the Calico apiserver."
   type        = bool
 }
 
-variable "calico_typha_enabled" {
+variable "calico_typha_install" {
   default     = false
   description = "Whether to enable Typha (automatically enabled for > 50 nodes)."
   type        = bool
@@ -63,14 +63,14 @@ variable "calico_staging_dir" {
 
 # Metrics server
 
-variable "metrics_server_enabled" {
+variable "metrics_server_install" {
   default     = false
   description = "Whether to deploy the Kubernetes Metrics Server Helm chart. See https://github.com/kubernetes-sigs/metrics-server. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
 variable "metrics_server_namespace" {
-  default     = "kube-system"
+  default     = "metrics"
   description = "Kubernetes namespace for deployed resources."
   type        = string
 }
@@ -95,7 +95,7 @@ variable "metrics_server_helm_values_files" {
 
 # Cluster autoscaler
 
-variable "cluster_autoscaler_enabled" {
+variable "cluster_autoscaler_install" {
   default     = false
   description = "Whether to deploy the Kubernetes Cluster Autoscaler Helm chart. See https://github.com/kubernetes/autoscaler. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
@@ -127,14 +127,20 @@ variable "cluster_autoscaler_helm_values_files" {
 
 # Prometheus
 
-variable "prometheus_enabled" {
+variable "prometheus_install" {
   default     = false
   description = "Whether to deploy the Prometheus Helm chart. See https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
+variable "prometheus_reapply" {
+  default     = false
+  description = "Whether to force reapply of the Prometheus Helm chart when no changes are detected, e.g. with state modified externally."
+  type        = bool
+}
+
 variable "prometheus_namespace" {
-  default     = "kube-system"
+  default     = "metrics"
   description = "Kubernetes namespace for deployed resources."
   type        = string
 }
@@ -159,7 +165,7 @@ variable "prometheus_helm_values_files" {
 
 # Gatekeeper
 
-variable "gatekeeper_enabled" {
+variable "gatekeeper_install" {
   default     = false
   description = "Whether to deploy the Gatekeeper Helm chart. See https://github.com/open-policy-agent/gatekeeper. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
