@@ -7,6 +7,7 @@ data "oci_identity_availability_domains" "ad_list" {
 
 data "oci_containerengine_node_pool_option" "node_pool_options" {
   compartment_id      = var.compartment_id
+  
   node_pool_option_id = oci_containerengine_cluster.k8s_cluster.id
 }
 
