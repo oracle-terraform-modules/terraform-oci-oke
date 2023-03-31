@@ -87,6 +87,44 @@ variable "multus_version" {
   type        = string
 }
 
+# CNI: Cilium
+
+variable "cilium_install" {
+  default     = false
+  description = "Whether to deploy the Cilium Helm chart. May only be enabled when cni_type = 'flannel'. See https://docs.cilium.io. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
+variable "cilium_reapply" {
+  default     = false
+  description = "Whether to force reapply of the chart when no changes are detected, e.g. with state modified externally."
+  type        = bool
+}
+
+variable "cilium_namespace" {
+  default     = "network"
+  description = "Kubernetes namespace for deployed resources."
+  type        = string
+}
+
+variable "cilium_helm_version" {
+  default     = "1.13.0"
+  description = "Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`."
+  type        = string
+}
+
+variable "cilium_helm_values" {
+  default     = {}
+  description = "Map of individual Helm chart values. See https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template."
+  type        = map(string)
+}
+
+variable "cilium_helm_values_files" {
+  default     = []
+  description = "Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`."
+  type        = list(string)
+}
+
 # Metrics server
 
 variable "metrics_server_install" {

@@ -37,6 +37,14 @@ variable "multus_namespace" { type = string }
 variable "multus_daemonset_url" { type = string }
 variable "multus_version" { type = string }
 
+# CNI: Cilium
+variable "cilium_install" { type = bool }
+variable "cilium_reapply" { type = bool }
+variable "cilium_namespace" { type = string }
+variable "cilium_helm_version" { type = string }
+variable "cilium_helm_values" { type = map(string) }
+variable "cilium_helm_values_files" { type = list(string) }
+
 # Metrics server
 variable "metrics_server_install" { type = bool }
 variable "metrics_server_namespace" { type = string }

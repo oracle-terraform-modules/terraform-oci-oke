@@ -310,6 +310,8 @@ _See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetwo
 
 NOTE: Pending validation on 5.x
 
+CAUTION: Changes to Kubernetes CNI configuration may disrupt running workloads, and require manual steps not covered in this documentation to properly remove from the cluster. Use with caution after validation for installation and operations in a non-production environment.
+
 [[net_calico]] _See https://docs.tigera.io/calico/latest/getting-started[Install Calico]._
 
 .Calico extension tfvars
