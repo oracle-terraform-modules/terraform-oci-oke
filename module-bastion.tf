@@ -26,7 +26,7 @@ locals {
 module "bastion" {
   count          = var.create_bastion ? 1 : 0
   source         = "./modules/bastion"
-  state_id       = random_id.state_id.id
+  state_id       = local.state_id
   compartment_id = local.compartment_id
 
   # Bastion

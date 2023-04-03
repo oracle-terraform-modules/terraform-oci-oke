@@ -35,7 +35,7 @@ locals {
 module "operator" {
   count          = var.create_operator ? 1 : 0
   source         = "./modules/operator"
-  state_id       = random_id.state_id.id
+  state_id       = local.state_id
   compartment_id = local.compartment_id
 
   # Bastion (to await cloud-init completion)
