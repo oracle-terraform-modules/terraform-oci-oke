@@ -1,4 +1,4 @@
-# Copyright (c) 2017, 2022 Oracle Corporation and/or its affiliates.
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # OCI Provider parameters
@@ -543,6 +543,16 @@ variable "cluster_name" {
   default     = "oke"
   description = "The name of oke cluster."
   type        = string
+}
+
+variable "cluster_type" {
+  default     = "basic"
+  description = "The cluster type. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengworkingwithenhancedclusters.htm>Working with Enhanced Clusters and Basic Clusters</a> for more information."
+  type        = string
+  validation {
+    condition     = contains(["basic", "enhanced"], lower(var.cluster_type))
+    error_message = "Accepted values are 'basic' or 'enhanced'."
+  }
 }
 
 variable "cni_type" {
