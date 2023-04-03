@@ -1,0 +1,519 @@
+# Copyright (c) 2023 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+title: "OKE: Worker Pool"
+description: Kubernetes worker nodes for an OKE cluster
+schemaVersion: 1.1.0
+version: "20230304"
+locale: "en"
+
+variableGroups:
+  - title: "Hidden"
+    visible: false
+    variables:
+      - api_fingerprint
+      - config_file_profile
+      - current_user_ocid
+      - user_id
+      - tenancy_id
+      - tenancy_ocid
+      - region
+      - kubernetes_version
+      - apiserver_private_host
+      - cluster_ca_cert
+
+  - title: "Identity"
+    variables:
+      - compartment_ocid
+      - create_iam_autoscaler_policy
+      - create_iam_worker_policy
+      - use_defined_tags
+      - tag_namespace
+
+  - title: "Cluster"
+    variables:
+      - cluster_id
+      - cni_type
+      - kubeproxy_mode
+      - worker_node_labels
+
+  - title: "Network"
+    variables:
+      - vcn_id
+      - assign_dns
+      - vcn_dns_label
+      - worker_subnet_id
+      - worker_nsg_id
+      - pod_subnet_id
+      - pod_nsg_id
+      - fss_subnet_id
+      - fss_nsg_id
+
+  - title: "SSH"
+    variables:
+      - ssh_public_key
+
+  - title: "Image"
+    variables:
+      - worker_image_type
+      - worker_image_os
+      - worker_image_os_version
+      - worker_image_platform_id
+      - worker_image_custom_id
+
+  - title: "Instances"
+    variables:
+      - worker_pool_name
+      - worker_pool_mode
+      - worker_shape
+      - worker_pool_size
+      - worker_ocpus
+      - worker_memory
+      - worker_boot_volume_size
+      - worker_block_volume_type
+      - worker_use_encryption
+      - worker_volume_kms_vault_id
+      - worker_volume_kms_key_id
+      - worker_pv_transit_encryption
+      - worker_cloud_init_configure
+      - worker_cloud_init
+      - worker_cloud_init_byon
+      - worker_cloud_init_oke
+      - autoscale
+      - drain
+      - worker_tags
+
+variables:
+  # Identity
+  current_user_ocid:
+    title: User
+    type: ocid
+    required: true
+  tenancy_ocid:
+    title: Tenancy
+    type: oci:identity:compartment:id
+    required: true
+  compartment_ocid:
+    title: Compartment
+    description: The default compartment for created resources.
+    type: oci:identity:compartment:id
+    required: true
+  region:
+    required: true
+    title: Region
+    type: oci:identity:region:name
+  create_iam_autoscaler_policy:
+    title: Authorize instance(s) to manage pools with Cluster Autoscaler
+    description: |
+      Create the required Identity policy with a dynamic group to authorize pool management by worker nodes for Cluster Autoscaler. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingclusterautoscaler.htm>Using the Kubernetes Cluster Autoscaler</a> for more information.
+    type: boolean
+    default: false
+    required: true
+    visible: { not: [autoscale] }
+  create_iam_worker_policy:
+    title: Authorize instance(s) to join the target cluster
+    description: |
+      Create the required Identity policy with a dynamic group to authorize self-managed worker node membership for an OKE cluster, e.g. `Allow dynamic-group ... to {CLUSTER_JOIN} in compartment id ... where { target.cluster.id = '...' }`. See <a href=https://docs.oracle.com/en-us/iaas/Content/Identity/policyreference/contengpolicyreference.htm#Details_for_Container_Engine_for_Kubernetes>Container Engine for Kubernetes Self-managed nodes</a> for more information.
+    type: boolean
+    default: false
+    required: true
+    visible:
+      not:
+        - eq:
+            - worker_pool_mode
+            - Node Pool
+  use_defined_tags:
+    title: Use defined tags
+    default: false
+    type: boolean
+  tag_namespace:
+    title: Tag namespace
+    visible: ${use_defined_tags}
+
+  # VCN
+  vcn_id:
+    title: Virtual Cloud Network
+    type: oci:core:vcn:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  assign_dns:
+    title: Assign DNS records
+    type: boolean
+    default: false
+    required: true
+  worker_subnet_id:
+    title: Worker subnet
+    description: VCN subnet for the primary network interface of created worker node(s).
+    type: oci:core:subnet:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+  worker_nsg_id:
+    title: Worker Network Security Group
+    description: Network Security Groups for the created worker node(s), used to configure network access to instances. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#securitylistconfig>Security Rule Configuration in ... Network Security Groups</a> for more information.
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+  pod_subnet_id:
+    title: Pod subnet
+    description: VCN subnet for the primary network interface of created worker node(s).
+    type: oci:core:subnet:id
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+  pod_nsg_id:
+    title: Pod Network Security Group
+    description: Network Security Groups for the created worker node(s), used to configure network access to instances. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#securitylistconfig>Security Rule Configuration in ... Network Security Groups</a> for more information.
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+  fss_subnet_id:
+    title: FSS subnet
+    type: oci:core:subnet:id
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+  fss_nsg_id:
+    title: FSS Network Security Group
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible:
+      and:
+        - ${create_fss}
+        - not: [create_vcn]
+
+  # SSH
+  ssh_public_key:
+    title: SSH Public Key
+    type: oci:core:ssh:publickey
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+    required: false
+
+  # Cluster
+  cluster_id:
+    title: Cluster
+    type: oci:container:cluster:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  cni_type:
+    title: CNI Type
+    description: The CNI type ('Flannel' or 'NPN') of the target OKE cluster.
+    type: enum
+    default: Flannel
+    enum: [Flannel, NPN]
+    allowMultiple: false
+    required: true
+    visible:
+      eq: [worker_pool_mode, Node Pool]
+  apiserver_private_host:
+    title: Cluster private endpoint
+    description: |
+      Private OKE endpoint IP address only - no protocol/port. Retrieve from an existing kubeconfig with: `kubectl config view --raw -o json | jq -rcM '.clusters[0].cluster.server' | cut -d: -f2 | tr -d '/'`
+    type: string
+    required: false
+  cluster_ca_cert:
+    title: Cluster CA certificate
+    description: |
+      Base64+PEM-encoded cluster CA certificate for a trusted connection to the OKE managed control plane. Retrieve from an existing kubeconfig with: `kubectl config view --raw -o json | jq -rcM '.clusters[0].cluster["certificate-authority-data"]'
+    type: text
+    multiline: true
+
+  # Worker
+  worker_pool_name:
+    title: Pool name
+    description: Display name for created worker node resources.
+    type: string
+    default: "oke-worker"
+    required: true
+  worker_pool_mode:
+    title: Resource type
+    description: Type of Oracle Cloud Compute resources for the created worker nodes.
+    type: enum
+    default: Instance Pool
+    enum: [Node Pool, Instances, Instance Pool, Cluster Network]
+    required: true
+  worker_pool_size:
+    title: Number of worker nodes
+    type: number
+    default: 1
+    required: true
+  worker_shape:
+    title: Shape
+    # type: oci:core:instanceshapewithflex:name
+    type: oci:core:instanceshape:name
+    default: "VM.Standard.E4.Flex"
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  worker_ocpus:
+    title: OCPUs
+    type: number
+    default: 2
+    required: false
+  worker_memory:
+    title: Memory (GB)
+    type: number
+    default: 16
+    required: false
+  worker_boot_volume_size:
+    title: Boot volume size (GB)
+    type: number
+    required: false
+  worker_image_type:
+    title: Image type
+    description: Whether to use a Platform, OKE, or Custom image for worker nodes.
+    type: enum
+    default: OKE
+    enum: [OKE, Platform, Custom]
+    required: true
+  worker_image_os:
+    title: Operating system
+    type: enum
+    default: "Oracle Linux"
+    enum: ["Oracle Linux"]
+    required: true
+    visible:
+      not:
+        - eq:
+            - worker_image_type
+            - Custom
+  worker_image_os_version:
+    title: Operating system version
+    type: enum
+    default: "8"
+    enum: ["7.9", "8"]
+    required: true
+    visible:
+      not:
+        - eq:
+            - worker_image_type
+            - Custom
+  worker_image_id:
+    visible: false
+  worker_image_custom_id:
+    title: Image ID
+    type: ocid
+    default: ocid1.image.oc1.ap-osaka-1.aaaaaaaaea5wfsravwlatdyq7x72nb7ci7xmc4aer3ncdfjkumup2fhvkrgq
+    required: true
+    visible:
+      eq:
+        - worker_image_type
+        - Custom
+  worker_image_platform_id:
+    title: Image
+    type: oci:core:image:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      operatingSystem: ${worker_image_os}
+      operatingSystemVersion: ${worker_image_os_version}
+      shape: ${worker_shape_name}
+    visible:
+      eq:
+        - worker_image_type
+        - Platform
+  worker_cloud_init:
+    visible: false
+  worker_cloud_init_configure:
+    type: boolean
+    title: Custom cloud-init
+  worker_cloud_init_byon:
+    title: Cloud-init script
+    type: text
+    multiline: true
+    required: true
+    description: |
+      Custom cloud-init script for worker node startup configuration. Must include the default OKE initialization call to join the cluster and begin operation.
+    visible:
+      and:
+        - worker_cloud_init_configure
+        - not:
+            - eq:
+                - worker_pool_mode
+                - Node Pool
+  worker_cloud_init_oke:
+    title: Cloud-init script
+    type: text
+    multiline: true
+    required: true
+    description: |
+      Custom cloud-init script for self-managed worker node startup configuration. Must uncomment and define the two required parameters and include the default OKE initialization call to join the cluster and begin operation.
+    visible:
+      and:
+        - worker_cloud_init_configure
+        - eq:
+            - worker_pool_mode
+            - Node Pool
+  worker_block_volume_type:
+    title: Block volume type
+    type: enum
+    enum: [Paravirtualized, iSCSI]
+    default: Paravirtualized
+    required: true
+  worker_node_labels:
+    title: Node labels
+    type: map
+    required: false
+  worker_use_encryption:
+    title: KMS volume encryption
+    type: boolean
+    default: false
+    required: true
+  worker_volume_kms_vault_id:
+    title: KMS volume encryption vault
+    description: Vault containing operator volume encryption keys.
+    type: oci:kms:vault:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: worker_use_encryption
+  worker_volume_kms_key_id:
+    title: KMS volume encryption key
+    type: oci:kms:key:id
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${worker_volume_kms_vault_id}
+    required: false
+    visible: worker_use_encryption
+  worker_pv_transit_encryption:
+    title: In-transit volume encryption
+    type: boolean
+    default: false
+    visible:
+      eq:
+        - worker_block_volume_type
+        - Paravirtualized
+  kubeproxy_mode:
+    title: Kubeproxy mode
+    type: enum
+    enum: [IPTables, IPVS]
+    default: IPTables
+    required: true
+  worker_tags:
+    title: Tagging
+    type: oci:identity:tag:value
+    required: false
+    description: Tag values for created resources.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  autoscale:
+    title: Manage with Cluster Autoscaler
+    description: |
+      Include pool in Dynamic Group for policies required by the Cluster Autoscaler. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingclusterautoscaler.htm>Using the Kubernetes Cluster Autoscaler</a> for more information.
+    type: boolean
+    default: false
+    required: true
+    visible:
+      and:
+        - eq: [worker_pool_mode, Node Pool]
+        - not: [create_iam_autoscaler_policy]
+
+  drain:
+    title: Cordon & Drain
+    description: |
+      Move non-Daemonset workloads off of the pool. See also: <a href=https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/>Safely Drain a Node</a>, <a href=https://kubernetes.io/docs/tasks/run-application/configure-pdb/#protecting-an-application-with-a-poddisruptionbudget>Protecting an Application with a PodDisruptionBudget</a>.
+    type: boolean
+    default: false
+    required: true
+
+outputGroups:
+  - title: Identity
+    outputs:
+      - state_id
+      - create_iam_autoscaler_policy
+      - create_iam_worker_policy
+      - dynamic_group_ids
+      - policy_statements
+  - title: Network
+    outputs:
+      - worker_subnet_id
+      - worker_nsg_id
+  - title: Cluster
+    outputs:
+      - cluster_id
+      - apiserver_private_host
+  - title: Workers
+    outputs:
+      - worker_pool_name
+      - worker_pool_ids
+      - worker_pool_mode
+      - worker_pool_size
+      - worker_shape
+      - worker_image_id
+      - autoscale
+
+outputs:
+  state_id:
+    title: Terraform state ID
+    type: copyableString
+  worker_pool_mode:
+    title: Resource type
+    type: string
+  worker_pool_name:
+    title: Pool name
+    type: string
+  worker_pool_size:
+    title: Size
+    type: number
+  cluster_id:
+    title: Cluster
+    type: ocid
+  apiserver_private_host:
+    title: Cluster private endpoint IP
+    type: copyableString
+  dynamic_group_ids:
+    title: Dynamic groups
+    type: list
+  policy_statements:
+    title: Policy statements
+    type: list
+  worker_subnet_id:
+    title: Subnet
+    type: ocid
+  worker_nsg_id:
+    title: Network Security Group
+    type: ocid
+  worker_pool_ids:
+    title: Pool
+    type: list
+  worker_image_id:
+    title: Image
+    type: ocid
+  worker_shape:
+    title: Shape
+    type: string
+  create_iam_autoscaler_policy:
+    title: Create Cluster Autoscaler policy
+    type: boolean
+  create_iam_worker_policy:
+    title: Create self-managed worker policy
+    type: string
+  autoscale:
+    title: Manage with Cluster Autoscaler
+    type: string

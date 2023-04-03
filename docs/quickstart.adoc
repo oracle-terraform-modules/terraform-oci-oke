@@ -21,85 +21,187 @@
 :uri-terraform-options: {uri-docs}/terraformoptions.adoc
 :uri-terraform-precedence: https://www.terraform.io/docs/language/values/variables.html#variable-definition-precedence
 :uri-variables: {uri-rel-file-base}/variables.tf
+:uri-rms-zip: 
 
-== Assumptions
+.Prerequisites
+- {uri-oci-keys}[Required Keys and OCIDs]
+- {uri-oci-okepolicy}[Required IAM policies]
+- `git`, `ssh` client to run locally
+- Terraform `>= 1.2.0` to run locally
 
-1. You have setup the {uri-oci-keys}[required keys]
-2. You know the {uri-oci-ocids}[required OCIDs]
-3. You have set the {uri-oci-okepolicy}[necessary OKE policy]
+== Provisioning from an OCI Resource Manager Stack
+++++
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Resources</th>
+    <th>Deploy</th>
+  </tr>
+  <tr>
+    <td>OKE Network Only</td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_vcn>core_vcn</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_nat_gateway>core_nat_gateway</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_internet_gateway>core_internet_gateway</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_subnet>core_subnet</a> (all)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance>core_instance</a> (bastion)</li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-network-only.20230410.zip target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+  <tr>
+    <td>OKE Cluster <i>(new network)</i></td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_vcn>core_vcn</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_nat_gateway>core_nat_gateway</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_internet_gateway>core_internet_gateway</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_subnet>core_subnet</a> (configured)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_network_security_group>core_network_security_group</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_network_security_group_security_rule>core_network_security_group_security_rule</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance>core_instance</a> (bastion, operator)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_cluster>containerengine_cluster</a></li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-cluster-with-network.20230410.zip&zipUrlVariables={"cluster_name":"oke-cluster-with-network"} target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+  <tr>
+    <td>OKE Cluster <i>(existing network)</a></td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_network_security_group>core_network_security_group</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_network_security_group_security_rule>core_network_security_group_security_rule</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance>core_instance</a> (operator)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_cluster>containerengine_cluster</a></li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-cluster-with-network.20230410.zip&zipUrlVariables={"cluster_name":"oke-cluster-existing-network","create_vcn":false,"create_nsgs":false,"create_bastion":false,"worker_subnet_create":"Never","control_plane_subnet_create":"Never","operator_subnet_create":"Never","bastion_subnet_create":"Never","pod_subnet_create":"Never","int_lb_subnet_create":"Never","pub_lb_subnet_create":"Never","fss_subnet_create":"Never"} target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+  <tr>
+    <td>OKE-Managed Node Pool</td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_node_pool>containerengine_node_pool</a></li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-workers.20230410.zip&zipUrlVariables={"worker_pool_mode":"Node%20Pool","worker_pool_name":"oke-node-pool"} target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+  <tr>
+    <td>Self-Managed Instances</td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/identity_dynamic_group>identity_dynamic_group</a> (workers)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/identity_policy>identity_policy</a> (JoinCluster)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance>core_instance</a></li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-workers.20230410.zip&zipUrlVariables={"worker_pool_mode":"Instances","worker_pool_name":"oke-instances"} target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+  <tr>
+    <td>Self-Managed Instance Pool</td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/identity_dynamic_group>identity_dynamic_group</a> (workers)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/identity_policy>identity_policy</a> (JoinCluster)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance_configuration>core_instance_configuration</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance_pool>core_instance_pool</a></li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-workers.20230410.zip&zipUrlVariables={"worker_pool_mode":"Instance%20Pool","worker_pool_name":"oke-instance-pool"} target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+  <tr>
+    <td>Self-Managed Cluster Network</td>
+    <td>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/identity_dynamic_group>identity_dynamic_group</a> (workers)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/identity_policy>identity_policy</a> (JoinCluster)</li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance_configuration>core_instance_configuration</a></li>
+      <li><a href=https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_cluster_network>core_cluster_network</a></li>
+    </td>
+    <td><a href=https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://objectstorage.ap-osaka-1.oraclecloud.com/p/LwHOyvlB0vrV7li0K03CDTGz5b12YLzqnBHVB4ud418o6ybBtHBVGzjehp5gK4Hw/n/hpc_limited_availability/b/temporary/o/oke-workers.20230410.zip&zipUrlVariables={"worker_pool_mode":"Cluster%20Network","worker_pool_name":"oke-cluster-network","worker_shape":"BM.GPU4.8"} target="_blank">
+        <img src="https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg" alt="Deploy to Oracle Cloud"/></a>
+    </td>
+  </tr>
+</table>
+++++
 
-== Prerequisites
+== Configure OCI Terraform providers locally
+Review {uri-oci-provider}[Configuring the OCI Terraform Provider] for additional detail.
 
-1. git is installed
-2. ssh client is installed
-3. Terraform 1.0.0+ is installed
+.The module will need at least 2 instances of the `oci` provider in most cases for access to regional endpoints:
+- 1 provider for the region where your OKE cluster and other resources will be created
+- 1 provider for the home region. This is required for conducting identity operations. *Note that your home region may not necessarily be the same as your current region.*
 
-== Provision using this git repo
-
-. Clone the repo:
-
-+
-[source,bash]
-----
-git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke
-
-cd tfoke
-cp terraform.tfvars.example terraform.tfvars
-----
-
-=== Creating Providers
-
-You need to create 2 providers:
-.. 1 provider for the region where your OKE cluster and other resources will be created
-.. 1 provider for the home region. This is required for conducting identity operations. *Note that your home region may not necessarily be the same as your current region.*
-
-. Create a provider.tf file in root with 2 providers. An {uri-provider-example}[example] is provided for convenience:
-+
-[source,bash]
+.Create a provider.tf file in root with 2 providers. An {uri-provider-example}[example] is provided for convenience:
+[source, shell]
 ----
 cp provider.tf.example provider.tf
 ----
 
-. You can also create use providers ({uri-oci-provider}[using differerent methods]) such as:
-
-.. config file profile
-.. auth token
-.. instance principal
-
-
-. Set mandatory parameters in the provider depending on your {uri-oci-provider}[method of initializing your provider]:
-
-* api_fingerprint
-* api_private_key_path
-* compartment_id
-* tenancy_id
-* user_id
-* regions
-
-You can set those parameters using: 
-
-1. environment variables (e.g. TF_api_fingerprint)
-2. the terraform.tfvars
-
-Please ensure you understand the {uri-terraform-precedence}[Terraform variable definition order of precedence] and {uri-oci-provider-precedence}[that of OCI].
-
-. Run Terraform:
-
-+
-[source,bash]
+.Define the appropriate provider configuration for your {uri-oci-provider}[authentication method]. A full configuration may include the following:
 ----
-terraform init
-terraform plan
-terraform apply
+provider "oci" {
+  config_file_profile  = var.config_file_profile
+  fingerprint          = var.api_fingerprint
+  api_private_key_path = var.api_private_key_path
+  private_key          = var.api_private_key
+  private_key_password = var.api_private_key_password
+  region               = var.region
+  tenancy_ocid         = var.tenancy_ocid
+  user_ocid            = var.current_user_ocid
+}
+
+provider "oci" {
+  alias                = "home"
+  config_file_profile  = var.config_file_profile
+  fingerprint          = var.api_fingerprint
+  api_private_key_path = var.api_private_key_path
+  private_key          = var.api_private_key
+  private_key_password = var.api_private_key_password
+  region               = var.home_region
+  tenancy_ocid         = var.tenancy_ocid
+  user_ocid            = var.current_user_ocid
+}
 ----
+
+.The following may suffice in a Resource Manager Stack, with the home region determined using a Terraform datasource:
+----
+provider "oci" {
+  alias        = "home"
+  region       = one(data.oci_identity_region_subscriptions.home.region_subscriptions[*].region_name)
+  tenancy_ocid = var.tenancy_ocid
+  user_ocid    = var.current_user_ocid
+}
+
+provider "oci" {
+  region                 = var.region
+  tenancy_ocid           = var.tenancy_ocid
+  user_ocid              = var.current_user_ocid
+  retry_duration_seconds = 1800
+}
+
+data "oci_identity_region_subscriptions" "home" {
+  tenancy_id = var.tenancy_ocid
+  filter {
+    name   = "is_home_region"
+    values = [true]
+  }
+}
+----
+
+.Parameters may be defined using:
+1. Environment variables (e.g. `TF_api_fingerprint`)
+2. `terraform.tfvars/*.auto.tfvars` files
+
+NOTE: Review {uri-terraform-precedence}[Terraform] and {uri-oci-provider-precedence}[OCI] variable definition order of precedence.
 
 == Provision using the HashiCorp registry module
+. {uri-oci-provider}[Configuring the OCI Terraform Provider]
+. In your project root, create a `provider.tf` file and repeat the steps for creating providers as above.
 
-. In your project root, create a provider.tf file and repeat the steps for creating providers as above.
+. In your project root, create a `variables.tf` file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the OKE module root.
 
-. In your project root, create a variables.tf file and add variables for your project. You can copy the existing {uri-variables}[variables.tf] in the OKE module root.
-
-. In your project root, create a versions.tf file and add the following:
+. In your project root, create a `versions.tf` file and add the following:
 
 +
 ----
@@ -115,9 +217,7 @@ terraform {
 }
 ----
 
-. In your project root, create a main.tf file and add the following:
-
-+
+.In your project root, create a main.tf file and add the following:
 ----
 module "oke" {
   source  = "oracle-terraform-modules/oke/oci"
@@ -126,13 +226,11 @@ module "oke" {
 }
 ----
 
-. Edit your OKE module definition and pass the required variables:
-
-+
+.Edit your OKE module definition and pass the required variables:
 ----
 module "oke" {
   source                                =   "oracle-terraform-modules/oke/oci"
-  version                               =   "4.0.0"
+  version                               =   "5.0.0"
 
   compartment_id                        =   var.compartment_id
   tenancy_id                            =   var.tenancy_id
@@ -158,18 +256,35 @@ module "oke" {
 }
 ----
 
-. Run Terraform:
-
-+
-[source,bash]
+.Run Terraform:
+[source, shell]
 ----
 terraform init
 terraform plan
 terraform apply
 ----
 
+== Provision using this Git repo
+
+.Clone the repo:
+[source, shell]
+----
+git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke && cd tfoke
+cp terraform.tfvars.example terraform.tfvars
+----
+
+Review the steps above to Configure OCI Terraform providers.
+
+NOTE: Review {uri-terraform-precedence}[Terraform] and {uri-oci-provider-precedence}[OCI] variable definition order of precedence.
+
+== Run Terraform
+[source, shell]
+----
+terraform init     # With -upgrade for the latest module versions
+terraform plan
+terraform apply
+----
+
 == Related documentation
-
 * {uri-instructions}[Detailed Instructions]
-
 * {uri-terraform-options}[All Terraform configuration options] for {uri-repo}[this project]
