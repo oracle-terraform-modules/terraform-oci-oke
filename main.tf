@@ -1,4 +1,4 @@
-# Copyright 2017, 2022 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2023 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "vcn" {
@@ -248,10 +248,14 @@ module "oke" {
   ssh_public_key_path = var.ssh_public_key_path
 
   # oke cluster parameters
-  cluster_kubernetes_version                              = var.kubernetes_version
-  control_plane_type                                      = var.control_plane_type
-  control_plane_nsgs                                      = concat(var.control_plane_nsgs, [module.network.control_plane_nsg_id])
-  cluster_name                                            = var.cluster_name
+  cluster_kubernetes_version = var.kubernetes_version
+  control_plane_type         = var.control_plane_type
+  control_plane_nsgs         = concat(var.control_plane_nsgs, [module.network.control_plane_nsg_id])
+  cluster_name               = var.cluster_name
+  cluster_type = lookup({
+    "basic"    = "BASIC_CLUSTER",
+    "enhanced" = "ENHANCED_CLUSTER"
+  }, lower(var.cluster_type), "BASIC_CLUSTER")
   cluster_options_add_ons_is_kubernetes_dashboard_enabled = var.dashboard_enabled
   cluster_options_kubernetes_network_config_pods_cidr     = var.pods_cidr
   cluster_options_kubernetes_network_config_services_cidr = var.services_cidr

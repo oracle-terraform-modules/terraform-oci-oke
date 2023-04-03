@@ -168,6 +168,7 @@ allow_pod_internet_access    = true
 allow_worker_internet_access = true
 allow_worker_ssh_access      = false
 cluster_name                 = "oke"
+cluster_type                 = "basic"
 cni_type                     = "flannel"
 control_plane_type           = "private"
 control_plane_allowed_cidrs  = ["0.0.0.0/0"]
