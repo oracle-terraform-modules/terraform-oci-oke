@@ -54,7 +54,7 @@ locals {
 module "iam" {
   source                       = "./modules/iam"
   compartment_id               = local.compartment_id
-  state_id                     = random_id.state_id.id
+  state_id                     = local.state_id
   tenancy_id                   = local.tenancy_id
   cluster_id                   = local.cluster_id
   create_iam_resources         = var.create_iam_resources

@@ -75,7 +75,7 @@ module "drg" {
 
 module "network" {
   source           = "./modules/network"
-  state_id         = random_id.state_id.id
+  state_id         = local.state_id
   compartment_id   = coalesce(var.network_compartment_id, local.compartment_id)
   defined_tags     = lookup(var.defined_tags, "network", {})
   freeform_tags    = lookup(var.freeform_tags, "network", {})
