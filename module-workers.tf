@@ -25,7 +25,7 @@ module "workers" {
   # Common
   compartment_id      = local.worker_compartment_id
   tenancy_id          = local.tenancy_id
-  state_id            = random_id.state_id.id
+  state_id            = local.state_id
   ad_numbers          = local.ad_numbers
   ad_numbers_to_names = local.ad_numbers_to_names
 
