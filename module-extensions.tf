@@ -2,9 +2,10 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "extensions" {
-  source = "./modules/extensions"
-  count  = local.operator_enabled ? 1 : 0
-  region = var.region
+  source   = "./modules/extensions"
+  count    = local.operator_enabled ? 1 : 0
+  region   = var.region
+  state_id = local.state_id
 
   # Cluster
   kubernetes_version  = var.kubernetes_version

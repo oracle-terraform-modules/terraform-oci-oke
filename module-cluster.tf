@@ -30,7 +30,7 @@ module "cluster" {
   count          = var.create_cluster ? 1 : 0
   source         = "./modules/cluster"
   compartment_id = local.compartment_id
-  state_id       = random_id.state_id.id
+  state_id       = local.state_id
 
   # Network
   cni_type                = var.cni_type
