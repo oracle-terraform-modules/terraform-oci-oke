@@ -14,12 +14,14 @@ locals {
 
   # Handle subnets configured with provided CIDRs
   subnet_cidrs_cidr_input = {
-    for k, v in local.subnet_cidrs_new : k => lookup(v, "cidr", null) if contains(keys(v), "cidr") && !contains(keys(v), "id")
+    for k, v in local.subnet_cidrs_new : k => lookup(v, "cidr")
+    if lookup(v, "cidr", null) != null
   }
 
   # Handle subnets configured with newbits for sizing
   subnet_cidrs_newbits_input = {
-    for k, v in local.subnet_cidrs_new : k => lookup(v, "newbits", 1) if contains(keys(v), "newbits") && !contains(keys(v), "id")
+    for k, v in local.subnet_cidrs_new : k => lookup(v, "newbits")
+    if lookup(v, "newbits", null) != null
   }
 
   # Generate CIDR ranges for subnets to be created
