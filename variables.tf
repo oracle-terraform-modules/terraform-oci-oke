@@ -180,6 +180,12 @@ variable "drg_id" {
   default     = null
 }
 
+variable "remote_peering_connections" {
+  description = "Map of parameters to add and optionally to peer to remote peering connections. Key-only items represent local acceptors and no peering attempted; items containing key and values represent local requestor and must have the OCID and region of the remote acceptor to peer to"
+  type = map(any)
+  default = {}
+}
+
 variable "internet_gateway_route_rules" {
   description = "(Updatable) List of routing rules to add to Internet Gateway Route Table"
   type        = list(map(string))

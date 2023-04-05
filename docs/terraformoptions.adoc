@@ -175,6 +175,16 @@ EOT
 |""
 |drg
 
+|remote_peering_connections
+|Map of parameters to add and optionally to peer to remote peering connections. Key-only items represent represent local acceptors no peering attempted; items containing key and values represent local requestor and must have the OCID and region of the remote acceptor to peer to
+|{
+  "rpc_name_1" = {}
+  "rpc_name_2" = {
+      rpc_acceptor_id = "ocid1.remotepeeringconnection.oc1.aaaaaa..." # 
+      rpc_acceptor_region = "us-ashburn-1"
+  }
+|{}
+
 |enable_waf
 |Whether to enable WAF monitoring of load balancers
 |`true/false`
