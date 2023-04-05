@@ -36,7 +36,7 @@ module "vcn" {
 
 module "drg" {
   source  = "oracle-terraform-modules/drg/oci"
-  version = "1.0.3"
+  version = "1.0.5"
 
   # general oci parameters
   compartment_id = local.compartment_id
@@ -51,9 +51,17 @@ module "drg" {
     drg_route_table_id : null
     }
   }
+  
   # var.drg_id can either contain an existing DRG ID or be null. 
   drg_id = var.drg_id
 
+  # rpc parameters
+  remote_peering_connections = { for k, v in var.remote_peering_connections: k => {
+    "rpc_acceptor_id"     = try(v.rpc_acceptor_id,null),
+    "rpc_acceptor_region" = try(v.rpc_acceptor_region, null)
+    } 
+  }
+  
   count = var.create_drg || var.drg_id != null ? 1 : 0
 }
 

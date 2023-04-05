@@ -56,6 +56,12 @@ output "drg_id" {
   value       = var.create_drg || var.drg_id != null ? module.drg[0].drg_id : null
 }
 
+output "rpcs_ids" {
+  description = "IDs of remote peering connections"
+  value = (var.create_drg || var.drg_id != null) && length(var.remote_peering_connections) > 0  ? { for k, v in module.drg[0].rpc_all_attributes : k => v.id } : null 
+
+}
+
 # convenient output
 
 output "bastion_public_ip" {

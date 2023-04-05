@@ -37,6 +37,18 @@ ssh_private_key_path = "~/.ssh/id_rsa"
 create_drg       = false
 drg_display_name = "drg"
 drg_id           = null
+remote_peering_connections = {} 
+#
+# map of remote peering connections
+# - key-only items represent represent local acceptors with no info about the remote peer
+# - items containing key and values represent local requestor and must have the OCID and region of the remote acceptor
+# remote_peering_connections = {
+#    "rpc_name_1" : {}
+#    "rpc_name_2" : {
+#        "rpc_acceptor_id" : "ocid1.remotepeeringconnection.oc1.aaaaaa" # <-- edit this OCID
+#        "rpc_acceptor_region" : "us-ashburn-1" #<-- replace the region
+#    }
+# }
 
 internet_gateway_route_rules = [
   #   {
