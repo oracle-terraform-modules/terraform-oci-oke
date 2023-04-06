@@ -13,6 +13,16 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "cluster_type" {
+  default     = "basic"
+  description = "The cluster type. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengworkingwithenhancedclusters.htm>Working with Enhanced Clusters and Basic Clusters</a> for more information."
+  type        = string
+  validation {
+    condition     = contains(["basic", "enhanced"], lower(var.cluster_type))
+    error_message = "Accepted values are 'basic' or 'enhanced'."
+  }
+}
+
 variable "control_plane_is_public" {
   default     = true
   description = "Whether the Kubernetes control plane endpoint should be allocated a public IP address."
