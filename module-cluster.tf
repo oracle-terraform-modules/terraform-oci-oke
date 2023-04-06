@@ -45,6 +45,10 @@ module "cluster" {
   # Cluster
   cluster_kms_key_id = var.cluster_kms_key_id
   cluster_name       = var.cluster_name
+  cluster_type = lookup({
+    "basic"    = "BASIC_CLUSTER",
+    "enhanced" = "ENHANCED_CLUSTER"
+  }, lower(var.cluster_type), "BASIC_CLUSTER")
   kubernetes_version = var.kubernetes_version
 
   # KMS

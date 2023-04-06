@@ -23,7 +23,7 @@ terraform {
     oci = {
       configuration_aliases = [oci.home]
       source                = "oracle/oci"
-      version               = "~> 4.108.0"
+      version               = "~> 4.114.0"
     }
 
     random = {

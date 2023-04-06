@@ -7,6 +7,7 @@ create_cluster     = true # *true/false
 cluster_dns        = "10.96.5.5"
 cluster_kms_key_id = null
 cluster_name       = "oke"
+cluster_type       = "basic" # *basic/enhanced
 cni_type           = "flannel"
 control_plane_type = "public"
 image_signing_keys = []
