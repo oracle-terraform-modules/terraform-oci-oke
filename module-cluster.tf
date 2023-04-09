@@ -92,3 +92,8 @@ output "cluster_ca_cert" {
   description = "OKE cluster CA certificate"
   value       = var.output_detail && length(local.cluster_ca_cert) > 0 ? local.cluster_ca_cert : null
 }
+
+output "apiserver_private_host" {
+  description = "Private OKE cluster endpoint address"
+  value       = local.apiserver_private_host
+}
