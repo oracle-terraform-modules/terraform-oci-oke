@@ -3,7 +3,7 @@
 
 locals {
   gatekeeper_enabled       = var.gatekeeper_install && var.expected_node_count > 0
-  gatekeeper_manifest      = one(data.helm_template.gatekeeper[*].manifest)
+  gatekeeper_manifest      = sensitive(one(data.helm_template.gatekeeper[*].manifest))
   gatekeeper_manifest_path = join("/", [local.yaml_manifest_path, "gatekeeper.yaml"])
 }
 

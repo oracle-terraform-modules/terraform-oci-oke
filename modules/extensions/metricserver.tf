@@ -3,7 +3,7 @@
 
 locals {
   metrics_server_enabled       = var.metrics_server_install && var.expected_node_count > 0
-  metrics_server_manifest      = one(data.helm_template.metrics_server[*].manifest)
+  metrics_server_manifest      = sensitive(one(data.helm_template.metrics_server[*].manifest))
   metrics_server_manifest_path = join("/", [local.yaml_manifest_path, "metrics_server.manifest.yaml"])
 }
 
