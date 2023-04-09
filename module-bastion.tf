@@ -36,7 +36,7 @@ module "bastion" {
   nsg_ids             = concat(var.bastion_nsg_ids, var.create_nsgs ? [module.network.bastion_nsg_id] : [])
   is_public           = var.bastion_is_public
   shape               = var.bastion_shape
-  ssh_private_key     = local.ssh_private_key # to await cloud-init completion
+  ssh_private_key     = sensitive(local.ssh_private_key) # to await cloud-init completion
   ssh_public_key      = local.ssh_public_key
   subnet_id           = lookup(module.network.subnet_ids, "bastion", lookup(module.network.subnet_ids, "pub_lb"))
   timezone            = var.timezone

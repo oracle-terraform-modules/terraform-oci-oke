@@ -22,7 +22,10 @@ variable "kubernetes_version" { type = string }
 variable "nsg_ids" { type = list(string) }
 variable "pv_transit_encryption" { type = bool }
 variable "shape" { type = map(any) }
-variable "ssh_private_key" { type = string }
+variable "ssh_private_key" {
+  type      = string
+  sensitive = true
+}
 variable "ssh_public_key" { type = string }
 variable "subnet_id" { type = string }
 variable "timezone" { type = string }

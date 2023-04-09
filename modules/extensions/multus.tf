@@ -9,7 +9,7 @@ locals {
   )
   multus_manifest_path        = join("/", [local.yaml_manifest_path, "multus-manifest.yaml"])
   multus_manifest_status_code = one(data.http.multus[*].status_code)
-  multus_manifest_content     = one(data.http.multus[*].response_body)
+  multus_manifest_content     = sensitive(one(data.http.multus[*].response_body))
 }
 
 data "http" "multus" {

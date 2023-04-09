@@ -5,8 +5,8 @@ locals {
   prometheus_helm_crds_file     = join("/", [local.yaml_manifest_path, "prometheus.crds.yaml"])
   prometheus_helm_manifest_file = join("/", [local.yaml_manifest_path, "prometheus.manifest.yaml"])
 
-  prometheus_helm_crds     = one(data.helm_template.prometheus[*].crds)
-  prometheus_helm_manifest = one(data.helm_template.prometheus[*].manifest)
+  prometheus_helm_crds     = sensitive(one(data.helm_template.prometheus[*].crds))
+  prometheus_helm_manifest = sensitive(one(data.helm_template.prometheus[*].manifest))
 }
 
 data "helm_template" "prometheus" {

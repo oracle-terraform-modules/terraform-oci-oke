@@ -16,7 +16,7 @@ locals {
   ])
 
   # Templated Helm manifest values
-  cluster_autoscaler_manifest      = one(data.helm_template.cluster_autoscaler[*].manifest)
+  cluster_autoscaler_manifest      = sensitive(one(data.helm_template.cluster_autoscaler[*].manifest))
   cluster_autoscaler_manifest_path = join("/", [local.yaml_manifest_path, "cluster_autoscaler.yaml"])
   cluster_autoscaler_defaults = {
     "cloudProvider"                              = "oci-oke",
