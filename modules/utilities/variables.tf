@@ -10,7 +10,10 @@ variable "bastion_host" { type = string }
 variable "bastion_user" { type = string }
 variable "operator_host" { type = string }
 variable "operator_user" { type = string }
-variable "ssh_private_key" { type = string }
+variable "ssh_private_key" {
+  type      = string
+  sensitive = true
+}
 
 # OCIR
 variable "ocir_email_address" { type = string }

@@ -12,7 +12,7 @@ module "utilities" {
   worker_pools         = one(module.workers[*].worker_pools)
 
   # Bastion/operator connection
-  ssh_private_key = local.ssh_private_key
+  ssh_private_key = sensitive(local.ssh_private_key)
   bastion_host    = local.bastion_public_ip
   bastion_user    = var.bastion_user
   operator_host   = local.operator_private_ip

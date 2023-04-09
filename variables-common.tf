@@ -4,7 +4,7 @@
 locals {
   # SSH key precedence: base64-encoded PEM > raw PEM > file PEM > null
   ssh_key_arg = coalesce(var.ssh_private_key_path, "none") != "none" ? " -i ${var.ssh_private_key_path}" : ""
-  ssh_private_key = (
+  ssh_private_key = sensitive(
     coalesce(var.ssh_private_key, "none") != "none"
     ? try(base64decode(var.ssh_private_key), var.ssh_private_key)
     : coalesce(var.ssh_private_key_path, "none") != "none" ? file(var.ssh_private_key_path) : null
