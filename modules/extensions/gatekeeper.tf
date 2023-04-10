@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  gatekeeper_enabled       = var.gatekeeper_enabled && var.expected_node_count > 0
+  gatekeeper_enabled       = var.gatekeeper_install && var.expected_node_count > 0
   gatekeeper_manifest      = one(data.helm_template.gatekeeper[*].manifest)
-  gatekeeper_manifest_path = join("/", [local.helm_manifest_path, "gatekeeper.yaml"])
+  gatekeeper_manifest_path = join("/", [local.yaml_manifest_path, "gatekeeper.yaml"])
 }
 
 data "helm_template" "gatekeeper" {
@@ -73,7 +73,7 @@ resource "null_resource" "gatekeeper" {
   }
 
   provisioner "remote-exec" {
-    inline = ["mkdir -p ${local.helm_manifest_path}"]
+    inline = ["mkdir -p ${local.yaml_manifest_path}"]
   }
 
   provisioner "file" {
@@ -82,6 +82,6 @@ resource "null_resource" "gatekeeper" {
   }
 
   provisioner "remote-exec" {
-    inline = ["kubectl apply -f ${local.gatekeeper_manifest_path}"]
+    inline = ["kubectl apply --force-conflicts=true --server-side -f ${local.gatekeeper_manifest_path}"]
   }
 }
