@@ -65,6 +65,7 @@ module "workers" {
   volume_kms_key_id     = var.worker_volume_kms_key_id
   worker_nsg_ids        = concat(var.worker_nsg_ids, [module.network.worker_nsg_id])
   worker_subnet_id      = lookup(module.network.subnet_ids, "workers")
+  preemptible_config    = var.worker_preemptible_config
 
   # FSS
   create_fss              = var.create_fss
