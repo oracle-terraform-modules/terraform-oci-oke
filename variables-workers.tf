@@ -147,6 +147,15 @@ variable "worker_shape" {
   type        = map(any)
 }
 
+variable "worker_preemptible_config" {
+  default = {
+    enable                  = false,
+    is_preserve_boot_volume = false
+  }
+  description = "Default preemptible Compute configuration when unspecified on a pool. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingpreemptiblecapacity.htm>Preemptible Worker Nodes</a> for more information."
+  type        = map(any)
+}
+
 variable "worker_cloud_init" {
   default     = []
   description = "List of maps containing cloud init MIME part configuration for worker nodes. Merged with pool-specific definitions. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element."

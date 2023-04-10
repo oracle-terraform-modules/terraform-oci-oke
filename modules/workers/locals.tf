@@ -2,12 +2,14 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  boot_volume_size = lookup(var.shape, "boot_volume_size", 50)
-  memory           = lookup(var.shape, "memory", 4)
-  ocpus            = max(1, lookup(var.shape, "ocpus", 1))
-  shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+  boot_volume_size   = lookup(var.shape, "boot_volume_size", 50)
+  memory             = lookup(var.shape, "memory", 4)
+  ocpus              = max(1, lookup(var.shape, "ocpus", 1))
+  shape              = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+  preemptible_config = { enable = false, is_preserve_boot_volume = false }
 
   worker_pool_defaults = {
+    preemptible_config    = local.preemptible_config
     allow_autoscaler      = false
     assign_public_ip      = var.assign_public_ip
     autoscale             = false
@@ -44,6 +46,7 @@ locals {
   # Filter worker_pools map for enabled entries and add derived configuration
   enabled_worker_pools = { for pool_name, pool in local.worker_pools_with_defaults :
     pool_name => merge(pool, {
+      preemptible_config = lookup(pool, "preemptible_config", local.preemptible_config)
       # Bare metal instances must use iSCSI block volume attachments, not paravirtualized
       block_volume_type = length(regexall("^BM", pool.shape)) > 0 ? "iscsi" : var.block_volume_type
       pv_transit_encryption = alltrue([

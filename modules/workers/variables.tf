@@ -52,6 +52,7 @@ variable "shape" { type = map(any) }
 variable "ssh_public_key" { type = string }
 variable "timezone" { type = string }
 variable "volume_kms_key_id" { type = string }
+variable "preemptible_config" { type = map(any) }
 
 # FSS
 variable "create_fss" { type = bool }
