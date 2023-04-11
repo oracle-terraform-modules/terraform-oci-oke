@@ -1,4 +1,4 @@
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.
+# Copyright 2017, 2023 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
@@ -142,14 +142,6 @@ locals {
       protocol    = local.icmp_protocol,
       port        = -1,
       source      = local.workers_subnet,
-      source_type = "CIDR_BLOCK",
-      stateless   = false
-    },
-    {
-      description = "Allow operator host access to control plane. Required for kubectl/helm."
-      protocol    = local.tcp_protocol,
-      port        = 6443,
-      source      = local.operator_subnet,
       source_type = "CIDR_BLOCK",
       stateless   = false
     },
