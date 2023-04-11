@@ -18,12 +18,15 @@ locals {
   cluster_enabled        = var.create_cluster || coalesce(var.cluster_id, "none") != "none"
   cluster_id             = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
   cluster_name           = coalesce(var.cluster_name, "oke-${local.state_id}")
-  apiserver_private_host = local.cluster_enabled ? try(split(":", one(module.cluster[*].endpoints.private_endpoint))[0], "") : null
 
   kubeconfig_public  = var.control_plane_is_public ? try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", "")), tomap({})) : null
   kubeconfig_private = try(yamldecode(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", "")), tomap({}))
 
   kubeconfig_clusters = try(lookup(local.kubeconfig_private, "clusters", []), [])
+  apiserver_private_host = (var.create_cluster
+    ? try(split(":", one(module.cluster[*].endpoints.private_endpoint))[0], "")
+    : split(":", replace(try(lookup(lookup(local.kubeconfig_clusters[0], "cluster", {}), "server", ""), "none"), "https://", ""))[0])
+
   kubeconfig_ca_cert  = try(lookup(lookup(local.kubeconfig_clusters[0], "cluster", {}), "certificate-authority-data", ""), "none")
   cluster_ca_cert     = coalesce(var.cluster_ca_cert, local.kubeconfig_ca_cert)
 }
