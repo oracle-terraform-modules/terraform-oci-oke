@@ -1,4 +1,4 @@
-# Copyright 2017, 2021, Oracle Corporation and/or affiliates.
+# Copyright 2017, 2023, Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # control plane nsg and rules
@@ -82,6 +82,28 @@ resource "oci_core_network_security_group_security_rule" "cp_ingress" {
   }
 
   count = length(local.cp_ingress)
+
+}
+
+# separate the operator rule for users who do not wish to use the operator
+resource "oci_core_network_security_group_security_rule" "cp_ingress_operator" {
+  network_security_group_id = oci_core_network_security_group.cp.id
+  description               = "Allow operator host access to control plane. Required for kubectl/helm."
+  direction                 = "INGRESS"
+  protocol                  = local.tcp_protocol
+  source                    = local.operator_subnet
+  source_type               = "CIDR_BLOCK"
+
+  stateless = false
+
+  tcp_options {
+      destination_port_range {
+        min = 6443
+        max = 6443
+      }
+    }
+
+  count = var.create_operator ? 1: 0
 
 }
 
