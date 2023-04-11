@@ -32,6 +32,15 @@ resource "oci_containerengine_node_pool" "nodepools" {
       content {
         availability_domain = ad_iterator.value
         subnet_id           = var.cluster_subnets["workers"]
+        dynamic "preemptible_node_config" {
+          for_each = lookup(lookup(each.value, "preemptible_config", {}), "enable", false)? [1]: []
+          content {
+            preemption_action {
+              type                    = "TERMINATE"
+              is_preserve_boot_volume = lookup(lookup(each.value, "preemptible_config", {}), "is_preserve_boot_volume", false)
+            }
+          }
+        }
       }
     }
 

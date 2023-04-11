@@ -193,6 +193,16 @@ enable_pv_encryption_in_transit = false
 kubeproxy_mode = "iptables"
 node_pools = {
   # Basic node pool
+  #preemptible = {
+  #  shape            = "VM.Standard.1.1",
+  #  ocpus            = 1,
+  #  memory           = 1,
+  #  node_pool_size   = 1,
+  #  boot_volume_size = 150,
+  #  eviction_grace_duration = 0,  //Grade duration in minutes. Service default is 60.
+  #  force_node_delete       = true
+  #  preemptible_config = {"enable": true, "is_preserve_boot_volume": true}
+  #}
   #np1 = {
   #  shape            = "VM.Standard.E4.Flex",
   #  ocpus            = 2,
