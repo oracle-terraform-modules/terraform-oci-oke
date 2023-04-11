@@ -5,7 +5,8 @@
 set -o pipefail
 
 function run_oke_init() { # Initialize OKE worker node
-  if command -v oke-init-systemd &>/dev/null; then oke-init-systemd; return
+  if [[ -f /etc/systemd/system/oke-init.service ]]; then
+    systemctl --no-block enable --now oke-init.service
   elif [[ -f /etc/oke/oke-functions.sh ]] && [[ -f /etc/oke/oke-install.sh ]]; then
     source /etc/oke/oke-functions.sh && bash /etc/oke/oke-install.sh \
       --apiserver-endpoint "$(get_apiserver_host)" \
