@@ -66,7 +66,7 @@ resource "oci_containerengine_node_pool" "nodepools" {
 
   node_eviction_node_pool_settings {
     #Optional
-    eviction_grace_duration              = format("PT%sM", lookup(each.value, "eviction_grace_duration", 0))
+    eviction_grace_duration              = lookup(each.value, "eviction_grace_duration", 0) == 0 ? "PT0S" : format("PT%sM", each.value.eviction_grace_duration)
     is_force_delete_after_grace_duration = tobool(lookup(each.value, "force_node_delete", true))
   }
 
