@@ -7,7 +7,7 @@ resource "oci_file_storage_file_system" "fss" {
   compartment_id      = var.compartment_id
   display_name        = "fss-${var.state_id}"
   lifecycle {
-    ignore_changes = [availability_domain, defined_tags]
+    ignore_changes = [availability_domain, defined_tags, display_name]
   }
 }
 
@@ -21,7 +21,7 @@ resource "oci_file_storage_mount_target" "fss" {
   nsg_ids             = var.fss_nsg_ids
 
   lifecycle {
-    ignore_changes = [availability_domain, defined_tags]
+    ignore_changes = [availability_domain, defined_tags, display_name]
   }
 }
 
@@ -31,6 +31,9 @@ resource "oci_file_storage_export_set" "fss" {
   display_name      = "fss-${var.state_id}"
   max_fs_stat_bytes = var.fss_max_fs_stat_bytes
   max_fs_stat_files = var.fss_max_fs_stat_files
+  lifecycle {
+    ignore_changes = [display_name]
+  }
 }
 
 resource "oci_file_storage_export" "fss" {

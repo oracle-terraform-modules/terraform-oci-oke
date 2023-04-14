@@ -84,7 +84,7 @@ resource "oci_core_instance" "operator" {
   }
 
   lifecycle {
-    ignore_changes       = [defined_tags, freeform_tags, metadata]
+    ignore_changes       = [defined_tags, freeform_tags, metadata, display_name]
     replace_triggered_by = [null_resource.operator_changed]
     precondition {
       condition     = coalesce(var.image_id, "none") != "none"
