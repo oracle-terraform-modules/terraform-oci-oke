@@ -8,20 +8,24 @@ locals {
 
   # Filter configured subnets eligible for resource creation
   subnet_cidrs_new = {
-    for k, v in var.subnets : k => v
-    if lookup(v, "id", null) == null && lookup(v, "create", "auto") != "never"
+    for k, v in var.subnets : k => merge(v, {
+      "type" = (lookup(v, "netnum", null) == null && lookup(v, "newbits", null) != null ? "newbits"
+        : (lookup(v, "netnum", null) != null && lookup(v, "newbits", null) != null ? "netnum"
+          : (lookup(v, "cidr", null) != null ? "cidr"
+            : (lookup(v, "id", null) != null ? "id"
+      : "invalid"))))
+    })
+    if lookup(v, "id", null) == null && lookup(v, "create", "auto") != "never" && tobool(lookup(lookup(local.subnet_info, k, {}), "create", true))
   }
 
   # Handle subnets configured with provided CIDRs
   subnet_cidrs_cidr_input = {
-    for k, v in local.subnet_cidrs_new : k => lookup(v, "cidr")
-    if lookup(v, "cidr", null) != null
+    for k, v in local.subnet_cidrs_new : k => lookup(v, "cidr") if v.type == "cidr"
   }
 
-  # Handle subnets configured with newbits for sizing
+  # Handle subnets configured with only newbits for sizing
   subnet_cidrs_newbits_input = {
-    for k, v in local.subnet_cidrs_new : k => lookup(v, "newbits")
-    if lookup(v, "newbits", null) != null
+    for k, v in local.subnet_cidrs_new : k => lookup(v, "newbits") if v.type == "newbits"
   }
 
   # Generate CIDR ranges for subnets to be created
@@ -30,8 +34,14 @@ locals {
     for k, v in local.subnet_cidrs_newbits_input : k => element(local.subnet_cidrs_newbits_ranges, index(keys(local.subnet_cidrs_newbits_input), k))
   } : {}
 
+  # Handle subnets configured with netnum + newbits for sizing
+  subnet_cidrs_netnum_newbits_ranges = {
+    for k, v in local.subnet_cidrs_new : k => cidrsubnet(local.vcn_cidr, lookup(v, "newbits"), lookup(v, "netnum"))
+    if v.type == "netnum"
+  }
+
   // Combine provided and calculated subnet CIDRs
-  subnet_cidrs_all = merge(local.subnet_cidrs_cidr_input, local.subnet_cidrs_newbits_resolved)
+  subnet_cidrs_all = merge(local.subnet_cidrs_cidr_input, local.subnet_cidrs_newbits_resolved, local.subnet_cidrs_netnum_newbits_ranges)
 
   # Map of subnets for standard components with additional configuration derived
   # TODO enumerate worker pools for public/private overrides, conditional subnets for both
@@ -54,6 +64,23 @@ locals {
 
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
+  }
+}
+
+resource "null_resource" "validate_subnets" {
+  lifecycle {
+    precondition {
+      condition     = !contains([for k, v in local.subnet_cidrs_new : v.type], "invalid")
+      error_message = format("Invalid subnet specification: %s", jsonencode({ for k, v in local.subnet_cidrs_new : k => v if v.type == "invalid" }))
+    }
+
+    precondition {
+      condition = !(contains([for k, v in local.subnet_cidrs_new : v.type], "netnum") && contains([for k, v in local.subnet_cidrs_new : v.type], "newbits"))
+      error_message = format(
+        "Must omit or include `netnum` for all subnet defintions uniformely: %s",
+        jsonencode({ for k, v in local.subnet_cidrs_new : k => v if contains(["netnum", "newbits"], v.type) })
+      )
+    }
   }
 }
 
