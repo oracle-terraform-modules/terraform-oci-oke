@@ -108,7 +108,7 @@ resource "oci_core_subnet" "oke" {
 
   lifecycle {
     # TODO reflect default security_list_id instead of ignore
-    ignore_changes = [security_list_ids, freeform_tags, defined_tags, dns_label]
+    ignore_changes = [security_list_ids, freeform_tags, defined_tags, dns_label, display_name, cidr_block]
   }
 }
 
@@ -129,7 +129,7 @@ resource "oci_core_security_list" "oke" {
   freeform_tags  = local.freeform_tags
 
   lifecycle {
-    ignore_changes = [freeform_tags, defined_tags]
+    ignore_changes = [freeform_tags, defined_tags, display_name]
   }
 }
 
@@ -139,5 +139,5 @@ output "subnet_ids" {
 }
 
 output "subnet_cidrs" {
-  value = local.subnet_cidrs_all
+  value = merge(local.subnet_cidrs_all, try({ for k, v in oci_core_subnet.oke : k => v.cidr_block }, {}))
 }

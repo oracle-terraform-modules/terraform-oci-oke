@@ -41,7 +41,7 @@ resource "oci_core_network_security_group" "fss" {
   defined_tags   = local.defined_tags
   freeform_tags  = local.freeform_tags
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags]
+    ignore_changes = [defined_tags, freeform_tags, display_name]
   }
 }
 
