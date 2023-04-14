@@ -15,7 +15,6 @@ locals {
             : (lookup(v, "id", null) != null ? "id"
       : "invalid"))))
     })
-    if lookup(v, "id", null) == null && lookup(v, "create", "auto") != "never" && tobool(lookup(lookup(local.subnet_info, k, {}), "create", true))
   }
 
   # Handle subnets configured with provided CIDRs
@@ -93,7 +92,7 @@ resource "oci_core_subnet" "oke" {
   for_each = { for k, v in local.subnet_info : k => v
     if(tobool(lookup(v, "create", true)) || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
     && contains(keys(local.subnet_cidrs_all), k)
-    && lookup(var.subnets, "create", "auto") != "never"
+    && lookup(lookup(var.subnets, k, {}), "create", "auto") != "never"
   }
 
   compartment_id             = var.compartment_id
