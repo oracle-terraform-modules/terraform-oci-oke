@@ -32,6 +32,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   kms_key_id         = coalesce(var.cluster_kms_key_id, "none") != "none" ? var.cluster_kms_key_id : null
   kubernetes_version = var.kubernetes_version
   name               = var.cluster_name
+  type               = var.cluster_type
   vcn_id             = var.vcn_id
 
   cluster_pod_network_options {
