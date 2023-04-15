@@ -13,7 +13,6 @@ locals {
   ])) : local.worker_compartment_rule
 
   cluster_join_where_clause = format("ALL {%s}", join(", ", compact([
-    "target.resource.kind = 'cluster'",
     var.create_iam_worker_policy ? "target.cluster.id = '${var.cluster_id}'" : null,
   ])))
 
