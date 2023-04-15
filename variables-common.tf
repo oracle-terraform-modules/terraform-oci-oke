@@ -16,6 +16,12 @@ locals {
   )
 }
 
+variable "state_id" {
+  default     = null
+  description = "Optional Terraform state_id from an existing deployment of the module to re-use with created resources."
+  type        = string
+}
+
 variable "output_detail" {
   default     = false
   description = "Whether to include detailed output in state."
