@@ -81,6 +81,10 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     service_lb_subnet_ids = compact([var.service_lb_subnet_id])
   }
 
+  timeouts {
+    update = "120m"
+  }
+
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
 
