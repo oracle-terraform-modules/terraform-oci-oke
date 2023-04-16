@@ -61,12 +61,29 @@ locals {
     }
   }
 
+  # Create subnets if when all are true:
+  # - Associated component is enabled OR configured with create == 'always'
+  # - Subnet is configured with newbits and/or netnum/cidr
+  # - Not configured with create == 'never'
+  # - Not configured with an existing 'id'
+  subnets_to_create = { for k, v in local.subnet_info : k => v
+    if alltrue([
+      contains(keys(local.subnet_cidrs_all), k),                       # has a calculated CIDR range (not id input)
+      lookup(lookup(var.subnets, k, {}), "create", "auto") != "never", # not disabled
+      anytrue([
+        tobool(lookup(v, "create", true)),                               # automatically enabled
+        lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" # force enabled
+      ]),
+    ])
+  }
+
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
   }
 }
 
 resource "null_resource" "validate_subnets" {
+  count = length(local.subnets_to_create) > 0 ? 1 : 0
   lifecycle {
     precondition {
       condition     = !contains([for k, v in local.subnet_cidrs_new : v.type], "invalid")
@@ -84,16 +101,7 @@ resource "null_resource" "validate_subnets" {
 }
 
 resource "oci_core_subnet" "oke" {
-  # Create subnets if when all are true:
-  # - Associated component is enabled OR configured with create == 'always'
-  # - Subnet CIDR is configured with newbits & netnum
-  # - Not configured with create == 'never'
-  # - Not configured with an existing 'id'
-  for_each = { for k, v in local.subnet_info : k => v
-    if(tobool(lookup(v, "create", true)) || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
-    && contains(keys(local.subnet_cidrs_all), k)
-    && lookup(lookup(var.subnets, k, {}), "create", "auto") != "never"
-  }
+  for_each = local.subnets_to_create
 
   compartment_id             = var.compartment_id
   vcn_id                     = var.vcn_id
@@ -115,11 +123,9 @@ resource "oci_core_subnet" "oke" {
 # Create an associated security list for subnets when enabled
 # e.g. for load balancers to prevent CCM management of default security list
 resource "oci_core_security_list" "oke" {
-  for_each = { for k, v in local.subnet_info : k => v if alltrue([
-    tobool(lookup(v, "create", true)),
-    tobool(lookup(v, "create_seclist", false)),
-    contains(keys(local.subnet_cidrs_all), k),
-    ])
+  for_each = {
+    for k, v in local.subnets_to_create : k => v
+    if tobool(lookup(v, "create_seclist", false))
   }
 
   compartment_id = var.compartment_id
