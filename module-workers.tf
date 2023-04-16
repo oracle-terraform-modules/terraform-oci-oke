@@ -64,13 +64,13 @@ module "workers" {
   timezone              = var.timezone
   volume_kms_key_id     = var.worker_volume_kms_key_id
   worker_nsg_ids        = concat(var.worker_nsg_ids, [module.network.worker_nsg_id])
-  worker_subnet_id      = lookup(module.network.subnet_ids, "workers")
+  worker_subnet_id      = lookup(module.network.subnet_ids, "workers", "")
   preemptible_config    = var.worker_preemptible_config
 
   # FSS
   create_fss              = var.create_fss
   fss_availability_domain = coalesce(var.fss_availability_domain, local.ad_numbers_to_names[1])
-  fss_subnet_id           = lookup(module.network.subnet_ids, "fss", lookup(module.network.subnet_ids, "workers"))
+  fss_subnet_id           = lookup(module.network.subnet_ids, "fss", "")
   fss_nsg_ids             = var.fss_nsg_ids
   fss_mount_path          = var.fss_mount_path
   fss_max_fs_stat_bytes   = var.fss_max_fs_stat_bytes
