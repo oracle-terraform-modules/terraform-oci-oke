@@ -57,7 +57,7 @@ module "operator" {
   shape                 = var.operator_shape
   ssh_private_key       = sensitive(local.ssh_private_key) # to await cloud-init completion
   ssh_public_key        = local.ssh_public_key
-  subnet_id             = lookup(module.network.subnet_ids, "operator", lookup(module.network.subnet_ids, "workers"))
+  subnet_id             = lookup(module.network.subnet_ids, "operator", "")
   timezone              = var.timezone
   upgrade               = var.operator_upgrade
   user                  = var.operator_user
