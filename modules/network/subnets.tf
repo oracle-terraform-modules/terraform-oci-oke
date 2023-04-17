@@ -66,16 +66,20 @@ locals {
   # - Subnet is configured with newbits and/or netnum/cidr
   # - Not configured with create == 'never'
   # - Not configured with an existing 'id'
-  subnets_to_create = { for k, v in local.subnet_info : k => v
-    if alltrue([
-      contains(keys(local.subnet_cidrs_all), k),                       # has a calculated CIDR range (not id input)
-      lookup(lookup(var.subnets, k, {}), "create", "auto") != "never", # not disabled
-      anytrue([
-        tobool(lookup(v, "create", true)),                               # automatically enabled
-        lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" # force enabled
-      ]),
-    ])
-  }
+  subnets_to_create = merge(
+    { for k, v in local.subnet_info : k =>
+      # Override `create = true` if configured with "always"
+      merge(v, lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" ? { "create" = true } : {})
+      if alltrue([                                                       # Filter disabled subnets from output
+        contains(keys(local.subnet_cidrs_all), k),                       # has a calculated CIDR range (not id input)
+        lookup(lookup(var.subnets, k, {}), "create", "auto") != "never", # not disabled
+        anytrue([
+          tobool(lookup(v, "create", true)),                               # automatically enabled
+          lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" # force enabled
+        ]),
+      ])
+    }
+  )
 
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
@@ -135,7 +139,10 @@ resource "oci_core_security_list" "oke" {
   freeform_tags  = local.freeform_tags
 
   lifecycle {
-    ignore_changes = [freeform_tags, defined_tags, display_name]
+    ignore_changes = [
+      freeform_tags, defined_tags, display_name,
+      ingress_security_rules, egress_security_rules, # ignore for CCM-management
+    ]
   }
 }
 
