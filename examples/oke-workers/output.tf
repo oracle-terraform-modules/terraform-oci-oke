@@ -28,7 +28,7 @@ output "autoscale" { value = var.autoscale }
 
 output "worker_pool_ids" {
   value = concat(
-    values(module.oke.worker_pool_ids),
-    values(module.oke.worker_instance_ids),
+    values(coalesce(module.oke.worker_pool_ids, {})),
+    values(coalesce(module.oke.worker_instance_ids, {})),
   )
 }
