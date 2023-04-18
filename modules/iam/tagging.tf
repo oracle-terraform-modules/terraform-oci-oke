@@ -14,7 +14,7 @@ data "oci_identity_tag_namespaces" "oke" {
 }
 
 data "oci_identity_tags" "oke" {
-  count            = var.create_iam_resources ? 1 : 0
+  count            = var.create_iam_resources && local.tag_namespace_id_found != null ? 1 : 0
   provider         = oci.home
   tag_namespace_id = local.tag_namespace_id_found
   state            = "ACTIVE" // TODO Support reactivation of retired tag w/ update
