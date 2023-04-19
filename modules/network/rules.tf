@@ -79,7 +79,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
   }
 
   dynamic "icmp_options" {
-    for_each = each.value.protocol == local.icmp_protocol ? [1] : []
+    for_each = tostring(each.value.protocol) == tostring(local.icmp_protocol) ? [1] : []
     content {
       type = 3
       code = 4
