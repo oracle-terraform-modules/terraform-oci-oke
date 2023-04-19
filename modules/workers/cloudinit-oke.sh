@@ -16,7 +16,7 @@ function run_oke_init() { # Initialize OKE worker node
 
     cluster_ca=$(get_kubelet_client_ca)
     if [[ -z "${cluster_ca}" ]]; then
-      cluster_ca=$(get_imds_metadata | jq -rcM '.cluster_ca_cert' | base64 -d)
+      cluster_ca=$(get_imds_metadata | jq -rcM '.cluster_ca_cert')
     fi
 
     bash /etc/oke/oke-install.sh \
