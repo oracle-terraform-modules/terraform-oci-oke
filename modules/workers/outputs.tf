@@ -11,6 +11,11 @@ output "worker_pool_ids" {
   value       = local.worker_pool_ids
 }
 
+output "worker_instance_ids" {
+  description = "Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances."
+  value       = local.worker_instance_ids
+}
+
 output "worker_count_expected" {
   description = "# of nodes expected from created worker pools"
   value       = local.expected_node_count

@@ -2,15 +2,15 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  prometheus_enabled            = var.prometheus_enabled && var.expected_node_count > 0
-  prometheus_helm_crds          = one(data.helm_template.prometheus[*].crds)
-  prometheus_helm_manifest      = one(data.helm_template.prometheus[*].manifest)
-  prometheus_helm_crds_file     = join("/", [local.helm_manifest_path, "prometheus_crds.yaml"])
-  prometheus_helm_manifest_file = join("/", [local.helm_manifest_path, "prometheus_manifest.yaml"])
+  prometheus_helm_crds_file     = join("/", [local.yaml_manifest_path, "prometheus.crds.yaml"])
+  prometheus_helm_manifest_file = join("/", [local.yaml_manifest_path, "prometheus.manifest.yaml"])
+
+  prometheus_helm_crds     = sensitive(one(data.helm_template.prometheus[*].crds))
+  prometheus_helm_manifest = sensitive(one(data.helm_template.prometheus[*].manifest))
 }
 
 data "helm_template" "prometheus" {
-  count        = local.prometheus_enabled ? 1 : 0
+  count        = var.prometheus_install ? 1 : 0
   chart        = "kube-prometheus-stack"
   repository   = "https://prometheus-community.github.io/helm-charts"
   version      = var.prometheus_helm_version
@@ -50,10 +50,13 @@ data "helm_template" "prometheus" {
 }
 
 resource "null_resource" "prometheus" {
-  count = local.prometheus_enabled ? 1 : 0
+  count = var.prometheus_install ? 1 : 0
 
   triggers = {
+    helm_version = var.prometheus_helm_version
+    crds_md5     = try(md5(join("\n", local.prometheus_helm_crds)), null)
     manifest_md5 = try(md5(local.prometheus_helm_manifest), null)
+    reapply      = var.prometheus_reapply ? uuid() : null
   }
 
   connection {
@@ -68,7 +71,7 @@ resource "null_resource" "prometheus" {
   }
 
   provisioner "remote-exec" {
-    inline = ["mkdir -p ${local.helm_manifest_path}"]
+    inline = ["mkdir -p ${local.yaml_manifest_path}"]
   }
 
   provisioner "file" {
@@ -82,9 +85,12 @@ resource "null_resource" "prometheus" {
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "kubectl apply --force-conflicts=true --server-side -f ${local.prometheus_helm_crds_file}",
-      "kubectl apply --force-conflicts=true --server-side -f ${local.prometheus_helm_manifest_file}",
+    inline = [for c in compact([
+      (contains(["kube-system", "default"], var.prometheus_namespace) ? null
+      : format(local.kubectl_create_missing_ns, var.prometheus_namespace)),
+      format(local.kubectl_apply_server_file, local.prometheus_helm_crds_file),
+      format(local.kubectl_apply_server_file, local.prometheus_helm_manifest_file),
+      ]) : format(local.output_log, c, "prometheus")
     ]
   }
 }

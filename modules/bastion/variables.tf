@@ -12,7 +12,10 @@ variable "image_id" { type = string }
 variable "is_public" { type = bool }
 variable "nsg_ids" { type = list(string) }
 variable "shape" { type = map(any) }
-variable "ssh_private_key" { type = string }
+variable "ssh_private_key" {
+  type      = string
+  sensitive = true
+}
 variable "ssh_public_key" { type = string }
 variable "subnet_id" { type = string }
 variable "timezone" { type = string }

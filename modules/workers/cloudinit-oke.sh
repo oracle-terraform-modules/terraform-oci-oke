@@ -5,13 +5,23 @@
 set -o pipefail
 
 function run_oke_init() { # Initialize OKE worker node
-  if command -v oke-init-systemd &>/dev/null; then oke-init-systemd; return
+  if [[ -f /etc/systemd/system/oke-init.service ]]; then
+    systemctl --no-block enable --now oke-init.service
   elif [[ -f /etc/oke/oke-functions.sh ]] && [[ -f /etc/oke/oke-install.sh ]]; then
-    source /etc/oke/oke-functions.sh && bash /etc/oke/oke-install.sh \
-      --apiserver-endpoint "$(get_apiserver_host)" \
-      --cluster-dns "$(get_cluster_dns)" \
-      --kubelet-ca-cert "$(get_kubelet_client_ca)" \
-      --kubelet-extra-args "$(get_kubelet_extra_args)"
+    source /etc/oke/oke-functions.sh
+    local apiserver_host; apiserver_host=$(get_apiserver_host)
+    if [[ -z "${apiserver_host}" ]]; then
+      apiserver_host=$(get_imds_metadata | jq -rcM '.apiserver_host')
+    fi
+
+    cluster_ca=$(get_kubelet_client_ca)
+    if [[ -z "${cluster_ca}" ]]; then
+      cluster_ca=$(get_imds_metadata | jq -rcM '.cluster_ca_cert')
+    fi
+
+    bash /etc/oke/oke-install.sh \
+      --apiserver-endpoint "${apiserver_host}" \
+      --kubelet-ca-cert "${cluster_ca}"
   else # Retrieve base64-encoded script content from http, e.g. instance metadata
     local oke_init_url='http://169.254.169.254/opc/v2/instance/metadata/oke_init_script'
     curl --fail -H "Authorization: Bearer Oracle" -L0 "${oke_init_url}" \

@@ -8,7 +8,7 @@ locals {
   user_id               = var.user_id != "" ? var.user_id : var.current_user_ocid
   home_region           = coalesce(var.home_region, var.region)
 
-  api_private_key = (
+  api_private_key = sensitive(
     var.api_private_key != ""
     ? try(base64decode(var.api_private_key), var.api_private_key)
     : var.api_private_key_path != ""

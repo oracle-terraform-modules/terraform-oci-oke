@@ -1,0 +1,1746 @@
+# Copyright (c) 2023 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+title: "OKE: Network & Cluster"
+description: OKE cluster with VCN network resources
+informationalText: "Connect to operator host using the SSH command below for Kubernetes endpoint access."
+schemaVersion: 1.1.0
+version: "20230304"
+locale: "en"
+
+variableGroups:
+  - title: "Hidden"
+    visible: false
+    variables:
+      - api_fingerprint
+      - current_user_ocid
+      - tenancy_ocid
+      - region
+      - output_detail
+      - timezone
+      - subnets
+      - await_node_readiness
+      - calico_helm_values
+      - calico_helm_values_files
+
+  - title: "Identity"
+    variables:
+      - compartment_ocid
+      - create_iam_resources
+      - create_iam_tag_namespace
+      - create_iam_defined_tags
+      - create_iam_autoscaler_policy
+      - create_iam_kms_policy
+      - create_iam_operator_policy
+      - create_iam_worker_policy
+      - use_defined_tags
+      - tag_namespace
+
+  - title: "Network"
+    variables:
+      - ${create_vcn}
+      - assign_dns
+      - vcn_id
+      - vcn_name
+      - vcn_cidrs
+      - vcn_dns_label
+      - ig_route_table_id
+      - vcn_create_internet_gateway
+      - vcn_create_nat_gateway
+      - vcn_create_service_gateway
+      - nat_gateway_id
+      - nat_route_table_id
+      - nat_gateway_public_ip_id
+      - service_gateway_id
+      - enable_waf
+      - create_drg
+      - drg_id
+      - local_peering_gateways
+      - lockdown_default_seclist
+      - create_nsgs
+
+  - title: "Bastion"
+    variables:
+      - bastion_subnet_create
+      - bastion_subnet_newbits
+      - bastion_subnet_id
+      - bastion_nsg_id
+      - bastion_allowed_cidrs
+      - ${create_bastion}
+      - bastion_public_ip
+      - bastion_is_public
+      - bastion_upgrade
+      - bastion_availability_domain
+      - bastion_image_os
+      - bastion_image_os_version
+      - bastion_image_id
+      - bastion_user
+      - bastion_shape_name
+      - bastion_shape_ocpus
+      - bastion_shape_memory
+      - bastion_shape_boot
+      - bastion_shape
+      - bastion_tags
+
+  - title: "SSH"
+    variables:
+      - ssh_public_key
+      - ssh_kms_vault_id
+      - ssh_kms_secret_id
+
+  - title: "Operator"
+    variables:
+      - operator_subnet_create
+      - operator_subnet_newbits
+      - operator_subnet_id
+      - operator_nsg_id
+      - ${create_operator}
+      - operator_upgrade
+      - operator_availability_domain
+      - operator_private_ip
+      - operator_image_os
+      - operator_image_os_version
+      - operator_image_id
+      - operator_user
+      - operator_shape_name
+      - operator_shape_ocpus
+      - operator_shape_memory
+      - operator_shape_boot
+      - operator_shape
+      - operator_use_encryption
+      - operator_volume_kms_vault_id
+      - operator_volume_kms_key_id
+      - operator_pv_transit_encryption
+      - operator_install_helm
+      - operator_install_k9s
+      - operator_install_kubectx
+      - operator_tags
+
+  - title: "Cluster"
+    variables:
+      - control_plane_is_public
+      - control_plane_subnet_create
+      - control_plane_subnet_newbits
+      - control_plane_subnet_id
+      - control_plane_nsg_id
+      - control_plane_allowed_cidrs
+      - int_lb_subnet_create
+      - int_lb_subnet_newbits
+      - int_lb_subnet_id
+      - pub_lb_subnet_create
+      - pub_lb_subnet_newbits
+      - pub_lb_subnet_id
+      - load_balancers
+      - allow_rules_internal_lb
+      - allow_rules_public_lb
+      - ${create_cluster}
+      - cluster_name
+      - cluster_type
+      - cluster_id
+      - kubernetes_version
+      - cluster_dns
+      - cluster_ca_cert
+      - cluster_use_encryption
+      - cluster_kms_vault_id
+      - cluster_kms_key_id
+      - cni_type
+      - pods_cidr
+      - services_cidr
+      - preferred_load_balancer
+      - use_signed_images
+      - configure_ocir
+      - ocir_username
+      - ocir_email_address
+      - ocir_kms_vault_id
+      - ocir_secret_id
+      - ocir_secret_namespace
+      - ocir_secret_name
+      - cluster_tags
+
+  - title: "Workers"
+    variables:
+      - worker_is_public
+      - worker_subnet_create
+      - worker_subnet_newbits
+      - worker_subnet_id
+      - worker_nsg_id
+      - allow_worker_ssh_access
+      - allow_worker_internet_access
+      - allow_node_port_access
+      - pod_subnet_create
+      - pod_subnet_newbits
+      - pod_subnet_id
+      - pod_nsg_id
+      - allow_pod_internet_access
+      - fss_subnet_create
+      - fss_subnet_newbits
+      - fss_subnet_id
+      - fss_nsg_id
+
+  - title: "Extensions"
+    visible: ${create_cluster}
+    variables:
+      - metrics_server_install
+      - prometheus_install
+      - cluster_autoscaler_install
+      - gatekeeper_install
+      - multus_install
+      - calico_install
+
+  - title: "Cluster Autoscaler"
+    visible:
+      and:
+        - ${create_cluster}
+        - cluster_autoscaler_install
+    variables:
+      - ${cluster_autoscaler_namespace}
+      - ${cluster_autoscaler_helm_version}
+      - ${cluster_autoscaler_helm_values}
+      - ${cluster_autoscaler_helm_values_files}
+
+  - title: "Metrics Server"
+    visible:
+      and:
+        - ${create_cluster}
+        - metrics_server_install
+    variables:
+      - metrics_server_namespace
+      - metrics_server_helm_version
+      - metrics_server_helm_values
+      - metrics_server_helm_values_files
+
+  - title: "Prometheus"
+    visible:
+      and:
+        - ${create_cluster}
+        - prometheus_install
+    variables:
+      - prometheus_namespace
+      - prometheus_reapply
+      - prometheus_helm_version
+      - prometheus_helm_values
+      - prometheus_helm_values_files
+
+  - title: "Gatekeeper"
+    visible:
+      and:
+        - ${create_cluster}
+        - gatekeeper_install
+    variables:
+      - gatekeeper_namespace
+      - gatekeeper_helm_version
+      - gatekeeper_helm_values
+      - gatekeeper_helm_values_files
+
+  - title: "Multus"
+    visible:
+      and:
+        - ${create_cluster}
+        - multus_install
+    variables:
+      - multus_namespace
+      - multus_daemonset_url
+      - multus_version
+
+  - title: "Calico"
+    visible:
+      and:
+        - ${create_cluster}
+        - calico_install
+    variables:
+      - calico_namespace
+      - calico_reapply
+      - calico_apiserver_install
+      - calico_version
+      - calico_url
+      - calico_typha_replicas
+      - calico_mtu
+      - calico_helm_version
+
+variables:
+  # Identity
+  api_fingerprint:
+    required: false
+    visible: false
+  current_user_ocid:
+    title: User
+    type: ocid
+    required: true
+  tenancy_ocid:
+    title: Tenancy
+    type: oci:identity:compartment:id
+    required: true
+  compartment_ocid:
+    title: Compartment
+    description: The default compartment for created resources.
+    type: oci:identity:compartment:id
+    required: true
+  region:
+    required: true
+    title: Region
+    type: oci:identity:region:name
+  defined_tags:
+    visible: false
+  freeform_tags:
+    visible: false
+  create_iam_resources:
+    default: false
+    description: Whether to create any IAM dynamic groups, policies, and tags.
+    required: true
+    title: Create IAM resources
+    type: boolean
+  create_iam_tag_namespace:
+    default: false
+    required: true
+    title: Create tag namespace
+    type: boolean
+    visible: ${create_iam_resources}
+  create_iam_defined_tags:
+    default: false
+    required: true
+    title: Create defined tags
+    type: boolean
+    visible: ${create_iam_resources}
+  create_iam_autoscaler_policy:
+    title: Create IAM policy for Cluster Autoscaler
+    required: false
+    visible: ${create_iam_resources}
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+  create_iam_kms_policy:
+    title: Create IAM policy for KMS
+    required: false
+    visible: ${create_iam_resources}
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+  create_iam_operator_policy:
+    title: Create IAM policy for operater cluster management
+    required: false
+    visible: ${create_iam_resources}
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+  create_iam_worker_policy:
+    title: Create IAM policy for self-managed worker nodes
+    required: false
+    visible: ${create_iam_resources}
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+  use_defined_tags:
+    title: Use defined tags
+    default: false
+    type: boolean
+  tag_namespace:
+    title: Tag namespace
+    visible:
+      or:
+        - ${create_iam_tag_namespace}
+        - ${create_iam_defined_tags}
+        - ${use_defined_tags}
+  timezone:
+    title: Timezone
+    type: string
+    # type: oci:identity:region:name
+    # required: true
+  output_detail:
+    title: Output detail
+    type: boolean
+    default: false
+    required: true
+
+  # VCN
+  network_compartment_id:
+    required: false
+    visible: false
+  create_vcn:
+    title: Create VCN
+    type: boolean
+    default: true
+  vcn_id:
+    title: Existing VCN
+    type: oci:core:vcn:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: { not: [create_vcn] }
+  vcn_name:
+    title: Virtual Cloud Network (VCN) name
+    description: Display name for the created VCN. Defaults to 'oke' suffixed with the generated Terraform 'state_id' value.
+    type: string
+    visible: ${create_vcn}
+  assign_dns:
+    title: Assign DNS records
+    type: boolean
+    required: true
+    visible: ${create_vcn}
+  vcn_dns_label:
+    title: DNS label
+    description: DNS label for the created VCN. Defaults to the generated Terraform 'state_id' value.
+    visible:
+      and:
+        - ${create_vcn}
+        - ${assign_dns}
+  vcn_cidrs:
+    title: CIDR ranges
+    description: Comma-separated list of CIDR blocks for the created VCN.
+    type: string
+    required: true
+    visible: ${create_vcn}
+  lockdown_default_seclist:
+    title: Secure default security list
+    type: boolean
+    required: true
+    visible: ${create_vcn}
+  vcn_create_internet_gateway:
+    title: Create internet gateway
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+    visible: ${create_vcn}
+  vcn_create_nat_gateway:
+    title: Create service gateway
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+    visible: ${create_vcn}
+  vcn_create_service_gateway:
+    title: Create NAT gateway
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+    visible: ${create_vcn}
+  local_peering_gateways:
+    title: Local peering gateways
+    visible: false
+  ig_route_table_id:
+    title: Internet Gateway Route Table
+    type: ocid
+    required: false
+    visible: { not: [create_vcn] }
+  service_gateway_id:
+    title: Service gateway
+    description: Existing service gateway in the VCN.
+    type: oci:core:servicegateway:id
+    required: true
+    visible:
+      not:
+        - ${create_vcn}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+  nat_gateway_id:
+    title: NAT gateway
+    description: Existing NAT gateway in the VCN.
+    type: oci:core:natgateway:id
+    required: true
+    visible:
+      not:
+        - ${create_vcn}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+  nat_route_table_id:
+    title: NAT Gateway Route Table
+    description: NAT Gateway Route Table.
+    type: ocid
+    required: false
+    visible: false
+  nat_gateway_public_ip_id:
+    required: false
+    visible: false
+
+  # NSGs
+  create_nsgs:
+    title: Create NSGs
+    description: Create standard network security groups and traffic rules. Additional configuration may be required when disabled, e.g. providing existing NSGs, subnet security lists, etc.
+    type: boolean
+    default: true
+    required: true
+  bastion_nsg_id:
+    title: Additional Network Security Group
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible: { not: [create_vcn] }
+  bastion_allowed_cidrs:
+    title: Comma-separated list of CIDR blocks allowed SSH access to the bastion host.
+    type: string
+    required: false
+    visible: ${create_nsgs}
+  operator_nsg_id:
+    title: Additional Network Security Group
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible: { not: [create_vcn] }
+  control_plane_nsg_id:
+    title: Additional Network Security Group
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible: { not: [create_vcn] }
+  control_plane_allowed_cidrs:
+    title: Comma-separated list of CIDR blocks allowed access to the OKE control plane.
+    type: string
+    required: false
+    visible: ${create_nsgs}
+  pod_nsg_id:
+    title: Additional Network Security Group for pods
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible:
+      and:
+        - eq: [cni_type, NPN]
+        - not: [create_vcn ]
+  worker_nsg_id:
+    title: Additional Network Security Group for workers
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible: { not: [create_vcn] }
+  fss_nsg_id:
+    title: Additional Network Security Group for FSS
+    type: oci:core:nsg:id
+    # additionalProps:
+    #   allowMultiple: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+    visible:
+      and:
+        - ${create_fss}
+        - not: [create_vcn]
+
+  control_plane_is_public:
+    title: Public Kubernetes control plane
+    type: boolean
+    default: false
+    required: false
+    visible: ${create_nsgs}
+  worker_is_public:
+    title: Public Kubernetes worker nodes
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_nsgs}
+  allow_node_port_access:
+    title: Allow NodePort access
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_nsgs}
+  allow_worker_ssh_access:
+    title: Allow worker SSH access
+    type: boolean
+    default: true
+    required: true
+    visible: ${create_nsgs}
+  allow_worker_internet_access:
+    title: Allow worker egress to internet
+    type: boolean
+    default: true
+    required: true
+    visible: ${create_nsgs}
+  allow_pod_internet_access:
+    title: Allow pod egress to internet
+    type: boolean
+    required: true
+    default: true
+    visible:
+      and:
+        - create_nsgs
+        - eq: [cni_type, NPN]
+  allow_rules_internal_lb:
+    title: Additional internal load balancer rules
+    additionalProps:
+      allowMultiple: true
+    required: false
+    visible: ${create_nsgs}
+  allow_rules_public_lb:
+    title: Additional public load balancer rules
+    additionalProps:
+      allowMultiple: true
+    required: false
+    visible: ${create_nsgs}
+
+  create_drg:
+    title: Create DRG
+    description: Create a Dynamic Routing Gateway and attach it to the VCN.
+    type: boolean
+    default: false
+    required: false
+    visible: false
+  drg_id:
+    title: Dynamic Routing Gateway
+    description: Existing Dynamic Routing Gateway to attach to the VCN.
+    type: ocid
+    required: false
+    visible: { not: [create_drg] }
+  drg_display_name:
+    title: DRG display name
+    visible: ${create_drg}
+  enable_waf:
+    title: Enable WAF
+    type: boolean
+    default: false
+    required: false
+    visible: false
+  load_balancers:
+    title: Load balancers
+    type: enum
+    enum: [Public, Internal, Both]
+    default: Internal
+    required: true
+    visible:
+      or:
+        - ${create_cluster}
+        - ${create_nsgs}
+
+  # Subnets
+  subnets:
+    visible: false
+  control_plane_subnet_create:
+    title: Create control plane subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  control_plane_subnet_newbits:
+    title: Control plane subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      and:
+        - ${create_vcn}
+        - not:
+            - eq:
+                - ${control_plane_subnet_create}
+                - Never
+  control_plane_subnet_id:
+    title: Control plane subnet
+    type: oci:core:subnet:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: true
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${control_plane_subnet_create}
+            - Never
+  int_lb_subnet_create:
+    title: Create internal load balancer subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  int_lb_subnet_newbits:
+    title: Internal load balancer subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      not:
+        - eq:
+            - ${int_lb_subnet_create}
+            - Never
+  int_lb_subnet_id:
+    title: Internal load balancer subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: true
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${int_lb_subnet_create}
+            - Never
+  pub_lb_subnet_create:
+    title: Create public load balancer subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  pub_lb_subnet_newbits:
+    title: Public load balancer subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      not:
+        - eq:
+            - ${pub_lb_subnet_create}
+            - Never
+  pub_lb_subnet_id:
+    title: Public load balancer subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: true
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${pub_lb_subnet_create}
+            - Never
+  worker_subnet_create:
+    title: Create worker subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  worker_subnet_newbits:
+    title: Worker subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      and:
+        - ${create_vcn}
+        - not:
+            - eq:
+                - ${worker_subnet_create}
+                - Never
+  worker_subnet_id:
+    title: Worker subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${worker_subnet_create}
+            - Never
+
+  bastion_subnet_create:
+    title: Create bastion subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  bastion_subnet_newbits:
+    title: Bastion subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      and:
+        - ${create_vcn}
+        - not:
+            - eq:
+                - ${bastion_subnet_create}
+                - Never
+  bastion_subnet_id:
+    title: Bastion subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${bastion_subnet_create}
+            - Never
+
+  operator_subnet_create:
+    title: Create operator subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  operator_subnet_newbits:
+    title: Operator subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      and:
+        - ${create_vcn}
+        - not:
+            - eq:
+                - ${operator_subnet_create}
+                - Never
+  operator_subnet_id:
+    title: Operator subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${operator_subnet_create}
+            - Never
+
+  pod_subnet_create:
+    title: Create pod subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  pod_subnet_newbits:
+    title: Pod subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      and:
+        - ${create_vcn}
+        - not:
+            - eq:
+                - ${pod_subnet_create}
+                - Never
+  pod_subnet_id:
+    title: Pod subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: true
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${pod_subnet_create}
+            - Never
+  fss_subnet_create:
+    title: Create FSS subnet
+    type: enum
+    enum: [Never, Auto, Always]
+    default: Auto
+    required: true
+  fss_subnet_newbits:
+    title: FSS subnet size
+    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
+    type: number
+    visible:
+      and:
+        - ${create_vcn}
+        - not:
+            - eq:
+                - ${fss_subnet_create}
+                - Never
+  fss_subnet_id:
+    title: FSS subnet
+    type: oci:core:subnet:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vcnId: ${vcn_id}
+      hidePublicSubnet: false
+      hidePrivateSubnet: false
+      hideRegionalSubnet: false
+      hideAdSubnet: false
+    visible:
+      and:
+        - not:
+            - ${create_vcn}
+        - eq:
+            - ${fss_subnet_create}
+            - Never
+
+  # SSH
+  ssh_public_key:
+    title: SSH Public Key
+    type: oci:core:ssh:publickey
+    pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+    required: false
+  ssh_kms_vault_id:
+    title: SSH Vault
+    description: The OCI Vault used to encrypt the SSH key pair.
+    type: oci:kms:vault:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  ssh_kms_secret_id:
+    title: SSH Vault secret
+    description: The OCI Vault secret containing the SSH private key.
+    type: oci:kms:secret:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${ssh_kms_vault_id}
+
+  # Bastion
+  create_bastion:
+    title: Create bastion instance
+    type: boolean
+    default: false
+    required: true
+  bastion_availability_domain:
+    title: Availability domain
+    type: oci:identity:availabilitydomain:name
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  bastion_public_ip:
+    title: Bastion IP
+    description: The address of an existing bastion host for SSH access to operator/cluster resources.
+    type: string
+    required: true
+    visible: { not: [create_bastion] }
+  bastion_user:
+    title: User
+    type: string
+    default: opc
+    required: true
+  bastion_shape_name:
+    title: Shape
+    type: oci:core:instanceshape:name
+    default: "VM.Standard.E4.Flex"
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  bastion_shape_ocpus:
+    title: OCPUs (Cores)
+    type: number
+    default: 4
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  bastion_shape_memory:
+    title: Memory (GB)
+    type: number
+    default: 16
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  bastion_shape_boot:
+    title: Boot volume size (GB)
+    type: number
+    default: 50
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  bastion_shape:
+    visible: false
+  bastion_image_os:
+    title: Image OS
+    description: Image operating system.
+    type: enum
+    default: "Oracle Autonomous Linux"
+    enum: ["Oracle Autonomous Linux", "Oracle Linux"]
+    required: true
+    visible:
+      and:
+        - ${create_bastion}
+        - not:
+            - eq:
+                - ${bastion_image_type}
+                - custom
+  bastion_image_os_version:
+    title: Image OS version
+    description: Image operating system version.
+    type: enum
+    default: "8.7"
+    enum: ["7.9", "8.7"]
+    required: true
+    visible:
+      and:
+        - ${create_bastion}
+        - not:
+            - eq:
+                - ${bastion_image_type}
+                - custom
+  bastion_image_type:
+    title: Image type
+    type: enum
+    default: platform
+    enum: [platform, custom]
+    required: true
+    visible: false
+  bastion_image_id:
+    title: Image ID
+    type: oci:core:image:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      operatingSystem: ${bastion_image_os}
+      operatingSystemVersion: ${bastion_image_os_version}
+      shape: ${bastion_shape_name}
+    visible: ${create_bastion}
+  bastion_is_public:
+    title: Public network
+    description: Public network and address for bastion host.
+    type: boolean
+    default: true
+    required: true
+    visible:
+      or:
+        - ${bastion_subnet_create}
+        - ${create_bastion}
+  bastion_upgrade:
+    title: Upgrade OS
+    description: Upgrade the operating system on boot.
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_bastion}
+  bastion_tags:
+    type: oci:identity:tag:value
+    required: false
+    title: Tagging
+    description: Tag values for created resources.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+
+  # Operator variables
+  create_operator:
+    title: Create operator instance
+    description: Provision an OCI Compute instance configured with IAM access to interact with the OKE Kubernetes endpoint, e.g. through a bastion host for private networks. Required for installation of extensions using the module.
+    type: boolean
+    default: true
+    required: false
+  operator_availability_domain:
+    title: Availability domain
+    type: oci:identity:availabilitydomain:name
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_operator}
+  operator_private_ip:
+    title: Operator IP
+    type: string
+    required: false
+    visible:
+      not:
+        - ${create_operator}
+  operator_user:
+    title: User
+    type: string
+    default: opc
+    required: true
+  operator_shape_name:
+    title: Shape
+    type: oci:core:instanceshape:name
+    default: "VM.Standard.E4.Flex"
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  operator_shape_ocpus:
+    title: OCPUs (Cores)
+    type: number
+    default: 4
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  operator_shape_memory:
+    title: Memory (GB)
+    type: number
+    default: 16
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  operator_shape_boot:
+    title: Boot volume size (GB)
+    type: number
+    default: 50
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
+  operator_shape:
+    visible: false
+  operator_image_os:
+    title: Image OS
+    type: enum
+    default: "Oracle Linux"
+    enum: ["Oracle Linux"]
+    required: true
+    visible:
+      and:
+        - ${create_operator}
+        - not:
+            - eq:
+                - ${operator_image_type}
+                - custom
+  operator_image_os_version:
+    title: Image OS version
+    type: enum
+    default: "8"
+    enum: ["7.9", "8"]
+    required: true
+    visible:
+      and:
+        - ${create_operator}
+        - not:
+            - eq:
+                - ${operator_image_type}
+                - custom
+  operator_image_type:
+    title: Image type
+    type: enum
+    default: platform
+    enum: [platform, custom]
+    required: true
+    visible: false
+  operator_image_id:
+    title: Image ID
+    type: oci:core:image:id
+    required: false
+    visible: ${create_operator}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      operatingSystem: ${operator_image_os}
+      operatingSystemVersion: ${operator_image_os_version}
+      shape: ${operator_shape_name}
+  operator_pv_transit_encryption:
+    title: In-transit volume encryption
+    type: boolean
+    visible: ${create_operator}
+  operator_use_encryption:
+    title: Use encryption
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_operator}
+  operator_volume_kms_vault_id:
+    title: KMS volume encryption vault
+    description: Vault containing operator volume encryption keys.
+    type: oci:kms:vault:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible:
+      and:
+        - ${create_operator}
+        - operator_use_encryption
+  operator_volume_kms_key_id:
+    title: KMS volume encryption key
+    type: oci:kms:key:id
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${operator_volume_kms_vault_id}
+    visible:
+      and:
+        - ${create_operator}
+        - operator_use_encryption
+  operator_upgrade:
+    title: Upgrade OS
+    description: Upgrade the operating system on boot.
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_operator}
+  operator_install_helm:
+    title: Install Helm
+    type: boolean
+    visible: ${create_operator}
+  operator_install_k9s:
+    title: Install K9s
+    type: boolean
+    default: true
+    visible: ${create_operator}
+  operator_install_kubectx:
+    title: Install Kubectx
+    type: boolean
+    visible: ${create_operator}
+  operator_tags:
+    type: oci:identity:tag:value
+    required: false
+    title: Tagging
+    description: Tag values for created resources.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_operator}
+
+  # Cluster
+  create_cluster:
+    title: Create cluster
+    type: boolean
+    default: true
+    required: true
+  cluster_dns:
+    title: Cluster DNS address
+    type: string
+    required: false
+    visible:
+      not:
+        - ${create_cluster}
+        - eq:
+            - cluster_id
+            - null
+  cluster_ca_cert:
+    title: Cluster CA certificate
+    description: Base64+PEM-encoded cluster CA certificate for self-managed nodes.
+    #  Determined automatically when 'create_cluster' = true or 'cluster_id' is provided.
+    visible:
+      not:
+        - ${create_cluster}
+        - eq:
+            - cluster_id
+            - null
+  cluster_use_encryption:
+    title: Use encryption
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_cluster}
+  cluster_kms_vault_id:
+    title: Cluster etcd KMS encryption vault
+    type: oci:kms:vault:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible:
+      and:
+        - ${create_cluster}
+        - cluster_use_encryption
+  cluster_kms_key_id:
+    title: Cluster etcd KMS encryption key
+    type: oci:kms:key:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${cluster_kms_vault_id}
+    visible:
+      and:
+        - ${create_cluster}
+        - cluster_use_encryption
+  cluster_id:
+    title: Cluster ID
+    type: oci:container:cluster:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible:
+      not:
+        - ${create_cluster}
+  cluster_name:
+    title: Cluster name
+    description: Display name for the created cluster. Defaults to 'oke' suffixed with the generated Terraform 'state_id' value.
+    type: string
+    required: false
+    visible: ${create_cluster}
+  cluster_type:
+    title: Cluster Type
+    type: enum
+    default: Basic
+    enum: [Basic, Enhanced]
+    allowMultiple: false
+    required: true
+    visible: ${create_cluster}
+  cni_type:
+    title: CNI Type
+    type: enum
+    default: Flannel
+    enum: [Flannel, NPN]
+    allowMultiple: false
+    required: true
+    visible: ${create_cluster}
+  kubernetes_version:
+    type: oci:kubernetes:versions:id
+    title: Kubernetes version
+    description: The Kubernetes version for the created OKE cluster and managed nodes.
+    default: "v1.25.4"
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      clusterOptionId: "all"
+    visible: ${create_cluster}
+  pods_cidr:
+    title: Pod CIDR
+    visible:
+      and:
+        - ${create_cluster}
+        - eq:
+            - ${cni_type}
+            - NPN
+  services_cidr:
+    title: Service CIDR
+    visible: ${create_cluster}
+  preferred_load_balancer:
+    title: Preferred load balancer
+    type: enum
+    default: Internal
+    enum: [Internal, Public]
+    allowMultiple: false
+    required: true
+    visible: ${create_cluster}
+  use_signed_images:
+    title: Use signed images
+    type: boolean
+    default: false
+    required: true
+    visible: ${create_cluster}
+
+  # OCIR
+  configure_ocir:
+    title: Configure container registry (OCIR)
+    type: boolean
+    default: false
+    visible: ${create_cluster}
+  ocir_username:
+    title: Username
+    visible:
+      and:
+        - ${create_cluster}
+        - configure_ocir
+  ocir_email_address:
+    title: Email address
+    visible:
+      and:
+        - ${create_cluster}
+        - configure_ocir
+  ocir_kms_vault_id:
+    title: Vault ID
+    type: oci:kms:vault:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible:
+      and:
+        - ${create_cluster}
+        - configure_ocir
+  ocir_kms_secret_id:
+    title: Vault secret ID
+    type: oci:kms:secret:id
+    required: false
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${ocir_kms_vault_id}
+    visible:
+      and:
+        - ${create_cluster}
+        - configure_ocir
+  ocir_secret_namespace:
+    title: Secret namespace
+    visible:
+      and:
+        - ${create_cluster}
+        - configure_ocir
+  ocir_secret_name:
+    title: Secret name
+    visible:
+      and:
+        - ${create_cluster}
+        - configure_ocir
+
+  cluster_tags:
+    type: oci:identity:tag:value
+    required: false
+    title: Tagging
+    description: Tag values for created resources.
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+    visible: ${create_cluster}
+
+  # CNI: Calico
+  calico_install:
+    title: Install Calico
+    description: Deploy Calico with Oracle Cloud configuration. See <a href=https://docs.tigera.io/calico/latest/getting-started>Install Calico</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  calico_namespace:
+    title: Kubernetes namespace
+    type: string
+  calico_reapply:
+    title: Re-apply
+    type: boolean
+    default: false
+    required: true
+  calico_apiserver_install:
+    title: Install Calico API Server
+    type: boolean
+    default: false
+    required: true
+  calico_mode:
+    visible: false
+  calico_staging_dir:
+    visible: false
+  calico_typha_install:
+    title: Install Typha
+    visible: ${calico_install}
+  calico_helm_version:
+    visible: false
+  calico_mtu:
+    visible: false
+  calico_typha_replicas:
+    visible: false
+  calico_url:
+    visible: false
+  calico_version:
+    visible: false
+
+  # Metrics server
+  metrics_server_install:
+    title: Install Metrics Server
+    description: Deploy the Kubernetes Metrics Server with Oracle Cloud configuration. See <a href=https://github.com/kubernetes-sigs/metrics-server>kubernetes-sigs/metrics-server</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  metrics_server_namespace:
+    title: Kubernetes namespace
+    type: string
+  metrics_server_helm_version:
+    title: Helm chart version
+    type: string
+  metrics_server_helm_values:
+    title: Helm chart values
+    visible: false
+  metrics_server_helm_values_files:
+    title: Helm chart values files
+    visible: false
+
+  # Cluster autoscaler
+  cluster_autoscaler_install:
+    title: Install Cluster Autoscaler
+    description: Deploy the Kubernetes Cluster Autoscaler with Oracle Cloud configuration. See <a href=https://github.com/kubernetes/autoscaler>kubernetes/autoscaler</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  cluster_autoscaler_namespace:
+    title: Kubernetes namespace
+    type: string
+  cluster_autoscaler_helm_version:
+    title: Helm chart version
+    type: string
+  cluster_autoscaler_helm_values:
+    title: Helm chart values
+    visible: false
+  cluster_autoscaler_helm_values_files:
+    title: Helm chart values files
+    visible: false
+
+  # Gatekeeper
+  gatekeeper_install:
+    title: Install Gatekeeper
+    description: Deploy Gatekeeper with Oracle Cloud configuration. See <a href=https://github.com/open-policy-agent/gatekeeper>open-policy-agent/gatekeeper</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  gatekeeper_namespace:
+    title: Kubernetes namespace
+    type: string
+  gatekeeper_helm_version:
+    title: Helm chart version
+    type: string
+  gatekeeper_helm_values:
+    title: Helm chart values
+    visible: false
+  gatekeeper_helm_values_files:
+    title: Helm chart values files
+    visible: false
+
+  # Prometheus
+  prometheus_install:
+    title: Install Prometheus
+    description: Deploy Prometheus with Oracle Cloud configuration. See <a href=https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack>prometheus-community/kube-prometheus-stack</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  prometheus_reapply:
+    title: Re-apply
+    type: boolean
+    default: false
+    required: true
+  prometheus_namespace:
+    title: Kubernetes namespace
+    type: string
+  prometheus_helm_version:
+    title: Helm chart version
+    type: string
+  prometheus_helm_values:
+    title: Helm chart values
+    visible: false
+  prometheus_helm_values_files:
+    title: Helm chart values files
+    visible: false
+
+  # Multus
+  multus_install:
+    title: Install Multus
+    description: Deploy Multus for extended CNI configuration. See <a href=https://github.com/k8snetworkplumbingwg/multus-cni>k8snetworkplumbingwg/multus-cni</a> for more information. Preempts existing CNI configuration, with the configured cluster CNI plugin used by default.
+    type: boolean
+    default: false
+    required: true
+  multus_namespace:
+    title: Kubernetes namespace
+    type: string
+  multus_daemonset_url:
+    title: Daemonset URL
+    description: The URL path to the Multus manifest. Leave unset for tags of <a href=https://github.com/k8snetworkplumbingwg/multus-cni>k8snetworkplumbingwg/multus-cni</a> using the configured Multus version.
+    type: string
+  multus_version:
+    title: Version
+    type: string
+
+outputGroups:
+  - title: Terraform
+    outputs:
+      - state_id
+  - title: Identity
+    outputs:
+      - dynamic_group_ids
+      - policy_statements
+  - title: Network
+    outputs:
+      - vcn_id
+      - ig_route_table_id
+      - nat_route_table_id
+      - drg_id
+      - network_security_rules
+  - title: Bastion
+    outputs:
+      - bastion_id
+      - bastion_subnet_id
+      - bastion_subnet_cidr
+      - bastion_nsg_id
+      - bastion_public_ip
+      - bastion_ssh_command
+      - bastion_ssh_secret_id
+  - title: Operator
+    outputs:
+      - operator_id
+      - operator_subnet_id
+      - operator_subnet_cidr
+      - operator_nsg_id
+      - operator_private_ip
+      - operator_ssh_command
+      - operator_ssh_secret_id
+  - title: Cluster
+    outputs:
+      - cluster_id
+      - cluster_endpoints
+      - control_plane_subnet_id
+      - control_plane_subnet_cidr
+      - control_plane_nsg_id
+      - int_lb_subnet_id
+      - int_lb_subnet_cidr
+      - int_lb_nsg_id
+      - pub_lb_subnet_id
+      - pub_lb_subnet_cidr
+      - pub_lb_nsg_id
+  - title: Workers
+    outputs:
+      - worker_subnet_id
+      - worker_subnet_cidr
+      - worker_nsg_id
+      - pod_subnet_id
+      - pod_subnet_cidr
+      - pod_nsg_id
+      - fss_subnet_id
+      - fss_subnet_cidr
+      - fss_nsg_id
+
+outputs:
+  # Terraform
+  state_id:
+    title: State ID
+    type: copyableString
+
+  # Identity
+  dynamic_group_ids:
+    title: Dynamic groups
+    type: list
+  policy_statements:
+    title: Policy statements
+    type: list
+
+  # Network
+  vcn_id:
+    title: VCN
+    type: ocid
+  drg_id:
+    title: Dynamic routing gateway
+    type: ocid
+  ig_route_table_id:
+    title: Internet gateway route table
+    type: ocid
+  nat_route_table_id:
+    title: NAT gateway route table
+    type: ocid
+  subnet_cidrs:
+    visible: false
+  subnet_ids:
+    visible: false
+  nsg_ids:
+    visible: false
+
+  # NSGs
+  network_security_rules:
+    visible: false
+
+  # Bastion
+  bastion_id:
+    title: Bastion instance
+    type: ocid
+  bastion_subnet_id:
+    title: Bastion subnet
+    type: ocid
+  bastion_subnet_cidr:
+    title: Bastion CIDR
+    type: string
+  bastion_nsg_id:
+    title: Bastion NSG
+    type: ocid
+  bastion_public_ip:
+    title: Bastion IP
+    type: copyableString
+  bastion_ssh_command:
+    title: Bastion SSH command
+    type: copyableString
+  bastion_ssh_secret_id:
+    title: Bastion SSH Vault secret
+    type: ocid
+
+  # Operator
+  operator_id:
+    title: Operator instance
+    type: ocid
+  operator_subnet_id:
+    title: Operator subnet
+    type: ocid
+  operator_subnet_cidr:
+    title: Operator CIDR
+    type: string
+  operator_nsg_id:
+    title: Operator NSG
+    type: ocid
+  operator_private_ip:
+    title: Operator IP
+    type: copyableString
+  operator_ssh_command:
+    title: Operator SSH command
+    type: copyableString
+  operator_ssh_secret_id:
+    title: Operator SSH Vault secret
+    type: ocid
+
+  # Cluster
+  cluster_id:
+    title: OKE cluster
+    type: ocid
+  cluster_endpoints:
+    title: Cluster endpoints
+    type: map
+  control_plane_subnet_id:
+    title: Control plane subnet
+    type: ocid
+  control_plane_subnet_cidr:
+    title: Control plane CIDR
+    type: string
+  control_plane_nsg_id:
+    title: Control plane NSG
+    type: ocid
+  int_lb_subnet_id:
+    title: Internal load balancer subnet
+    type: ocid
+  int_lb_subnet_cidr:
+    title: Internal load balancer CIDR
+    type: string
+  int_lb_nsg_id:
+    title: Internal load balancer NSG
+    type: ocid
+  pub_lb_subnet_id:
+    title: Public load balancer subnet
+    type: ocid
+  pub_lb_subnet_cidr:
+    title: Public load balancer CIDR
+    type: string
+  pub_lb_nsg_id:
+    title: Public load balancer NSG
+    type: ocid
+
+  # Workers
+  worker_subnet_id:
+    title: Worker subnet
+    type: ocid
+  worker_subnet_cidr:
+    title: Worker CIDR
+    type: string
+  worker_nsg_id:
+    title: Worker NSG
+    type: ocid
+  pod_subnet_id:
+    title: Pod subnet
+    type: ocid
+  pod_subnet_cidr:
+    title: Pod CIDR
+    type: string
+  pod_nsg_id:
+    title: Pod NSG
+    type: ocid
+
+  # FSS
+  fss_subnet_id:
+    title: File Storage Service subnet
+    type: ocid
+  fss_subnet_cidr:
+    title: File Storage Service CIDR
+    type: string
+  fss_nsg_id:
+    title: File Storage Service NSG
+    type: ocid

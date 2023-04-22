@@ -2,12 +2,14 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  boot_volume_size = lookup(var.shape, "boot_volume_size", 50)
-  memory           = lookup(var.shape, "memory", 4)
-  ocpus            = max(1, lookup(var.shape, "ocpus", 1))
-  shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+  boot_volume_size   = lookup(var.shape, "boot_volume_size", 50)
+  memory             = lookup(var.shape, "memory", 4)
+  ocpus              = max(1, lookup(var.shape, "ocpus", 1))
+  shape              = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+  preemptible_config = { enable = false, is_preserve_boot_volume = false }
 
   worker_pool_defaults = {
+    preemptible_config    = local.preemptible_config
     allow_autoscaler      = false
     assign_public_ip      = var.assign_public_ip
     autoscale             = false
@@ -44,6 +46,7 @@ locals {
   # Filter worker_pools map for enabled entries and add derived configuration
   enabled_worker_pools = { for pool_name, pool in local.worker_pools_with_defaults :
     pool_name => merge(pool, {
+      preemptible_config = lookup(pool, "preemptible_config", local.preemptible_config)
       # Bare metal instances must use iSCSI block volume attachments, not paravirtualized
       block_volume_type = length(regexall("^BM", pool.shape)) > 0 ? "iscsi" : var.block_volume_type
       pv_transit_encryption = alltrue([
@@ -81,24 +84,34 @@ locals {
 
       # Standard tags as defined if enabled for use
       # User-provided freeform tags are merged and take precedence
-      defined_tags = merge(var.use_defined_tags ? {
-        "${var.tag_namespace}.state_id"           = var.state_id,
-        "${var.tag_namespace}.role"               = "worker",
-        "${var.tag_namespace}.pool"               = pool_name,
-        "${var.tag_namespace}.cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
-        } : {},
-        var.defined_tags, lookup(pool, "defined_tags", {}),
+      defined_tags = merge(
+        var.use_defined_tags ? merge(
+          {
+            "${var.tag_namespace}.state_id"           = var.state_id,
+            "${var.tag_namespace}.role"               = "worker",
+            "${var.tag_namespace}.pool"               = pool_name,
+            "${var.tag_namespace}.cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
+          },
+          pool.autoscale ? { "${var.tag_namespace}.oraclecloud.com/cluster_autoscaler" = "managed" } : {},
+        ) : {},
+        var.defined_tags,
+        lookup(pool, "defined_tags", {})
       )
 
       # Standard tags as freeform if defined tags are disabled
       # User-provided freeform tags are merged and take precedence
-      freeform_tags = merge(!var.use_defined_tags ? {
-        "state_id"           = var.state_id,
-        "role"               = "worker",
-        "pool"               = pool_name,
-        "cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
-        } : {},
-        var.freeform_tags, lookup(pool, "freeform_tags", {}),
+      freeform_tags = merge(
+        !var.use_defined_tags ? merge(
+          {
+            "state_id"           = var.state_id,
+            "role"               = "worker",
+            "pool"               = pool_name,
+            "cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
+          },
+          pool.autoscale ? { "cluster_autoscaler" = "managed" } : {},
+        ) : {},
+        var.freeform_tags,
+        lookup(pool, "freeform_tags", {})
       )
 
       # Combine global and pool-specific NSGs
@@ -107,15 +120,14 @@ locals {
       # Add a node label for cluster autoscaler where scheduling is supported
       node_labels = merge(
         {
-          "oke.oraclecloud.com/tf.module"    = "terraform-oci-oke"
-          "oke.oraclecloud.com/tf.state_id"  = var.state_id
-          "oke.oraclecloud.com/tf.workspace" = terraform.workspace
-          "oke.oraclecloud.com/pool.name"    = pool_name
-          "oke.oraclecloud.com/pool.mode"    = pool.mode
+          "oke.oraclecloud.com/tf.module"          = "terraform-oci-oke"
+          "oke.oraclecloud.com/tf.state_id"        = var.state_id
+          "oke.oraclecloud.com/tf.workspace"       = terraform.workspace
+          "oke.oraclecloud.com/pool.name"          = pool_name
+          "oke.oraclecloud.com/pool.mode"          = pool.mode
+          "oke.oraclecloud.com/cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled"
         },
-        pool.allow_autoscaler ? {
-          "oke.oraclecloud.com/cluster_autoscaler" = "allowed"
-        } : {},
+        pool.autoscale ? { "oke.oraclecloud.com/cluster_autoscaler" = "managed" } : {},
         var.node_labels,
       )
     }) if tobool(pool.create)
@@ -142,6 +154,13 @@ locals {
     for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "instance-pool"
   }
 
+  # Enabled worker_pool map entries for individual instances
+  enabled_instances = { for k, v in concat([], [
+    for k, v in local.enabled_worker_pools : [
+      for i in range(0, lookup(v, "size", 0)) : merge(v, { "key" = k, "index" = i })
+    ] if lookup(v, "mode", "") == "instance"
+  ]...) : "${lookup(v, "key")}-${k}" => v }
+
   # Enabled worker_pool map entries for cluster networks
   enabled_cluster_networks = {
     for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "cluster-network"
@@ -164,4 +183,5 @@ locals {
   worker_cluster_networks = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_pools_output     = merge(local.worker_node_pools, local.worker_instance_pools, local.worker_cluster_networks)
   worker_pool_ids         = { for k, v in local.worker_pools_output : k => v.id }
+  worker_instance_ids     = { for k, v in local.enabled_instances : k => lookup(lookup(oci_core_instance.workers, k, {}), "id", "") }
 }
