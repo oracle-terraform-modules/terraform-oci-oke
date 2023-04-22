@@ -7,6 +7,12 @@ variable "create_operator" {
   type        = bool
 }
 
+variable "use_existing_operator" {
+  default     = false
+  description = "Whether to create an operator server in a private subnet."
+  type        = bool
+}
+
 variable "operator_availability_domain" {
   default     = null
   description = "The availability domain for FSS placement. Defaults to first available."

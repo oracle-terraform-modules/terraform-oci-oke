@@ -8,20 +8,23 @@ locals {
 
   # Filter configured subnets eligible for resource creation
   subnet_cidrs_new = {
-    for k, v in var.subnets : k => v
-    if lookup(v, "id", null) == null && lookup(v, "create", "auto") != "never"
+    for k, v in var.subnets : k => merge(v, {
+      "type" = (lookup(v, "netnum", null) == null && lookup(v, "newbits", null) != null ? "newbits"
+        : (lookup(v, "netnum", null) != null && lookup(v, "newbits", null) != null ? "netnum"
+          : (lookup(v, "cidr", null) != null ? "cidr"
+            : (lookup(v, "id", null) != null ? "id"
+      : "invalid"))))
+    })
   }
 
   # Handle subnets configured with provided CIDRs
   subnet_cidrs_cidr_input = {
-    for k, v in local.subnet_cidrs_new : k => lookup(v, "cidr")
-    if lookup(v, "cidr", null) != null
+    for k, v in local.subnet_cidrs_new : k => lookup(v, "cidr") if v.type == "cidr"
   }
 
-  # Handle subnets configured with newbits for sizing
+  # Handle subnets configured with only newbits for sizing
   subnet_cidrs_newbits_input = {
-    for k, v in local.subnet_cidrs_new : k => lookup(v, "newbits")
-    if lookup(v, "newbits", null) != null
+    for k, v in local.subnet_cidrs_new : k => lookup(v, "newbits") if v.type == "newbits"
   }
 
   # Generate CIDR ranges for subnets to be created
@@ -30,8 +33,14 @@ locals {
     for k, v in local.subnet_cidrs_newbits_input : k => element(local.subnet_cidrs_newbits_ranges, index(keys(local.subnet_cidrs_newbits_input), k))
   } : {}
 
+  # Handle subnets configured with netnum + newbits for sizing
+  subnet_cidrs_netnum_newbits_ranges = {
+    for k, v in local.subnet_cidrs_new : k => cidrsubnet(local.vcn_cidr, lookup(v, "newbits"), lookup(v, "netnum"))
+    if v.type == "netnum"
+  }
+
   // Combine provided and calculated subnet CIDRs
-  subnet_cidrs_all = merge(local.subnet_cidrs_cidr_input, local.subnet_cidrs_newbits_resolved)
+  subnet_cidrs_all = merge(local.subnet_cidrs_cidr_input, local.subnet_cidrs_newbits_resolved, local.subnet_cidrs_netnum_newbits_ranges)
 
   # Map of subnets for standard components with additional configuration derived
   # TODO enumerate worker pools for public/private overrides, conditional subnets for both
@@ -52,22 +61,54 @@ locals {
     }
   }
 
+  # Create subnets if when all are true:
+  # - Associated component is enabled OR configured with create == 'always'
+  # - Subnet is configured with newbits and/or netnum/cidr
+  # - Not configured with create == 'never'
+  # - Not configured with an existing 'id'
+  subnets_to_create = merge(
+    { for k, v in local.subnet_info : k =>
+      # Override `create = true` if configured with "always"
+      merge(v, lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" ? { "create" = true } : {})
+      if alltrue([                                                       # Filter disabled subnets from output
+        contains(keys(local.subnet_cidrs_all), k),                       # has a calculated CIDR range (not id input)
+        lookup(lookup(var.subnets, k, {}), "create", "auto") != "never", # not disabled
+        anytrue([
+          tobool(lookup(v, "create", true)),                               # automatically enabled
+          lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" # force enabled
+        ]),
+      ])
+    }
+  )
+
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
   }
 }
 
-resource "oci_core_subnet" "oke" {
-  # Create subnets if when all are true:
-  # - Associated component is enabled OR configured with create == 'always'
-  # - Subnet CIDR is configured with newbits & netnum
-  # - Not configured with create == 'never'
-  # - Not configured with an existing 'id'
-  for_each = { for k, v in local.subnet_info : k => v
-    if(tobool(lookup(v, "create", true)) || lookup(lookup(var.subnets, k, {}), "create", "auto") == "always")
-    && contains(keys(local.subnet_cidrs_all), k)
-    && lookup(var.subnets, "create", "auto") != "never"
+resource "null_resource" "validate_subnets" {
+  count = anytrue(
+    [ for k, v in var.subnets: alltrue(
+       [ anytrue([contains(keys(v), "newbits"),contains(keys(v),"netnum")]),
+         lookup(lookup(var.subnets, k, {}), "create", "auto") != "never"])]) ? 1 : 0
+  lifecycle {
+    precondition {
+      condition     = !contains([for k, v in local.subnet_cidrs_new : v.type], "invalid")
+      error_message = format("Invalid subnet specification: %s", jsonencode({ for k, v in local.subnet_cidrs_new : k => v if v.type == "invalid" }))
+    }
+
+    precondition {
+      condition = !(contains([for k, v in local.subnet_cidrs_new : v.type], "netnum") && contains([for k, v in local.subnet_cidrs_new : v.type], "newbits"))
+      error_message = format(
+        "Must omit or include `netnum` for all subnet defintions uniformely: %s",
+        jsonencode({ for k, v in local.subnet_cidrs_new : k => v if contains(["netnum", "newbits"], v.type) })
+      )
+    }
   }
+}
+
+resource "oci_core_subnet" "oke" {
+  for_each = anytrue([ for k, v in var.subnets: alltrue([anytrue([contains(keys(v), "newbits"),  contains(keys(v),"netnum")]),lookup(lookup(var.subnets, k, {}), "create", "auto") != "never"])]) ? local.subnets_to_create : {}
 
   compartment_id             = var.compartment_id
   vcn_id                     = var.vcn_id
@@ -82,20 +123,14 @@ resource "oci_core_subnet" "oke" {
 
   lifecycle {
     # TODO reflect default security_list_id instead of ignore
-    ignore_changes = [security_list_ids, freeform_tags, defined_tags, dns_label]
+    ignore_changes = [security_list_ids, freeform_tags, defined_tags, dns_label, display_name, cidr_block]
   }
 }
 
 # Create an associated security list for subnets when enabled
 # e.g. for load balancers to prevent CCM management of default security list
 resource "oci_core_security_list" "oke" {
-  for_each = { for k, v in local.subnet_info : k => v if alltrue([
-    tobool(lookup(v, "create", true)),
-    tobool(lookup(v, "create_seclist", false)),
-    contains(keys(local.subnet_cidrs_all), k),
-    ])
-  }
-
+  for_each = anytrue([ for k, v in var.subnets: alltrue([anytrue([contains(keys(v), "newbits"),  contains(keys(v),"netnum")]),lookup(lookup(var.subnets, k, {}), "create", "auto") != "never"])]) ? { for k, v in local.subnets_to_create : k => v if tobool(lookup(v, "create_seclist", false)) } : {}
   compartment_id = var.compartment_id
   display_name   = "${each.key}-${var.state_id}"
   vcn_id         = var.vcn_id
@@ -103,7 +138,10 @@ resource "oci_core_security_list" "oke" {
   freeform_tags  = local.freeform_tags
 
   lifecycle {
-    ignore_changes = [freeform_tags, defined_tags]
+    ignore_changes = [
+      freeform_tags, defined_tags, display_name,
+      ingress_security_rules, egress_security_rules, # ignore for CCM-management
+    ]
   }
 }
 
@@ -113,5 +151,5 @@ output "subnet_ids" {
 }
 
 output "subnet_cidrs" {
-  value = local.subnet_cidrs_all
+  value = merge(local.subnet_cidrs_all, try({ for k, v in oci_core_subnet.oke : k => v.cidr_block }, {}))
 }

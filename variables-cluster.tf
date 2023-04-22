@@ -7,6 +7,12 @@ variable "create_cluster" {
   type        = bool
 }
 
+variable "use_existing_cluster" {
+  default = false
+  description = "Use existing cluster"
+  type = bool
+}
+
 variable "cluster_name" {
   default     = "oke"
   description = "The name of oke cluster."

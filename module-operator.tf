@@ -20,10 +20,7 @@ locals {
   )
 
   // Whether the operator is enabled, i.e. created in this TF state or existing provided by ID
-  operator_enabled = alltrue([
-    (local.cluster_enabled || coalesce(var.cluster_id, "none") != "none"),
-    (var.create_operator || coalesce(var.operator_private_ip, "none") != "none"),
-  ])
+  operator_enabled = var.create_operator || var.use_existing_operator
 
   // The resolved image ID for the created operator instance
   operator_image_id = var.create_operator ? (var.operator_image_type == "custom"
