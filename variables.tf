@@ -182,8 +182,8 @@ variable "drg_id" {
 
 variable "remote_peering_connections" {
   description = "Map of parameters to add and optionally to peer to remote peering connections. Key-only items represent local acceptors and no peering attempted; items containing key and values represent local requestor and must have the OCID and region of the remote acceptor to peer to"
-  type = map(any)
-  default = {}
+  type        = map(any)
+  default     = {}
 }
 
 variable "internet_gateway_route_rules" {
@@ -1053,32 +1053,15 @@ variable "freeform_tags" {
   default = {
     # vcn, bastion and operator tags are required
     # add more tags in each as desired
-    vcn = {
-      environment = "dev"
-    }
-    bastion = {
-      environment = "dev"
-      role        = "bastion"
-    }
-    operator = {
-      environment = "dev"
-      role        = "operator"
-    }
+    vcn      = {}
+    bastion  = {}
+    operator = {}
     oke = {
-
-      cluster = {
-        environment = "dev"
-      }
-
-      persistent_volume = {
-        environment = "dev"
-      }
-
-      service_lb = {
-        environment = "dev"
-        role        = "load balancer"
-      }
-      node_pool = {}
+      cluster           = {}
+      persistent_volume = {}
+      service_lb        = {}
+      node_pool         = {}
+      node              = {}
     }
   }
   description = "Tags to apply to different resources."
