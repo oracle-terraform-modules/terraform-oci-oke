@@ -178,6 +178,12 @@ variable "allow_worker_ssh_access" {
   type        = bool
 }
 
+variable "allow_bastion_cluster_access" {
+  default     = false
+  description = "Whether to allow access to the Kubernetes cluster endpoint from the bastion host."
+  type        = bool
+}
+
 variable "allow_rules_internal_lb" {
   default     = {}
   description = "A map of additional rules to allow incoming traffic for internal load balancers."
