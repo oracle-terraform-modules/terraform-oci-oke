@@ -88,6 +88,7 @@ module "network" {
   allow_rules_public_lb        = var.allow_rules_public_lb
   allow_worker_internet_access = var.allow_worker_internet_access
   allow_worker_ssh_access      = var.allow_worker_ssh_access
+  allow_bastion_cluster_access = var.allow_bastion_cluster_access
   assign_dns                   = var.assign_dns
   bastion_allowed_cidrs        = var.bastion_allowed_cidrs
   bastion_is_public            = var.bastion_is_public
