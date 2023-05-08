@@ -56,6 +56,11 @@ locals {
         protocol = local.tcp_protocol, port = local.oke_port, source = local.pod_nsg_id, source_type = local.rule_type_nsg,
       },
     } : {},
+    (var.allow_bastion_cluster_access && local.bastion_nsg_enabled) ? {
+      "Allow TCP ingress to kube-apiserver from bastion host" = {
+        protocol = local.tcp_protocol, port = local.apiserver_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
+      },
+    } : {},
 
     { for allowed_cidr in var.control_plane_allowed_cidrs :
       "Allow TCP ingress to kube-apiserver from ${allowed_cidr}" => {
