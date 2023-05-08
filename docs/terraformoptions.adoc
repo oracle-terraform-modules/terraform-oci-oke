@@ -588,22 +588,15 @@ EOT
 }`
 |
 `freeform_tags = {
-  vcn = {
-    environment = "dev"
-  }
-  bastion = {
-    environment = "dev"
-    role        = "bastion"
-  }
-  operator = {
-    environment = "dev"
-    role        = "operator"
-  }
+  vcn      = {}
+  bastion  = {}
+  operator = {}
   oke = {
-    service_lb  = {
-      environment = "dev"
-      role        = "load balancer"
-    }
+    cluster           = {}
+    persistent_volume = {}
+    service_lb        = {}
+    node_pool         = {}
+    node              = {}
   }
 }`
 
