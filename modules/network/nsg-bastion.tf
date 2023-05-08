@@ -26,6 +26,11 @@ locals {
         protocol = local.tcp_protocol, port = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
+    (var.allow_bastion_cluster_access && local.control_plane_nsg_enabled) ? {
+      "Allow TCP egress from bastion to cluster endpoint" = {
+        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
   ) : {}
 }
 
