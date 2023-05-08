@@ -133,9 +133,9 @@ variable "worker_nsgs" {
 }
 
 variable "freeform_tags" {
-  type = map(any)
+  type = map(map(string))
 }
 
 variable "defined_tags" {
-  type = map(any)
+  type = map(map(string))
 }
