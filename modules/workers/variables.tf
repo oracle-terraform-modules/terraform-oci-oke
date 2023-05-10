@@ -38,6 +38,7 @@ variable "ad_numbers_to_names" { type = map(string) }
 variable "ad_numbers" { type = list(number) }
 variable "block_volume_type" { type = string }
 variable "cloud_init" { type = list(map(string)) }
+variable "disable_default_cloud_init" { type = bool }
 variable "image_id" { type = string }
 variable "image_ids" { type = map(any) }
 variable "image_os_version" { type = string }
