@@ -162,6 +162,12 @@ variable "worker_cloud_init" {
   type        = list(map(string))
 }
 
+variable "worker_disable_default_cloud_init" {
+  default = false
+  description = "Whether to disable the default OKE cloud init and only use the cloud init explicitly passed to the worker pool in 'worker_cloud_init'."
+  type = bool
+}
+
 variable "worker_volume_kms_key_id" {
   default     = null
   description = "The ID of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption by default when unspecified on a pool."

@@ -9,33 +9,34 @@ locals {
   preemptible_config = { enable = false, is_preserve_boot_volume = false }
 
   worker_pool_defaults = {
-    preemptible_config    = local.preemptible_config
-    allow_autoscaler      = false
-    assign_public_ip      = var.assign_public_ip
-    autoscale             = false
-    block_volume_type     = var.block_volume_type
-    boot_volume_size      = local.boot_volume_size
-    cloud_init            = [] # empty pool-specific default
-    compartment_id        = var.compartment_id
-    create                = true
-    drain                 = false
-    image_id              = var.image_id
-    image_type            = var.image_type
-    memory                = local.memory
-    mode                  = var.worker_pool_mode
-    node_labels           = var.node_labels
-    nsg_ids               = [] # empty pool-specific default
-    ocpus                 = local.ocpus
-    os                    = var.image_os
-    os_version            = var.image_os_version
-    placement_ads         = var.ad_numbers
-    pod_nsg_ids           = var.pod_nsg_ids
-    pod_subnet_id         = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
-    pv_transit_encryption = var.pv_transit_encryption
-    shape                 = local.shape
-    size                  = var.worker_pool_size
-    subnet_id             = var.worker_subnet_id
-    volume_kms_key_id     = var.volume_kms_key_id
+    preemptible_config         = local.preemptible_config
+    allow_autoscaler           = false
+    assign_public_ip           = var.assign_public_ip
+    autoscale                  = false
+    block_volume_type          = var.block_volume_type
+    boot_volume_size           = local.boot_volume_size
+    cloud_init                 = [] # empty pool-specific default
+    disable_default_cloud_init = false
+    compartment_id             = var.compartment_id
+    create                     = true
+    drain                      = false
+    image_id                   = var.image_id
+    image_type                 = var.image_type
+    memory                     = local.memory
+    mode                       = var.worker_pool_mode
+    node_labels                = var.node_labels
+    nsg_ids                    = [] # empty pool-specific default
+    ocpus                      = local.ocpus
+    os                         = var.image_os
+    os_version                 = var.image_os_version
+    placement_ads              = var.ad_numbers
+    pod_nsg_ids                = var.pod_nsg_ids
+    pod_subnet_id              = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+    pv_transit_encryption      = var.pv_transit_encryption
+    shape                      = local.shape
+    size                       = var.worker_pool_size
+    subnet_id                  = var.worker_subnet_id
+    volume_kms_key_id          = var.volume_kms_key_id
   }
 
   # Merge desired pool configuration onto default values
