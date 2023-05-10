@@ -129,7 +129,7 @@ locals {
           "oke.oraclecloud.com/cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled"
         },
         pool.autoscale ? { "oke.oraclecloud.com/cluster_autoscaler" = "managed" } : {},
-        var.node_labels,
+        pool.node_labels,
       )
     }) if tobool(pool.create)
   }
