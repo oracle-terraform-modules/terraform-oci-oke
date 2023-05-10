@@ -42,30 +42,31 @@ module "workers" {
   worker_pools     = var.worker_pools
 
   # Workers
-  assign_dns            = var.assign_dns
-  assign_public_ip      = var.worker_is_public
-  block_volume_type     = var.worker_block_volume_type
-  cloud_init            = var.worker_cloud_init
-  cni_type              = var.cni_type
-  image_id              = var.worker_image_id
-  image_ids             = local.image_ids
-  image_os              = var.worker_image_os
-  image_os_version      = var.worker_image_os_version
-  image_type            = var.worker_image_type
-  kubeproxy_mode        = var.kubeproxy_mode
-  max_pods_per_node     = var.max_pods_per_node
-  node_labels           = var.worker_node_labels
-  node_metadata         = var.worker_node_metadata
-  pod_nsg_ids           = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [module.network.pod_nsg_id] : [])
-  pod_subnet_id         = lookup(module.network.subnet_ids, "pods", "")
-  pv_transit_encryption = var.worker_pv_transit_encryption
-  shape                 = var.worker_shape
-  ssh_public_key        = local.ssh_public_key
-  timezone              = var.timezone
-  volume_kms_key_id     = var.worker_volume_kms_key_id
-  worker_nsg_ids        = concat(var.worker_nsg_ids, [module.network.worker_nsg_id])
-  worker_subnet_id      = lookup(module.network.subnet_ids, "workers", "")
-  preemptible_config    = var.worker_preemptible_config
+  assign_dns                 = var.assign_dns
+  assign_public_ip           = var.worker_is_public
+  block_volume_type          = var.worker_block_volume_type
+  cloud_init                 = var.worker_cloud_init
+  disable_default_cloud_init = var.worker_disable_default_cloud_init
+  cni_type                   = var.cni_type
+  image_id                   = var.worker_image_id
+  image_ids                  = local.image_ids
+  image_os                   = var.worker_image_os
+  image_os_version           = var.worker_image_os_version
+  image_type                 = var.worker_image_type
+  kubeproxy_mode             = var.kubeproxy_mode
+  max_pods_per_node          = var.max_pods_per_node
+  node_labels                = var.worker_node_labels
+  node_metadata              = var.worker_node_metadata
+  pod_nsg_ids                = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [module.network.pod_nsg_id] : [])
+  pod_subnet_id              = lookup(module.network.subnet_ids, "pods", "")
+  pv_transit_encryption      = var.worker_pv_transit_encryption
+  shape                      = var.worker_shape
+  ssh_public_key             = local.ssh_public_key
+  timezone                   = var.timezone
+  volume_kms_key_id          = var.worker_volume_kms_key_id
+  worker_nsg_ids             = concat(var.worker_nsg_ids, [module.network.worker_nsg_id])
+  worker_subnet_id           = lookup(module.network.subnet_ids, "workers", "")
+  preemptible_config         = var.worker_preemptible_config
 
   # FSS
   create_fss              = var.create_fss
