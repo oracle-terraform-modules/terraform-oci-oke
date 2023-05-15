@@ -156,11 +156,11 @@ locals {
   }
 
   # Enabled worker_pool map entries for individual instances
-  enabled_instances = { for k, v in concat([], [
+  enabled_instances = { for e in concat([], [
     for k, v in local.enabled_worker_pools : [
       for i in range(0, lookup(v, "size", 0)) : merge(v, { "key" = k, "index" = i })
     ] if lookup(v, "mode", "") == "instance"
-  ]...) : "${lookup(v, "key")}-${k}" => v }
+  ]...) : "${lookup(e, "key")}-${lookup(e, "index")}" => e }
 
   # Enabled worker_pool map entries for cluster networks
   enabled_cluster_networks = {
