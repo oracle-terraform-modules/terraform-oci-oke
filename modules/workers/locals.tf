@@ -182,7 +182,8 @@ locals {
   worker_node_pools       = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_instance_pools   = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_cluster_networks = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_pools_output     = merge(local.worker_node_pools, local.worker_instance_pools, local.worker_cluster_networks)
+  worker_instances        = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_pools_output     = merge(local.worker_node_pools, local.worker_instance_pools, local.worker_cluster_networks, local.worker_instances)
   worker_pool_ids         = { for k, v in local.worker_pools_output : k => v.id }
   worker_instance_ids     = { for k, v in local.enabled_instances : k => lookup(lookup(oci_core_instance.workers, k, {}), "id", "") }
 }
