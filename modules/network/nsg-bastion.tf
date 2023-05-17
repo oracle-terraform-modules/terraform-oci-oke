@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  bastion_nsg_enabled = (var.create_nsgs && var.create_bastion) || var.create_nsgs_always
+  bastion_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_bastion) || var.create_nsgs_always
   bastion_nsg_id      = one(oci_core_network_security_group.bastion[*].id)
   bastion_rules = (var.create_nsgs && var.create_bastion) || var.create_nsgs_always ? merge(
     { for cidr in var.bastion_allowed_cidrs :

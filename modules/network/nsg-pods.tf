@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  pod_nsg_enabled = (var.cni_type == "npn" && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
+  pod_nsg_enabled = (var.vcn_id != null && var.cni_type == "npn" && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
   pod_nsg_id      = one(oci_core_network_security_group.pods[*].id)
   pods_rules = local.pod_nsg_enabled ? merge(
     {

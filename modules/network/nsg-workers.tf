@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  worker_nsg_enabled = (var.create_nsgs && var.create_cluster) || var.create_nsgs_always
+  worker_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
   worker_nsg_id      = one(oci_core_network_security_group.workers[*].id)
   workers_rules = local.worker_nsg_enabled ? merge(
     {
