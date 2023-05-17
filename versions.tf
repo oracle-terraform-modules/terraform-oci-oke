@@ -7,33 +7,33 @@ terraform {
   required_providers {
     cloudinit = {
       source  = "hashicorp/cloudinit"
-      version = "~> 2.2.0"
+      version = ">= 2.2.0"
     }
 
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.9.0"
+      version = ">= 2.9.0"
     }
 
     null = {
       source  = "hashicorp/null"
-      version = "~> 3.2.1"
+      version = ">= 3.2.1"
     }
 
     oci = {
       configuration_aliases = [oci.home]
       source                = "oracle/oci"
-      version               = "~> 4.115.0"
+      version               = ">= 4.115.0"
     }
 
     random = {
       source  = "hashicorp/random"
-      version = "~> 3.4.3"
+      version = ">= 3.4.3"
     }
 
     time = {
       source  = "hashicorp/time"
-      version = "~> 0.9.1"
+      version = ">= 0.9.1"
     }
   }
 }
