@@ -14,8 +14,8 @@ variable "bastion_public_ip" {
 }
 
 variable "bastion_allowed_cidrs" {
-  default     = ["0.0.0.0/0"]
-  description = "A list of CIDR blocks to allow SSH access to the bastion host."
+  default     = []
+  description = "A list of CIDR blocks to allow SSH access to the bastion host. NOTE: Default is empty i.e. no access permitted. Allow access from anywhere with '0.0.0.0/0'."
   type        = list(string)
 }
 

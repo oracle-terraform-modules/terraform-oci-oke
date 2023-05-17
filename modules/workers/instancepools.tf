@@ -39,7 +39,12 @@ resource "oci_core_instance_pool" "workers" {
 
     precondition {
       condition     = coalesce(each.value.image_id, "none") != "none"
-      error_message = "Missing image_id for pool ${each.key}. Check provided value for image_id if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'."
+      error_message = <<-EOT
+      Missing image_id; check provided value if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'.
+        pool: ${each.key}
+        image_type: ${coalesce(each.value.image_type, "none")}
+        image_id: ${coalesce(each.value.image_id, "none")}
+      EOT
     }
 
     precondition {

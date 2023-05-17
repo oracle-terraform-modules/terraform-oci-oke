@@ -3,7 +3,7 @@
 
 locals {
   pub_lb_nsg_enabled = alltrue([
-    var.create_cluster, var.create_nsgs,
+    var.vcn_id != null, var.create_cluster, var.create_nsgs,
     var.load_balancers == "public" || var.load_balancers == "both",
   ]) || var.create_nsgs_always
   pub_lb_nsg_id = one(oci_core_network_security_group.pub_lb[*].id)

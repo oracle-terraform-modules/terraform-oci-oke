@@ -4,7 +4,9 @@
 locals {
   # VCN subnet configuration
   # See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#vcnconfig
-  vcn_cidr = element(var.vcn_cidrs, 0)
+  # May be undefined when VCN is neither created nor required, e.g. when creating only workers for
+  # an existing cluster. Fallback value is unused.
+  vcn_cidr = length(var.vcn_cidrs) > 0 ? element(var.vcn_cidrs, 0) : "0.0.0.0/16"
 
   # Filter configured subnets eligible for resource creation
   subnet_cidrs_new = {
@@ -66,7 +68,7 @@ locals {
   # - Subnet is configured with newbits and/or netnum/cidr
   # - Not configured with create == 'never'
   # - Not configured with an existing 'id'
-  subnets_to_create = merge(
+  subnets_to_create = length(var.vcn_cidrs) > 0 ? merge(
     { for k, v in local.subnet_info : k =>
       # Override `create = true` if configured with "always"
       merge(v, lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" ? { "create" = true } : {})
@@ -79,7 +81,7 @@ locals {
         ]),
       ])
     }
-  )
+  ) : {}
 
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
@@ -87,7 +89,10 @@ locals {
 }
 
 resource "null_resource" "validate_subnets" {
-  count = length(local.subnets_to_create) > 0 ? 1 : 0
+  count = anytrue([for k, v in local.subnet_cidrs_new : contains(["netnum", "newbits", "cidr"], v.type)
+    if lookup(v, "create", "auto") != "never"
+  ]) ? 1 : 0
+
   lifecycle {
     precondition {
       condition     = !contains([for k, v in local.subnet_cidrs_new : v.type], "invalid")
@@ -148,9 +153,15 @@ resource "oci_core_security_list" "oke" {
 
 # Return configured/created subnet IDs when applicable
 output "subnet_ids" {
-  value = local.subnet_output
+  value = (length(compact(values(local.subnet_output))) > 0
+    ? { for k, v in local.subnet_output : k => v if v != null }
+    : null
+  )
 }
 
 output "subnet_cidrs" {
-  value = merge(local.subnet_cidrs_all, try({ for k, v in oci_core_subnet.oke : k => v.cidr_block }, {}))
+  value = (length(compact(values(local.subnet_cidrs_all))) > 0
+    ? { for k, v in local.subnet_cidrs_all : k => lookup(oci_core_subnet.oke, k, null) }
+    : null
+  )
 }
