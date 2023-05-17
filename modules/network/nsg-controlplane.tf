@@ -2,9 +2,9 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  control_plane_nsg_enabled = (var.create_nsgs && var.create_cluster) || var.create_nsgs_always
+  control_plane_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
   control_plane_nsg_id      = one(oci_core_network_security_group.cp[*].id)
-  control_plane_rules = merge(
+  control_plane_rules = local.control_plane_nsg_enabled ? merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
@@ -67,7 +67,7 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
       }
     },
-  )
+  ) : {}
 }
 
 resource "oci_core_network_security_group" "cp" {

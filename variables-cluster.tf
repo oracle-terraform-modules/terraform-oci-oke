@@ -24,7 +24,7 @@ variable "cluster_type" {
 }
 
 variable "control_plane_is_public" {
-  default     = true
+  default     = false
   description = "Whether the Kubernetes control plane endpoint should be allocated a public IP address."
   type        = bool
 }

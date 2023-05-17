@@ -3,7 +3,7 @@
 
 locals {
   int_lb_nsg_enabled = alltrue([
-    var.create_cluster, var.create_nsgs,
+    var.vcn_id != null, var.create_cluster, var.create_nsgs,
     var.load_balancers == "internal" || var.load_balancers == "both",
   ]) || var.create_nsgs_always
   int_lb_nsg_id = one(oci_core_network_security_group.int_lb[*].id)

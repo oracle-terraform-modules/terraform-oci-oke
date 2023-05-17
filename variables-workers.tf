@@ -163,9 +163,9 @@ variable "worker_cloud_init" {
 }
 
 variable "worker_disable_default_cloud_init" {
-  default = false
+  default     = false
   description = "Whether to disable the default OKE cloud init and only use the cloud init explicitly passed to the worker pool in 'worker_cloud_init'."
-  type = bool
+  type        = bool
 }
 
 variable "worker_volume_kms_key_id" {
