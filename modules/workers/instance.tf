@@ -66,6 +66,16 @@ resource "oci_core_instance" "workers" {
   }
 
   lifecycle {
+    precondition {
+      condition     = coalesce(each.value.image_id, "none") != "none"
+      error_message = <<-EOT
+      Missing image_id; check provided value if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'.
+        pool: ${each.key}
+        image_type: ${coalesce(each.value.image_type, "none")}
+        image_id: ${coalesce(each.value.image_id, "none")}
+      EOT
+    }
+
     ignore_changes = [
       defined_tags, freeform_tags, display_name,
       metadata["cluster_ca_cert"], metadata["user_data"],

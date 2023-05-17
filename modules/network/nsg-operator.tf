@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  operator_nsg_enabled = (var.create_nsgs && var.create_operator) || var.create_nsgs_always
+  operator_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_operator) || var.create_nsgs_always
   operator_nsg_id      = one(oci_core_network_security_group.operator[*].id)
   operator_rules = local.operator_nsg_enabled ? merge(
     {
@@ -15,12 +15,12 @@ locals {
       "Allow ALL egress from operator to internet" : {
         protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
       },
-      "Allow ICMP ingress to operator for path discovery" : {
-        protocol = local.icmp_protocol, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr,
-      }
     },
 
     (var.create_bastion || var.create_nsgs_always) ? {
+      "Allow ICMP ingress to operator from bastion for path discovery" : {
+        protocol = local.icmp_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
+      }
       "Allow SSH ingress to operator from bastion" : {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
       }
