@@ -27,7 +27,7 @@ locals {
       source_type               = lookup(y, "source_type", null)
       destination               = lookup(y, "destination", null)
       destination_type          = lookup(y, "destination_type", null)
-  }) if var.create_nsgs }
+  }) }
 
   # Dynamic map of all NSG IDs for enabled NSGs
   all_nsg_ids = { for x, y in merge(
@@ -39,7 +39,7 @@ locals {
     local.pod_nsg_enabled ? { "pods" = local.pod_nsg_id } : {},
     local.operator_nsg_enabled ? { "operator" = local.operator_nsg_id } : {},
     local.fss_nsg_enabled ? { "fss" = local.fss_nsg_id } : {},
-  ) : x => y if var.create_nsgs }
+  ) : x => y }
 }
 
 resource "oci_core_network_security_group_security_rule" "oke" {

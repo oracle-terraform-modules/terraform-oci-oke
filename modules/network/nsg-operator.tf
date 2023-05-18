@@ -2,8 +2,15 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  operator_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_operator) || var.create_nsgs_always
-  operator_nsg_id      = one(oci_core_network_security_group.operator[*].id)
+  operator_nsg_config = try(var.nsgs.operator, { create = "never" })
+  operator_nsg_enabled = anytrue([
+    lookup(local.operator_nsg_config, "create", "auto") == "always",
+    alltrue([
+      lookup(local.operator_nsg_config, "create", "auto") == "auto",
+      var.create_cluster, var.create_operator,
+    ]),
+  ])
+  operator_nsg_id = one(oci_core_network_security_group.operator[*].id)
   operator_rules = local.operator_nsg_enabled ? merge(
     {
       "Allow TCP egress from operator to OCI services" : {
@@ -17,7 +24,7 @@ locals {
       },
     },
 
-    (var.create_bastion || var.create_nsgs_always) ? {
+    local.bastion_nsg_enabled ? {
       "Allow ICMP ingress to operator from bastion for path discovery" : {
         protocol = local.icmp_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
       }

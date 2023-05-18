@@ -16,7 +16,7 @@ locals {
           : (lookup(v, "cidr", null) != null ? "cidr"
             : (lookup(v, "id", null) != null ? "id"
       : "invalid"))))
-    })
+    }) if try(v.create, "auto") != "never"
   }
 
   # Handle subnets configured with provided CIDRs
@@ -71,13 +71,13 @@ locals {
   subnets_to_create = length(var.vcn_cidrs) > 0 ? merge(
     { for k, v in local.subnet_info : k =>
       # Override `create = true` if configured with "always"
-      merge(v, lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" ? { "create" = true } : {})
-      if alltrue([                                                       # Filter disabled subnets from output
-        contains(keys(local.subnet_cidrs_all), k),                       # has a calculated CIDR range (not id input)
-        lookup(lookup(var.subnets, k, {}), "create", "auto") != "never", # not disabled
+      merge(v, lookup(try(lookup(var.subnets, k), { create = "never" }), "create", "auto") == "always" ? { "create" = true } : {})
+      if alltrue([                                                                              # Filter disabled subnets from output
+        contains(keys(local.subnet_cidrs_all), k),                                              # has a calculated CIDR range (not id input)
+        lookup(try(lookup(var.subnets, k), { create = "never" }), "create", "auto") != "never", # not disabled
         anytrue([
-          tobool(lookup(v, "create", true)),                               # automatically enabled
-          lookup(lookup(var.subnets, k, {}), "create", "auto") == "always" # force enabled
+          tobool(lookup(v, "create", true)),                                                      # automatically enabled
+          lookup(try(lookup(var.subnets, k), { create = "never" }), "create", "auto") == "always" # force enabled
         ]),
       ])
     }
@@ -116,7 +116,7 @@ resource "oci_core_subnet" "oke" {
   vcn_id                     = var.vcn_id
   cidr_block                 = lookup(local.subnet_cidrs_all, each.key)
   display_name               = "${each.key}-${var.state_id}"
-  dns_label                  = var.assign_dns ? lookup(var.subnets, "id", substr(each.key, 0, 2)) : null
+  dns_label                  = var.assign_dns ? lookup(try(lookup(var.subnets, each.key), {}), "dns_label", substr(each.key, 0, 2)) : null
   prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
   route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
   security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
@@ -151,17 +151,52 @@ resource "oci_core_security_list" "oke" {
   }
 }
 
-# Return configured/created subnet IDs when applicable
-output "subnet_ids" {
-  value = (length(compact(values(local.subnet_output))) > 0
-    ? { for k, v in local.subnet_output : k => v if v != null }
-    : null
-  )
+# Return configured/created subnet IDs and CIDRs when applicable
+output "bastion_subnet_id" {
+  value = lookup(local.subnet_output, "bastion", null)
 }
-
-output "subnet_cidrs" {
-  value = (length(compact(values(local.subnet_cidrs_all))) > 0
-    ? { for k, v in local.subnet_cidrs_all : k => lookup(oci_core_subnet.oke, k, null) }
-    : null
-  )
+output "bastion_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "bastion") ? lookup(local.subnet_cidrs_all, "bastion", null) : null
+}
+output "operator_subnet_id" {
+  value = lookup(local.subnet_output, "operator", null)
+}
+output "operator_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "operator") ? lookup(local.subnet_cidrs_all, "operator", null) : null
+}
+output "control_plane_subnet_id" {
+  value = lookup(local.subnet_output, "cp", null)
+}
+output "control_plane_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "cp") ? lookup(local.subnet_cidrs_all, "cp", null) : null
+}
+output "int_lb_subnet_id" {
+  value = lookup(local.subnet_output, "int_lb", null)
+}
+output "int_lb_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "int_lb") ? lookup(local.subnet_cidrs_all, "int_lb", null) : null
+}
+output "pub_lb_subnet_id" {
+  value = lookup(local.subnet_output, "pub_lb", null)
+}
+output "pub_lb_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "pub_lb") ? lookup(local.subnet_cidrs_all, "pub_lb", null) : null
+}
+output "worker_subnet_id" {
+  value = lookup(local.subnet_output, "workers", null)
+}
+output "worker_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "workers") ? lookup(local.subnet_cidrs_all, "workers", null) : null
+}
+output "pod_subnet_id" {
+  value = lookup(local.subnet_output, "pods", null)
+}
+output "pod_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "pods") ? lookup(local.subnet_cidrs_all, "pods", null) : null
+}
+output "fss_subnet_id" {
+  value = lookup(local.subnet_output, "fss", null)
+}
+output "fss_subnet_cidr" {
+  value = contains(keys(local.subnet_output), "fss") ? lookup(local.subnet_cidrs_all, "fss", null) : null
 }

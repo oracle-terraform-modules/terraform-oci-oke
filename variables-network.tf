@@ -7,18 +7,6 @@ variable "create_vcn" {
   type        = bool
 }
 
-variable "create_nsgs" { // TODO Align with subnets declaration in map
-  default     = true
-  description = "Whether to create standard network security groups."
-  type        = bool
-}
-
-variable "create_nsgs_always" { // TODO Align with subnets declaration, never/auto/always
-  default     = false
-  description = "Whether to create standard network security groups when associated components will not be."
-  type        = bool
-}
-
 variable "vcn_name" {
   default     = null
   description = "Display name for the created VCN. Defaults to 'oke' suffixed with the generated Terraform 'state_id' value."
@@ -123,17 +111,79 @@ variable "nat_gateway_public_ip_id" {
 
 variable "subnets" {
   default = {
-    bastion  = { create = "auto", newbits = 13 }
-    operator = { create = "auto", newbits = 13 }
-    cp       = { create = "auto", newbits = 13 }
-    int_lb   = { create = "auto", newbits = 11 }
-    pub_lb   = { create = "auto", newbits = 11 }
-    workers  = { create = "auto", newbits = 2 }
-    pods     = { create = "auto", newbits = 2 }
-    fss      = { create = "auto", newbits = 11 }
+    bastion  = { newbits = 13 }
+    operator = { newbits = 13 }
+    cp       = { newbits = 13 }
+    int_lb   = { newbits = 11 }
+    pub_lb   = { newbits = 11 }
+    workers  = { newbits = 2 }
+    pods     = { newbits = 2 }
+    fss      = { newbits = 11 }
   }
-  description = "parameters to cidrsubnet function to calculate subnet masks within the VCN."
-  type        = any
+  description = "Configuration for standard subnets. The 'create' parameter of each entry defaults to 'auto', creating subnets when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
+  type = map(object({
+    create    = optional(string, "auto")
+    id        = optional(string)
+    newbits   = optional(string)
+    netnum    = optional(string)
+    cidr      = optional(string)
+    dns_label = optional(string)
+  }))
+  validation {
+    condition = alltrue([
+      for k, v in var.subnets : contains(["never", "auto", "always"], coalesce(v.create, "auto"))
+    ])
+    error_message = "Accepted values for 'create' are 'never', 'auto', or 'always'."
+  }
+  validation {
+    condition = alltrue([
+      for v in flatten([for k, v in var.subnets : keys(v)]) : contains(["create", "id", "cidr", "netnum", "newbits", "dns_label"], v)
+    ])
+    error_message = format("Invalid subnet configuration keys: %s", jsonencode(distinct([
+      for v in flatten([for k, v in var.subnets : keys(v)]) : v if !contains(["create", "id", "cidr", "netnum", "newbits", "dns_label"], v)
+    ])))
+  }
+}
+
+variable "nsgs" {
+  default = {
+    bastion  = { }
+    operator = { }
+    cp       = { }
+    int_lb   = { }
+    pub_lb   = { }
+    workers  = { }
+    pods     = { }
+    fss      = { }
+  }
+  description = "Configuration for standard network security groups (NSGs).  The 'create' parameter of each entry defaults to 'auto', creating NSGs when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
+  type = map(object({
+    create = optional(string, "auto")
+    id     = optional(string)
+  }))
+  validation {
+    condition = alltrue([
+      for k, v in values(var.nsgs) : contains(["never", "auto", "always"], coalesce(v.create, "auto"))
+    ])
+    error_message = "Accepted values for 'create' are 'never', 'auto', or 'always'."
+  }
+  validation {
+    condition = alltrue([
+      for v in flatten([for k, v in var.nsgs : keys(v)]) : contains(["create", "id"], v)
+    ])
+    error_message = format("Invalid NSG configuration keys: %s", jsonencode(distinct([
+      for v in flatten([for k, v in var.nsgs : keys(v)]) : v if !contains(["create", "id"], v)
+    ])))
+  }
+  validation {
+    condition = alltrue([
+      for k, v in var.nsgs :
+      contains(["bastion", "operator", "cp", "int_lb", "pub_lb", "workers", "pods", "fss"], k)
+    ])
+    error_message = format("Invalid NSG keys: %s", jsonencode([for k, v in var.nsgs : k
+      if !contains(["bastion", "operator", "cp", "int_lb", "pub_lb", "workers", "pods", "fss"], k)
+    ]))
+  }
 }
 
 variable "vcn_cidrs" {

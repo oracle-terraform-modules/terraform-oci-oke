@@ -2,8 +2,15 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  pod_nsg_enabled = (var.vcn_id != null && var.cni_type == "npn" && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
-  pod_nsg_id      = one(oci_core_network_security_group.pods[*].id)
+  pod_nsg_config = try(var.nsgs.pods, { create = "never" })
+  pod_nsg_enabled = anytrue([
+    lookup(local.pod_nsg_config, "create", "auto") == "always",
+    alltrue([
+      lookup(local.pod_nsg_config, "create", "auto") == "auto",
+      var.create_cluster, var.cni_type == "npn",
+    ]),
+  ])
+  pod_nsg_id = one(oci_core_network_security_group.pods[*].id)
   pods_rules = local.pod_nsg_enabled ? merge(
     {
       "Allow TCP egress from pods to OCI Services" : {

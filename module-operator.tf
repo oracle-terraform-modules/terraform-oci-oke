@@ -52,12 +52,12 @@ module "operator" {
   install_kubectx       = var.operator_install_kubectx
   kubeconfig            = yamlencode(local.kubeconfig_private)
   kubernetes_version    = var.kubernetes_version
-  nsg_ids               = concat(var.operator_nsg_ids, var.create_nsgs ? [module.network.operator_nsg_id] : [])
+  nsg_ids               = compact(flatten([var.operator_nsg_ids, module.network.operator_nsg_id]))
   pv_transit_encryption = var.operator_pv_transit_encryption
   shape                 = var.operator_shape
   ssh_private_key       = sensitive(local.ssh_private_key) # to await cloud-init completion
   ssh_public_key        = local.ssh_public_key
-  subnet_id             = lookup(module.network.subnet_ids, "operator", "")
+  subnet_id             = module.network.operator_subnet_id
   timezone              = var.timezone
   upgrade               = var.operator_upgrade
   user                  = var.operator_user
