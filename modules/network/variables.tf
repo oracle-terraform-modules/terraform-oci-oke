@@ -28,15 +28,30 @@ variable "control_plane_is_public" { type = bool }
 variable "create_cluster" { type = bool }
 variable "create_bastion" { type = bool }
 variable "create_fss" { type = bool }
-variable "create_nsgs" { type = bool }
-variable "create_nsgs_always" { type = bool }
 variable "create_operator" { type = bool }
 variable "drg_attachments" { type = any }
 variable "enable_waf" { type = bool }
 variable "ig_route_table_id" { type = string }
 variable "load_balancers" { type = string }
 variable "nat_route_table_id" { type = string }
-variable "subnets" { type = any }
 variable "vcn_cidrs" { type = list(string) }
 variable "vcn_id" { type = string }
 variable "worker_is_public" { type = bool }
+
+variable "subnets" {
+  type = map(object({
+    create    = optional(string)
+    id        = optional(string)
+    newbits   = optional(string)
+    netnum    = optional(string)
+    cidr      = optional(string)
+    dns_label = optional(string)
+  }))
+}
+
+variable "nsgs" {
+  type = map(object({
+    create = optional(string)
+    id     = optional(string)
+  }))
+}

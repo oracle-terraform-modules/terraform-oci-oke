@@ -2,26 +2,27 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  bastion_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_bastion) || var.create_nsgs_always
-  bastion_nsg_id      = one(oci_core_network_security_group.bastion[*].id)
-  bastion_rules = (var.create_nsgs && var.create_bastion) || var.create_nsgs_always ? merge(
+  bastion_nsg_config = try(var.nsgs.bastion, { create = "never" })
+  bastion_nsg_enabled = anytrue([
+    lookup(local.bastion_nsg_config, "create", "auto") == "always",
+    alltrue([
+      lookup(local.bastion_nsg_config, "create", "auto") == "auto",
+      var.create_cluster, var.create_bastion,
+    ]),
+  ])
+  bastion_nsg_id = one(oci_core_network_security_group.bastion[*].id)
+  bastion_rules = local.bastion_nsg_enabled ? merge(
     { for cidr in var.bastion_allowed_cidrs :
       "Allow SSH ingress to bastion from ${cidr}" => {
         protocol = local.tcp_protocol, port = local.ssh_port, source = cidr, source_type = local.rule_type_cidr,
       }
     },
-    {
-      "Allow SSH egress from bastion to workers" = {
-        protocol = local.tcp_protocol, port = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
-        enabled  = var.allow_worker_ssh_access,
-      },
-    },
-    (var.create_operator || var.create_nsgs_always) ? {
+    local.operator_nsg_enabled ? {
       "Allow SSH egress from bastion to operator" = {
         protocol = local.tcp_protocol, port = local.ssh_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
-    var.allow_worker_ssh_access ? {
+    var.allow_worker_ssh_access && local.worker_nsg_enabled ? {
       "Allow SSH egress from bastion to workers" = {
         protocol = local.tcp_protocol, port = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
