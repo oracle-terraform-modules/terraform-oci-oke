@@ -33,12 +33,12 @@ module "bastion" {
   assign_dns          = var.assign_dns
   availability_domain = coalesce(var.bastion_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
   image_id            = local.bastion_image_id
-  nsg_ids             = concat(var.bastion_nsg_ids, var.create_nsgs ? [module.network.bastion_nsg_id] : [])
+  nsg_ids             = compact(flatten([var.bastion_nsg_ids, [module.network.bastion_nsg_id]]))
   is_public           = var.bastion_is_public
   shape               = var.bastion_shape
   ssh_private_key     = sensitive(local.ssh_private_key) # to await cloud-init completion
   ssh_public_key      = local.ssh_public_key
-  subnet_id           = lookup(module.network.subnet_ids, "bastion", lookup(module.network.subnet_ids, "pub_lb"))
+  subnet_id           = module.network.bastion_subnet_id
   timezone            = var.timezone
   upgrade             = var.bastion_upgrade
   user                = var.bastion_user

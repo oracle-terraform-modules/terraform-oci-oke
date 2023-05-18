@@ -2,8 +2,15 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  control_plane_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
-  control_plane_nsg_id      = one(oci_core_network_security_group.cp[*].id)
+  control_plane_nsg_config = try(var.nsgs.cp, { create = "never" })
+  control_plane_nsg_enabled = anytrue([
+    lookup(local.control_plane_nsg_config, "create", "auto") == "always",
+    alltrue([
+      lookup(local.control_plane_nsg_config, "create", "auto") == "auto",
+      var.create_cluster,
+    ]),
+  ])
+  control_plane_nsg_id = one(oci_core_network_security_group.cp[*].id)
   control_plane_rules = local.control_plane_nsg_enabled ? merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {
@@ -37,12 +44,12 @@ locals {
         protocol = local.icmp_protocol, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
       },
     },
-    (var.create_operator || var.create_nsgs_always) ? {
+    local.operator_nsg_enabled ? {
       "Allow TCP ingress to kube-apiserver from operator instance" : {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg,
       },
     } : {},
-    (var.cni_type == "npn" || var.create_nsgs_always) ? {
+    local.pod_nsg_enabled ? {
       "Allow TCP ingress to kube-apiserver from pods" : {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = local.pod_nsg_id, source_type = local.rule_type_nsg,
       },

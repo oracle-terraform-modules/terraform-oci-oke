@@ -2,10 +2,14 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  pub_lb_nsg_enabled = alltrue([
-    var.vcn_id != null, var.create_cluster, var.create_nsgs,
-    var.load_balancers == "public" || var.load_balancers == "both",
-  ]) || var.create_nsgs_always
+  pub_lb_nsg_config = try(var.nsgs.pub_lb, { create = "never" })
+  pub_lb_nsg_enabled = anytrue([
+    lookup(local.pub_lb_nsg_config, "create", "auto") == "always",
+    alltrue([
+      lookup(local.pub_lb_nsg_config, "create", "auto") == "auto",
+      var.create_cluster, var.load_balancers == "public" || var.load_balancers == "both",
+    ]),
+  ])
   pub_lb_nsg_id = one(oci_core_network_security_group.pub_lb[*].id)
   pub_lb_rules = local.pub_lb_nsg_enabled ? merge(
     {
@@ -19,7 +23,7 @@ locals {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     },
-    (var.enable_waf || var.create_nsgs_always) ? local.waf_rules : {},
+    var.enable_waf ? local.waf_rules : {},
     var.allow_rules_public_lb,
   ) : {}
 }

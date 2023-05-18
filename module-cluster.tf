@@ -41,13 +41,13 @@ module "cluster" {
   vcn_id                  = local.vcn_id
   cni_type                = var.cni_type
   control_plane_is_public = var.control_plane_is_public
-  control_plane_nsg_ids   = setunion(var.control_plane_nsg_ids, var.create_nsgs ? [module.network.control_plane_nsg_id] : [])
-  control_plane_subnet_id = lookup(module.network.subnet_ids, "cp")
+  control_plane_nsg_ids   = compact(flatten([var.control_plane_nsg_ids, module.network.control_plane_nsg_id]))
+  control_plane_subnet_id = module.network.control_plane_subnet_id
   pods_cidr               = var.pods_cidr
   services_cidr           = var.services_cidr
   service_lb_subnet_id = (var.preferred_load_balancer == "public"
-    ? lookup(module.network.subnet_ids, "pub_lb")
-    : lookup(module.network.subnet_ids, "int_lb")
+    ? module.network.pub_lb_subnet_id
+    : module.network.int_lb_subnet_id
   )
 
   # Cluster
