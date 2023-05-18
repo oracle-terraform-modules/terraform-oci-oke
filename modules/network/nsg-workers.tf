@@ -2,8 +2,15 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  worker_nsg_enabled = (var.vcn_id != null && var.create_nsgs && var.create_cluster) || var.create_nsgs_always
-  worker_nsg_id      = one(oci_core_network_security_group.workers[*].id)
+  worker_nsg_config = try(var.nsgs.workers, { create = "never" })
+  worker_nsg_enabled = anytrue([
+    lookup(local.worker_nsg_config, "create", "auto") == "always",
+    alltrue([
+      lookup(local.worker_nsg_config, "create", "auto") == "auto",
+      var.create_cluster,
+    ]),
+  ])
+  worker_nsg_id = one(oci_core_network_security_group.workers[*].id)
   workers_rules = local.worker_nsg_enabled ? merge(
     {
       "Allow TCP egress from workers to OCI Services" : {
@@ -37,7 +44,7 @@ locals {
       },
     },
 
-    var.cni_type == "npn" ? {
+    local.pod_nsg_enabled ? {
       "Allow ALL egress from workers to pods" : {
         protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg,
       },
@@ -52,7 +59,7 @@ locals {
       },
     } : {},
 
-    var.allow_node_port_access && (var.load_balancers == "internal" || var.load_balancers == "both") ? {
+    var.allow_node_port_access && local.int_lb_nsg_enabled ? {
       "Allow TCP ingress to workers from internal load balancers" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, source = local.int_lb_nsg_id, source_type = local.rule_type_nsg,
       },
@@ -61,7 +68,7 @@ locals {
       },
     } : {},
 
-    var.allow_node_port_access && (var.load_balancers == "public" || var.load_balancers == "both") ? {
+    var.allow_node_port_access && local.pub_lb_nsg_enabled ? {
       "Allow TCP ingress to workers from public load balancers" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, source = local.pub_lb_nsg_id, source_type = local.rule_type_nsg,
       },
@@ -70,13 +77,13 @@ locals {
       },
     } : {},
 
-    (var.create_bastion || var.create_nsgs_always) && var.allow_worker_ssh_access ? {
+    local.bastion_nsg_enabled && var.allow_worker_ssh_access ? {
       "Allow SSH ingress to workers from bastion" : {
         protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
       }
     } : {},
 
-    (var.create_fss || var.create_nsgs_always) ? {
+    local.fss_nsg_enabled ? {
       # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
       # Ingress
       "Allow TCP ingress to workers for NFS portmapper from FSS mounts" : {
