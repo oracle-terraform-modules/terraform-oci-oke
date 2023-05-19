@@ -19,6 +19,23 @@ resource "oci_core_instance" "workers" {
     }
   }
 
+  dynamic "platform_config" {
+    for_each = each.value.platform_config != null ? [1] : []
+    content {
+      type                                           = lookup(each.value.platform_config, "type")
+      are_virtual_instructions_enabled               = lookup(each.value.platform_config, "are_virtual_instructions_enabled", null)
+      is_access_control_service_enabled              = lookup(each.value.platform_config, "is_access_control_service_enabled", null)
+      is_input_output_memory_management_unit_enabled = lookup(each.value.platform_config, "is_input_output_memory_management_unit_enabled", null)
+      is_measured_boot_enabled                       = lookup(each.value.platform_config, "is_measured_boot_enabled", null)
+      is_memory_encryption_enabled                   = lookup(each.value.platform_config, "is_memory_encryption_enabled", null)
+      is_secure_boot_enabled                         = lookup(each.value.platform_config, "is_secure_boot_enabled", null)
+      is_symmetric_multi_threading_enabled           = lookup(each.value.platform_config, "is_symmetric_multi_threading_enabled", null)
+      is_trusted_platform_module_enabled             = lookup(each.value.platform_config, "is_trusted_platform_module_enabled", null)
+      numa_nodes_per_socket                          = lookup(each.value.platform_config, "numa_nodes_per_socket", null)
+      percentage_of_cores_enabled                    = lookup(each.value.platform_config, "percentage_of_cores_enabled", null)
+    }
+  }
+
   agent_config {
     are_all_plugins_disabled = false
     is_management_disabled   = false
