@@ -57,6 +57,7 @@ module "workers" {
   max_pods_per_node          = var.max_pods_per_node
   node_labels                = var.worker_node_labels
   node_metadata              = var.worker_node_metadata
+  platform_config            = var.platform_config
   pod_nsg_ids                = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [module.network.pod_nsg_id] : [])
   pod_subnet_id              = module.network.pod_subnet_id
   pv_transit_encryption      = var.worker_pv_transit_encryption

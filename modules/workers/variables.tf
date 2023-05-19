@@ -48,6 +48,22 @@ variable "kubeproxy_mode" { type = string }
 variable "max_pods_per_node" { type = number }
 variable "node_labels" { type = map(string) }
 variable "node_metadata" { type = map(string) }
+variable "platform_config" {
+  default = null
+  type = object({
+    type                                           = string,
+    are_virtual_instructions_enabled               = optional(bool),
+    is_access_control_service_enabled              = optional(bool),
+    is_input_output_memory_management_unit_enabled = optional(bool),
+    is_measured_boot_enabled                       = optional(bool),
+    is_memory_encryption_enabled                   = optional(bool),
+    is_secure_boot_enabled                         = optional(bool),
+    is_symmetric_multi_threading_enabled           = optional(bool),
+    is_trusted_platform_module_enabled             = optional(bool),
+    numa_nodes_per_socket                          = optional(number),
+    percentage_of_cores_enabled                    = optional(bool),
+  })
+}
 variable "pv_transit_encryption" { type = bool }
 variable "shape" { type = map(any) }
 variable "ssh_public_key" { type = string }

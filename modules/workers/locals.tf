@@ -29,6 +29,7 @@ locals {
     ocpus                      = local.ocpus
     os                         = var.image_os
     os_version                 = var.image_os_version
+    platform_config            = var.platform_config
     placement_ads              = var.ad_numbers
     pod_nsg_ids                = var.pod_nsg_ids
     pod_subnet_id              = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
