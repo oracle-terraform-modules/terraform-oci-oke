@@ -230,3 +230,21 @@ variable "fss_max_fs_stat_files" {
   description = "Maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT."
   type        = number
 }
+
+variable "platform_config" {
+  default     = null
+  description = "Default platform_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/PlatformConfig>PlatformConfig</a> for more information."
+  type = object({
+    type                                           = string,
+    are_virtual_instructions_enabled               = optional(bool),
+    is_access_control_service_enabled              = optional(bool),
+    is_input_output_memory_management_unit_enabled = optional(bool),
+    is_measured_boot_enabled                       = optional(bool),
+    is_memory_encryption_enabled                   = optional(bool),
+    is_secure_boot_enabled                         = optional(bool),
+    is_symmetric_multi_threading_enabled           = optional(bool),
+    is_trusted_platform_module_enabled             = optional(bool),
+    numa_nodes_per_socket                          = optional(number),
+    percentage_of_cores_enabled                    = optional(bool),
+  })
+}

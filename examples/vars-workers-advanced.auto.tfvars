@@ -43,6 +43,16 @@ worker_pools = {
     description = "OKE-managed Node Pool with custom image", create = true,
     mode        = "node-pool", image_type = "custom", size = 1, allow_autoscaler = true,
   },
+  shielded_instances = {
+    description = "Self-managed Shielded VM Instance", create = false,
+    size = 1, mode = "instance", shape = "VM.Standard2.4",
+    platform_config = {
+      type                               = "INTEL_VM",
+      is_measured_boot_enabled           = true,
+      is_secure_boot_enabled             = true,
+      is_trusted_platform_module_enabled = true,
+    }
+  }
   wg_ip-vm-custom = {
     description = "Self-managed Instance Pool with custom image", create = false,
     mode        = "instance-pool", image_type = "custom", size = 1, allow_autoscaler = true,
