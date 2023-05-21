@@ -282,7 +282,7 @@ variable "bastion_image_id" {
 
 variable "bastion_os_version" {
   description = "In case Autonomous Linux is used, allow specification of Autonomous version"
-  default     = "7.9"
+  default     = "8.7"
   type        = string
 }
 

@@ -350,8 +350,8 @@ EOT
 
 |bastion_os_version
 |In case Autonomous Linux is used, allow specification of Autonomous version.
-|7.9
-|7.9
+|8.7
+|8.7
 
 |`bastion_user`
 |The user for SSH access to the bastion host. Always 'opc' on supported images.
