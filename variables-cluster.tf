@@ -25,7 +25,7 @@ variable "cluster_type" {
 
 variable "control_plane_is_public" {
   default     = false
-  description = "Whether the Kubernetes control plane endpoint should be allocated a public IP address."
+  description = "Whether the Kubernetes control plane endpoint should be allocated a public IP address to enable access over public internet."
   type        = bool
 }
 
@@ -37,7 +37,7 @@ variable "control_plane_nsg_ids" {
 
 variable "cni_type" {
   default     = "flannel"
-  description = "The CNI for the cluster: 'flannel' or 'npn'. See https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm."
+  description = "The CNI for the cluster: 'flannel' or 'npn'. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm>Pod Networking</a>."
   type        = string
   validation {
     condition     = contains(["flannel", "npn"], var.cni_type)
@@ -82,7 +82,7 @@ variable "image_signing_keys" {
 }
 
 variable "load_balancers" {
-  default     = "public"
+  default     = "both"
   description = "The type of subnets to create for load balancers."
   type        = string
   validation {
@@ -92,10 +92,8 @@ variable "load_balancers" {
 }
 
 variable "preferred_load_balancer" {
-  # values: public, internal.
-  # When creating an internal load balancer, the internal annotation must still be specified regardless
   default     = "public"
-  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. valid values are public or internal. if 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'."
+  description = "The preferred load balancer subnets that OKE will automatically choose when creating a load balancer. Valid values are 'public' or 'internal'. If 'public' is chosen, the value for load_balancers must be either 'public' or 'both'. If 'private' is chosen, the value for load_balancers must be either 'internal' or 'both'. NOTE: Service annotations for internal load balancers must still be specified regardless of this setting. See <a href=https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md>Load Balancer Annotations</a> for more information."
   type        = string
   validation {
     condition     = contains(["public", "internal"], var.preferred_load_balancer)
