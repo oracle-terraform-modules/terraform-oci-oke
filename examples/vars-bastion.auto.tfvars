@@ -4,7 +4,7 @@
 # All configuration for bastion sub-module w/ defaults
 
 create_bastion              = true           # *true/false
-bastion_allowed_cidrs       = ["0.0.0.0/0"]  # e.g. "0.0.0.0/0" for all
+bastion_allowed_cidrs       = []             # e.g. ["0.0.0.0/0"] to allow traffic from all sources
 bastion_availability_domain = null           # Defaults to first available
 bastion_image_id            = null           # Ignored when bastion_image_type = "platform"
 bastion_image_os            = "Oracle Linux" # Ignored when bastion_image_type = "custom"
