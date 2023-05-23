@@ -10,7 +10,8 @@ locals {
       var.create_cluster, var.load_balancers == "internal" || var.load_balancers == "both",
     ]),
   ])
-  int_lb_nsg_id = one(oci_core_network_security_group.int_lb[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  int_lb_nsg_id = one(compact([try(var.nsgs.int_lb.id, null), one(oci_core_network_security_group.int_lb[*].id)]))
   int_lb_rules = local.int_lb_nsg_enabled ? merge(
     {
       "Allow TCP egress from internal load balancers to workers for Node Ports" : {
