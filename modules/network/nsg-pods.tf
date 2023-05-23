@@ -7,6 +7,7 @@ locals {
     lookup(local.pod_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.pod_nsg_config, "create", "auto") == "auto",
+      !contains(keys(local.pod_nsg_config), "id"),
       var.create_cluster, var.cni_type == "npn",
     ]),
   ])

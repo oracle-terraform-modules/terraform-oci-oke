@@ -7,6 +7,7 @@ locals {
     lookup(local.control_plane_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.control_plane_nsg_config, "create", "auto") == "auto",
+      !contains(keys(local.control_plane_nsg_config), "id"),
       var.create_cluster,
     ]),
   ])

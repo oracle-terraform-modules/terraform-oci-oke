@@ -7,6 +7,7 @@ locals {
     lookup(local.int_lb_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.int_lb_nsg_config, "create", "auto") == "auto",
+      !contains(keys(local.int_lb_nsg_config), "id"),
       var.create_cluster, var.load_balancers == "internal" || var.load_balancers == "both",
     ]),
   ])
