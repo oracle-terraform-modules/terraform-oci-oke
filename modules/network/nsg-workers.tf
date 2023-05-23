@@ -7,6 +7,7 @@ locals {
     lookup(local.worker_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.worker_nsg_config, "create", "auto") == "auto",
+      !contains(keys(local.worker_nsg_config), "id"),
       var.create_cluster,
     ]),
   ])
