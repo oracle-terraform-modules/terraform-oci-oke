@@ -235,7 +235,7 @@ variable "platform_config" {
   default     = null
   description = "Default platform_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/PlatformConfig>PlatformConfig</a> for more information."
   type = object({
-    type                                           = string,
+    type                                           = optional(string),
     are_virtual_instructions_enabled               = optional(bool),
     is_access_control_service_enabled              = optional(bool),
     is_input_output_memory_management_unit_enabled = optional(bool),
