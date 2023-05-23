@@ -67,7 +67,13 @@ resource "oci_core_instance_configuration" "workers" {
       dynamic "platform_config" {
         for_each = each.value.platform_config != null ? [1] : []
         content {
-          type                                           = lookup(each.value.platform_config, "type")
+          type = lookup(
+            # Attempt lookup against data source for the associated 'type' of configured worker shape
+            lookup(local.platform_config_by_shape, each.value.shape, {}), "type",
+            # Fall back to 'type' on pool with custom platform_config, or INTEL_VM default
+            lookup(each.value.platform_config, "type", "INTEL_VM")
+          )
+          # Remaining parameters as configured, validated by instance/instance config resource
           are_virtual_instructions_enabled               = lookup(each.value.platform_config, "are_virtual_instructions_enabled", null)
           is_access_control_service_enabled              = lookup(each.value.platform_config, "is_access_control_service_enabled", null)
           is_input_output_memory_management_unit_enabled = lookup(each.value.platform_config, "is_input_output_memory_management_unit_enabled", null)

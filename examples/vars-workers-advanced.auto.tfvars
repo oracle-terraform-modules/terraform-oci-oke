@@ -45,9 +45,8 @@ worker_pools = {
   },
   shielded_instances = {
     description = "Self-managed Shielded VM Instance", create = false,
-    size = 1, mode = "instance", shape = "VM.Standard2.4",
+    size        = 1, mode = "instance", shape = "VM.Standard2.4",
     platform_config = {
-      type                               = "INTEL_VM",
       is_measured_boot_enabled           = true,
       is_secure_boot_enabled             = true,
       is_trusted_platform_module_enabled = true,
