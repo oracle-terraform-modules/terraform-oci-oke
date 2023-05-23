@@ -10,7 +10,8 @@ locals {
       var.create_cluster,
     ]),
   ])
-  control_plane_nsg_id = one(oci_core_network_security_group.cp[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  control_plane_nsg_id = one(compact([try(var.nsgs.cp.id, null), one(oci_core_network_security_group.cp[*].id)]))
   control_plane_rules = local.control_plane_nsg_enabled ? merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {

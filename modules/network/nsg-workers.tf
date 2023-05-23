@@ -10,7 +10,8 @@ locals {
       var.create_cluster,
     ]),
   ])
-  worker_nsg_id = one(oci_core_network_security_group.workers[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  worker_nsg_id = one(compact([try(var.nsgs.workers.id, null), one(oci_core_network_security_group.workers[*].id)]))
   workers_rules = local.worker_nsg_enabled ? merge(
     {
       "Allow TCP egress from workers to OCI Services" : {
