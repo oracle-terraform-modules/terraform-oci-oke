@@ -10,7 +10,8 @@ locals {
       var.create_cluster, var.create_operator,
     ]),
   ])
-  operator_nsg_id = one(oci_core_network_security_group.operator[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  operator_nsg_id = one(compact([try(var.nsgs.operator.id, null), one(oci_core_network_security_group.operator[*].id)]))
   operator_rules = local.operator_nsg_enabled ? merge(
     {
       "Allow TCP egress from operator to OCI services" : {

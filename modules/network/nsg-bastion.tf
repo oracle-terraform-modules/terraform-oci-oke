@@ -10,7 +10,8 @@ locals {
       var.create_cluster, var.create_bastion,
     ]),
   ])
-  bastion_nsg_id = one(oci_core_network_security_group.bastion[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  bastion_nsg_id = one(compact([try(var.nsgs.bastion.id, null), one(oci_core_network_security_group.bastion[*].id)]))
   bastion_rules = local.bastion_nsg_enabled ? merge(
     { for cidr in var.bastion_allowed_cidrs :
       "Allow SSH ingress to bastion from ${cidr}" => {

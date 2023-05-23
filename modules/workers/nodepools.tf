@@ -53,8 +53,8 @@ resource "oci_containerengine_node_pool" "workers" {
       content { # VCN-Native requires max pods/node, nsg ids, subnet ids
         cni_type          = "OCI_VCN_IP_NATIVE"
         max_pods_per_node = min(max(var.max_pods_per_node, 1), 110)
-        pod_nsg_ids    = compact(tolist(each.value.pod_nsg_ids))
-        pod_subnet_ids = compact(tolist([each.value.pod_subnet_id]))
+        pod_nsg_ids       = compact(tolist(each.value.pod_nsg_ids))
+        pod_subnet_ids    = compact(tolist([each.value.pod_subnet_id]))
       }
     }
   }

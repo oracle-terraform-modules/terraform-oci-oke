@@ -10,7 +10,8 @@ locals {
       var.create_cluster, var.create_fss,
     ]),
   ])
-  fss_nsg_id = one(oci_core_network_security_group.fss[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  fss_nsg_id = one(compact([try(var.nsgs.fss.id, null), one(oci_core_network_security_group.fss[*].id)]))
   fss_rules = local.fss_nsg_enabled ? {
     # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
     # Ingress
