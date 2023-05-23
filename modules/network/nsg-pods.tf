@@ -10,7 +10,8 @@ locals {
       var.create_cluster, var.cni_type == "npn",
     ]),
   ])
-  pod_nsg_id = one(oci_core_network_security_group.pods[*].id)
+  # Return provided NSG when configured with an existing ID or created resource ID
+  pod_nsg_id = one(compact([try(var.nsgs.pods.id, null), one(oci_core_network_security_group.pods[*].id)]))
   pods_rules = local.pod_nsg_enabled ? merge(
     {
       "Allow TCP egress from pods to OCI Services" : {
