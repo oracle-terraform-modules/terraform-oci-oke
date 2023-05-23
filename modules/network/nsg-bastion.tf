@@ -7,6 +7,7 @@ locals {
     lookup(local.bastion_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.bastion_nsg_config, "create", "auto") == "auto",
+      !contains(keys(local.bastion_nsg_config), "id"),
       var.create_cluster, var.create_bastion,
     ]),
   ])
