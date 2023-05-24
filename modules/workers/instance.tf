@@ -6,8 +6,9 @@ resource "oci_core_instance" "workers" {
   preserve_boot_volume = false
   shape                = each.value.shape
 
-  defined_tags  = each.value.defined_tags
-  freeform_tags = each.value.freeform_tags
+  defined_tags      = each.value.defined_tags
+  freeform_tags     = each.value.freeform_tags
+  extended_metadata = each.value.extended_metadata
 
   dynamic "shape_config" {
     for_each = length(regexall("Flex", each.value.shape)) > 0 ? [1] : []
@@ -100,7 +101,7 @@ resource "oci_core_instance" "workers" {
     }
 
     ignore_changes = [
-      defined_tags, freeform_tags, display_name, extended_metadata,
+      defined_tags, freeform_tags, display_name,
       metadata["cluster_ca_cert"], metadata["user_data"],
       create_vnic_details[0].defined_tags,
       create_vnic_details[0].freeform_tags,

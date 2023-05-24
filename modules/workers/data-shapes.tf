@@ -7,12 +7,14 @@ data "oci_core_shapes" "oke" {
 
 locals {
   shapes_by_name = {
+    # Group by shape name, yielding a list of objects for each
     for shape in data.oci_core_shapes.oke.shapes :
-    lookup(shape, "name") => shape if contains(keys(shape), "name")
+    lookup(shape, "name") => shape... if contains(keys(shape), "name")
   }
 
   platform_config_by_shape = {
+    # Merge objects for each shape; we only need the consistent 'type'
     for k, v in local.shapes_by_name :
-    k => merge(lookup(v, "platform_config_options", [])...)
+    k => merge(lookup(merge(v...), "platform_config_options", [])...)
   }
 }
