@@ -100,7 +100,7 @@ resource "oci_core_instance" "workers" {
     }
 
     ignore_changes = [
-      defined_tags, freeform_tags, display_name,
+      defined_tags, freeform_tags, display_name, extended_metadata,
       metadata["cluster_ca_cert"], metadata["user_data"],
       create_vnic_details[0].defined_tags,
       create_vnic_details[0].freeform_tags,
