@@ -17,6 +17,7 @@ resource "oci_core_instance_configuration" "workers" {
       compartment_id      = each.value.compartment_id
       defined_tags        = each.value.defined_tags
       freeform_tags       = each.value.freeform_tags
+      extended_metadata   = each.value.extended_metadata
 
       instance_options {
         are_legacy_imds_endpoints_disabled = false
@@ -142,7 +143,6 @@ resource "oci_core_instance_configuration" "workers" {
     ignore_changes = [
       defined_tags, freeform_tags, display_name,
       instance_details[0].launch_details[0].metadata,
-      instance_details[0].launch_details[0].extended_metadata,
       instance_details[0].launch_details[0].defined_tags,
       instance_details[0].launch_details[0].freeform_tags,
       instance_details[0].launch_details[0].create_vnic_details[0].defined_tags,
