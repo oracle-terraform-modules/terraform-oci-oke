@@ -140,8 +140,9 @@ resource "oci_core_instance_configuration" "workers" {
     # https://github.com/hashicorp/terraform/issues/15485
     create_before_destroy = true
     ignore_changes = [
-      defined_tags, freeform_tags, display_name, extended_metadata,
+      defined_tags, freeform_tags, display_name,
       instance_details[0].launch_details[0].metadata,
+      instance_details[0].launch_details[0].extended_metadata,
       instance_details[0].launch_details[0].defined_tags,
       instance_details[0].launch_details[0].freeform_tags,
       instance_details[0].launch_details[0].create_vnic_details[0].defined_tags,
