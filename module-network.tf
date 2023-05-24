@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_core_vcn" "oke" {
-  count  = coalesce(var.vcn_id, "none") != "none" ? 0 : 1
+  count  = coalesce(var.vcn_id, "none") != "none" ? 1 : 0
   vcn_id = coalesce(var.vcn_id, "none")
 }
 
