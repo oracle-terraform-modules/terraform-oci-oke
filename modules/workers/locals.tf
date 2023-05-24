@@ -20,6 +20,7 @@ locals {
     compartment_id             = var.compartment_id
     create                     = true
     drain                      = false
+    extended_metadata          = {} # empty pool-specific default
     image_id                   = var.image_id
     image_type                 = var.image_type
     memory                     = local.memory
