@@ -17,3 +17,6 @@ generated/**
 **/.metals*
 
 .terraform.lock.hcl
+
+# Generated documentation
+docs/book

@@ -87,12 +87,12 @@ module "oke" {
   create_operator         = false
 
   freeform_tags = { # TODO Remaining tags in schema
-    bastion           = lookup(var.bastion_tags, "freeformTags", {})
-    vcn               = {}
+    bastion = lookup(var.bastion_tags, "freeformTags", {})
+    vcn     = {}
   }
 
   defined_tags = { # TODO Remaining tags in schema
-    bastion           = lookup(var.bastion_tags, "definedTags", {})
-    vcn               = {}
+    bastion = lookup(var.bastion_tags, "definedTags", {})
+    vcn     = {}
   }
 }

@@ -1,9 +1,4 @@
-= Configuration
-:idprefix:
-:idseparator: -
-:sectlinks:
-:sectnums:
-:toc: auto
+## Configuration
 
 :uri-repo: https://github.com/oracle-terraform-modules/terraform-oci-oke
 
@@ -43,12 +38,6 @@
 :uri-topology: {uri-docs}/topology.adoc
 :uri-cloudinit: {uri-docs}/cloudinit.adoc
 
-:uri-docs-extensions: link:extensions.adoc
-:uri-docs-workers: link:workers.adoc
-:uri-docs-bastion: link:bastion.adoc
-:uri-docs-operator: link:operator.adoc
-:uri-docs-networking: link:networking.adoc
-
 == Assumptions
 
 This section assumes you have completed all the {uri-prereqs}[Prerequisites].
@@ -65,15 +54,15 @@ Enter the values for the following parameters in the terraform.tfvars file:
 
 e.g.
 
-----
+```
 api_fingerprint = "1a:bc:23:45:6d:78:e9:f0:gh:ij:kl:m1:23:no:4p:5q"
-----
+```
 
 Alternatively, you can also specify these using Terraform environment variables by prepending TF_variable_name e.g.
 
-----
+```
 export TF_api_fingerprint = "1a:bc:23:45:6d:78:e9:f0:gh:ij:kl:m1:23:no:4p:5q"
-----
+```
 
 You would have obtained your values when doing the {uri-prereqs}[Prerequisites].
 
@@ -81,7 +70,7 @@ You would have obtained your values when doing the {uri-prereqs}[Prerequisites].
 
 
 
-== Configure OCI parameters
+### Configure OCI parameters
 
 The 3 OCI parameters here mainly concern:
 
@@ -90,11 +79,11 @@ The 3 OCI parameters here mainly concern:
 
 e.g.
 
-----
+```
 compartment_id = "compartment_id = "ocid1.compartment...."
 home_region = "us-phoenix-1"
 region = "ap-sydney-1"
-----
+```
 
 Regions must have exactly 2 entries as above:
 
@@ -104,26 +93,6 @@ Regions must have exactly 2 entries as above:
 The list of regions can be found {uri-oci-region}[here].
 
 {uri-terraform-options}#general-oci[Reference]
-
-== Configure operator
-
-_See {uri-docs-operator}[Operator]._
-
-The operator host parameters concern:
-
-. whether you want to enable the operator host
-. the list of NSG ids of the operator host
-. the different parameters about the operator host e.g. shape, image id etc.
-
-1 parameter to keep in mind here is the enable_operator_instance_principal. Be aware that if this is enabled, it gives API access to the operator host without authentication.
-
-Read {uri-instructions}#enabling-instance_principal-on-the-operator-host[more] about {uri-oci-instance-principal}[instance_principal].
-
-{uri-terraform-options}#operator-host[Reference]
-
-== Configure cluster extensions
-
-_See {uri-docs-extensions}[Extensions]._
 
 == Configure OKE Load Balancer
 
@@ -138,42 +107,4 @@ Refer to {uri-topology}[topology] for more thorough examples.
 
 {uri-terraform-options}#oke-load-balancers[Reference]
 
-
-
-== Configure KMS Integration parameters
-
-The KMS integration parameters control whether {uri-oci-kms}[OCI Key Management Service] will be used for encrypting Kubernetes secrets and boot volumes/block volumes. Additionally, the bastion and operator hosts must be enabled as well as instance_principal on the operator.
-
-Bastion Variables
-
-----
-create_bastion_host = true
-----
-
-OKE Variables:-
-
-----
-use_cluster_encryption = true
-cluster_kms_key_id = <cluster_kms_key_id>
-use_node_pool_volume_encryption = true
-node_pool_volume_kms_key_id = <node_pool_volume_kms_key_id>
-----
-
-Operator Variables
-
-----
-create_operator = true
-enable_operator_instance_principal = true
-enable_operator_pv_encryption_in_transit = false
-operator_volume_kms_id = <operator_volume_kms_id>
-create_policies = true
-----
-
-OKE also supports enforcing the use of signed images. You can enforce the use of signed image using the following parameters:
-
-----
-use_signed_images = false
-image_signing_keys = ["ocid1.key.oc1....", "ocid1.key.oc1...."]
-----
-{uri-terraform-options}#kms-integration[Reference]
 
