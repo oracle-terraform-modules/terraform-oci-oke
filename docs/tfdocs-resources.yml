@@ -1,0 +1,12 @@
+sections:
+  show: ["resources"]
+
+content: |-
+  {{- range .Module.Resources }}
+      {{- $isResource := and $.Config.Sections.Resources ( eq "resource" (printf "%s" .GetMode)) }}
+      {{- $isDataResource := and $.Config.Sections.DataSources ( eq "data source" (printf "%s" .GetMode)) }}
+      {{- if or $isResource $isDataResource }}
+          {{- $fullspec := ternary .URL (printf "[%s](%s)" .Spec .URL) .Spec }}
+          * {{ $fullspec }}
+      {{- end }}
+  {{- end }}

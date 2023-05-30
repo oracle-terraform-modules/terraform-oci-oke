@@ -56,9 +56,3 @@ worker_pools                  = [
     shape = "VM.Standard.E4.Flex", ocpus = 4, memory = 32, boot_volume_size = 150 }
 ]
 ```
-
-### Generated reference
-The content below is generated/updated with:
-```shell
-terraform-docs markdown table --hide-empty=true --hide=modules,providers --output-file=./README.md .
-```

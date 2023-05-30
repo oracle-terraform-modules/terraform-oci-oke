@@ -1,0 +1,43 @@
+name: Publish Terraform OCI OKE Module Book
+on:
+  # Rebuild docs when a release is published
+  release:
+    types: [published]
+  # Enable manual trigger
+  workflow_dispatch:
+
+jobs:
+  build-and-publish-book:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+    - name: Install mdbook
+      run: |
+        mkdir mdbook
+        curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.21/mdbook-v0.4.21-x86_64-unknown-linux-gnu.tar.gz | tar -xz --directory=./mdbook
+        echo `pwd`/mdbook >> $GITHUB_PATH
+        cargo install mdbook-admonish
+    - name: Deploy Book to GitHub Pages
+      run: |
+        # Build the HTML content
+        mdbook build -d book/ docs/
+
+        # Create and switch to the gh-pages work tree
+        git worktree add gh-pages gh-pages
+        cd $GITHUB_WORKSPACE/gh-pages
+
+        git config user.name "GitHub Actions"
+        git config user.email "oci-dax-tools_ww@oracle.com"
+
+        # Delete the ref to avoid keeping history.
+        git update-ref -d refs/heads/gh-pages
+        rm -rf *
+
+        mv $GITHUB_WORKSPACE/docs/book/* $GITHUB_WORKSPACE/gh-pages
+        touch $GITHUB_WORKSPACE/gh-pages/.nojekyll
+
+        git add .
+        git commit -m "Deploy $GITHUB_SHA to gh-pages"
+        git push --force-with-lease
