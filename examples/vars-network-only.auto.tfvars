@@ -5,7 +5,6 @@
 
 create_bastion  = false # *true/false
 create_cluster  = false # *true/false
-create_nsgs     = false # *true/false
 create_operator = false # *true/false
 
 # Force creation of subnets with associated components disabled

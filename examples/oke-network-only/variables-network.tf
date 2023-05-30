@@ -37,11 +37,6 @@ variable "ig_route_table_id" {
   type    = string
 }
 
-variable "nat_route_table_id" {
-  default = null
-  type    = string
-}
-
 variable "create_drg" { default = false }
 
 variable "drg_display_name" {
@@ -71,11 +66,6 @@ variable "nat_gateway_route_rules" {
   type    = list(map(string))
 }
 
-variable "nat_gateway_public_ip_id" {
-  default = null
-  type    = string
-}
-
 variable "vcn_cidrs" {
   default = "10.0.0.0/16"
   type    = string
@@ -93,5 +83,26 @@ variable "load_balancers" {
 
 variable "preferred_load_balancer" {
   default = "Internal"
+  type    = string
+}
+
+variable "create_nsgs" { default = true }
+variable "allow_node_port_access" { default = false }
+variable "allow_pod_internet_access" { default = true }
+variable "allow_worker_internet_access" { default = true }
+variable "allow_worker_ssh_access" { default = false }
+
+variable "allow_rules_internal_lb" {
+  default = {}
+  type    = any
+}
+
+variable "allow_rules_public_lb" {
+  default = {}
+  type    = any
+}
+
+variable "control_plane_allowed_cidrs" {
+  default = ""
   type    = string
 }

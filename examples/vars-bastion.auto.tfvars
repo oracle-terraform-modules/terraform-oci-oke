@@ -10,7 +10,7 @@ bastion_image_id            = null           # Ignored when bastion_image_type =
 bastion_image_os            = "Oracle Linux" # Ignored when bastion_image_type = "custom"
 bastion_image_os_version    = "8"            # Ignored when bastion_image_type = "custom"
 bastion_image_type          = "platform"     # platform/custom
-bastion_nsg_ids             = []             # Combined with created NSG when create_nsgs = true
+bastion_nsg_ids             = []             # Combined with created NSG when enabled in var.nsgs
 bastion_public_ip           = null           # Ignored when create_bastion = true
 bastion_type                = "public"       # *public/private
 bastion_upgrade             = false          # true/*false
