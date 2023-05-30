@@ -14,35 +14,31 @@ output "nat_route_table_id" { value = module.oke.nat_route_table_id }
 output "bastion_id" { value = module.oke.bastion_id }
 output "bastion_public_ip" { value = module.oke.bastion_public_ip }
 output "bastion_subnet_id" { value = module.oke.bastion_subnet_id }
-output "bastion_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "bastion", null) }
+output "bastion_subnet_cidr" { value = module.oke.bastion_subnet_cidr }
 output "bastion_nsg_id" { value = module.oke.bastion_nsg_id }
 output "bastion_ssh_command" { value = module.oke.ssh_to_bastion }
 output "bastion_ssh_secret_id" { value = var.ssh_kms_secret_id }
 
 # Operator
 output "operator_subnet_id" { value = module.oke.operator_subnet_id }
-output "operator_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "operator", null) }
+output "operator_subnet_cidr" { value = module.oke.operator_subnet_cidr }
 output "operator_nsg_id" { value = module.oke.operator_nsg_id }
 
 # Cluster
 output "control_plane_subnet_id" { value = module.oke.control_plane_subnet_id }
-output "control_plane_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "cp", null) }
+output "control_plane_subnet_cidr" { value = module.oke.control_plane_subnet_cidr }
 output "control_plane_nsg_id" { value = module.oke.control_plane_nsg_id }
 output "int_lb_subnet_id" { value = module.oke.int_lb_subnet_id }
 output "pub_lb_subnet_id" { value = module.oke.pub_lb_subnet_id }
 output "int_lb_nsg_id" { value = module.oke.int_lb_nsg_id }
-output "int_lb_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "int_lb", null) }
+output "int_lb_subnet_cidr" { value = module.oke.int_lb_subnet_cidr }
 output "pub_lb_nsg_id" { value = module.oke.pub_lb_nsg_id }
-output "pub_lb_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "pub_lb", null) }
+output "pub_lb_subnet_cidr" { value = module.oke.pub_lb_subnet_cidr }
 
 # Workers
 output "worker_subnet_id" { value = module.oke.worker_subnet_id }
-output "worker_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "workers", null) }
+output "worker_subnet_cidr" { value = module.oke.worker_subnet_cidr }
 output "worker_nsg_id" { value = module.oke.worker_nsg_id }
 output "pod_subnet_id" { value = module.oke.pod_subnet_id }
-output "pod_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "pods", null) }
+output "pod_subnet_cidr" { value = module.oke.pod_subnet_cidr }
 output "pod_nsg_id" { value = module.oke.pod_nsg_id }
-output "fss_id" { value = module.oke.fss_id }
-output "fss_subnet_id" { value = module.oke.fss_subnet_id }
-output "fss_subnet_cidr" { value = lookup(module.oke.subnet_cidrs, "fss", null) }
-output "fss_nsg_id" { value = module.oke.fss_nsg_id }

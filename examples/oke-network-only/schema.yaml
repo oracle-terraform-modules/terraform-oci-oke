@@ -58,7 +58,6 @@ variableGroups:
       - bastion_subnet_create
       - bastion_subnet_newbits
       - bastion_subnet_id
-      - bastion_nsg_id
       - bastion_allowed_cidrs
       - ${create_bastion}
       - bastion_upgrade
@@ -86,16 +85,14 @@ variableGroups:
       - operator_subnet_create
       - operator_subnet_newbits
       - operator_subnet_id
-      - operator_nsg_id
 
   - title: "Control Plane"
     variables:
       - control_plane_is_public
+      - control_plane_allowed_cidrs
       - control_plane_subnet_create
       - control_plane_subnet_newbits
       - control_plane_subnet_id
-      - control_plane_nsg_id
-      - control_plane_allowed_cidrs
 
   - title: "Load Balancers"
     variables:
@@ -116,19 +113,13 @@ variableGroups:
       - worker_subnet_create
       - worker_subnet_newbits
       - worker_subnet_id
-      - worker_nsg_id
       - allow_worker_ssh_access
       - allow_worker_internet_access
       - allow_node_port_access
       - pod_subnet_create
       - pod_subnet_newbits
       - pod_subnet_id
-      - pod_nsg_id
       - allow_pod_internet_access
-      - fss_subnet_create
-      - fss_subnet_newbits
-      - fss_subnet_id
-      - fss_nsg_id
 
 variables:
   # Identity
@@ -265,14 +256,6 @@ variables:
     dependsOn:
       compartmentId: ${compartment_ocid}
       vcnId: ${vcn_id}
-  nat_route_table_id:
-    title: NAT Gateway Route Table
-    type: ocid
-    required: false
-    visible: false
-  nat_gateway_public_ip_id:
-    required: false
-    visible: false
 
   # NSGs
   create_nsgs:
@@ -281,74 +264,16 @@ variables:
     type: boolean
     default: true
     required: true
-  bastion_nsg_id:
-    title: Additional Network Security Group
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible: { not: [create_vcn] }
   bastion_allowed_cidrs:
     title: Comma-separated list of CIDR blocks allowed SSH access to the bastion host.
     type: string
     required: false
     visible: ${create_nsgs}
-  operator_nsg_id:
-    title: Additional Network Security Group
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible: { not: [create_vcn] }
-  control_plane_nsg_id:
-    title: Additional Network Security Group
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible: { not: [create_vcn] }
   control_plane_allowed_cidrs:
     title: Comma-separated list of CIDR blocks allowed access to the OKE control plane.
     type: string
     required: false
     visible: ${create_nsgs}
-  pod_nsg_id:
-    title: Additional Network Security Group for pods
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible: { not: [create_vcn] }
-  worker_nsg_id:
-    title: Additional Network Security Group for workers
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible: { not: [create_vcn] }
-  fss_nsg_id:
-    title: Additional Network Security Group for FSS
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible:
-      and:
-        - ${create_fss}
-        - not: [create_vcn]
-
   control_plane_is_public:
     title: Public Kubernetes control plane
     type: boolean
@@ -433,10 +358,7 @@ variables:
     enum: [Public, Internal, Both]
     default: Internal
     required: true
-    visible:
-      or:
-        - ${create_cluster}
-        - ${create_nsgs}
+    visible: ${create_nsgs}
 
   bastion_is_public:
     title: Public network
@@ -473,7 +395,6 @@ variables:
       not:
         - or:
             - ${bastion_subnet_create}
-            - ${create_vcn}
             - not:
                 - ${create_bastion}
   create_bastion:
@@ -602,6 +523,7 @@ variables:
     required: true
     dependsOn:
       compartmentId: ${compartment_ocid}
+    visible: ${create_bastion}
   ssh_kms_secret_id:
     title: SSH Vault secret
     description: The OCI Vault secret containing the SSH private key.
@@ -610,6 +532,7 @@ variables:
     dependsOn:
       compartmentId: ${compartment_ocid}
       vaultId: ${ssh_kms_vault_id}
+    visible: ${create_bastion}
 
   operator_subnet_create:
     title: Create operator subnet
@@ -632,10 +555,7 @@ variables:
       hideRegionalSubnet: false
       hideAdSubnet: false
     visible:
-      not:
-        - or:
-            - ${operator_subnet_create}
-            - ${create_vcn}
+      not: ${operator_subnet_create}
   control_plane_subnet_create:
     title: Create control plane subnet
     type: boolean
@@ -657,10 +577,7 @@ variables:
       hideRegionalSubnet: false
       hideAdSubnet: true
     visible:
-      not:
-        - or:
-            - ${control_plane_subnet_create}
-            - ${create_vcn}
+      not: ${control_plane_subnet_create}
   int_lb_subnet_create:
     title: Create internal load balancer subnet
     type: boolean
@@ -682,10 +599,7 @@ variables:
       hideRegionalSubnet: false
       hideAdSubnet: true
     visible:
-      not:
-        - or:
-            - ${create_vcn}
-            - ${int_lb_subnet_create}
+      not: ${int_lb_subnet_create}
   pub_lb_subnet_create:
     title: Create public load balancer subnet
     type: boolean
@@ -707,10 +621,7 @@ variables:
       hideRegionalSubnet: false
       hideAdSubnet: true
     visible:
-      not:
-        - or:
-            - ${create_vcn}
-            - ${pub_lb_subnet_create}
+      not: ${pub_lb_subnet_create}
   worker_subnet_create:
     title: Create worker subnet
     type: boolean
@@ -732,11 +643,7 @@ variables:
       hideRegionalSubnet: false
       hideAdSubnet: false
     visible:
-      not:
-        - or:
-            - ${worker_subnet_create}
-            - ${create_vcn}
-
+      not: ${worker_subnet_create}
   pod_subnet_create:
     title: Create pod subnet
     type: boolean
@@ -758,35 +665,7 @@ variables:
       hideRegionalSubnet: false
       hideAdSubnet: true
     visible:
-      not:
-        - or:
-            - ${pod_subnet_create}
-            - ${create_vcn}
-  fss_subnet_create:
-    title: Create FSS subnet
-    type: boolean
-    required: true
-  fss_subnet_newbits:
-    title: FSS subnet size
-    description: The number of network prefix bits added to the VCN CIDR block for the created subnet address range (i.e. a higher value is smaller). Refer to the Terraform <a href=https://developer.hashicorp.com/terraform/language/functions/cidrsubnets>cidrsubnets</a> function for more information.
-    type: number
-    visible: ${fss_subnet_create}
-  fss_subnet_id:
-    title: FSS subnet
-    type: oci:core:subnet:id
-    required: false
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-      hidePublicSubnet: false
-      hidePrivateSubnet: false
-      hideRegionalSubnet: false
-      hideAdSubnet: false
-    visible:
-      not:
-        - or:
-            - ${fss_subnet_create}
-            - ${create_vcn}
+      not: ${pod_subnet_create}
 
 outputGroups:
   - title: Terraform
@@ -803,7 +682,6 @@ outputGroups:
       - bastion_id
       - bastion_subnet_id
       - bastion_subnet_cidr
-      - bastion_nsg_id
       - bastion_public_ip
       - bastion_ssh_command
       - bastion_ssh_secret_id
@@ -811,29 +689,20 @@ outputGroups:
     outputs:
       - operator_subnet_id
       - operator_subnet_cidr
-      - operator_nsg_id
   - title: Cluster
     outputs:
       - control_plane_subnet_id
       - control_plane_subnet_cidr
-      - control_plane_nsg_id
       - int_lb_subnet_id
       - int_lb_subnet_cidr
-      - int_lb_nsg_id
       - pub_lb_subnet_id
       - pub_lb_subnet_cidr
-      - pub_lb_nsg_id
   - title: Workers
     outputs:
       - worker_subnet_id
       - worker_subnet_cidr
-      - worker_nsg_id
       - pod_subnet_id
       - pod_subnet_cidr
-      - pod_nsg_id
-      - fss_subnet_id
-      - fss_subnet_cidr
-      - fss_nsg_id
 
 outputs:
   # Terraform
@@ -858,8 +727,6 @@ outputs:
     visible: false
   subnet_ids:
     visible: false
-  nsg_ids:
-    visible: false
   network_security_rules:
     visible: false
 
@@ -873,9 +740,6 @@ outputs:
   bastion_subnet_cidr:
     title: Bastion CIDR
     type: string
-  bastion_nsg_id:
-    title: Bastion NSG
-    type: ocid
   bastion_public_ip:
     title: Bastion IP
     type: copyableString
@@ -893,9 +757,6 @@ outputs:
   operator_subnet_cidr:
     title: Operator CIDR
     type: string
-  operator_nsg_id:
-    title: Operator NSG
-    type: ocid
 
   # Cluster
   control_plane_subnet_id:
@@ -904,27 +765,18 @@ outputs:
   control_plane_subnet_cidr:
     title: Control plane CIDR
     type: string
-  control_plane_nsg_id:
-    title: Control plane NSG
-    type: ocid
   int_lb_subnet_id:
     title: Internal load balancer subnet
     type: ocid
   int_lb_subnet_cidr:
     title: Internal load balancer CIDR
     type: string
-  int_lb_nsg_id:
-    title: Internal load balancer NSG
-    type: ocid
   pub_lb_subnet_id:
     title: Public load balancer subnet
     type: ocid
   pub_lb_subnet_cidr:
     title: Public load balancer CIDR
     type: string
-  pub_lb_nsg_id:
-    title: Public load balancer NSG
-    type: ocid
 
   # Workers
   worker_subnet_id:
@@ -933,26 +785,9 @@ outputs:
   worker_subnet_cidr:
     title: Worker CIDR
     type: string
-  worker_nsg_id:
-    title: Worker NSG
-    type: ocid
   pod_subnet_id:
     title: Pod subnet
     type: ocid
   pod_subnet_cidr:
     title: Pod CIDR
     type: string
-  pod_nsg_id:
-    title: Pod NSG
-    type: ocid
-
-  # FSS
-  fss_subnet_id:
-    title: File Storage Service subnet
-    type: ocid
-  fss_subnet_cidr:
-    title: File Storage Service CIDR
-    type: string
-  fss_nsg_id:
-    title: File Storage Service NSG
-    type: ocid
