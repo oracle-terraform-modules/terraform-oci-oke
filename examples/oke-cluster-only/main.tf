@@ -40,10 +40,10 @@ module "oke" {
   }
 
   # Network Security
-  control_plane_is_public      = var.control_plane_is_public
-  load_balancers               = lower(var.load_balancers)
-  create_bastion              = false
-  bastion_public_ip           = var.bastion_public_ip
+  control_plane_is_public = var.control_plane_is_public
+  load_balancers          = lower(var.load_balancers)
+  create_bastion          = false
+  bastion_public_ip       = var.bastion_public_ip
 
   # Operator
   create_operator                = var.create_operator
