@@ -1,0 +1,21 @@
+sections:
+  show: ["inputs"]
+
+content: |-
+  | Name | Description | Type | Default | Required |
+  |------|-------------|------|---------|:--------:|
+  {{- range .Module.Inputs }}
+      | {{ anchorNameMarkdown "input" .Name -}}
+      | {{ tostring .Description | sanitizeMarkdownTbl -}}
+      | {{ printf " " }}{{ printf "%s" (tostring .Type | sanitizeMarkdownTbl) -}}
+      | {{ printf " " }}{{ printf "%s" (.GetValue | sanitizeMarkdownTbl) -}}
+      | {{ printf " " }}{{ ternary .Required "yes" "no" -}} |
+  {{- end }}
+
+sort:
+  enabled: true
+  by: type
+
+settings:
+  hide-empty: true
+  indent: 2

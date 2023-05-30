@@ -1,0 +1,14 @@
+sections:
+  show: [all]
+
+output:
+  file: "./README.md"
+  mode: inject
+
+sort:
+  enabled: true
+  by: type
+
+settings:
+  hide-empty: true
+  indent: 2

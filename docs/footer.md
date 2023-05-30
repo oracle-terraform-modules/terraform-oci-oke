@@ -1,0 +1,2 @@
+
+>Copyright &copy; 2019, 2023 Oracle Corporation and/or its affiliates. <br/>Licensed under the [Universal Permissive License v1.0](https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/LICENSE) as shown at https://oss.oracle.com/licenses/upl.
