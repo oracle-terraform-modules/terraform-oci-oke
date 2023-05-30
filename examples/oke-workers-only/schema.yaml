@@ -46,12 +46,12 @@ variableGroups:
       - worker_nsg_id
       - pod_subnet_id
       - pod_nsg_id
-      - fss_subnet_id
-      - fss_nsg_id
 
   - title: "SSH"
     variables:
       - ssh_public_key
+      - ssh_kms_vault_id
+      - ssh_kms_secret_id
 
   - title: "Image"
     variables:
@@ -184,28 +184,6 @@ variables:
     dependsOn:
       compartmentId: ${compartment_ocid}
       vcnId: ${vcn_id}
-  fss_subnet_id:
-    title: FSS subnet
-    type: oci:core:subnet:id
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-      hidePublicSubnet: false
-      hidePrivateSubnet: false
-      hideRegionalSubnet: false
-      hideAdSubnet: false
-  fss_nsg_id:
-    title: FSS Network Security Group
-    type: oci:core:nsg:id
-    # additionalProps:
-    #   allowMultiple: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vcnId: ${vcn_id}
-    visible:
-      and:
-        - ${create_fss}
-        - not: [create_vcn]
 
   # SSH
   ssh_public_key:
@@ -213,6 +191,21 @@ variables:
     type: oci:core:ssh:publickey
     pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
     required: false
+  ssh_kms_vault_id:
+    title: SSH Vault
+    description: The OCI Vault used to encrypt the SSH key pair.
+    type: oci:kms:vault:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+  ssh_kms_secret_id:
+    title: SSH Vault secret
+    description: The OCI Vault secret containing the SSH private key.
+    type: oci:kms:secret:id
+    required: true
+    dependsOn:
+      compartmentId: ${compartment_ocid}
+      vaultId: ${ssh_kms_vault_id}
 
   # Cluster
   cluster_id:
@@ -319,7 +312,6 @@ variables:
   worker_image_custom_id:
     title: Image ID
     type: ocid
-    default: ocid1.image.oc1.ap-osaka-1.aaaaaaaaea5wfsravwlatdyq7x72nb7ci7xmc4aer3ncdfjkumup2fhvkrgq
     required: true
     visible:
       eq:

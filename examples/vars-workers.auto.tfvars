@@ -30,9 +30,3 @@ worker_shape = {
 }
 
 worker_pools = {}
-
-# FSS
-create_fss            = false # true/*false
-fss_mount_path        = "/oke_fss"
-fss_max_fs_stat_bytes = 23843202333
-fss_max_fs_stat_files = 223442
