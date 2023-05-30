@@ -1,10 +1,6 @@
 # Copyright (c) 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-locals {
-  ssh_public_key = try(base64decode(var.ssh_public_key), var.ssh_public_key)
-}
-
 # Identity
 
 # Automatically populated by Resource Manager
@@ -28,13 +24,6 @@ variable "create_iam_autoscaler_policy" { default = false }
 variable "create_iam_worker_policy" { default = false }
 variable "autoscale" { default = false }
 
-# SSH
-
-variable "ssh_public_key" {
-  default = null
-  type    = string
-}
-
 # Cluster
 
 variable "cluster_id" {
@@ -43,7 +32,7 @@ variable "cluster_id" {
 }
 variable "cni_type" { default = "Flannel" }
 variable "kubernetes_version" {
-  default = "v1.25.4"
+  default = "v1.26.2"
   type    = string
 }
 
@@ -68,8 +57,6 @@ variable "vcn_id" {
   type    = string
 }
 variable "assign_dns" { default = true }
-variable "fss_nsg_id" { default = "" }
-variable "fss_subnet_id" { default = "" }
 variable "pod_nsg_id" { default = "" }
 variable "pod_subnet_id" { default = "" }
 variable "worker_nsg_id" { default = "" }

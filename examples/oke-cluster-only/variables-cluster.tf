@@ -1,7 +1,13 @@
 # Copyright (c) 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-variable "create_cluster" { default = true }
+# General
+
+variable "output_detail" { default = false }
+variable "timezone" { default = "Etc/UTC" }
+
+# Cluster
+
 variable "cluster_type" {
   description = "The cluster type. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengworkingwithenhancedclusters.htm>Working with Enhanced Clusters and Basic Clusters</a> for more information. NOTE: An Enhanced cluster is required for self-managed worker pools (mode != Node Pool)."
   type        = string
@@ -19,7 +25,7 @@ variable "services_cidr" {
   default = "10.96.0.0/16"
   type    = string
 }
-variable "kubernetes_version" { default = "v1.25.4" }
+variable "kubernetes_version" { default = "v1.26.2" }
 
 variable "cluster_kms_vault_id" {
   default = null
@@ -51,4 +57,25 @@ variable "preferred_load_balancer" {
 variable "cluster_tags" {
   default = {}
   type    = map(any)
+}
+
+# Oracle Container Image Registry (OCIR)
+
+variable "ocir_email_address" {
+  default = null
+  type    = string
+}
+variable "ocir_secret_name" { default = "ocirsecret" }
+variable "ocir_secret_namespace" { default = "default" }
+variable "ocir_username" {
+  default = null
+  type    = string
+}
+variable "ocir_kms_vault_id" {
+  default = null
+  type    = string
+}
+variable "ocir_kms_secret_id" {
+  default = null
+  type    = string
 }

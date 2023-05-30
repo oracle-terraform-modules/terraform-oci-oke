@@ -22,11 +22,9 @@ subnets = { # netnum/newbits if create = true, or id required
   pub_lb   = { netnum = 17, newbits = 11, id = "" }
   workers  = { netnum = 1, newbits = 2, id = "" }
   pods     = { netnum = 2, newbits = 2, id = "" }
-  fss      = { netnum = 18, newbits = 11, id = "" }
 }
 
 # Security
-create_nsgs                  = true          # *true/false
 allow_node_port_access       = true          # *true/false
 allow_pod_internet_access    = true          # *true/false
 allow_worker_internet_access = false         # true/*false

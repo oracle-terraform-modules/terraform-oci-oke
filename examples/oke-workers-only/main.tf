@@ -1,14 +1,6 @@
 # Copyright (c) 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-data "oci_identity_region_subscriptions" "home" {
-  tenancy_id = var.tenancy_ocid
-  filter {
-    name   = "is_home_region"
-    values = [true]
-  }
-}
-
 locals {
   worker_image_id   = coalesce(var.worker_image_custom_id, var.worker_image_platform_id, "none")
   worker_image_type = contains(["platform", "custom"], lower(var.worker_image_type)) ? "custom" : "oke"
@@ -20,7 +12,7 @@ locals {
 }
 
 module "oke" {
-  source    = "github.com/devoncrouse/terraform-oci-oke.git?ref=5.x-stack&depth=1"
+  source    = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x&depth=1"
   providers = { oci.home = oci.home }
 
   # Identity
@@ -30,7 +22,6 @@ module "oke" {
   create_iam_resources         = true
   create_iam_autoscaler_policy = var.create_iam_autoscaler_policy ? "always" : "never"
   create_iam_worker_policy     = var.create_iam_worker_policy ? "always" : "never"
-  create_nsgs                  = false
   create_bastion               = false
   create_operator              = false
   create_cluster               = false
@@ -41,9 +32,15 @@ module "oke" {
   assign_dns     = var.assign_dns
   worker_nsg_ids = compact([var.worker_nsg_id])
   pod_nsg_ids    = compact([var.pod_nsg_id])
+
   subnets = {
-    workers = { id = var.worker_subnet_id }
-    pods    = { id = var.pod_subnet_id }
+    workers = { create = "never", id = var.worker_subnet_id }
+    pods    = { create = "never", id = var.pod_subnet_id }
+  }
+
+  nsgs = {
+    workers = { create = "never", id = var.worker_nsg_id }
+    pods    = { create = "never", id = var.pod_nsg_id }
   }
 
   # Cluster
