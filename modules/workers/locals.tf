@@ -82,7 +82,7 @@ locals {
         lookup(var.image_ids, pool.image_type, null),
         length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
         length(regexall("A1", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
-        lookup(var.image_ids, "${pool.os} ${split(".", pool.os_version)[0]}", null),
+        lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
       ]...)), 0))
 
       # Standard tags as defined if enabled for use
@@ -162,7 +162,7 @@ locals {
     for k, v in local.enabled_worker_pools : [
       for i in range(0, lookup(v, "size", 0)) : merge(v, { "key" = k, "index" = i })
     ] if lookup(v, "mode", "") == "instance"
-  ]...) : "${lookup(e, "key")}-${lookup(e, "index")}" => e }
+  ]...) : format("%v-%v", lookup(e, "key"), lookup(e, "index")) => e }
 
   # Enabled worker_pool map entries for cluster networks
   enabled_cluster_networks = {
