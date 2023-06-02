@@ -40,6 +40,6 @@ locals {
     }, {
     # Include groups for OS name and major version
     # https://developer.hashicorp.com/terraform/language/expressions/for#grouping-results
-    for k, v in local.parsed_images : "${v.os} ${split(".", v.os_version)[0]}" => k...
+    for k, v in local.parsed_images : format("%v %v", v.os, split(".", v.os_version)[0]) => k...
   })
 }

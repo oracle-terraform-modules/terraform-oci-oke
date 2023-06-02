@@ -115,7 +115,7 @@ resource "oci_core_subnet" "oke" {
   compartment_id             = var.compartment_id
   vcn_id                     = var.vcn_id
   cidr_block                 = lookup(local.subnet_cidrs_all, each.key)
-  display_name               = "${each.key}-${var.state_id}"
+  display_name               = format("%v-%v", each.key, var.state_id)
   dns_label                  = var.assign_dns ? lookup(try(lookup(var.subnets, each.key), {}), "dns_label", substr(each.key, 0, 2)) : null
   prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
   route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
@@ -138,7 +138,7 @@ resource "oci_core_security_list" "oke" {
   }
 
   compartment_id = var.compartment_id
-  display_name   = "${each.key}-${var.state_id}"
+  display_name   = format("%v-%v", each.key, var.state_id)
   vcn_id         = var.vcn_id
   defined_tags   = local.defined_tags
   freeform_tags  = local.freeform_tags

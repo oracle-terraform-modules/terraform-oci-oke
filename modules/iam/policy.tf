@@ -21,7 +21,7 @@ resource "oci_identity_policy" "cluster" {
   provider       = oci.home
   count          = local.has_policy_statements ? 1 : 0
   compartment_id = var.compartment_id
-  description    = "Policies for OKE Terraform state ${var.state_id}"
+  description    = format("Policies for OKE Terraform state %v", var.state_id)
   name           = local.cluster_group_name
   statements     = local.policy_statements
   defined_tags   = local.defined_tags
