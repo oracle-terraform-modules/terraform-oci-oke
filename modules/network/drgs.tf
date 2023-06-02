@@ -41,7 +41,7 @@ resource "oci_core_drg_attachment" "oke" {
 resource "oci_core_drg_attachment" "extra" {
   for_each      = local.drg_attachments
   drg_id        = one(oci_core_drg.oke[*].id)
-  display_name  = "${each.key}-${var.state_id}"
+  display_name  = format("%v-%v", each.key, var.state_id)
   defined_tags  = local.defined_tags
   freeform_tags = local.freeform_tags
 

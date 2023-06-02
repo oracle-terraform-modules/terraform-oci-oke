@@ -58,21 +58,21 @@ module "workers" {
   node_labels                = var.worker_node_labels
   node_metadata              = var.worker_node_metadata
   platform_config            = var.platform_config
-  pod_nsg_ids                = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [module.network.pod_nsg_id] : [])
-  pod_subnet_id              = module.network.pod_subnet_id
+  pod_nsg_ids                = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [try(module.network.pod_nsg_id, null)] : [])
+  pod_subnet_id              = try(module.network.pod_subnet_id, "") # safe destroy; validated in submodule
   pv_transit_encryption      = var.worker_pv_transit_encryption
   shape                      = var.worker_shape
   ssh_public_key             = local.ssh_public_key
   timezone                   = var.timezone
   volume_kms_key_id          = var.worker_volume_kms_key_id
-  worker_nsg_ids             = concat(var.worker_nsg_ids, [module.network.worker_nsg_id])
-  worker_subnet_id           = module.network.worker_subnet_id
+  worker_nsg_ids             = concat(var.worker_nsg_ids, [try(module.network.worker_nsg_id, null)])
+  worker_subnet_id           = try(module.network.worker_subnet_id, "") # safe destroy; validated in submodule
   preemptible_config         = var.worker_preemptible_config
 
   # FSS
   create_fss              = var.create_fss
   fss_availability_domain = coalesce(var.fss_availability_domain, local.ad_numbers_to_names[1])
-  fss_subnet_id           = module.network.fss_subnet_id
+  fss_subnet_id           = try(module.network.fss_subnet_id, "") # safe destroy; validated in submodule
   fss_nsg_ids             = var.fss_nsg_ids
   fss_mount_path          = var.fss_mount_path
   fss_max_fs_stat_bytes   = var.fss_max_fs_stat_bytes

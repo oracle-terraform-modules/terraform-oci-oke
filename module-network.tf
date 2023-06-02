@@ -120,107 +120,107 @@ module "network" {
 # VCN
 output "vcn_id" {
   description = "VCN ID"
-  value       = local.vcn_id
+  value       = try(local.vcn_id, null)
 }
 output "ig_route_table_id" {
   description = "Internet gateway route table ID"
-  value       = local.ig_route_table_id
+  value       = try(local.ig_route_table_id, null)
 }
 output "nat_route_table_id" {
   description = "NAT gateway route table ID"
-  value       = local.nat_route_table_id
+  value       = try(local.nat_route_table_id, null)
 }
 
 # Subnets
 output "bastion_subnet_id" {
-  value = module.network.bastion_subnet_id
+  value = try(module.network.bastion_subnet_id, null)
 }
 output "bastion_subnet_cidr" {
-  value = module.network.bastion_subnet_cidr
+  value = try(module.network.bastion_subnet_cidr, null)
 }
 output "operator_subnet_id" {
-  value = module.network.operator_subnet_id
+  value = try(module.network.operator_subnet_id, null)
 }
 output "operator_subnet_cidr" {
-  value = module.network.operator_subnet_cidr
+  value = try(module.network.operator_subnet_cidr, null)
 }
 output "control_plane_subnet_id" {
-  value = module.network.control_plane_subnet_id
+  value = try(module.network.control_plane_subnet_id, null)
 }
 output "control_plane_subnet_cidr" {
-  value = module.network.control_plane_subnet_cidr
+  value = try(module.network.control_plane_subnet_cidr, null)
 }
 output "worker_subnet_id" {
-  value = module.network.worker_subnet_id
+  value = try(module.network.worker_subnet_id, null)
 }
 output "worker_subnet_cidr" {
-  value = module.network.worker_subnet_cidr
+  value = try(module.network.worker_subnet_cidr, null)
 }
 output "pod_subnet_id" {
-  value = module.network.pod_subnet_id
+  value = try(module.network.pod_subnet_id, null)
 }
 output "pod_subnet_cidr" {
-  value = module.network.pod_subnet_cidr
+  value = try(module.network.pod_subnet_cidr, null)
 }
 output "int_lb_subnet_id" {
-  value = module.network.int_lb_subnet_id
+  value = try(module.network.int_lb_subnet_id, null)
 }
 output "int_lb_subnet_cidr" {
-  value = module.network.int_lb_subnet_cidr
+  value = try(module.network.int_lb_subnet_cidr, null)
 }
 output "pub_lb_subnet_id" {
-  value = module.network.pub_lb_subnet_id
+  value = try(module.network.pub_lb_subnet_id, null)
 }
 output "pub_lb_subnet_cidr" {
-  value = module.network.pub_lb_subnet_cidr
+  value = try(module.network.pub_lb_subnet_cidr, null)
 }
 output "fss_subnet_id" {
-  value = module.network.fss_subnet_id
+  value = try(module.network.fss_subnet_id, null)
 }
 output "fss_subnet_cidr" {
-  value = module.network.fss_subnet_cidr
+  value = try(module.network.fss_subnet_cidr, null)
 }
 
 # NSGs
 output "bastion_nsg_id" {
   description = "Network Security Group for bastion host(s)."
-  value       = module.network.bastion_nsg_id
+  value       = try(module.network.bastion_nsg_id, null)
 }
 output "operator_nsg_id" {
   description = "Network Security Group for operator host(s)."
-  value       = module.network.operator_nsg_id
+  value       = try(module.network.operator_nsg_id, null)
 }
 output "control_plane_nsg_id" {
   description = "Network Security Group for Kubernetes control plane(s)."
-  value       = module.network.control_plane_nsg_id
+  value       = try(module.network.control_plane_nsg_id, null)
 }
 output "int_lb_nsg_id" {
   description = "Network Security Group for internal load balancers."
-  value       = module.network.int_lb_nsg_id
+  value       = try(module.network.int_lb_nsg_id, null)
 }
 output "pub_lb_nsg_id" {
   description = "Network Security Group for public load balancers."
-  value       = module.network.pub_lb_nsg_id
+  value       = try(module.network.pub_lb_nsg_id, null)
 }
 output "worker_nsg_id" {
   description = "Network Security Group for worker nodes."
-  value       = module.network.worker_nsg_id
+  value       = try(module.network.worker_nsg_id, null)
 }
 output "pod_nsg_id" {
   description = "Network Security Group for pods."
-  value       = module.network.pod_nsg_id
+  value       = try(module.network.pod_nsg_id, null)
 }
 output "fss_nsg_id" {
   description = "Network Security Group for File Storage Service resources."
-  value       = module.network.fss_nsg_id
+  value       = try(module.network.fss_nsg_id, null)
 }
 
 output "network_security_rules" {
-  value = var.output_detail ? module.network.network_security_rules : null
+  value = var.output_detail ? try(module.network.network_security_rules, null) : null
 }
 
 # DRG
 output "drg_id" {
   description = "Dynamic routing gateway ID"
-  value       = one(module.drg[*].drg_id)
+  value       = try(one(module.drg[*].drg_id), null)
 }
