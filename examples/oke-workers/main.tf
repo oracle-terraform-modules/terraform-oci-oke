@@ -75,7 +75,7 @@ module "oke" {
   }
 
   worker_pools = {
-    "${var.worker_pool_name}" = {
+    format("%v", var.worker_pool_name) = {
       description = lookup({
         "Node Pool"       = "OKE-managed Node Pool"
         "Instances"       = "Self-managed Instances"
