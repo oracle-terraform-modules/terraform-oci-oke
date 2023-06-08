@@ -11,7 +11,7 @@ locals {
       "${var.tag_namespace}.state_id" = var.state_id,
       "${var.tag_namespace}.role"     = role,
     } : {},
-    lookup(var.defined_tags, role, {}),
+    try(lookup(var.defined_tags, role, {}), {}),
   ) }
 
   # Standard tags as freeform if defined tags are disabled
@@ -21,7 +21,7 @@ locals {
       "state_id" = var.state_id,
       "role"     = role,
     } : {},
-    lookup(var.freeform_tags, role, {}),
+    try(lookup(var.freeform_tags, role, {}), {}),
   ) }
 }
 

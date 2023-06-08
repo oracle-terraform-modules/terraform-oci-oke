@@ -64,8 +64,8 @@ module "operator" {
   volume_kms_key_id     = var.operator_volume_kms_key_id
 
   # Tagging
-  defined_tags     = lookup(var.defined_tags, "operator", {})
-  freeform_tags    = lookup(var.freeform_tags, "operator", {})
+  defined_tags     = try(lookup(var.defined_tags, "operator", {}), {})
+  freeform_tags    = try(lookup(var.freeform_tags, "operator", {}), {})
   use_defined_tags = var.use_defined_tags
   tag_namespace    = var.tag_namespace
 
