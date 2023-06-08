@@ -1,15 +1,16 @@
 name: Publish Terraform OCI OKE Module Book
 on:
-  on:
-    push:
-      tags:
-        - 'v5.*'
-      branches:
-        - 'main'
-        - '5.x'
-    release:
-      types: [published]
-    workflow_dispatch:
+  push:
+    tags:
+      - 'v5.*'
+    branches:
+      - 'docs/**'
+      - 'main'
+      - '5.x'
+  release:
+    types: [published]
+  workflow_dispatch:
+
 jobs:
   build-and-publish-book:
     runs-on: ubuntu-latest
