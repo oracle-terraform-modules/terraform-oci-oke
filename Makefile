@@ -85,10 +85,11 @@ tfdocs: terraform-docs iam.tfdocs network.tfdocs bastion.tfdocs cluster.tfdocs w
 mdbook:
 	cargo install mdbook-admonish mdbook-variables mdbook
 
+.PHONY: mdbuild
+mdbuild: mdbook tfdocs ## Generate documention
+	mdbook build docs
+
 .PHONY: mdserve
-mdserve: mdbook tfdocs
+mdserve: mdbook tfdocs ## Generate documentation and start a local web server
 	mdbook serve docs
 
-.PHONY: mdbuild
-mdbuild: mdbook tfdocs
-	mdbook build docs
