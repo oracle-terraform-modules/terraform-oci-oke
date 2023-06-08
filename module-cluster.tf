@@ -66,8 +66,8 @@ module "cluster" {
   # Tags
   use_defined_tags = var.use_defined_tags
   tag_namespace    = var.tag_namespace
-  defined_tags     = lookup(var.defined_tags, "cluster", {})
-  freeform_tags    = lookup(var.freeform_tags, "cluster", {})
+  defined_tags     = try(lookup(var.defined_tags, "cluster", {}), {})
+  freeform_tags    = try(lookup(var.freeform_tags, "cluster", {}), {})
 
   providers = {
     oci.home = oci.home

@@ -79,8 +79,8 @@ module "network" {
   source           = "./modules/network"
   state_id         = local.state_id
   compartment_id   = coalesce(var.network_compartment_id, local.compartment_id)
-  defined_tags     = lookup(var.defined_tags, "network", {})
-  freeform_tags    = lookup(var.freeform_tags, "network", {})
+  defined_tags     = try(lookup(var.defined_tags, "network", {}), {})
+  freeform_tags    = try(lookup(var.freeform_tags, "network", {}), {})
   tag_namespace    = var.tag_namespace
   use_defined_tags = var.use_defined_tags
 
