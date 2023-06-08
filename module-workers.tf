@@ -80,8 +80,8 @@ module "workers" {
 
   # Tagging
   tag_namespace    = var.tag_namespace
-  defined_tags     = lookup(var.defined_tags, "workers", {})
-  freeform_tags    = lookup(var.freeform_tags, "workers", {})
+  defined_tags     = try(lookup(var.defined_tags, "workers", {}), {})
+  freeform_tags    = try(lookup(var.freeform_tags, "workers", {}), {})
   use_defined_tags = var.use_defined_tags
 
   providers = {
