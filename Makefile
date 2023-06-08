@@ -50,7 +50,7 @@ tflint: ## Run tflint
 
 .PHONY: terraform-docs
 terraform-docs:
-	@command -v terraform-docs
+	@command -v terraform-docs || { echo "Missing terraform-docs command" 2>&1; exit 1; }
 
 .PHONY: tfdocs.%
 %.tfdocs:
