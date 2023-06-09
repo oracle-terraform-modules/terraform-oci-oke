@@ -65,8 +65,8 @@ module "iam" {
 
   create_iam_tag_namespace = var.create_iam_tag_namespace
   create_iam_defined_tags  = var.create_iam_defined_tags
-  defined_tags             = try(lookup(var.defined_tags, "policy", {}), {})
-  freeform_tags            = try(lookup(var.freeform_tags, "policy", {}), {})
+  defined_tags             = local.iam_defined_tags
+  freeform_tags            = local.iam_freeform_tags
   tag_namespace            = var.tag_namespace
   use_defined_tags         = var.use_defined_tags
 

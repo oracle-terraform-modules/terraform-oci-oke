@@ -1,38 +1,14 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-locals {
-  roles = ["cluster", "persistent_volume", "service_lb"]
-
-  # Standard tags as defined if enabled for use
-  # User-provided defined tags are merged and take precedence
-  defined_tags = { for role in local.roles : role => merge(
-    var.use_defined_tags ? {
-      "${var.tag_namespace}.state_id" = var.state_id,
-      "${var.tag_namespace}.role"     = role,
-    } : {},
-    try(lookup(var.defined_tags, role, {}), {}),
-  ) }
-
-  # Standard tags as freeform if defined tags are disabled
-  # User-provided freeform tags are merged and take precedence
-  freeform_tags = { for role in local.roles : role => merge(
-    !var.use_defined_tags ? {
-      "state_id" = var.state_id,
-      "role"     = role,
-    } : {},
-    try(lookup(var.freeform_tags, role, {}), {}),
-  ) }
-}
-
 resource "oci_containerengine_cluster" "k8s_cluster" {
   compartment_id     = var.compartment_id
-  defined_tags       = lookup(local.defined_tags, "cluster", {})
-  freeform_tags      = lookup(local.freeform_tags, "cluster", {})
   kms_key_id         = coalesce(var.cluster_kms_key_id, "none") != "none" ? var.cluster_kms_key_id : null
   kubernetes_version = var.kubernetes_version
   name               = var.cluster_name
   type               = var.cluster_type
+  defined_tags       = var.cluster_defined_tags
+  freeform_tags      = var.cluster_freeform_tags
   vcn_id             = var.vcn_id
 
   cluster_pod_network_options {
@@ -69,13 +45,13 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     persistent_volume_config {
-      defined_tags  = lookup(local.defined_tags, "persistent_volume", {})
-      freeform_tags = lookup(local.freeform_tags, "persistent_volume", {})
+      defined_tags  = var.persistent_volume_defined_tags
+      freeform_tags = var.persistent_volume_freeform_tags
     }
 
     service_lb_config {
-      defined_tags  = lookup(local.defined_tags, "service_lb", {})
-      freeform_tags = lookup(local.freeform_tags, "service_lb", {})
+      defined_tags  = var.service_lb_defined_tags
+      freeform_tags = var.service_lb_freeform_tags
     }
 
     service_lb_subnet_ids = compact([var.service_lb_subnet_id])

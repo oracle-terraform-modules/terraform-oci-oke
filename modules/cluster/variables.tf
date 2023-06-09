@@ -13,8 +13,6 @@ variable "cni_type" { type = string }
 variable "control_plane_is_public" { type = bool }
 variable "control_plane_nsg_ids" { type = set(string) }
 variable "control_plane_subnet_id" { type = string }
-variable "defined_tags" { type = map(any) }
-variable "freeform_tags" { type = map(any) }
 variable "image_signing_keys" { type = set(string) }
 variable "kubernetes_version" { type = string }
 variable "pods_cidr" { type = string }
@@ -24,3 +22,11 @@ variable "tag_namespace" { type = string }
 variable "use_defined_tags" { type = string }
 variable "use_signed_images" { type = bool }
 variable "vcn_id" { type = string }
+
+# Tagging
+variable "cluster_defined_tags" { type = map(string) }
+variable "cluster_freeform_tags" { type = map(string) }
+variable "persistent_volume_defined_tags" { type = map(string) }
+variable "persistent_volume_freeform_tags" { type = map(string) }
+variable "service_lb_defined_tags" { type = map(string) }
+variable "service_lb_freeform_tags" { type = map(string) }

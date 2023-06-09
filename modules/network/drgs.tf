@@ -12,8 +12,8 @@ resource "oci_core_drg" "oke" {
   count          = length(local.drg_attachments) > 0 ? 1 : 0
   compartment_id = var.compartment_id
   display_name   = "oke-${var.state_id}"
-  defined_tags   = local.defined_tags
-  freeform_tags  = local.freeform_tags
+  defined_tags   = var.defined_tags
+  freeform_tags  = var.freeform_tags
   lifecycle {
     ignore_changes = [freeform_tags, defined_tags]
   }
@@ -24,8 +24,8 @@ resource "oci_core_drg_attachment" "oke" {
   count         = length(local.drg_attachments) > 0 && length(oci_core_drg.oke[*]) > 0 ? 1 : 0
   drg_id        = one(oci_core_drg.oke[*].id)
   display_name  = "drg-oke-${var.state_id}"
-  defined_tags  = local.defined_tags
-  freeform_tags = local.freeform_tags
+  defined_tags  = var.defined_tags
+  freeform_tags = var.freeform_tags
 
   network_details {
     id   = var.vcn_id
@@ -42,8 +42,8 @@ resource "oci_core_drg_attachment" "extra" {
   for_each      = local.drg_attachments
   drg_id        = one(oci_core_drg.oke[*].id)
   display_name  = format("%v-%v", each.key, var.state_id)
-  defined_tags  = local.defined_tags
-  freeform_tags = local.freeform_tags
+  defined_tags  = var.defined_tags
+  freeform_tags = var.freeform_tags
 
   network_details {
     id   = lookup(each.value, "vcn_id")
