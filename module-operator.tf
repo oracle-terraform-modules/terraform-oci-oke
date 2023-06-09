@@ -63,9 +63,16 @@ module "operator" {
   user                  = var.operator_user
   volume_kms_key_id     = var.operator_volume_kms_key_id
 
-  # Tagging
-  defined_tags     = try(lookup(var.defined_tags, "operator", {}), {})
-  freeform_tags    = try(lookup(var.freeform_tags, "operator", {}), {})
+  # Standard tags as defined if enabled for use, or freeform
+  # User-provided tags are merged last and take precedence
+  defined_tags = merge(var.use_defined_tags ? {
+    "${var.tag_namespace}.state_id" = var.state_id,
+    "${var.tag_namespace}.role"     = "operator",
+  } : {}, local.operator_defined_tags)
+  freeform_tags = merge(var.use_defined_tags ? {} : {
+    "state_id" = var.state_id,
+    "role"     = "operator",
+  }, local.operator_freeform_tags)
   use_defined_tags = var.use_defined_tags
   tag_namespace    = var.tag_namespace
 

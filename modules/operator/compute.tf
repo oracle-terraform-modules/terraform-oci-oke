@@ -6,16 +6,6 @@ locals {
   memory           = lookup(var.shape, "memory", 4)
   ocpus            = max(1, lookup(var.shape, "ocpus", 1))
   shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
-
-  defined_tags = merge(var.defined_tags, var.use_defined_tags ? {
-    "${var.tag_namespace}.state_id" = var.state_id,
-    "${var.tag_namespace}.role"     = "operator",
-  } : {})
-
-  freeform_tags = merge(var.freeform_tags, !var.use_defined_tags ? {
-    "state_id" = var.state_id,
-    "role"     = "operator",
-  } : {})
 }
 
 output "id" {
@@ -29,9 +19,9 @@ output "private_ip" {
 resource "oci_core_instance" "operator" {
   availability_domain                 = var.availability_domain
   compartment_id                      = var.compartment_id
-  defined_tags                        = local.defined_tags
   display_name                        = "operator-${var.state_id}"
-  freeform_tags                       = local.freeform_tags
+  defined_tags                        = var.defined_tags
+  freeform_tags                       = var.freeform_tags
   is_pv_encryption_in_transit_enabled = var.pv_transit_encryption
   shape                               = local.shape
 

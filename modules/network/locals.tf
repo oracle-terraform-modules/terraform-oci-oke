@@ -29,16 +29,4 @@ locals {
 
   # Oracle Services Network (OSN)
   osn = one(data.oci_core_services.all_oci_services.services[*].cidr_block)
-
-  defined_tags = merge(var.defined_tags, var.use_defined_tags ? {
-    "${var.tag_namespace}.state_id" = var.state_id,
-    "${var.tag_namespace}.role"     = "network",
-    } : {},
-  )
-
-  freeform_tags = merge(var.freeform_tags, !var.use_defined_tags ? {
-    "state_id" = var.state_id,
-    "role"     = "network",
-    } : {},
-  )
 }

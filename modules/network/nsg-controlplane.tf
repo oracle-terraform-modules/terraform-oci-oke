@@ -84,8 +84,8 @@ resource "oci_core_network_security_group" "cp" {
   compartment_id = var.compartment_id
   display_name   = "cp-${var.state_id}"
   vcn_id         = var.vcn_id
-  defined_tags   = local.defined_tags
-  freeform_tags  = local.freeform_tags
+  defined_tags   = var.defined_tags
+  freeform_tags  = var.freeform_tags
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags, display_name]
   }
