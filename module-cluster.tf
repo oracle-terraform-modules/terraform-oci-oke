@@ -66,8 +66,51 @@ module "cluster" {
   # Tags
   use_defined_tags = var.use_defined_tags
   tag_namespace    = var.tag_namespace
-  defined_tags     = try(lookup(var.defined_tags, "cluster", {}), {})
-  freeform_tags    = try(lookup(var.freeform_tags, "cluster", {}), {})
+
+  # Standard tags as defined if enabled for use, or freeform
+  # User-provided tags are merged last and take precedence
+  cluster_defined_tags = var.use_defined_tags ? merge(
+    {
+      "${var.tag_namespace}.state_id" = var.state_id,
+      "${var.tag_namespace}.role"     = "cluster",
+    },
+    local.cluster_defined_tags,
+  ) : {}
+  cluster_freeform_tags = var.use_defined_tags ? {} : merge(
+    {
+      "state_id" = var.state_id,
+      "role"     = "cluster",
+    },
+    local.cluster_freeform_tags,
+  )
+  persistent_volume_defined_tags = var.use_defined_tags ? merge(
+    {
+      "${var.tag_namespace}.state_id" = var.state_id,
+      "${var.tag_namespace}.role"     = "persistent_volume",
+    },
+    local.persistent_volume_defined_tags,
+  ) : {}
+  persistent_volume_freeform_tags = var.use_defined_tags ? {} : merge(
+    {
+      "state_id" = var.state_id,
+      "role"     = "persistent_volume",
+    },
+    local.persistent_volume_freeform_tags,
+  )
+  service_lb_defined_tags = var.use_defined_tags ? merge(
+    {
+      "${var.tag_namespace}.state_id" = var.state_id,
+      "${var.tag_namespace}.role"     = "service_lb"
+    },
+    local.service_lb_defined_tags,
+  ) : {}
+  service_lb_freeform_tags = var.use_defined_tags ? {} : merge(
+    {
+      "state_id" = var.state_id,
+      "role"     = "service_lb"
+    },
+    local.service_lb_freeform_tags,
+  )
 
   providers = {
     oci.home = oci.home

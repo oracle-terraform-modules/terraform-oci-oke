@@ -15,6 +15,26 @@ locals {
     ? file(var.api_private_key_path)
     : null
   )
+
+  # Merge freeform tags from map & individual inputs better suited to Resource Manager
+  bastion_freeform_tags           = merge(lookup(var.freeform_tags, "bastion", {}), var.bastion_freeform_tags)
+  cluster_freeform_tags           = merge(lookup(var.freeform_tags, "cluster", {}), var.cluster_freeform_tags)
+  iam_freeform_tags               = merge(lookup(var.freeform_tags, "iam", {}), var.iam_freeform_tags)
+  network_freeform_tags           = merge(lookup(var.freeform_tags, "network", {}), var.network_freeform_tags)
+  operator_freeform_tags          = merge(lookup(var.freeform_tags, "operator", {}), var.operator_freeform_tags)
+  persistent_volume_freeform_tags = merge(lookup(var.freeform_tags, "persistent_volume", {}), var.persistent_volume_freeform_tags)
+  service_lb_freeform_tags        = merge(lookup(var.freeform_tags, "service_lb", {}), var.service_lb_freeform_tags)
+  workers_freeform_tags           = merge(lookup(var.freeform_tags, "workers", {}), var.workers_freeform_tags)
+
+  # Merge defined tags from map & individual inputs better suited to Resource Manager
+  bastion_defined_tags           = merge(lookup(var.defined_tags, "bastion", {}), var.bastion_defined_tags)
+  cluster_defined_tags           = merge(lookup(var.defined_tags, "cluster", {}), var.cluster_defined_tags)
+  iam_defined_tags               = merge(lookup(var.defined_tags, "iam", {}), var.iam_defined_tags)
+  network_defined_tags           = merge(lookup(var.defined_tags, "network", {}), var.network_defined_tags)
+  operator_defined_tags          = merge(lookup(var.defined_tags, "operator", {}), var.operator_defined_tags)
+  persistent_volume_defined_tags = merge(lookup(var.defined_tags, "persistent_volume", {}), var.persistent_volume_defined_tags)
+  service_lb_defined_tags        = merge(lookup(var.defined_tags, "service_lb", {}), var.service_lb_defined_tags)
+  workers_defined_tags           = merge(lookup(var.defined_tags, "workers", {}), var.workers_defined_tags)
 }
 
 # Overrides Resource Manager
@@ -164,6 +184,8 @@ variable "create_iam_worker_policy" {
   }
 }
 
+# Tagging
+
 variable "create_iam_tag_namespace" {
   default     = false
   description = "Whether to create a namespace for defined tags used for IAM policy and tracking. Ignored when 'create_iam_resources' is false."
@@ -190,13 +212,14 @@ variable "tag_namespace" {
 
 variable "freeform_tags" {
   default = {
+    bastion           = {}
     cluster           = {}
+    iam               = {}
+    network           = {}
+    operator          = {}
     persistent_volume = {}
     service_lb        = {}
     workers           = {}
-    bastion           = {}
-    operator          = {}
-    vcn               = {}
   }
   description = "Freeform tags to be applied to created resources."
   type        = any
@@ -204,14 +227,98 @@ variable "freeform_tags" {
 
 variable "defined_tags" {
   default = {
+    bastion           = {}
     cluster           = {}
+    iam               = {}
+    network           = {}
+    operator          = {}
     persistent_volume = {}
     service_lb        = {}
     workers           = {}
-    bastion           = {}
-    operator          = {}
-    vcn               = {}
   }
   description = "Defined tags to be applied to created resources. Must already exist in the tenancy."
   type        = any
+}
+
+# Individual inputs better suited to Resource Manager are merged in locals
+
+variable "bastion_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "bastion_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "cluster_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "cluster_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "iam_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "iam_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "network_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "network_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "operator_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "operator_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "persistent_volume_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "persistent_volume_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "service_lb_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "service_lb_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
+}
+variable "workers_defined_tags" {
+  type        = map(string)
+  description = "Defined tags applied to created resources."
+  default     = {}
+}
+variable "workers_freeform_tags" {
+  type        = map(string)
+  description = "Freeform tags applied to created resources."
+  default     = {}
 }

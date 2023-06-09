@@ -120,8 +120,8 @@ resource "oci_core_subnet" "oke" {
   prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
   route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
   security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
-  defined_tags               = local.defined_tags
-  freeform_tags              = local.freeform_tags
+  defined_tags               = var.defined_tags
+  freeform_tags              = var.freeform_tags
 
   lifecycle {
     # TODO reflect default security_list_id instead of ignore
@@ -140,8 +140,8 @@ resource "oci_core_security_list" "oke" {
   compartment_id = var.compartment_id
   display_name   = format("%v-%v", each.key, var.state_id)
   vcn_id         = var.vcn_id
-  defined_tags   = local.defined_tags
-  freeform_tags  = local.freeform_tags
+  defined_tags   = var.defined_tags
+  freeform_tags  = var.freeform_tags
 
   lifecycle {
     ignore_changes = [
