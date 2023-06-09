@@ -27,8 +27,21 @@ module "vcn" {
   source         = "oracle-terraform-modules/vcn/oci"
   version        = "3.5.3"
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
-  defined_tags   = var.defined_tags["vcn"]
-  freeform_tags  = var.freeform_tags["vcn"]
+
+  # Standard tags as defined if enabled for use, or freeform
+  # User-provided tags are merged last and take precedence
+  defined_tags = merge(var.use_defined_tags ? {
+    "${var.tag_namespace}.state_id" = var.state_id,
+    "${var.tag_namespace}.role"     = "network",
+    } : {},
+    local.network_defined_tags,
+  )
+  freeform_tags = merge(var.use_defined_tags ? {} : {
+    "state_id" = var.state_id,
+    "role"     = "network",
+    },
+    local.network_freeform_tags,
+  )
 
   attached_drg_id = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
 
@@ -79,8 +92,8 @@ module "network" {
   source           = "./modules/network"
   state_id         = local.state_id
   compartment_id   = coalesce(var.network_compartment_id, local.compartment_id)
-  defined_tags     = try(lookup(var.defined_tags, "network", {}), {})
-  freeform_tags    = try(lookup(var.freeform_tags, "network", {}), {})
+  defined_tags     = local.network_defined_tags
+  freeform_tags    = local.network_freeform_tags
   tag_namespace    = var.tag_namespace
   use_defined_tags = var.use_defined_tags
 
