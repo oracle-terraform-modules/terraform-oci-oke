@@ -1,20 +1,19 @@
 # Terraform OKE for Oracle Cloud Infrastructure
 
-This [Terraform OKE Installer](https://github.com/oracle-terraform-modules/terraform-oci-oke)
-for [Oracle Cloud Infrastructure](https://cloud.oracle.com/cloud-infrastructure) provides a reusable Terraform module that provisions a [Oracle Container Engine](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm) cluster.
+[![Documentation](https://github.com/oracle-terraform-modules/terraform-oci-oke/actions/workflows/mdbook.yaml/badge.svg?branch=5.x-mdbook&status=Documentation)](https://oracle-terraform-modules.github.io/terraform-oci-oke/)
+
+This project implements a reusable Terraform module for [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/cloud-infrastructure) to provision an [Oracle Container Engine for Kubernetes (OKE)](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm) cluster with supporting infrastructure.
+
 
 ## Documentation
--   [Prerequisites](./docs/prerequisites.md)
--   [Quick Start](./docs/quickstart.md)
--   [User Guide](./docs/main.adoc)
--   [Topology](./docs/topology.adoc)
 
-## References
--   [Oracle Cloud Infrastructure Documentation](https://docs.cloud.oracle.com/iaas/Content/home.htm)
--   [Oracle Container Engine Documentation](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm)
--   [Terraform OCI Provider Documentation](https://www.terraform.io/docs/providers/oci/index.html)
+-   [Terraform OKE Module](https://oracle-terraform-modules.github.io/terraform-oci-oke/)
+-   [Terraform OCI Provider](https://www.terraform.io/docs/providers/oci/index.html)
+-   [Oracle Cloud Infrastructure](https://docs.cloud.oracle.com/iaas/Content/home.htm)
+-   [Oracle Container Engine](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm)
 
 ## Acknowledgement
+
 Code derived and adapted from [Terraform OKE Sample](https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples/container_engine) and Hashicorp’s [Terraform 0.12 examples](https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples).
 
 ## Contributing

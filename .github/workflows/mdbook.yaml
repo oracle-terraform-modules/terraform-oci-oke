@@ -1,82 +1,87 @@
-name: Publish Terraform OCI OKE Module Book
+name: Publish Documentation
 on:
   push:
     branches:
       - "5.x"
-      - "*-5.x"
+      - "5.x-*"
   workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  build-and-publish-book:
+  install-mdbook:
     environment:
       name: github-pages
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/cache@v3
+        continue-on-error: true
+        id: cache-mdbook
+        with:
+          key: mdbook
+          path: ./cargo/**/*
+      - if: ${{ steps.cache-mdbook.outputs.cache-hit != 'true' }}
+        name: Install mdbook
+        env:
+          CARGO_HOME: ./cargo
+        run: cargo install mdbook-admonish mdbook-variables mdbook
+
+  install-tfdocs:
+    environment:
+      name: github-pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache@v3
+        id: cache-tfdocs
+        with:
+          key: tfdocs
+          path: ./tfdocs/terraform-docs
+      - if: ${{ steps.cache-tfdocs.outputs.cache-hit != 'true' }}
+        name: Install terraform-docs
+        run: |
+          go install github.com/terraform-docs/terraform-docs@v0.16.0
+          mkdir ./tfdocs; mv `go env GOPATH`/bin/terraform-docs ./tfdocs/
+
+  build-and-deploy:
+    needs: [install-mdbook, install-tfdocs]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v3
-
-      - name: Install terraform-docs
-        run: |
-          mkdir ./tfdocs
-          curl -sSL https://terraform-docs.io/dl/v0.16.0/terraform-docs-v0.16.0-$(uname)-amd64.tar.gz \
-            | tar -xz --directory=./tfdocs && chmod +x ./tfdocs/terraform-docs
-          echo `pwd`/tfdocs >> $GITHUB_PATH
-
-      - name: Cache terraform-docs
-        uses: actions/cache@v3
+      - uses: actions/cache@v3
         continue-on-error: true
-        env:
-          cache-name: cache-terraform-docs
         with:
-          key: ${{ hashFiles('./tfdocs/**') }}
-          path: "./tfdocs"
-
-      - name: Install mdbook
-        run: |
-          mkdir ./mdbook
-          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.21/mdbook-v0.4.21-x86_64-unknown-linux-gnu.tar.gz \
-            | tar -xz --directory=./mdbook
-          echo `pwd`/mdbook >> $GITHUB_PATH
-
-      - name: Cache mdbook
-        uses: actions/cache@v3
-        continue-on-error: true
-        env:
-          cache-name: cache-mdbook
+          key: mdbook
+          path: ./cargo/**/*
+      - uses: actions/cache@v3
         with:
-          key: ${{ hashFiles('./mdbook/**') }}
-          path: "./mdbook"
-
-      - name: Install mdbook plugins
-        env:
-          CARGO_HOME: "./cargo"
-        run: |
-          make mdbook
-          echo `pwd`/cargo/bin >> $GITHUB_PATH
-
-      - name: Cache mdbook plugins
-        uses: actions/cache@v3
-        continue-on-error: true
-        env:
-          cache-name: cache-cargo
-        with:
-          key: ${{ hashFiles('./cargo/**') }}
-          path: |
-            .cargo/registry
-            .cargo/bin
+          key: tfdocs
+          path: ./tfdocs/terraform-docs
 
       - name: Generate docs
+        shell: bash
+        env:
+          CARGO_HOME: ./cargo
         run: |
-          make mdbuild || exit 1   # Build the tfdocs and HTML content
+          export PATH=`pwd`/tfdocs:`pwd`/cargo/bin:${PATH}
+          make mdbuild
+          touch ./docs/book/.nojekyll
 
-          # Create and switch to separate worktree
-          git worktree add -b "$GITHUB_RUN_ID" stage || exit 1 && pushd stage
-          git config user.name "GitHub Actions"
-          git config user.email "oci-dax-tools_ww@oracle.com"
-          cp -rv ../docs/* .       # Copy static & generated docs tree
-          touch .nojekyll          # Don't run published files through Jekyll
-          git add -v .             # Stage new content
-          git commit -m "Deploy $GITHUB_SHA to 5.x-docs"
-
-          # Push with suffix on conflicts, remove workspace and exit
-          git push --force-with-lease origin "$GITHUB_RUN_ID":"5.x-docs"
-          popd; git worktree remove --force stage
+      - uses: actions/configure-pages@v3
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: './docs/book'
+      - uses: actions/deploy-pages@v2
+        id: deployment

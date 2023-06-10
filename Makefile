@@ -50,7 +50,7 @@ tflint: ## Run tflint
 
 .PHONY: terraform-docs
 terraform-docs:
-	@command -v terraform-docs || { echo "Missing terraform-docs command" 2>&1; exit 1; }
+	@command -v terraform-docs || go install github.com/terraform-docs/terraform-docs@v0.16.0
 
 .PHONY: tfdocs.%
 %.tfdocs:
