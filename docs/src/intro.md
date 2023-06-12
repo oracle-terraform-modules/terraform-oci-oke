@@ -1,4 +1,16 @@
-# OKE Terraform Module
+[uri-oci-oke]: https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top
+[uri-terraform-oci-oke]: https://github.com/oracle-terraform-modules/terraform-oci-oke
+[uri-terraform-options]: ./inputs_submodule.html#cluster
+# Oracle Container Engine for Kubernetes (OKE) Terraform Module
+
+## Introduction
+
+This module automates the provisioning of an [OKE][uri-oci-oke] cluster.
+
+```admonish notice
+The documentation here is for 5.x **only**. The documentation for earlier versions can be found on the [GitHub repo][uri-terraform-oci-oke].
+```
+
 
 ## Usage
 
@@ -15,7 +27,7 @@ terraform plan
 terraform apply
 ```
 
-You can create a Kubernetes cluster with the latest version of Kubernetes available in OKE using this terraform script. By default the kubernetes_version parameter in terraform.tfvars.example is set as "LATEST". Refer to {uri-terraform-options}#oke[Terraform Options] for other available parameters for OKE.
+You can create a Kubernetes cluster with the latest version of Kubernetes available in OKE using this terraform script. By default the kubernetes_version parameter in terraform.tfvars.example is set as "LATEST". Refer to [Terraform Options][uri-terraform-options] for other available parameters for OKE.
 
 Use the parameter *cluster_name* to change the name of the cluster as per your needs.
 
