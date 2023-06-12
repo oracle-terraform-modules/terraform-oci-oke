@@ -12,6 +12,8 @@ The OKE parameters concern mainly the following:
 * services and pods cidr blocks
 * whether to use encryption
 
->>> If you need to change the default services and pods' CIDRs, note the following:
+```admonish notice
+ If you need to change the default services and pods' CIDRs, note the following:
 * The CIDR block you specify for the VCN *must not* overlap with the CIDR block you specify for the Kubernetes services.
 * The CIDR blocks you specify for pods running in the cluster *must not* overlap with CIDR blocks you specify for worker node and load balancer subnets.
+```
