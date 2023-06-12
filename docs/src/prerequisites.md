@@ -20,8 +20,9 @@ Start by installing Terraform and configuring your path.
 
 ### Configure path on Linux/macOS
 Open a terminal and enter the following:
-```shell
-$ sudo mv /path/to/terraform /usr/local/bin
+```bash, editable
+# edit your desired path in-place:
+sudo mv /path/to/terraform /usr/local/bin
 ```
 
 ### Configure path on Windows
@@ -35,9 +36,8 @@ Follow the steps below to configure your path on Windows:
 
 ### Testing Terraform installation
 Open a terminal and test:
-```shell
+```bash
 terraform -v
-Terraform v1.0.3
 ```
 
 ## Generate API keys

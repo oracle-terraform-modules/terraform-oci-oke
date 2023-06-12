@@ -9,7 +9,9 @@ This section documents how to upgrade the OKE cluster using this project. At a h
 
 These steps must be performed in order.
 
-**NOTE:** The out-of-place method is currently the **only** supported method of upgrading a cluster and worker nodes.
+```admonish notice
+The out-of-place method is currently the **only** supported method of upgrading a cluster and worker nodes.
+```
 
 ## Prerequisites
 
@@ -30,12 +32,13 @@ kubernetes_version = "v1.23.4"
 
 Run `terraform apply`. This will upgrade the control plane nodes. You can verify this in the OCI Console.
 
-****
-**Note:** If you have modified the default resources e.g. security lists, you will need to use a targeted apply:
-```shell
+```admonish tip
+If you have modified the default resources e.g. security lists, you will need to use a targeted apply:
+```
+
+```
 terraform apply --target=module.oke.k8s_cluster
 ```
-****
 
 ## Upgrading the worker nodes using the out-of-place method
 
