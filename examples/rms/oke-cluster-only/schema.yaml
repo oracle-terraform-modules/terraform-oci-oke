@@ -111,12 +111,19 @@ variableGroups:
 
   - title: "Extensions"
     variables:
+      - cluster_autoscaler_install
       - metrics_server_install
       - prometheus_install
-      - cluster_autoscaler_install
+      - dcgm_exporter_install
       - gatekeeper_install
       - multus_install
       - calico_install
+      - cilium_install
+      - whereabouts_install
+      - sriov_device_plugin_install
+      - sriov_cni_plugin_install
+      - rdma_cni_plugin_install
+      - mpi_operator_install
 
   - title: "Cluster Autoscaler"
     visible: cluster_autoscaler_install
@@ -136,8 +143,7 @@ variableGroups:
       - metrics_server_helm_values_files
 
   - title: "Prometheus"
-    visible:
-      and: prometheus_install
+    visible: prometheus_install
     variables:
       - prometheus_namespace
       - prometheus_reapply
@@ -145,9 +151,17 @@ variableGroups:
       - prometheus_helm_values
       - prometheus_helm_values_files
 
+  - title: "DCGM exporter"
+    visible: dcgm_exporter_install
+    variables:
+      - dcgm_exporter_namespace
+      - dcgm_exporter_reapply
+      - dcgm_exporter_helm_version
+      - dcgm_exporter_helm_values
+      - dcgm_exporter_helm_values_files
+
   - title: "Gatekeeper"
-    visible:
-      and: gatekeeper_install
+    visible: gatekeeper_install
     variables:
       - gatekeeper_namespace
       - gatekeeper_helm_version
@@ -155,16 +169,14 @@ variableGroups:
       - gatekeeper_helm_values_files
 
   - title: "Multus"
-    visible:
-      and: multus_install
+    visible: multus_install
     variables:
       - multus_namespace
       - multus_daemonset_url
       - multus_version
 
   - title: "Calico"
-    visible:
-      and: calico_install
+    visible: calico_install
     variables:
       - calico_namespace
       - calico_reapply
@@ -174,6 +186,41 @@ variableGroups:
       - calico_typha_replicas
       - calico_mtu
       - calico_helm_version
+
+  - title: "Cilium"
+    visible: cilium_install
+    variables:
+      - cilium_namespace
+      - cilium_reapply
+      - cilium_helm_version
+
+  - title: "Whereabouts"
+    visible: whereabouts_install
+    variables:
+      - whereabouts_namespace
+      - whereabouts_daemonset_url
+      - whereabouts_version
+
+  - title: "SR-IOV Device Plugin"
+    visible: sriov_device_plugin_install
+    variables:
+      - sriov_device_plugin_namespace
+      - sriov_device_plugin_daemonset_url
+      - sriov_device_plugin_version
+
+  - title: "SR-IOV CNI Plugin"
+    visible: sriov_cni_plugin_install
+    variables:
+      - sriov_cni_plugin_namespace
+      - sriov_cni_plugin_daemonset_url
+      - sriov_cni_plugin_version
+
+  - title: "MPI Operator"
+    visible: mpi_operator_install
+    variables:
+      - mpi_operator_namespace
+      - mpi_operator_deployment_url
+      - mpi_operator_version
 
 variables:
   # Identity
@@ -815,6 +862,78 @@ variables:
     description: The URL path to the Multus manifest. Leave unset for tags of <a href=https://github.com/k8snetworkplumbingwg/multus-cni>k8snetworkplumbingwg/multus-cni</a> using the configured Multus version.
     type: string
   multus_version:
+    title: Version
+    type: string
+
+  # SR-IOV Device Plugin
+  sriov_device_plugin_install:
+    title: Install SR-IOV device plugin
+    description: Deploy SR-IOV device plugin to advertise Virtual Functions (VFs) to Kubernetes. See <a href=https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/tree/master/deployments>k8snetworkplumbingwg/sriov-network-device-plugin</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  sriov_device_plugin_namespace:
+    title: Kubernetes namespace
+    type: string
+  sriov_device_plugin_daemonset_url:
+    title: Daemonset URL
+    description: The URL path to the manifest. Leave unset for tags of <a href=https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/tree/master/deployments>k8snetworkplumbingwg/sriov-network-device-plugin</a> using the configured version.
+    type: string
+  sriov_device_plugin_version:
+    title: Version
+    type: string
+
+  # SR-IOV CNI Plugin
+  sriov_cni_plugin_install:
+    title: Install SR-IOV CNI plugin
+    description: Deploy SR-IOV CNI plugin to configure Virtual Functions (VFs) for Pod networking with Kubernetes. See <a href=https://github.com/openshift/sriov-cni>openshift/sriov-cni</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  sriov_cni_plugin_namespace:
+    title: Kubernetes namespace
+    type: string
+  sriov_cni_plugin_daemonset_url:
+    title: Daemonset URL
+    description: The URL path to the manifest. Leave unset for tags of <a href=https://github.com/openshift/sriov-cni>openshift/sriov-cni</a> using the configured version.
+    type: string
+  sriov_cni_plugin_version:
+    title: Version
+    type: string
+
+  # Whereabouts
+  whereabouts_install:
+    title: Install Whereabouts
+    description: Deploy Whereabouts for cluster-wide IP Address Management (IPAM). See <a href=https://github.com/k8snetworkplumbingwg/whereabouts>k8snetworkplumbingwg/whereabouts</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  whereabouts_namespace:
+    title: Kubernetes namespace
+    type: string
+  whereabouts_daemonset_url:
+    title: Daemonset URL
+    description: The URL path to the manifest. Leave unset for tags of <a href=https://github.com/k8snetworkplumbingwg/whereabouts>k8snetworkplumbingwg/whereabouts</a> using the configured version.
+    type: string
+  whereabouts_version:
+    title: Version
+    type: string
+
+  # MPI Operator
+  mpi_operator_install:
+    title: Install MPI operator
+    description: Deploy MPI operator to run MPI jobs. See <a href=https://github.com/kubeflow/mpi-operator>kubeflow/mpi-operator</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  mpi_operator_namespace:
+    title: Kubernetes namespace
+    type: string
+  mpi_operator_deployment_url:
+    title: Deployment URL
+    description: The URL path to the manifest. Leave unset for tags of <a href=https://github.com/kubeflow/mpi-operator>kubeflow/mpi-operator</a> using the configured version.
+    type: string
+  mpi_operator_version:
     title: Version
     type: string
 

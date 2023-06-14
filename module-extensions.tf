@@ -69,4 +69,42 @@ module "extensions" {
   prometheus_helm_version      = var.prometheus_helm_version
   prometheus_helm_values       = var.prometheus_helm_values
   prometheus_helm_values_files = var.prometheus_helm_values_files
+
+  # DCGM exporter
+  dcgm_exporter_install           = var.dcgm_exporter_install
+  dcgm_exporter_reapply           = var.dcgm_exporter_reapply
+  dcgm_exporter_namespace         = var.dcgm_exporter_namespace
+  dcgm_exporter_helm_version      = var.dcgm_exporter_helm_version
+  dcgm_exporter_helm_values       = var.dcgm_exporter_helm_values
+  dcgm_exporter_helm_values_files = var.dcgm_exporter_helm_values_files
+
+  # SR-IOV device plugin
+  sriov_device_plugin_install       = var.sriov_device_plugin_install
+  sriov_device_plugin_namespace     = var.sriov_device_plugin_namespace
+  sriov_device_plugin_daemonset_url = var.sriov_device_plugin_daemonset_url
+  sriov_device_plugin_version       = var.sriov_device_plugin_version
+
+  # SR-IOV CNI plugin
+  sriov_cni_plugin_install       = var.sriov_cni_plugin_install
+  sriov_cni_plugin_namespace     = var.sriov_cni_plugin_namespace
+  sriov_cni_plugin_daemonset_url = var.sriov_cni_plugin_daemonset_url
+  sriov_cni_plugin_version       = var.sriov_cni_plugin_version
+
+  # SR-IOV CNI plugin
+  rdma_cni_plugin_install       = var.rdma_cni_plugin_install
+  rdma_cni_plugin_namespace     = var.rdma_cni_plugin_namespace
+  rdma_cni_plugin_daemonset_url = var.rdma_cni_plugin_daemonset_url
+  rdma_cni_plugin_version       = var.rdma_cni_plugin_version
+
+  # Whereabouts IPAM plugin
+  whereabouts_install       = var.whereabouts_install
+  whereabouts_namespace     = var.whereabouts_namespace
+  whereabouts_daemonset_url = var.whereabouts_daemonset_url
+  whereabouts_version       = var.whereabouts_version
+
+  # MPI operator
+  mpi_operator_install        = var.mpi_operator_install
+  mpi_operator_namespace      = var.mpi_operator_namespace
+  mpi_operator_deployment_url = var.mpi_operator_deployment_url
+  mpi_operator_version        = var.mpi_operator_version
 }
