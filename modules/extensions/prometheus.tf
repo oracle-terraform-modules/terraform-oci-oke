@@ -4,9 +4,15 @@
 locals {
   prometheus_helm_crds_file     = join("/", [local.yaml_manifest_path, "prometheus.crds.yaml"])
   prometheus_helm_manifest_file = join("/", [local.yaml_manifest_path, "prometheus.manifest.yaml"])
+  prometheus_helm_values_file   = join("/", [local.yaml_manifest_path, "prometheus.values.yaml"])
+  prometheus_helm_crds          = sensitive(one(data.helm_template.prometheus[*].crds))
+  prometheus_helm_manifest      = sensitive(one(data.helm_template.prometheus[*].manifest))
 
-  prometheus_helm_crds     = sensitive(one(data.helm_template.prometheus[*].crds))
-  prometheus_helm_manifest = sensitive(one(data.helm_template.prometheus[*].manifest))
+  prometheus_helm_values = {
+    additionalScrapeConfigs = local.dcgm_exporter_scrape_config
+  }
+
+  prometheus_helm_values_yaml = jsonencode(local.prometheus_helm_values)
 }
 
 data "helm_template" "prometheus" {
@@ -21,9 +27,10 @@ data "helm_template" "prometheus" {
   create_namespace = true
   include_crds     = true
   skip_tests       = true
-  values = length(var.prometheus_helm_values_files) > 0 ? [
-    for path in var.prometheus_helm_values_files : file(path)
-  ] : null
+  values = concat(
+    [local.prometheus_helm_values_yaml],
+    [for path in var.prometheus_helm_values_files : file(path)],
+  )
 
   set {
     name  = "podSecurityPolicy.enabled"
@@ -82,6 +89,11 @@ resource "null_resource" "prometheus" {
   provisioner "file" {
     content     = local.prometheus_helm_manifest
     destination = local.prometheus_helm_manifest_file
+  }
+
+  provisioner "file" {
+    content     = local.prometheus_helm_values_yaml
+    destination = local.prometheus_helm_values_file
   }
 
   provisioner "remote-exec" {

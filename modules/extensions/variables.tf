@@ -37,6 +37,30 @@ variable "multus_namespace" { type = string }
 variable "multus_daemonset_url" { type = string }
 variable "multus_version" { type = string }
 
+# SR-IOV Device Plugin
+variable "sriov_device_plugin_install" { type = bool }
+variable "sriov_device_plugin_namespace" { type = string }
+variable "sriov_device_plugin_daemonset_url" { type = string }
+variable "sriov_device_plugin_version" { type = string }
+
+# SR-IOV CNI Plugin
+variable "sriov_cni_plugin_install" { type = bool }
+variable "sriov_cni_plugin_namespace" { type = string }
+variable "sriov_cni_plugin_daemonset_url" { type = string }
+variable "sriov_cni_plugin_version" { type = string }
+
+# RDMA CNI Plugin
+variable "rdma_cni_plugin_install" { type = bool }
+variable "rdma_cni_plugin_namespace" { type = string }
+variable "rdma_cni_plugin_daemonset_url" { type = string }
+variable "rdma_cni_plugin_version" { type = string }
+
+# Whereabouts
+variable "whereabouts_install" { type = bool }
+variable "whereabouts_namespace" { type = string }
+variable "whereabouts_daemonset_url" { type = string }
+variable "whereabouts_version" { type = string }
+
 # Metrics server
 variable "metrics_server_install" { type = bool }
 variable "metrics_server_namespace" { type = string }
@@ -58,6 +82,20 @@ variable "prometheus_namespace" { type = string }
 variable "prometheus_helm_version" { type = string }
 variable "prometheus_helm_values" { type = map(string) }
 variable "prometheus_helm_values_files" { type = list(string) }
+
+# DCGM exporter
+variable "dcgm_exporter_install" { type = bool }
+variable "dcgm_exporter_reapply" { type = bool }
+variable "dcgm_exporter_namespace" { type = string }
+variable "dcgm_exporter_helm_version" { type = string }
+variable "dcgm_exporter_helm_values" { type = map(string) }
+variable "dcgm_exporter_helm_values_files" { type = list(string) }
+
+# MPI Operator
+variable "mpi_operator_install" { type = bool }
+variable "mpi_operator_namespace" { type = string }
+variable "mpi_operator_deployment_url" { type = string }
+variable "mpi_operator_version" { type = string }
 
 # Gatekeeper
 variable "gatekeeper_install" { type = bool }
