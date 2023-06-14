@@ -76,10 +76,6 @@ module "operator" {
   use_defined_tags = var.use_defined_tags
   tag_namespace    = var.tag_namespace
 
-  providers = {
-    oci.home = oci.home
-  }
-
   depends_on = [
     module.iam,
   ]

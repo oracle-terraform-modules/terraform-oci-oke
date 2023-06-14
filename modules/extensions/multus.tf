@@ -7,7 +7,7 @@ locals {
     var.multus_daemonset_url,
     "${local.multus_url}/v${var.multus_version}/deployments/multus-daemonset.yml"
   )
-  multus_manifest_path        = join("/", [local.yaml_manifest_path, "multus-manifest.yaml"])
+  multus_manifest_path        = join("/", [local.yaml_manifest_path, "multus.manifest.yaml"])
   multus_manifest_status_code = one(data.http.multus[*].status_code)
   multus_manifest_content     = sensitive(one(data.http.multus[*].response_body))
 }
