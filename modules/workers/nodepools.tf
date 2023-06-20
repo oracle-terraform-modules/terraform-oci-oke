@@ -27,8 +27,9 @@ resource "oci_containerengine_node_pool" "workers" {
       iterator = ad
 
       content {
-        availability_domain = ad.value
-        subnet_id           = each.value.subnet_id
+        availability_domain     = ad.value
+        capacity_reservation_id = each.value.capacity_reservation_id
+        subnet_id               = each.value.subnet_id
         dynamic "preemptible_node_config" {
           for_each = each.value.preemptible_config.enable ? [1] : []
           content {
@@ -115,6 +116,11 @@ resource "oci_containerengine_node_pool" "workers" {
         length(lookup(each.value, "secondary_vnics", {})) == 0,          # unrestricted when empty/unset
       ])
       error_message = "Unsupported option for mode=${each.value.mode}: secondary_vnics"
+    }
+
+    precondition {
+      condition = coalesce(each.value.capacity_reservation_id, "none") == "none" || length(each.value.availability_domains) == 1
+      error_message = "A single availability domain must be specified when using a capacity reservation with mode=${each.value.mode}"
     }
   }
 

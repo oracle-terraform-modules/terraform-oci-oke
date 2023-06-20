@@ -6,9 +6,10 @@ resource "oci_core_instance" "workers" {
   preserve_boot_volume = false
   shape                = each.value.shape
 
-  defined_tags      = each.value.defined_tags
-  freeform_tags     = each.value.freeform_tags
-  extended_metadata = each.value.extended_metadata
+  defined_tags            = each.value.defined_tags
+  freeform_tags           = each.value.freeform_tags
+  extended_metadata       = each.value.extended_metadata
+  capacity_reservation_id = each.value.capacity_reservation_id
 
   dynamic "shape_config" {
     for_each = length(regexall("Flex", each.value.shape)) > 0 ? [1] : []

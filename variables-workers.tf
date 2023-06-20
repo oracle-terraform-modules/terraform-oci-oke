@@ -147,6 +147,12 @@ variable "worker_shape" {
   type        = map(any)
 }
 
+variable "worker_capacity_reservation_id" {
+  default     = null
+  description = "The ID of the Compute capacity reservation the worker node will be launched under. See <a href=https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/reserve-capacity.htm>Capacity Reservations</a> for more information."
+  type        = string
+}
+
 variable "worker_preemptible_config" {
   default = {
     enable                  = false,
