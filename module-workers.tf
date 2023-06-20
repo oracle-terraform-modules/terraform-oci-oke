@@ -45,6 +45,7 @@ module "workers" {
   assign_dns                 = var.assign_dns
   assign_public_ip           = var.worker_is_public
   block_volume_type          = var.worker_block_volume_type
+  capacity_reservation_id    = var.worker_capacity_reservation_id
   cloud_init                 = var.worker_cloud_init
   disable_default_cloud_init = var.worker_disable_default_cloud_init
   cni_type                   = var.cni_type

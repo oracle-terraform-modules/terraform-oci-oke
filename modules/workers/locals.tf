@@ -15,6 +15,7 @@ locals {
     autoscale                  = false
     block_volume_type          = var.block_volume_type
     boot_volume_size           = local.boot_volume_size
+    capacity_reservation_id    = var.capacity_reservation_id
     cloud_init                 = [] # empty pool-specific default
     disable_default_cloud_init = false
     compartment_id             = var.compartment_id

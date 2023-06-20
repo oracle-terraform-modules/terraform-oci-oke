@@ -37,6 +37,7 @@ variable "worker_pools" { type = any }
 variable "ad_numbers_to_names" { type = map(string) }
 variable "ad_numbers" { type = list(number) }
 variable "block_volume_type" { type = string }
+variable "capacity_reservation_id" { type = string }
 variable "cloud_init" { type = list(map(string)) }
 variable "disable_default_cloud_init" { type = bool }
 variable "image_id" { type = string }
