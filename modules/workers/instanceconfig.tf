@@ -13,11 +13,12 @@ resource "oci_core_instance_configuration" "workers" {
     instance_type = "compute"
 
     launch_details {
-      availability_domain = element(each.value.availability_domains, 1)
-      compartment_id      = each.value.compartment_id
-      defined_tags        = each.value.defined_tags
-      freeform_tags       = each.value.freeform_tags
-      extended_metadata   = each.value.extended_metadata
+      availability_domain     = element(each.value.availability_domains, 1)
+      compartment_id          = each.value.compartment_id
+      defined_tags            = each.value.defined_tags
+      freeform_tags           = each.value.freeform_tags
+      extended_metadata       = each.value.extended_metadata
+      capacity_reservation_id = each.value.capacity_reservation_id
 
       instance_options {
         are_legacy_imds_endpoints_disabled = false
