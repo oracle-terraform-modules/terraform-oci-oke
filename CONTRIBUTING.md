@@ -8,7 +8,7 @@ If you have any questions about a possible submission, feel free to open an issu
 
 ## Contributing to the terraform-oci-oke repository
 
-Pull requests can be made under [The Oracle Contributor Agreement](https://www.oracle.com/technetwork/community/oca-486395.html).
+Pull requests can be made under [The Oracle Contributor Agreement](https://oca.opensource.oracle.com/).
 
 For pull requests to be accepted, the bottom of your commit message must have the following line using your name and e-mail address as it appears in the OCA Signatories list.
 
