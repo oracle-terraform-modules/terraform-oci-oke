@@ -22,11 +22,11 @@ The out-of-place method is currently the **only** supported method of upgrading 
 ## Upgrading the control plane nodes
 
 Locate your `kubernetes_version` in your Terraform variable file and change:
-```
+```properties
 kubernetes_version = "v1.22.5" 
 ```
 to
-```
+```properties
 kubernetes_version = "v1.23.4"
 ```
 
@@ -36,7 +36,7 @@ Run `terraform apply`. This will upgrade the control plane nodes. You can verify
 If you have modified the default resources e.g. security lists, you will need to use a targeted apply:
 ```
 
-```
+```shell
 terraform apply --target=module.oke.k8s_cluster
 ```
 
@@ -45,14 +45,14 @@ terraform apply --target=module.oke.k8s_cluster
 ### Add new node pools
 
 Add a new node pool in your list of node pools e.g. change:
-```
+```properties
 worker_pools = {
   np1 = ["VM.Standard.E2.2", 7, 50]
   np2 = ["VM.Standard2.8", 5, 50]
 }
 ```
 to
-```
+```properties
 worker_pools = {
   np1 = ["VM.Standard.E2.2", 7, 50]
   np2 = ["VM.Standard2.8", 5, 50]
