@@ -3,19 +3,26 @@ authors = ["The Terraform OCI OKE Module contributors"]
 language = "en"
 multilingual = false
 src = "src"
-title = "Terraform OCI OKE module"
+title = "Terraform OCI module for OKE"
+
+[output.html]
+curly-quotes = false
+git-repository-url = "https://github.com/oracle-terraform-modules/terraform-oci-oke"
+additional-css = ["./src/css/mdbook-admonish.css", "theme/pagetoc.css"]
+additional-js  = ["theme/pagetoc.js"]
+default-theme = "light"
+
+[output.html.playground]
+editable = true
 
 [preprocessor.admonish]
 command = "mdbook-admonish"
 assets_version = "2.0.0" # do not edit: managed by `mdbook-admonish install`
 
+[preprocessor.toc]
+max-level = 3
+
+[preprocessor.pagetoc]
+
 [preprocessor.variables]
 use_env = true
-
-[output.html]
-curly-quotes = false
-git-repository-url = "https://github.com/oracle-terraform-modules/terraform-oci-oke"
-additional-css = ["./src/css/mdbook-admonish.css"]
-
-[output.html.playground]
-editable = true
