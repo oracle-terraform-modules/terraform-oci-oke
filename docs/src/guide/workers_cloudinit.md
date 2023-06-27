@@ -20,3 +20,10 @@ Cloud init configuration applied to a specific worker pool:
 ```javascript
 {{#include ../../../examples/workers/vars-workers-cloudinit-pool.auto.tfvars:4:}}
 ```
+
+## Default Cloud-Init Disabled
+
+When providing a custom script that calls OKE initialization:
+```properties
+worker_disable_default_cloud_init = true
+```

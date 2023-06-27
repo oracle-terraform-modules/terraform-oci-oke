@@ -17,7 +17,6 @@ Subnets are created for core components managed within the module, namely:
 
 ## Create new subnets (forced)
 
-Force creation of subnets with associated components disabled:
 ```javascript
 {{#include ../../../examples/network/vars-network-subnets-create-force.auto.tfvars:4:}}
 ```
@@ -32,3 +31,4 @@ Force creation of subnets with associated components disabled:
 
 * [OCI Networking Overview](https://docs.oracle.com/en-us/iaas/Content/Network/Concepts/overview.htm)
 * [VCNs and Subnets](https://docs.oracle.com/en-us/iaas/Content/Network/Tasks/VCNs.htm)
+* Terraform [cidrsubnets](https://developer.hashicorp.com/terraform/language/functions/cidrsubnets) function

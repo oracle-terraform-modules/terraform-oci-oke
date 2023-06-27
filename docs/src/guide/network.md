@@ -2,6 +2,20 @@
 
 Optional creation of VCN subnets, Network Security Groups, NSG Rules, and more.
 
+## Examples
+
+### Create Minimal Network Resources
+
+```javascript
+{{#include ../../../examples/network/vars-network-only-minimal.auto.tfvars:4:}}
+```
+
+### Create Common Network Resources
+
+```javascript
+{{#include ../../../examples/network/vars-network-only-common.auto.tfvars:4:}}
+```
+
 ## References
 
 * [Terraform VCN Module](https://github.com/oracle-terraform-modules/terraform-oci-vcn)

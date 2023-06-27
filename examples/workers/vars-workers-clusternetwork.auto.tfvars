@@ -4,8 +4,8 @@
 worker_pools = {
   oke-vm-standard = {
     description = "Managed node pool for operational workloads without GPU toleration"
-    mode  = "node-pool", size = 1, shape = "VM.Standard.E4.Flex",
-    ocpus = 2, memory = 16, boot_volume_size = 50,
+    mode        = "node-pool", size = 1, shape = "VM.Standard.E4.Flex",
+    ocpus       = 2, memory = 16, boot_volume_size = 50,
   },
 
   oke-bm-gpu-rdma = {
