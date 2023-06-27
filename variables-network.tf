@@ -116,7 +116,7 @@ variable "subnets" {
     cp       = { newbits = 13 }
     int_lb   = { newbits = 11 }
     pub_lb   = { newbits = 11 }
-    workers  = { newbits = 2 }
+    workers  = { newbits = 4 }
     pods     = { newbits = 2 }
   }
   description = "Configuration for standard subnets. The 'create' parameter of each entry defaults to 'auto', creating subnets when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
