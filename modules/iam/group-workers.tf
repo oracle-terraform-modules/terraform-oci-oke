@@ -30,15 +30,15 @@ locals {
   ])
 
   # Block volume encryption using OCI Key Management System (KMS)
-  worker_kms_volume_statements = coalesce(var.worker_volume_kms_key_id, "none") != "none" ? tolist([
+  worker_kms_volume_statements = coalesce(var.worker_volume_kms_key_id, "none") != "none" ? flatten(tolist([
     for statement in local.worker_kms_volume_templates :
     formatlist(statement, local.worker_compartments, var.worker_volume_kms_key_id)
-  ]) : []
+  ])) : []
 
-  worker_policy_statements = var.create_iam_worker_policy ? concat(
+  worker_policy_statements = var.create_iam_worker_policy ? tolist(concat(
     local.cluster_join_statements,
     local.worker_kms_volume_statements,
-  ) : []
+  )) : []
 }
 
 resource "oci_identity_dynamic_group" "workers" {
