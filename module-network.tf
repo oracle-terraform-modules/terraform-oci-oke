@@ -8,7 +8,7 @@ data "oci_core_vcn" "oke" {
 
 locals {
   # Created VCN if enabled, else var.vcn_id
-  vcn_id = var.create_vcn ? one(module.vcn[*].vcn_id) : var.vcn_id
+  vcn_id = var.create_vcn ? try(one(module.vcn[*].vcn_id), var.vcn_id) : var.vcn_id
 
   # Configured VCN CIDRs if creating, else from provided vcn_id
   vcn_lookup             = coalesce(one(data.oci_core_vcn.oke[*].cidr_blocks), [])
@@ -16,10 +16,10 @@ locals {
   vcn_cidrs              = var.create_vcn ? var.vcn_cidrs : local.vcn_lookup_cidr_blocks
 
   # Created route table if enabled, else var.ig_route_table_id
-  ig_route_table_id = var.create_vcn ? one(module.vcn[*].ig_route_id) : var.ig_route_table_id
+  ig_route_table_id = var.create_vcn ? try(one(module.vcn[*].ig_route_id), var.ig_route_table_id) : var.ig_route_table_id
 
   # Created route table if enabled, else var.nat_route_table_id
-  nat_route_table_id = var.create_vcn ? one(module.vcn[*].nat_route_id) : var.nat_route_table_id
+  nat_route_table_id = var.create_vcn ? try(one(module.vcn[*].nat_route_id), var.ig_route_table_id) : var.nat_route_table_id
 }
 
 module "vcn" {
