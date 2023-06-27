@@ -1,3 +1,7 @@
 # Workers: Draining
 
-**TODO**
+## Usage
+
+```javascript
+{{#include ../../../examples/workers/vars-workers-drain.auto.tfvars:4:}}
+```

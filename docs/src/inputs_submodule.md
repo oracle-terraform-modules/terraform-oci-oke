@@ -46,7 +46,6 @@ Sub-modules currently use a sparse definition of inputs required from the root:
 | <a name="input_control_plane_is_public"></a> [control\_plane\_is\_public](#input\_control\_plane\_is\_public)| n/a|  bool|  n/a|  yes|
 | <a name="input_create_bastion"></a> [create\_bastion](#input\_create\_bastion)| n/a|  bool|  n/a|  yes|
 | <a name="input_create_cluster"></a> [create\_cluster](#input\_create\_cluster)| n/a|  bool|  n/a|  yes|
-| <a name="input_create_fss"></a> [create\_fss](#input\_create\_fss)| n/a|  bool|  n/a|  yes|
 | <a name="input_create_operator"></a> [create\_operator](#input\_create\_operator)| n/a|  bool|  n/a|  yes|
 | <a name="input_enable_waf"></a> [enable\_waf](#input\_enable\_waf)| n/a|  bool|  n/a|  yes|
 | <a name="input_use_defined_tags"></a> [use\_defined\_tags](#input\_use\_defined\_tags)| n/a|  bool|  n/a|  yes|
