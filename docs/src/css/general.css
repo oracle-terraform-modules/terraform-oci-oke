@@ -95,8 +95,8 @@ h6:target::before {
 .content main {
     margin-left: auto;
     margin-right: auto;
-    min-width: 90%;
-    max-width: 90%;    
+    min-width: 60%;
+    max-width: 60%;    
 }
 .content p { line-height: 1.45em; }
 .content ol { line-height: 1.45em; }

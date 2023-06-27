@@ -43,7 +43,7 @@ module "vcn" {
     local.network_freeform_tags,
   )
 
-  attached_drg_id = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
+  # attached_drg_id = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
 
   create_internet_gateway = alltrue([
     var.vcn_create_internet_gateway != "never",    # always disable
@@ -77,16 +77,16 @@ module "vcn" {
   vcn_name                     = coalesce(var.vcn_name, "oke-${local.state_id}")
 }
 
-module "drg" {
-  count          = var.create_drg || var.drg_id != null ? 1 : 0
-  source         = "oracle-terraform-modules/drg/oci"
-  version        = "1.0.3"
-  compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
+# module "drg" {
+#   count          = var.create_drg || var.drg_id != null ? 1 : 0
+#   source         = "oracle-terraform-modules/drg/oci"
+#   version        = "1.0.3"
+#   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
-  drg_id              = var.drg_id # existing DRG ID or null
-  drg_display_name    = coalesce(var.drg_display_name, "oke-${local.state_id}")
-  drg_vcn_attachments = var.drg_attachments
-}
+#   drg_id              = var.drg_id # existing DRG ID or null
+#   drg_display_name    = coalesce(var.drg_display_name, "oke-${local.state_id}")
+#   drg_vcn_attachments = var.drg_attachments
+# }
 
 module "network" {
   source           = "./modules/network"
@@ -232,7 +232,7 @@ output "network_security_rules" {
 }
 
 # DRG
-output "drg_id" {
-  description = "Dynamic routing gateway ID"
-  value       = try(one(module.drg[*].drg_id), null)
-}
+# output "drg_id" {
+#   description = "Dynamic routing gateway ID"
+#   value       = try(one(module.drg[*].drg_id), null)
+# }
