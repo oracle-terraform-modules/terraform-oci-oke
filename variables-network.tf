@@ -118,7 +118,6 @@ variable "subnets" {
     pub_lb   = { newbits = 11 }
     workers  = { newbits = 2 }
     pods     = { newbits = 2 }
-    fss      = { newbits = 11 }
   }
   description = "Configuration for standard subnets. The 'create' parameter of each entry defaults to 'auto', creating subnets when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
   type = map(object({
@@ -154,7 +153,6 @@ variable "nsgs" {
     pub_lb   = {}
     workers  = {}
     pods     = {}
-    fss      = {}
   }
   description = "Configuration for standard network security groups (NSGs).  The 'create' parameter of each entry defaults to 'auto', creating NSGs when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
   type = map(object({

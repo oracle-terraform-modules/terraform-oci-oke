@@ -197,46 +197,6 @@ variable "max_pods_per_node" {
   }
 }
 
-#
-# FSS
-#
-
-variable "create_fss" {
-  default     = false
-  description = "Whether to enable provisioning for FSS."
-  type        = bool
-}
-
-variable "fss_availability_domain" {
-  default     = null
-  description = "The availability domain for FSS placement. Defaults to first available."
-  type        = string
-}
-
-variable "fss_nsg_ids" {
-  default     = []
-  description = "A list of network security group (NSG) ids for FSS mount targets."
-  type        = list(string)
-}
-
-variable "fss_mount_path" {
-  default     = "/oke_fss"
-  description = "FSS mount path to be associated."
-  type        = string
-}
-
-variable "fss_max_fs_stat_bytes" {
-  default     = 23843202333
-  description = "Maximum tbytes, fbytes, and abytes, values reported by NFS FSSTAT calls through any associated mount targets."
-  type        = number
-}
-
-variable "fss_max_fs_stat_files" {
-  default     = 223442
-  description = "Maximum tfiles, ffiles, and afiles values reported by NFS FSSTAT."
-  type        = number
-}
-
 variable "platform_config" {
   default     = null
   description = "Default platform_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/PlatformConfig>PlatformConfig</a> for more information."
