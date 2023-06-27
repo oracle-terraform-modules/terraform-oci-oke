@@ -58,7 +58,7 @@ variable "services_cidr" {
 }
 
 variable "kubernetes_version" {
-  default     = "v1.25.4"
+  default     = "v1.26.2"
   description = "The version of kubernetes to use when provisioning OKE or to upgrade an existing OKE cluster to."
   type        = string
 }
