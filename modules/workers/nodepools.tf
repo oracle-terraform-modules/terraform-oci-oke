@@ -119,7 +119,7 @@ resource "oci_containerengine_node_pool" "workers" {
     }
 
     precondition {
-      condition = coalesce(each.value.capacity_reservation_id, "none") == "none" || length(each.value.availability_domains) == 1
+      condition     = coalesce(each.value.capacity_reservation_id, "none") == "none" || length(each.value.availability_domains) == 1
       error_message = "A single availability domain must be specified when using a capacity reservation with mode=${each.value.mode}"
     }
   }

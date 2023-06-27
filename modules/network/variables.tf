@@ -27,7 +27,6 @@ variable "control_plane_allowed_cidrs" { type = set(string) }
 variable "control_plane_is_public" { type = bool }
 variable "create_cluster" { type = bool }
 variable "create_bastion" { type = bool }
-variable "create_fss" { type = bool }
 variable "create_operator" { type = bool }
 variable "drg_attachments" { type = any }
 variable "enable_waf" { type = bool }

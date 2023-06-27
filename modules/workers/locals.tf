@@ -2,14 +2,12 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  boot_volume_size   = lookup(var.shape, "boot_volume_size", 50)
-  memory             = lookup(var.shape, "memory", 4)
-  ocpus              = max(1, lookup(var.shape, "ocpus", 1))
-  shape              = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
-  preemptible_config = { enable = false, is_preserve_boot_volume = false }
+  boot_volume_size = lookup(var.shape, "boot_volume_size", 50)
+  memory           = lookup(var.shape, "memory", 4)
+  ocpus            = max(1, lookup(var.shape, "ocpus", 1))
+  shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
 
   worker_pool_defaults = {
-    preemptible_config         = local.preemptible_config
     allow_autoscaler           = false
     assign_public_ip           = var.assign_public_ip
     autoscale                  = false
@@ -17,9 +15,9 @@ locals {
     boot_volume_size           = local.boot_volume_size
     capacity_reservation_id    = var.capacity_reservation_id
     cloud_init                 = [] # empty pool-specific default
-    disable_default_cloud_init = false
     compartment_id             = var.compartment_id
     create                     = true
+    disable_default_cloud_init = var.disable_default_cloud_init
     drain                      = false
     extended_metadata          = {} # empty pool-specific default
     image_id                   = var.image_id
@@ -31,10 +29,11 @@ locals {
     ocpus                      = local.ocpus
     os                         = var.image_os
     os_version                 = var.image_os_version
-    platform_config            = var.platform_config
     placement_ads              = var.ad_numbers
+    platform_config            = var.platform_config
     pod_nsg_ids                = var.pod_nsg_ids
     pod_subnet_id              = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+    preemptible_config         = var.preemptible_config
     pv_transit_encryption      = var.pv_transit_encryption
     shape                      = local.shape
     size                       = var.worker_pool_size
@@ -50,7 +49,7 @@ locals {
   # Filter worker_pools map for enabled entries and add derived configuration
   enabled_worker_pools = { for pool_name, pool in local.worker_pools_with_defaults :
     pool_name => merge(pool, {
-      preemptible_config = lookup(pool, "preemptible_config", local.preemptible_config)
+      preemptible_config = lookup(pool, "preemptible_config", pool.preemptible_config)
       # Bare metal instances must use iSCSI block volume attachments, not paravirtualized
       block_volume_type = length(regexall("^BM", pool.shape)) > 0 ? "iscsi" : var.block_volume_type
       pv_transit_encryption = alltrue([

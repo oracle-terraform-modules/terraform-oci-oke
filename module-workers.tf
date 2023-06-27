@@ -70,24 +70,11 @@ module "workers" {
   worker_subnet_id           = try(module.network.worker_subnet_id, "") # safe destroy; validated in submodule
   preemptible_config         = var.worker_preemptible_config
 
-  # FSS
-  create_fss              = var.create_fss
-  fss_availability_domain = coalesce(var.fss_availability_domain, local.ad_numbers_to_names[1])
-  fss_subnet_id           = try(module.network.fss_subnet_id, "") # safe destroy; validated in submodule
-  fss_nsg_ids             = var.fss_nsg_ids
-  fss_mount_path          = var.fss_mount_path
-  fss_max_fs_stat_bytes   = var.fss_max_fs_stat_bytes
-  fss_max_fs_stat_files   = var.fss_max_fs_stat_files
-
   # Tagging
   tag_namespace    = var.tag_namespace
   defined_tags     = local.workers_defined_tags
   freeform_tags    = local.workers_freeform_tags
   use_defined_tags = var.use_defined_tags
-
-  providers = {
-    oci.home = oci.home
-  }
 
   depends_on = [
     module.iam,
@@ -107,9 +94,4 @@ output "worker_pool_ids" {
 output "worker_instance_ids" {
   description = "Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances."
   value       = one(module.workers[*].worker_instance_ids)
-}
-
-output "fss_id" {
-  description = "FSS ID"
-  value       = var.create_fss ? one(module.workers[*].fss_id) : null
 }

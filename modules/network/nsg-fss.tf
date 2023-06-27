@@ -8,7 +8,8 @@ locals {
     alltrue([
       lookup(local.operator_nsg_config, "create", "auto") == "auto",
       !contains(keys(local.operator_nsg_config), "id"),
-      var.create_cluster, var.create_fss,
+      contains(keys(var.nsgs), "fss"),
+      var.create_cluster,
     ]),
   ])
   # Return provided NSG when configured with an existing ID or created resource ID

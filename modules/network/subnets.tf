@@ -52,7 +52,7 @@ locals {
     workers  = { create = var.create_cluster, is_public = var.worker_is_public }
     pods     = { create = var.create_cluster && var.cni_type == "npn" }
     operator = { create = var.create_operator }
-    fss      = { create = var.create_fss }
+    fss      = { create = contains(keys(var.subnets), "fss") }
     int_lb = {
       create         = var.create_cluster && contains(["both", "internal"], var.load_balancers),
       create_seclist = true, dns_label = "ilb",
