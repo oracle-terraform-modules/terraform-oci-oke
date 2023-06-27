@@ -100,8 +100,12 @@ Sub-modules currently use a sparse definition of inputs required from the root:
 |------|-------------|------|---------|:--------:|
 | <a name="input_control_plane_is_public"></a> [control\_plane\_is\_public](#input\_control\_plane\_is\_public)| n/a|  bool|  n/a|  yes|
 | <a name="input_use_signed_images"></a> [use\_signed\_images](#input\_use\_signed\_images)| n/a|  bool|  n/a|  yes|
-| <a name="input_defined_tags"></a> [defined\_tags](#input\_defined\_tags)| n/a|  map(any)|  n/a|  yes|
-| <a name="input_freeform_tags"></a> [freeform\_tags](#input\_freeform\_tags)| n/a|  map(any)|  n/a|  yes|
+| <a name="input_cluster_defined_tags"></a> [cluster\_defined\_tags](#input\_cluster\_defined\_tags)| Tagging|  map(string)|  n/a|  yes|
+| <a name="input_cluster_freeform_tags"></a> [cluster\_freeform\_tags](#input\_cluster\_freeform\_tags)| n/a|  map(string)|  n/a|  yes|
+| <a name="input_persistent_volume_defined_tags"></a> [persistent\_volume\_defined\_tags](#input\_persistent\_volume\_defined\_tags)| n/a|  map(string)|  n/a|  yes|
+| <a name="input_persistent_volume_freeform_tags"></a> [persistent\_volume\_freeform\_tags](#input\_persistent\_volume\_freeform\_tags)| n/a|  map(string)|  n/a|  yes|
+| <a name="input_service_lb_defined_tags"></a> [service\_lb\_defined\_tags](#input\_service\_lb\_defined\_tags)| n/a|  map(string)|  n/a|  yes|
+| <a name="input_service_lb_freeform_tags"></a> [service\_lb\_freeform\_tags](#input\_service\_lb\_freeform\_tags)| n/a|  map(string)|  n/a|  yes|
 | <a name="input_control_plane_nsg_ids"></a> [control\_plane\_nsg\_ids](#input\_control\_plane\_nsg\_ids)| n/a|  set(string)|  n/a|  yes|
 | <a name="input_image_signing_keys"></a> [image\_signing\_keys](#input\_image\_signing\_keys)| n/a|  set(string)|  n/a|  yes|
 | <a name="input_cluster_kms_key_id"></a> [cluster\_kms\_key\_id](#input\_cluster\_kms\_key\_id)| Cluster|  string|  n/a|  yes|
@@ -125,55 +129,49 @@ Sub-modules currently use a sparse definition of inputs required from the root:
 <!-- BEGIN_TF_WORKERS -->
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_worker_pools"></a> [worker\_pools](#input\_worker\_pools)| n/a|  any|  n/a|  yes|
-| <a name="input_assign_dns"></a> [assign\_dns](#input\_assign\_dns)| Network|  bool|  n/a|  yes|
+| <a name="input_image_ids"></a> [image\_ids](#input\_image\_ids)| Map of images for filtering with image\_os and image\_os\_version.|  any|  {}|  no|
+| <a name="input_worker_pools"></a> [worker\_pools](#input\_worker\_pools)| Tuple of OKE worker pools where each key maps to the OCID of an OCI resource, and value contains its definition.|  any|  {}|  no|
+| <a name="input_assign_dns"></a> [assign\_dns](#input\_assign\_dns)| n/a|  bool|  n/a|  yes|
 | <a name="input_assign_public_ip"></a> [assign\_public\_ip](#input\_assign\_public\_ip)| n/a|  bool|  n/a|  yes|
-| <a name="input_create_fss"></a> [create\_fss](#input\_create\_fss)| FSS|  bool|  n/a|  yes|
-| <a name="input_disable_default_cloud_init"></a> [disable\_default\_cloud\_init](#input\_disable\_default\_cloud\_init)| n/a|  bool|  n/a|  yes|
-| <a name="input_pv_transit_encryption"></a> [pv\_transit\_encryption](#input\_pv\_transit\_encryption)| n/a|  bool|  n/a|  yes|
-| <a name="input_use_defined_tags"></a> [use\_defined\_tags](#input\_use\_defined\_tags)| n/a|  bool|  n/a|  yes|
-| <a name="input_cloud_init"></a> [cloud\_init](#input\_cloud\_init)| n/a|  list(map(string))|  n/a|  yes|
+| <a name="input_disable_default_cloud_init"></a> [disable\_default\_cloud\_init](#input\_disable\_default\_cloud\_init)| Whether to disable the default OKE cloud init and only use the cloud init explicitly passed to the worker pool in 'worker\_cloud\_init'.|  bool|  false|  no|
+| <a name="input_pv_transit_encryption"></a> [pv\_transit\_encryption](#input\_pv\_transit\_encryption)| Whether to enable in-transit encryption for the data volume's paravirtualized attachment by default when unspecified on a pool.|  bool|  false|  no|
+| <a name="input_use_defined_tags"></a> [use\_defined\_tags](#input\_use\_defined\_tags)| Whether to apply defined tags to created resources for IAM policy and tracking.|  bool|  false|  no|
+| <a name="input_cloud_init"></a> [cloud\_init](#input\_cloud\_init)| List of maps containing cloud init MIME part configuration for worker nodes. Merged with pool-specific definitions. See https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html#part for expected schema of each element.|  list(map(string))|  []|  no|
 | <a name="input_ad_numbers"></a> [ad\_numbers](#input\_ad\_numbers)| n/a|  list(number)|  n/a|  yes|
-| <a name="input_fss_nsg_ids"></a> [fss\_nsg\_ids](#input\_fss\_nsg\_ids)| n/a|  list(string)|  n/a|  yes|
-| <a name="input_pod_nsg_ids"></a> [pod\_nsg\_ids](#input\_pod\_nsg\_ids)| n/a|  list(string)|  n/a|  yes|
-| <a name="input_worker_nsg_ids"></a> [worker\_nsg\_ids](#input\_worker\_nsg\_ids)| n/a|  list(string)|  n/a|  yes|
-| <a name="input_image_ids"></a> [image\_ids](#input\_image\_ids)| n/a|  map(any)|  n/a|  yes|
-| <a name="input_preemptible_config"></a> [preemptible\_config](#input\_preemptible\_config)| n/a|  map(any)|  n/a|  yes|
-| <a name="input_shape"></a> [shape](#input\_shape)| n/a|  map(any)|  n/a|  yes|
-| <a name="input_ad_numbers_to_names"></a> [ad\_numbers\_to\_names](#input\_ad\_numbers\_to\_names)| Workers: instance|  map(string)|  n/a|  yes|
-| <a name="input_defined_tags"></a> [defined\_tags](#input\_defined\_tags)| Tags|  map(string)|  n/a|  yes|
-| <a name="input_freeform_tags"></a> [freeform\_tags](#input\_freeform\_tags)| n/a|  map(string)|  n/a|  yes|
-| <a name="input_node_labels"></a> [node\_labels](#input\_node\_labels)| n/a|  map(string)|  n/a|  yes|
-| <a name="input_node_metadata"></a> [node\_metadata](#input\_node\_metadata)| n/a|  map(string)|  n/a|  yes|
-| <a name="input_max_pods_per_node"></a> [max\_pods\_per\_node](#input\_max\_pods\_per\_node)| n/a|  number|  n/a|  yes|
-| <a name="input_worker_pool_size"></a> [worker\_pool\_size](#input\_worker\_pool\_size)| n/a|  number|  n/a|  yes|
-| <a name="input_platform_config"></a> [platform\_config](#input\_platform\_config)| n/a|  object({<br>    type                                           = string,<br>    are\_virtual\_instructions\_enabled               = optional(bool),<br>    is\_access\_control\_service\_enabled              = optional(bool),<br>    is\_input\_output\_memory\_management\_unit\_enabled = optional(bool),<br>    is\_measured\_boot\_enabled                       = optional(bool),<br>    is\_memory\_encryption\_enabled                   = optional(bool),<br>    is\_secure\_boot\_enabled                         = optional(bool),<br>    is\_symmetric\_multi\_threading\_enabled           = optional(bool),<br>    is\_trusted\_platform\_module\_enabled             = optional(bool),<br>    numa\_nodes\_per\_socket                          = optional(number),<br>    percentage\_of\_cores\_enabled                    = optional(bool),<br>  })|  null|  no|
-| <a name="input_apiserver_private_host"></a> [apiserver\_private\_host](#input\_apiserver\_private\_host)| Cluster|  string|  n/a|  yes|
-| <a name="input_block_volume_type"></a> [block\_volume\_type](#input\_block\_volume\_type)| n/a|  string|  n/a|  yes|
-| <a name="input_cluster_ca_cert"></a> [cluster\_ca\_cert](#input\_cluster\_ca\_cert)| n/a|  string|  n/a|  yes|
-| <a name="input_cluster_dns"></a> [cluster\_dns](#input\_cluster\_dns)| n/a|  string|  n/a|  yes|
-| <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id)| n/a|  string|  n/a|  yes|
-| <a name="input_cni_type"></a> [cni\_type](#input\_cni\_type)| n/a|  string|  n/a|  yes|
-| <a name="input_compartment_id"></a> [compartment\_id](#input\_compartment\_id)| Common|  string|  n/a|  yes|
-| <a name="input_fss_availability_domain"></a> [fss\_availability\_domain](#input\_fss\_availability\_domain)| n/a|  string|  n/a|  yes|
-| <a name="input_fss_max_fs_stat_bytes"></a> [fss\_max\_fs\_stat\_bytes](#input\_fss\_max\_fs\_stat\_bytes)| n/a|  string|  n/a|  yes|
-| <a name="input_fss_max_fs_stat_files"></a> [fss\_max\_fs\_stat\_files](#input\_fss\_max\_fs\_stat\_files)| n/a|  string|  n/a|  yes|
-| <a name="input_fss_mount_path"></a> [fss\_mount\_path](#input\_fss\_mount\_path)| n/a|  string|  n/a|  yes|
-| <a name="input_fss_subnet_id"></a> [fss\_subnet\_id](#input\_fss\_subnet\_id)| n/a|  string|  n/a|  yes|
-| <a name="input_image_id"></a> [image\_id](#input\_image\_id)| n/a|  string|  n/a|  yes|
-| <a name="input_image_os"></a> [image\_os](#input\_image\_os)| n/a|  string|  n/a|  yes|
-| <a name="input_image_os_version"></a> [image\_os\_version](#input\_image\_os\_version)| n/a|  string|  n/a|  yes|
-| <a name="input_image_type"></a> [image\_type](#input\_image\_type)| n/a|  string|  n/a|  yes|
-| <a name="input_kubeproxy_mode"></a> [kubeproxy\_mode](#input\_kubeproxy\_mode)| n/a|  string|  n/a|  yes|
-| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version)| n/a|  string|  n/a|  yes|
+| <a name="input_pod_nsg_ids"></a> [pod\_nsg\_ids](#input\_pod\_nsg\_ids)| An additional list of network security group (NSG) IDs for pod security. Combined with 'pod\_nsg\_ids' specified on each pool.|  list(string)|  []|  no|
+| <a name="input_worker_nsg_ids"></a> [worker\_nsg\_ids](#input\_worker\_nsg\_ids)| An additional list of network security group (NSG) IDs for node security. Combined with 'nsg\_ids' specified on each pool.|  list(string)|  []|  no|
+| <a name="input_preemptible_config"></a> [preemptible\_config](#input\_preemptible\_config)| Default preemptible Compute configuration when unspecified on a pool. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengusingpreemptiblecapacity.htm>Preemptible Worker Nodes</a> for more information.|  map(any)|  {<br>  "enable": false,<br>  "is\_preserve\_boot\_volume": false<br>}|  no|
+| <a name="input_shape"></a> [shape](#input\_shape)| Default shape of the created worker instance when unspecified on a pool.|  map(any)|  {<br>  "boot\_volume\_size": 50,<br>  "memory": 16,<br>  "ocpus": 2,<br>  "shape": "VM.Standard.E4.Flex"<br>}|  no|
+| <a name="input_ad_numbers_to_names"></a> [ad\_numbers\_to\_names](#input\_ad\_numbers\_to\_names)| n/a|  map(string)|  n/a|  yes|
+| <a name="input_defined_tags"></a> [defined\_tags](#input\_defined\_tags)| Defined tags to be applied to created resources. Must already exist in the tenancy.|  map(string)|  {}|  no|
+| <a name="input_freeform_tags"></a> [freeform\_tags](#input\_freeform\_tags)| Freeform tags to be applied to created resources.|  map(string)|  {}|  no|
+| <a name="input_node_labels"></a> [node\_labels](#input\_node\_labels)| Default worker node labels. Merged with labels defined on each pool.|  map(string)|  {}|  no|
+| <a name="input_node_metadata"></a> [node\_metadata](#input\_node\_metadata)| Map of additional worker node instance metadata. Merged with metadata defined on each pool.|  map(string)|  {}|  no|
+| <a name="input_max_pods_per_node"></a> [max\_pods\_per\_node](#input\_max\_pods\_per\_node)| The default maximum number of pods to deploy per node when unspecified on a pool. Absolute maximum is 110. Ignored when when cni\_type != 'npn'.|  number|  31|  no|
+| <a name="input_worker_pool_size"></a> [worker\_pool\_size](#input\_worker\_pool\_size)| Default size for worker pools when unspecified on a pool.|  number|  0|  no|
+| <a name="input_platform_config"></a> [platform\_config](#input\_platform\_config)| Default platform\_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/PlatformConfig>PlatformConfig</a> for more information.|  object({<br>    type                                           = optional(string),<br>    are\_virtual\_instructions\_enabled               = optional(bool),<br>    is\_access\_control\_service\_enabled              = optional(bool),<br>    is\_input\_output\_memory\_management\_unit\_enabled = optional(bool),<br>    is\_measured\_boot\_enabled                       = optional(bool),<br>    is\_memory\_encryption\_enabled                   = optional(bool),<br>    is\_secure\_boot\_enabled                         = optional(bool),<br>    is\_symmetric\_multi\_threading\_enabled           = optional(bool),<br>    is\_trusted\_platform\_module\_enabled             = optional(bool),<br>    numa\_nodes\_per\_socket                          = optional(number),<br>    percentage\_of\_cores\_enabled                    = optional(bool),<br>  })|  null|  no|
+| <a name="input_apiserver_private_host"></a> [apiserver\_private\_host](#input\_apiserver\_private\_host)| n/a|  string|  n/a|  yes|
+| <a name="input_block_volume_type"></a> [block\_volume\_type](#input\_block\_volume\_type)| Default block volume attachment type for Instance Configurations when unspecified on a pool.|  string|  "paravirtualized"|  no|
+| <a name="input_capacity_reservation_id"></a> [capacity\_reservation\_id](#input\_capacity\_reservation\_id)| The ID of the Compute capacity reservation the worker node will be launched under. See <a href=https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/reserve-capacity.htm>Capacity Reservations</a> for more information.|  string|  null|  no|
+| <a name="input_cluster_ca_cert"></a> [cluster\_ca\_cert](#input\_cluster\_ca\_cert)| Base64+PEM-encoded cluster CA certificate for unmanaged instance pools. Determined automatically when 'create\_cluster' = true or 'cluster\_id' is provided.|  string|  null|  no|
+| <a name="input_cluster_dns"></a> [cluster\_dns](#input\_cluster\_dns)| Cluster DNS resolver IP address. Determined automatically when not set (recommended).|  string|  null|  no|
+| <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id)| An existing OKE cluster OCID when `create_cluster = false`.|  string|  null|  no|
+| <a name="input_cni_type"></a> [cni\_type](#input\_cni\_type)| The CNI for the cluster: 'flannel' or 'npn'. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm>Pod Networking</a>.|  string|  "flannel"|  no|
+| <a name="input_compartment_id"></a> [compartment\_id](#input\_compartment\_id)| The compartment id where resources will be created.|  string|  null|  no|
+| <a name="input_image_id"></a> [image\_id](#input\_image\_id)| Default image for worker pools  when unspecified on a pool.|  string|  null|  no|
+| <a name="input_image_os"></a> [image\_os](#input\_image\_os)| Default worker image operating system name when worker\_image\_type = 'oke' or 'platform' and unspecified on a pool.|  string|  "Oracle Linux"|  no|
+| <a name="input_image_os_version"></a> [image\_os\_version](#input\_image\_os\_version)| Default worker image operating system version when worker\_image\_type = 'oke' or 'platform' and unspecified on a pool.|  string|  "8"|  no|
+| <a name="input_image_type"></a> [image\_type](#input\_image\_type)| Whether to use a platform, OKE, or custom image for worker nodes by default when unspecified on a pool. When custom is set, the worker\_image\_id must be specified.|  string|  "oke"|  no|
+| <a name="input_kubeproxy_mode"></a> [kubeproxy\_mode](#input\_kubeproxy\_mode)| The mode in which to run kube-proxy when unspecified on a pool.|  string|  "iptables"|  no|
+| <a name="input_kubernetes_version"></a> [kubernetes\_version](#input\_kubernetes\_version)| The version of Kubernetes used for worker nodes.|  string|  "v1.26.2"|  no|
 | <a name="input_pod_subnet_id"></a> [pod\_subnet\_id](#input\_pod\_subnet\_id)| n/a|  string|  n/a|  yes|
-| <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key)| n/a|  string|  n/a|  yes|
-| <a name="input_state_id"></a> [state\_id](#input\_state\_id)| n/a|  string|  n/a|  yes|
-| <a name="input_tag_namespace"></a> [tag\_namespace](#input\_tag\_namespace)| n/a|  string|  n/a|  yes|
-| <a name="input_tenancy_id"></a> [tenancy\_id](#input\_tenancy\_id)| n/a|  string|  n/a|  yes|
+| <a name="input_ssh_public_key"></a> [ssh\_public\_key](#input\_ssh\_public\_key)| The contents of the SSH public key file. Used to allow login for workers/bastion/operator with corresponding private key.|  string|  null|  no|
+| <a name="input_state_id"></a> [state\_id](#input\_state\_id)| Optional Terraform state\_id from an existing deployment of the module to re-use with created resources.|  string|  null|  no|
+| <a name="input_tag_namespace"></a> [tag\_namespace](#input\_tag\_namespace)| The tag namespace for standard OKE defined tags.|  string|  "oke"|  no|
+| <a name="input_tenancy_id"></a> [tenancy\_id](#input\_tenancy\_id)| The tenancy id of the OCI Cloud Account in which to create the resources.|  string|  null|  no|
 | <a name="input_timezone"></a> [timezone](#input\_timezone)| n/a|  string|  n/a|  yes|
-| <a name="input_volume_kms_key_id"></a> [volume\_kms\_key\_id](#input\_volume\_kms\_key\_id)| n/a|  string|  n/a|  yes|
-| <a name="input_worker_pool_mode"></a> [worker\_pool\_mode](#input\_worker\_pool\_mode)| Worker pools|  string|  n/a|  yes|
+| <a name="input_volume_kms_key_id"></a> [volume\_kms\_key\_id](#input\_volume\_kms\_key\_id)| The ID of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption by default when unspecified on a pool.|  string|  null|  no|
+| <a name="input_worker_pool_mode"></a> [worker\_pool\_mode](#input\_worker\_pool\_mode)| Default management mode for workers when unspecified on a pool. Only 'node-pool' is currently supported.|  string|  "node-pool"|  no|
 | <a name="input_worker_subnet_id"></a> [worker\_subnet\_id](#input\_worker\_subnet\_id)| n/a|  string|  n/a|  yes|
 
 <!-- END_TF_WORKERS -->

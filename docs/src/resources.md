@@ -58,10 +58,6 @@
 * [oci_core_instance.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance)
 * [oci_core_instance_configuration.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance_configuration)
 * [oci_core_instance_pool.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance_pool)
-* [oci_file_storage_export.fss](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/file_storage_export)
-* [oci_file_storage_export_set.fss](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/file_storage_export_set)
-* [oci_file_storage_file_system.fss](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/file_storage_file_system)
-* [oci_file_storage_mount_target.fss](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/file_storage_mount_target)
 
 <!-- END_TF_WORKERS -->
 
