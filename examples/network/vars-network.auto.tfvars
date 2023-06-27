@@ -14,14 +14,14 @@ vcn_dns_label            = "oke"           # Ignored if create_vcn = false
 vcn_name                 = "oke"           # Ignored if create_vcn = false
 
 # Subnets
-subnets = { # netnum/newbits if create = true, or id required
-  bastion  = { netnum = 18, newbits = 13, id = "" }
-  operator = { netnum = 1, newbits = 13, id = "" }
-  cp       = { netnum = 2, newbits = 13, id = "" }
-  int_lb   = { netnum = 16, newbits = 11, id = "" }
-  pub_lb   = { netnum = 17, newbits = 11, id = "" }
-  workers  = { netnum = 1, newbits = 2, id = "" }
-  pods     = { netnum = 2, newbits = 2, id = "" }
+subnets = {
+  bastion  = { newbits = 13 }
+  operator = { newbits = 13 }
+  cp       = { newbits = 13 }
+  int_lb   = { newbits = 11 }
+  pub_lb   = { newbits = 11 }
+  workers  = { newbits = 2 }
+  pods     = { newbits = 2 }
 }
 
 # Security

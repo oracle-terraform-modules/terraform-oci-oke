@@ -59,8 +59,6 @@
 ## Workers
 <!-- BEGIN_TF_WORKERS -->
 
-* **`fss_id`**&nbsp;&nbsp; 
-* **`fss_mount_target_id`**&nbsp;&nbsp; 
 * **`worker_count_expected`**&nbsp;&nbsp; # of nodes expected from created worker pools
 * **`worker_instance_ids`**&nbsp;&nbsp; Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances.
 * **`worker_pool_ids`**&nbsp;&nbsp; Created worker pool IDs

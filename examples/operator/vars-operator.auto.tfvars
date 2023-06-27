@@ -1,8 +1,6 @@
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# All configuration for operator sub-module w/ defaults
-
 create_operator                = true # *true/false
 operator_availability_domain   = null
 operator_cloud_init            = []

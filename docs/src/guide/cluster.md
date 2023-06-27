@@ -1,4 +1,4 @@
-## Cluster
+# Cluster
 
 See also:
 * [Creating a Kubernetes Cluster](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm)
@@ -16,4 +16,16 @@ The OKE parameters concern mainly the following:
  If you need to change the default services and pods' CIDRs, note the following:
 * The CIDR block you specify for the VCN *must not* overlap with the CIDR block you specify for the Kubernetes services.
 * The CIDR blocks you specify for pods running in the cluster *must not* overlap with CIDR blocks you specify for worker node and load balancer subnets.
+```
+
+## Example usage
+
+Basic cluster with defaults:
+```javascript
+{{#include ../../../examples/cluster/vars-cluster-basic.auto.tfvars:4:}}
+```
+
+Enhanced cluster with extra configuration:
+```javascript
+{{#include ../../../examples/cluster/vars-cluster-enhanced.auto.tfvars:4:}}
 ```

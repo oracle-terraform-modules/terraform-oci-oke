@@ -33,7 +33,7 @@ Finally, assign the Secret OCID to `secret_id` in terraform.tfvars. Refer to {ur
 OKE now uses Kubeconfig v2 which means the default token has a limited lifespan. In order to allow CI/CD tools to deploy to OKE, a service account must be created.
 
 Set the *create_service_account = true* and you can name the other parameters as appropriate:
-```
+```properties
 create_service_account = true
 service_account_name = "kubeconfigsa"
 service_account_namespace = "kube-system"
