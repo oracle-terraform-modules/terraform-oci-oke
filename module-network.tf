@@ -112,7 +112,6 @@ module "network" {
   control_plane_is_public      = var.control_plane_is_public
   create_cluster               = var.create_cluster
   create_bastion               = var.create_bastion
-  create_fss                   = var.create_fss
   nsgs                         = var.nsgs
   create_operator              = local.operator_enabled
   drg_attachments              = var.drg_attachments
