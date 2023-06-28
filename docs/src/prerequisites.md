@@ -1,17 +1,19 @@
+[uri-terraform-install]: https://developer.hashicorp.com/terraform/tutorials/oci-get-started/install-cli
 # Prerequisites
 
 This section will guide you through the prerequisites before you can use this project.
 
 ## Identity and Access Management Rights
 
-The Terraform user must have the permission to:
+The Terraform user must have the following permissions to:
+
 * MANAGE dynamic groups (instance_principal and KMS integration)
 * MANAGE cluster-family in compartment
 * MANAGE virtual-network-family in compartment
 * MANAGE instance-family in compartment
 
 ## Install Terraform
-Start by installing Terraform and configuring your path.
+[Start by installing Terraform][uri-terraform-install] and configuring your path.
 
 ### Download Terraform
 1. Open your browser and navigate to the [Terraform download page](https://www.terraform.io/downloads.html). You need version 1.0.0+.
