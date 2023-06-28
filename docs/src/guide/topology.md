@@ -14,59 +14,69 @@ The following resources are created by default:
 * 1 public Kubernetes Cluster with private worker nodes
 * 1 Network Security Group (NSG) for each of control plane, workers and load balancers
 
-****
-**Important:** The Kubernetes Control Plane Nodes run in Oracle's tenancy and are not shown here.
+```admonish notice
+The Kubernetes Control Plane Nodes run in Oracle's tenancy and are not shown here.
 
-Although the recommended approach is to now deploy private clusters, *we are currently keeping the default setting to public*. This is to give our users the time to adjust other configurations e.g. their CI/CD tools etc.
-****
+Although the recommended approach is to now deploy private clusters,***we are currently keeping the default setting to public***. This is to give our users the time to adjust other configurations e.g. their CI/CD tools.
+```
 
 The Load Balancers are only created when Kubernetes services of type *LoadBalancer* are deployed or you manually create Load Balancers yourself.
 
-**Multi-AD Default Deployment:**
+The diagrams below depicts the default deployment in multi-AD regions:
 
-![](../images/defaultmad.png)
+[ ![](../images/defaultmad.png) ](../images/defaultmad-large.svg)
+*Figure 1: Multi-AD Default Deployment*
 
-**Single-AD Default Deployment:**
+and single-AD regions:
 
-![](../images/defaultsad.png)
+[ ![](../images/defaultsad.svg) ](../images/defaultsad-large.svg)
+*Figure 2: Single-AD Default Deployment*
+
+```admonish notice
+The node pools above are depicted for illustration purposes only. By default, the clusters are now created without any node pools.
+```
 
 ## Networking and Gateways
 
-**Common configuration:**
-![](../images/networking.png)
+[ ![](../images/networking.svg) ](../images/networking-large.svg)
+*Figure 3: Networking and Gateways*
 
-The following resources are created:
-* 1 public regional control plane subnet
-* 1 private regional worker subnet
-* 1 public regional load balancer subnet
-* 1 public regional bastion subnet
-* 1 private regional operator subnet
+The following subnets are created *by default*:
+
+* 1 public regional control plane subnet: this subnet hosts an endpoint for the Kubernetes API server publicly accessible from the Internet. Typically, only 1 IP address is sufficient if you intend to host only 1 OKE cluster in this VCN. However, if you intend to host many OKE or Kubernetes clusters in this VCN and you intend to reuse the same subnets, you need to increase the default size of this subnet.
+* 1 private regional worker subnet: this subnet hosts the worker nodes where your workloads will be running. By default, they are private. If you need admin access to the worker nodes e.g. SSH, you'll need to enable and use either the bastion host or the OCI Bastion Service.
+* 1 public regional load balancer subnet: this subnet hosts your OCI Load Balancer which acts as a network ingress point into your OKE cluster.
+* 1 public regional bastion subnet: this subnet hosts an optional bastion host. See additional documentation on the purpose of the bastion host. 
+* 1 private regional operator subnet: this subnet hosts an optional operator host that is used for admin purposes. See additional documentation on the purpose of the operator host
+
+```admonish warning
+Do not confuse the bastion host with the OCI Bastion Service.
+```
 
 The bastion subnet is regional i.e. in multi-AD regions, the subnet spans all Availability Domains. By default, the bastion subnet is assigned a CIDR of `10.0.0.0/29` giving a maximum possible of 5 assignable IP addresses in the bastion subnet.
 
-The workers subnet has a CIDR of `10.0.64.0/18` assigned by default. This gives the subnet a maximum possible of 16381 IP addresses. This is enough to scale the cluster to the maximum number of worker nodes (1000) currently allowed by Oracle Container Engine.
+The workers subnet has a CIDR of `10.0.16.0/20` assigned by default. This gives the subnet a maximum possible of 4094 IP addresses. This is enough to scale the cluster to the maximum number of worker nodes (2000) currently allowed by Oracle Container Engine.
 
 The load balancer subnets are of 2 types:
 * public
 * private
 
-By default, only the the public load balancer subnet is created. See link:#public-and-internal-load-balancers[Public and Internal Load Balancers] for more details. The private load balancer subnet has a CIDR of `10.0.2.0/27` whereas the public load balancer subnet has a CIDR of `10.0.2.32/27` assigned by default. This allows both subnets to assign a maximum of 29 IP addresses and therefore 9 load balancers can be created in each. You can control the size of your subnets and have more load balancers if required by adjusting the newbit and netnum values for the `subnets` parameter.
+By default, only the the public load balancer subnet is created. See [Public and Internal Load Balancers](#public-vs-internal-load-balancers) for more details. The private load balancer subnet has a CIDR of `10.0.2.0/27` whereas the public load balancer subnet has a CIDR of `10.0.2.32/27` assigned by default. This allows both subnets to assign a maximum of 29 IP addresses and therefore 9 load balancers can be created in each. You can control the size of your subnets and have more load balancers if required by adjusting the newbit and netnum values for the `subnets` parameter.
 
-The `subnets` parameter govern the boundaries of the subnets. If you need to change the default values, refer to this project's link:terraformoptions.adoc#oci-networking[Networking Documentation] to see how. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
+The `subnets` parameter govern the boundaries and sizes of the subnets. If you need to change the default values, refer to the [Networking Documentation](./network_subnets.html#create-new-subnets-forced) to see how. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
 * [Erik Berg on Networks, Subnets and CIDR](https://erikberg.com/notes/networks.html)
 * [Terraform cidrsubnet documentation](https://www.terraform.io/docs/configuration/functions/cidrsubnet.html)
 
-Additionally, the following gateways are created:
+The following gateways are also created:
 
-* Internet Gateway (required if application is public facing or bastion host is used)
-* NAT Gateway if deployed in link:#public-vs-private-worker-nodes[private mode]
-* Service Gateway
+* Internet Gateway: this is required if the application is public-facing or a public bastion host is used
+* NAT Gateway if deployed in [private mode](#public-vs-private-worker-nodes)
+* Service Gateway: this is required for connectivity between worker nodes and the control plane
 
-The Service Gateway enables OCI cloud resources without public IP addresses to privately access Oracle services and without the traffic going over the public Internet. Refer to the [OCI Service Gateway documentation](https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/servicegateway.htm) to understand whether you need to enable it.
+The Service Gateway also allows OCI cloud resources without public IP addresses to privately access Oracle services and without the traffic going over the public Internet. Refer to the [OCI Service Gateway documentation](https://docs.cloud.oracle.com/iaas/Content/Network/Tasks/servicegateway.htm) to understand whether you need to enable it.
 
 ## Bastion Host
 
-SSH to Bastion
 ![](../images/bastion.png)
 
 The bastion host is created in a public regional subnet. You can create or destroy it anytime with no effect on the Kubernetes cluster by setting the `create_bastion_host = true` in your variable file. You can also turn it on or off by changing the `bastion_state` to `RUNNING` or `STOPPED` respectively.
@@ -88,8 +98,9 @@ To SSH to the worker nodes, you can do the following:
 ssh -i /path/to/private_key -J <username>@bastion_ip opc@worker_node_private_ip
 ```
 
-****
-**Note:** If your private ssh key has a different name or path than the default `~/.ssh/id_*` e.g `~/.ssh/dev_rsa`, you will need to add the private key to your ssh agent:
+```admonish tip
+**Note:** If your private ssh key has a different name or path than the default `~/.ssh/id_*` e.g `~/.ssh/dev_rsa`, you will need to add the private key to your ssh agent.
+```
 
 ```shell
 eval $(ssh-agent -s)
