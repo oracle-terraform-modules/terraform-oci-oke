@@ -55,10 +55,6 @@ module "bastion" {
     "state_id" = var.state_id,
     "role"     = "bastion",
   }, local.bastion_freeform_tags)
-
-  providers = {
-    oci.home = oci.home
-  }
 }
 
 output "bastion_id" {
