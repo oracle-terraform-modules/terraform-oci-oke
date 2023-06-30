@@ -1,9 +1,9 @@
 # Summary
-- [Getting started](./intro.md)
-  - [Introduction](./intro.md)
-  - [Prerequisites](./prerequisites.md)
+[Introduction](./gs/intro.md)
+- [Getting started](./gs/gs.md)
+  - [Prerequisites](./gs/prerequisites.md)
   - [Quickstart](./guide/deploy.md)
-- [User Guide](./intro.md)
+- [User Guide](./guide/ug.md)
   - [Topology](./guide/topology.md)
   - [Identity](./guide/identity.md)
     - [Policies](./guide/identity_policies.md)
