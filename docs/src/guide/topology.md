@@ -64,7 +64,7 @@ The load balancer subnets are of 2 types:
 
 By default, only the public load balancer subnet is created. See [Public and Internal Load Balancers](#public-vs-internal-load-balancers) for more details. The private load balancer subnet has a CIDR of `10.0.32.0/27` whereas the public load balancer subnet has a CIDR of `10.0.128.0/27` assigned by default. This allows both subnets to assign a maximum of 29 IP addresses and therefore 9 load balancers can be created in each. You can control the size of your subnets and have more load balancers if required by adjusting the newbit and netnum values for the `subnets` parameter.
 
-The `subnets` parameter govern the boundaries and sizes of the subnets. If you need to change the default values, refer to the [Networking Documentation](./network_subnets.html#create-new-subnets-forced) to see how. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
+The `subnets` parameter govern the boundaries and sizes of the subnets. If you need to change the default values, refer to the [Networking Documentation](./network_subnets.md#create-new-subnets-forced) to see how. We recommend working with your network administrator to design your network. The following additional documentation is useful in designing your network:
 * [Erik Berg on Networks, Subnets and CIDR](https://erikberg.com/notes/networks.html)
 * [Terraform cidrsubnet documentation](https://www.terraform.io/docs/configuration/functions/cidrsubnet.html)
 
@@ -104,7 +104,7 @@ ssh -i /path/to/private_key -J <username>@bastion_ip opc@worker_node_private_ip
 ```
 
 ```admonish tip
-If your private ssh key has a different name or path than the default `~/.ssh/id_*` that ssh expects e.g if your private is `~/.ssh/dev_rsa`, you will need to add the private key to your ssh agent:
+If your private ssh key has a different name or path than the default `~/.ssh/id_*` that ssh expects e.g if your private key is `~/.ssh/dev_rsa`, you must add it to your ssh agent:
 ```
 
 ```shell
@@ -143,32 +143,95 @@ The following table maps all possible cluster and workers deployment combination
 | worker_type=private   |    X     |    X      |
 
 ```admonish important
-Private clusters and workers are recommended.
+We strongly recommend you use private clusters.
 ```
 
 ## Public vs Private worker nodes
 
-### Public
+### Public workers
 
-![](../images/publicworkers.png)
+[ ![](../images/publicworkers.svg) ](../images/publicworkers-large.svg)
+*Figure 6: Deploying public workers*
 
 
 When deployed in public mode, all worker subnets will be deployed as public subnets and route to the Internet Gateway directly. Worker nodes will have both private and public IP addresses. Their private IP addresses will be from the range of the worker subnet they are part of whereas the public IP addresses will be allocated from Oracle's pool of public IP addresses.
 
-NodePort and SSH access need to be explicitly enabled in order for the security rules to be properly configured and allow NodePort access.
+If you intend to use Kubernetes NodePort services on your public workers or SSH to them, you must explicitly enable these in order for the security rules to be properly configured and allow access:
 
 ```
 allow_node_port_access  = true
 allow_worker_ssh_access = true
 ```
 
-### Private
+```admonish danger
+Because of the increased attack surface area, we ***do not*** recommend running your worker nodes publicly. However, there are some valid use cases for these and you have the option to make this choice.
+```
 
-![](../images/privateworkers.png)
+### Private workers
 
-When deployed in private mode, the worker subnet will be deployed as a private subnet and route to the NAT Gateway instead. 
+[ ![](../images/privateworkers.svg) ](../images/privateworkers-large.svg)
+*Figure 7: Deploying public workers*
 
-Additionally, ssh access to the worker nodes *_must_* be done through the bastion host regardless of whether the worker nodes are deployed in public or private mode. If you intend to ssh to your worker nodes, ensure you have also link:terraformoptions.adoc#bastion-host[enabled the creation of the bastion host].
+When deployed in private mode, the worker subnet will be deployed as a private subnet and route to the NAT Gateway instead. This considerably reduces the surface attack area and improves the security posture of your OKE cluster as well as the rest of your infrastructure.
+
+```admonish tip
+We ***strongly*** recommend you run your worker nodes in private mode.
+```
+
+Irrespective of whether you run your worker nodes publicly or privately, if you ssh to them, you must do so through the bastion host or the OCI Bastion Service. Ensure you have enabled the [bastion host](./bastion.md#example-usage).
+
+## Public vs. Internal Load Balancers
+
+By default, public load balancers are created when you deploy services of type `LoadBalancer`. Public load balancers have public IP addresses. You can also use internal load balancers. Internal load balancers have only private IP addresses and are not accessible from the Internet. 
+
+The following parameters govern the creation of load balancers:
+* `load_balancers`
+* `preferred_load_balancer`
+
+The table below shows the valid combinations of preferred_load_balancer and subnet_type values.
+
+**TODO**
+
+### Using Public Load Balancers
+
+When creating a public load balancer, you *_must_* specify the list of NSGs using annotations e.g.:
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: acme-website
+  annotations:
+    oci.oraclecloud.com/oci-network-security-groups: "ocid1.networksecuritygroup...."
+    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "None"
+spec:
+  type: LoadBalancer
+  ....
+```
+
+```admonish note
+Since we have already added the NodePort range to the public load balancer NSG, you can also disable the security list management and set its value to `"None"`.
+```
+
+### Using Internal Load Balancers
+
+When creating an internal load balancer, you must ensure the following:
+* `load_balancers` is set to `both` or `internal`.
+
+You can also set the `preferred_load_balancer` to `internal` so if you happen to use both, the cluster will preference the internal load balancer subnets instead.
+
+![](../images/privatelbs.png)
+
+Note that even if you set the `preferred_load_balancer` to `internal`, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient e.g.:
+```yaml
+service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+```
+
+Refer to [OCI Documentation](https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengcreatingloadbalancer.htm#CreatingInternalLoadBalancersinPublicandPrivateSubnets) for further guidance on internal load balancers.
+
+### Creating LoadBalancers using IngressControllers
+
+Refer to _Experimenting with Ingress Controllers on Oracle Container Engine (OKE)_ [Part 1](https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-1-5af51e6cdb85) & [Part 2](https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-2-96063927d2e6) for additional information.
 
 ## Managing Workers Pools
 
@@ -308,54 +371,4 @@ When a node pool is created, the worker nodes are spread over all three fault do
 
 ![](../images/defaultsad.png)
 
-## Public vs. Internal Load Balancers
 
-By default, public load balancers are created when you deploy services of type `LoadBalancer`. Public load balancers have public IP addresses. You can also use internal load balancers. Internal load balancers have only private IP addresses and are not accessible from the Internet. 
-
-The following parameters govern the creation of load balancers:
-* `load_balancers`
-* `preferred_load_balancer`
-
-The table below shows the valid combinations of preferred_load_balancer and subnet_type values.
-
-**TODO**
-
-### Using Public Load Balancers
-
-When creating a public load balancer, you *_must_* specify the list of NSGs using annotations e.g.:
-
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: acme-website
-  annotations:
-    oci.oraclecloud.com/oci-network-security-groups: "ocid1.networksecuritygroup...."
-    service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "None"
-spec:
-  type: LoadBalancer
-  ....
-```
-
-Note that since we have already added the NodePort range to the public load balancer NSG, you can also disable the security list management and set its value to `"None"`.
-
-### Using Internal Load Balancers
-
-When creating an internal load balancer, you must ensure the following:
-* `load_balancers` is set to `both` or `internal`.
-
-You can also set the `preferred_load_balancer` to `internal` so if you happen to use both, the cluster will preference the internal load balancer subnets instead.
-
-![](../images/privatelbs.png)
-
-
-Note that even if you set the `preferred_load_balancer` to `internal`, you still need to set the correct {uri-oci-loadbalancer-annotations}[annotations] when creating internal load balancers. Just setting the subnet to be private is *_not_* sufficient e.g.:
-```yaml
-service.beta.kubernetes.io/oci-load-balancer-internal: "true"
-```
-
-Refer to [OCI Documentation](https://docs.cloud.oracle.com/iaas/Content/ContEng/Tasks/contengcreatingloadbalancer.htm#CreatingInternalLoadBalancersinPublicandPrivateSubnets) for further guidance on internal load balancers.
-
-### Creating LoadBalancers using IngressControllers
-
-Refer to _Experimenting with Ingress Controllers on Oracle Container Engine (OKE)_ [Part 1](https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-1-5af51e6cdb85) & [Part 2](https://medium.com/oracledevs/experimenting-with-ingress-controllers-on-oracle-container-engine-oke-part-2-96063927d2e6) for additional information.
