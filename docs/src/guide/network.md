@@ -6,14 +6,16 @@ Optional creation of VCN subnets, Network Security Groups, NSG Rules, and more.
 
 ### Create Minimal Network Resources
 
+**TODO**: ../../../examples/network/vars-network-only-minimal.auto.tfvars
+
 ```javascript
-{{#include ../../../examples/network/vars-network-only-minimal.auto.tfvars:4:}}
+{{#include ../../../examples/network/vars-network.auto.tfvars:4:15:}}
 ```
 
 ### Create Common Network Resources
 
 ```javascript
-{{#include ../../../examples/network/vars-network-only-common.auto.tfvars:4:}}
+{{#include ../../examples/network/vars-network-only-common.auto.tfvars:4:}}
 ```
 
 ## References
