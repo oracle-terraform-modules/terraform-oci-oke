@@ -17,6 +17,10 @@ This module automates the provisioning of an [OKE][uri-oci-oke] cluster.
 The documentation here is for 5.x **only**. The documentation for earlier versions can be found on the [GitHub repo][uri-terraform-oci-oke].
 ```
 
+```admonish warning
+The documentation here is currently being reorganised.
+```
+
 ## News
 
 ***
