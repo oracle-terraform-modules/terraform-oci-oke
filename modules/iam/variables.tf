@@ -7,6 +7,7 @@ variable "compartment_id" { type = string }
 variable "state_id" { type = string }
 variable "tenancy_id" { type = string }
 variable "worker_compartments" { type = list(string) }
+variable "identity_domain_name" { type = string }
 
 # Tags
 variable "create_iam_defined_tags" { type = bool }

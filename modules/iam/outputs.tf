@@ -3,12 +3,17 @@
 
 output "dynamic_group_ids" {
   description = "Cluster IAM dynamic group IDs"
-  value = local.has_policy_statements ? compact([
-    one(oci_identity_dynamic_group.cluster[*].id),
-    one(oci_identity_dynamic_group.workers[*].id),
-    one(oci_identity_dynamic_group.autoscaling[*].id),
-    one(oci_identity_dynamic_group.operator[*].id),
-  ]) : null
+  value = local.has_policy_statements && local.isDefaultIdentityDomain ? compact([
+      one(oci_identity_dynamic_group.cluster[*].id),
+      one(oci_identity_dynamic_group.workers[*].id),
+      one(oci_identity_dynamic_group.autoscaling[*].id),
+      one(oci_identity_dynamic_group.operator[*].id),
+    ]) : local.has_policy_statements && !local.isDefaultIdentityDomain ? compact([
+      one(oci_identity_domains_dynamic_resource_group.cluster[*].id),
+      one(oci_identity_domains_dynamic_resource_group.workers[*].id),
+      one(oci_identity_domains_dynamic_resource_group.autoscaling[*].id),
+      one(oci_identity_domains_dynamic_resource_group.operator[*].id),
+    ]) : null
 }
 
 output "policy_statements" {

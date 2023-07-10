@@ -15,26 +15,26 @@ locals {
   ])) : local.autoscaler_compartment_rule
 
   autoscaler_templates = [
-    "Allow dynamic-group %v to manage cluster-node-pools in compartment id %v",
-    "Allow dynamic-group %v to manage compute-management-family in compartment id %v",
-    "Allow dynamic-group %v to manage instance-family in compartment id %v",
-    "Allow dynamic-group %v to manage volume-family in compartment id %v",
-    "Allow dynamic-group %v to use subnets in compartment id %v",
-    "Allow dynamic-group %v to read virtual-network-family in compartment id %v",
-    "Allow dynamic-group %v to use vnics in compartment id %v",
-    "Allow dynamic-group %v to inspect compartments in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to manage cluster-node-pools in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to manage compute-management-family in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to manage instance-family in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to manage volume-family in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to use subnets in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to read virtual-network-family in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to use vnics in compartment id %v",
+    "Allow dynamic-group '%v'/'%v' to inspect compartments in compartment id %v",
   ]
 
   autoscaler_policy_statements = var.create_iam_autoscaler_policy ? tolist([
     for statement in local.autoscaler_templates : formatlist(statement,
-      local.autoscaler_group_name, local.worker_compartments,
+      local.identity_domain_name, local.autoscaler_group_name, local.worker_compartments,
     )
   ]) : []
 }
 
 resource "oci_identity_dynamic_group" "autoscaling" {
   provider       = oci.home
-  count          = var.create_iam_resources && var.create_iam_autoscaler_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_autoscaler_policy && local.isDefaultIdentityDomain ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = format("Dynamic group of cluster autoscaler-capable worker nodes for OKE Terraform state %v", var.state_id)
   matching_rule  = local.autoscaler_group_rules
@@ -44,4 +44,19 @@ resource "oci_identity_dynamic_group" "autoscaling" {
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
   }
+}
+
+resource "oci_identity_domains_dynamic_resource_group" "autoscaling" {
+  provider      = oci.home
+  count         = var.create_iam_resources && var.create_iam_autoscaler_policy && !local.isDefaultIdentityDomain ? 1 : 0
+  #Optional
+  description   = format("Dynamic group of cluster autoscaler-capable worker nodes for OKE Terraform state %v", var.state_id)
+  #Required
+  matching_rule = local.autoscaler_group_rules
+  display_name  = local.autoscaler_group_name
+  idcs_endpoint = data.oci_identity_domains.domains[0].domains[0]["url"]
+  schemas = [
+    "urn:ietf:params:scim:schemas:oracle:idcs:DynamicResourceGroup",
+    "urn:ietf:params:scim:schemas:oracle:idcs:extension:OCITags"
+  ]
 }
