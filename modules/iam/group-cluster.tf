@@ -19,7 +19,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "cluster" {
   provider       = oci.home
-  count          = var.create_iam_resources && var.create_iam_kms_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_kms_policy && local.isDefaultIdentityDomain ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = format("Dynamic group with cluster for OKE Terraform state %v", var.state_id)
   matching_rule  = local.cluster_rule
@@ -29,4 +29,19 @@ resource "oci_identity_dynamic_group" "cluster" {
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
   }
+}
+
+resource "oci_identity_domains_dynamic_resource_group" "cluster" {
+  provider      = oci.home
+  count         = var.create_iam_resources && var.create_iam_kms_policy && !local.isDefaultIdentityDomain ? 1 : 0
+  #Optional
+  description   = format("Dynamic group with cluster for OKE Terraform state %v", var.state_id)
+  #Required
+  matching_rule = local.cluster_rule
+  display_name  = local.cluster_group_name
+  idcs_endpoint = data.oci_identity_domains.domains[0].domains[0]["url"]
+  schemas = [
+    "urn:ietf:params:scim:schemas:oracle:idcs:DynamicResourceGroup",
+    "urn:ietf:params:scim:schemas:oracle:idcs:extension:OCITags"
+  ]
 }

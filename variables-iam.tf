@@ -3,6 +3,8 @@
 
 locals {
   tenancy_id            = coalesce(var.tenancy_id, var.tenancy_ocid, "unknown")
+  iam_compartment_id    = coalesce(var.iam_compartment_id, local.tenancy_id)
+  identity_domain_name  = coalesce(var.identity_domain_name, "Default")
   compartment_id        = coalesce(var.compartment_id, var.compartment_ocid, var.tenancy_id)
   worker_compartment_id = coalesce(var.worker_compartment_id, var.compartment_id)
   user_id               = var.user_id != "" ? var.user_id : var.current_user_ocid
@@ -47,6 +49,18 @@ variable "tenancy_id" {
 variable "tenancy_ocid" {
   default     = null
   description = "A tenancy OCID automatically populated by Resource Manager."
+  type        = string
+}
+
+variable "iam_compartment_id" {
+  default     = null
+  description = "The comparment id of the parent comparment in which to create the IAM resources."
+  type        = string
+}
+
+variable "identity_domain_name" {
+  default     = null
+  description = "The Identity domain name to use. If not defined, it will use the tenancy default"
   type        = string
 }
 

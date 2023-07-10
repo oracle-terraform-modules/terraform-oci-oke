@@ -9,8 +9,8 @@ locals {
   ])) : "ALL {instance.compartment.id = '${var.compartment_id}'}"
 
   cluster_manage_statement = format(
-    "Allow dynamic-group %v to MANAGE clusters in compartment id %v",
-    local.operator_group_name, var.compartment_id,
+    "Allow dynamic-group '%v'/'%v' to MANAGE clusters in compartment id %v",
+    local.identity_domain_name ,local.operator_group_name, var.compartment_id,
   )
 
   # TODO support keys defined at worker group level
@@ -33,7 +33,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "operator" {
   provider       = oci.home
-  count          = var.create_iam_resources && var.create_iam_operator_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_operator_policy && local.isDefaultIdentityDomain ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = format("Dynamic group of operator instance(s) for OKE Terraform state %v", var.state_id)
   matching_rule  = local.operator_group_rules
@@ -43,4 +43,19 @@ resource "oci_identity_dynamic_group" "operator" {
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
   }
+}
+
+resource "oci_identity_domains_dynamic_resource_group" "operator" {
+  provider      = oci.home
+  count         = var.create_iam_resources && var.create_iam_operator_policy && !local.isDefaultIdentityDomain ? 1 : 0
+  #Optional
+  description   = format("Dynamic group of operator instance(s) for OKE Terraform state %v", var.state_id)
+  #Required
+  matching_rule = local.operator_group_rules
+  display_name  = local.operator_group_name
+  idcs_endpoint = data.oci_identity_domains.domains[0].domains[0]["url"]
+  schemas = [
+    "urn:ietf:params:scim:schemas:oracle:idcs:DynamicResourceGroup",
+    "urn:ietf:params:scim:schemas:oracle:idcs:extension:OCITags"
+  ]
 }

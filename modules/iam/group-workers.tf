@@ -43,7 +43,7 @@ locals {
 
 resource "oci_identity_dynamic_group" "workers" {
   provider       = oci.home
-  count          = var.create_iam_resources && var.create_iam_worker_policy ? 1 : 0
+  count          = var.create_iam_resources && var.create_iam_worker_policy && local.isDefaultIdentityDomain ? 1 : 0
   compartment_id = var.tenancy_id # dynamic groups exist in root compartment (tenancy)
   description    = format("Dynamic group of self-managed worker nodes for OKE Terraform state %v", var.state_id)
   matching_rule  = local.worker_group_rules
@@ -53,4 +53,19 @@ resource "oci_identity_dynamic_group" "workers" {
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
   }
+}
+
+resource "oci_identity_domains_dynamic_resource_group" "workers" {
+  provider      = oci.home
+  count         = var.create_iam_resources && var.create_iam_worker_policy && !local.isDefaultIdentityDomain ? 1 : 0
+  #Optional
+  description   = format("Dynamic group of self-managed worker nodes for OKE Terraform state %v", var.state_id)
+  #Required
+  matching_rule = local.worker_group_rules
+  display_name  = local.worker_group_name
+  idcs_endpoint = data.oci_identity_domains.domains[0].domains[0]["url"]
+  schemas = [
+    "urn:ietf:params:scim:schemas:oracle:idcs:DynamicResourceGroup",
+    "urn:ietf:params:scim:schemas:oracle:idcs:extension:OCITags"
+  ]
 }
