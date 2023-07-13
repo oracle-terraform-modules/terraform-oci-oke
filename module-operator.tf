@@ -1,8 +1,9 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-// Used to retrieve available operator images
+// Used to retrieve available operator images when enabled
 data "oci_core_images" "operator" {
+  count                    = var.create_operator ? 1 : 0
   compartment_id           = local.compartment_id
   operating_system         = var.operator_image_os
   operating_system_version = var.operator_image_os_version
@@ -10,6 +11,11 @@ data "oci_core_images" "operator" {
   state                    = "AVAILABLE"
   sort_by                  = "TIMECREATED"
   sort_order               = "DESC"
+
+  filter {
+    name   = "launch_mode"
+    values = ["NATIVE"]
+  }
 }
 
 locals {
@@ -26,10 +32,11 @@ locals {
   ])
 
   // The resolved image ID for the created operator instance
-  operator_image_id = var.create_operator ? (var.operator_image_type == "custom"
-    ? var.operator_image_id
-    : element(coalescelist(data.oci_core_images.operator.images[*].id, ["none"]), 0)
-  ) : null
+  operator_images    = one(data.oci_core_images.operator[*].images) # Data source result or null
+  operator_image_ids = local.operator_images[*].id                  # Image OCIDs from data source
+  operator_image_id = (var.operator_image_type == "custom"
+    ? var.operator_image_id : element(coalescelist(local.operator_image_ids, ["none"]), 0)
+  )
 }
 
 module "operator" {

@@ -3,6 +3,7 @@
 
 # Used to retrieve available worker node images, k8s versions, shapes...
 data "oci_containerengine_node_pool_option" "oke" {
+  count               = local.cluster_enabled ? 1 : 0
   node_pool_option_id = "all"
   compartment_id      = local.compartment_id
 }
@@ -12,10 +13,10 @@ locals {
   k8s_version_only   = substr(var.kubernetes_version, 1, local.k8s_version_length)
 
   # OKE managed node pool images
-  node_pool_images = try(data.oci_containerengine_node_pool_option.oke.sources, [])
+  node_pool_images = try(one(data.oci_containerengine_node_pool_option.oke[*].sources), [])
 
   # Parse platform/operating system information from node pool image names
-  parsed_images = {
+  parsed_images = try({
     for k, v in local.node_pool_images : v.image_id => merge(
       try(element(regexall("OKE-(?P<k8s_version>[0-9\\.]+)-(?P<build>[0-9]+)", v.source_name), 0), { k8s_version = "none" }),
       {
@@ -27,10 +28,10 @@ locals {
         source_name = v.source_name
       },
     )
-  }
+  }, {})
 
   # Create non-exclusive groupings of image IDs for intersection when selecting based on config and instance shape
-  image_ids = merge({
+  image_ids = try(merge({
     x86_64   = [for k, v in local.parsed_images : k if v.arch == "x86_64"]
     aarch64  = [for k, v in local.parsed_images : k if v.arch == "aarch64"]
     oke      = [for k, v in local.parsed_images : k if v.image_type == "oke" && v.k8s_version == local.k8s_version_only]
@@ -41,5 +42,5 @@ locals {
     # Include groups for OS name and major version
     # https://developer.hashicorp.com/terraform/language/expressions/for#grouping-results
     for k, v in local.parsed_images : format("%v %v", v.os, split(".", v.os_version)[0]) => k...
-  })
+  }), {})
 }

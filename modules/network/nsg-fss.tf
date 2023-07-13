@@ -4,11 +4,10 @@
 locals {
   fss_nsg_config = try(var.nsgs.fss, { create = "never" })
   fss_nsg_enabled = anytrue([
-    lookup(local.operator_nsg_config, "create", "auto") == "always",
+    lookup(local.fss_nsg_config, "create", "auto") == "always",
     alltrue([
-      lookup(local.operator_nsg_config, "create", "auto") == "auto",
-      !contains(keys(local.operator_nsg_config), "id"),
-      contains(keys(var.nsgs), "fss"),
+      lookup(local.fss_nsg_config, "create", "auto") == "auto",
+      coalesce(lookup(local.fss_nsg_config, "id", null), "none") == "none",
       var.create_cluster,
     ]),
   ])

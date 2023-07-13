@@ -7,7 +7,7 @@ locals {
     lookup(local.pub_lb_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.pub_lb_nsg_config, "create", "auto") == "auto",
-      !contains(keys(local.pub_lb_nsg_config), "id"),
+      coalesce(lookup(local.pub_lb_nsg_config, "id", null), "none") == "none",
       var.create_cluster, var.load_balancers == "public" || var.load_balancers == "both",
     ]),
   ])
