@@ -21,6 +21,12 @@ Subnets are created for core components managed within the module, namely:
 {{#include ../../../examples/network/vars-network-subnets-create-force.auto.tfvars:4:}}
 ```
 
+## Create new subnets (CIDR notation)
+
+```javascript
+{{#include ../../../examples/network/vars-network-subnets-create-cidr.auto.tfvars:4:}}
+```
+
 ## Use existing subnets
 
 ```javascript
