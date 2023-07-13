@@ -7,7 +7,7 @@ locals {
     lookup(local.operator_nsg_config, "create", "auto") == "always",
     alltrue([
       lookup(local.operator_nsg_config, "create", "auto") == "auto",
-      !contains(keys(local.operator_nsg_config), "id"),
+      coalesce(lookup(local.operator_nsg_config, "id", null), "none") == "none",
       var.create_cluster, var.create_operator,
     ]),
   ])
