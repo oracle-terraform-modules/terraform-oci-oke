@@ -32,13 +32,47 @@ module "oke" {
   drg_display_name            = var.drg_display_name
 
   subnets = {
-    bastion  = { create = var.bastion_subnet_create ? "always" : "never", newbits = var.bastion_subnet_newbits, id = var.bastion_subnet_id }
-    operator = { create = var.operator_subnet_create ? "always" : "never", newbits = var.operator_subnet_newbits, id = var.operator_subnet_id }
-    cp       = { create = var.control_plane_subnet_create ? "always" : "never", newbits = var.control_plane_subnet_newbits, id = var.control_plane_subnet_id }
-    int_lb   = { create = var.int_lb_subnet_create ? "always" : "never", newbits = var.int_lb_subnet_newbits, id = var.int_lb_subnet_id }
-    pub_lb   = { create = var.pub_lb_subnet_create ? "always" : "never", newbits = var.pub_lb_subnet_newbits, id = var.pub_lb_subnet_id }
-    workers  = { create = var.worker_subnet_create ? "always" : "never", newbits = var.worker_subnet_newbits, id = var.worker_subnet_id }
-    pods     = { create = var.pod_subnet_create ? "always" : "never", newbits = var.pod_subnet_newbits, id = var.pod_subnet_id }
+    bastion = {
+      create  = var.bastion_subnet_create ? "always" : "never",
+      newbits = var.bastion_subnet_newbits,
+      id      = var.bastion_subnet_id
+    }
+
+    operator = {
+      create  = var.operator_subnet_create ? "always" : "never",
+      newbits = var.operator_subnet_newbits,
+      id      = var.operator_subnet_id
+    }
+
+    cp = {
+      create  = var.control_plane_subnet_create ? "always" : "never",
+      newbits = var.control_plane_subnet_newbits,
+      id      = var.control_plane_subnet_id
+    }
+
+    int_lb = {
+      create  = var.int_lb_subnet_create ? "always" : "never",
+      newbits = var.int_lb_subnet_newbits,
+      id      = var.int_lb_subnet_id
+    }
+
+    pub_lb = {
+      create  = var.pub_lb_subnet_create ? "always" : "never",
+      newbits = var.pub_lb_subnet_newbits,
+      id      = var.pub_lb_subnet_id
+    }
+
+    workers = {
+      create  = var.worker_subnet_create ? "always" : "never",
+      newbits = var.worker_subnet_newbits,
+      id      = var.worker_subnet_id
+    }
+
+    pods = {
+      create  = var.pod_subnet_create ? "always" : "never",
+      newbits = var.pod_subnet_newbits,
+      id      = var.pod_subnet_id
+    }
   }
 
   # Network Security
