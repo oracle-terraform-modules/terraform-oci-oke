@@ -30,12 +30,39 @@ module "network_only" {
 
   # Force creation of subnets with associated components disabled
   subnets = {
-    bastion  = { create = "always", newbits = 13 }
-    operator = { create = "always", newbits = 13 }
-    cp       = { create = "always", newbits = 13 }
-    int_lb   = { create = "always", newbits = 11 }
-    pub_lb   = { create = "always", newbits = 11 }
-    workers  = { create = "always", newbits = 4 }
-    pods     = { create = "always", newbits = 2 }
+    bastion = {
+      create  = "always",
+      newbits = 13
+    }
+
+    operator = {
+      create  = "always",
+      newbits = 13
+    }
+
+    cp = {
+      create  = "always",
+      newbits = 13
+    }
+
+    int_lb = {
+      create  = "always",
+      newbits = 11
+    }
+
+    pub_lb = {
+      create  = "always",
+      newbits = 11
+    }
+
+    workers = {
+      create  = "always",
+      newbits = 4
+    }
+
+    pods = {
+      create  = "always",
+      newbits = 2
+    }
   }
 }
