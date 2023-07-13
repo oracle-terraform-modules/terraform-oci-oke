@@ -1,11 +1,17 @@
 # Copyright (c) 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+provider "oci" {
+  config_file_profile = var.config_file_profile
+  tenancy_ocid        = var.tenancy_id
+  region              = var.region
+}
+
 module "network_only" {
-  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x"
-  providers      = { oci.home = oci.home }
-  tenancy_id     = "ocid1.tenancy..."
-  compartment_id = "ocid1.compartment..."
+  source         = "../../../"
+  providers      = { oci.home = oci }
+  tenancy_id     = var.tenancy_id
+  compartment_id = var.compartment_id
 
   create_bastion  = false // *true/false
   create_cluster  = false // *true/false
