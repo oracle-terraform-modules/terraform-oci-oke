@@ -18,22 +18,46 @@ worker_pool_mode = "node-pool"
 worker_pool_size = 1
 
 worker_pools = {
-  np1 = { mode = "node-pool", size = 1, shape = "VM.Standard.E4.Flex", create = false },
+  np1 = {
+    mode   = "node-pool",
+    size   = 1,
+    shape  = "VM.Standard.E4.Flex",
+    create = false
+  },
   wg_np-vm-ol7 = {
-    description = "OKE-managed Node Pool with OKE Oracle Linux 7 image", create = false,
-    mode        = "node-pool", size = 1, size_max = 2, os = "Oracle Linux", os_version = "7", autoscale = true,
+    description = "OKE-managed Node Pool with OKE Oracle Linux 7 image",
+    create      = false,
+    mode        = "node-pool",
+    size        = 1,
+    size_max    = 2,
+    os          = "Oracle Linux",
+    os_version  = "7",
+    autoscale   = true,
   },
   wg_np-vm-ol8 = {
-    description = "OKE-managed Node Pool with OKE Oracle Linux 8 image", create = false,
-    mode        = "node-pool", size = 1, size_max = 3, os = "Oracle Linux", os_version = "8", autoscale = true,
+    description = "OKE-managed Node Pool with OKE Oracle Linux 8 image",
+    create      = false,
+    mode        = "node-pool",
+    size        = 1,
+    size_max    = 3,
+    os          = "Oracle Linux",
+    os_version  = "8",
+    autoscale   = true,
   },
   wg_np-vm-custom = {
-    description = "OKE-managed Node Pool with custom image", create = true,
-    mode        = "node-pool", image_type = "custom", size = 1, allow_autoscaler = true,
+    description      = "OKE-managed Node Pool with custom image",
+    create           = true,
+    mode             = "node-pool",
+    image_type       = "custom",
+    size             = 1,
+    allow_autoscaler = true,
   },
   shielded_instances = {
-    description = "Self-managed Shielded VM Instance", create = false,
-    size        = 1, mode = "instance", shape = "VM.Standard2.4",
+    description = "Self-managed Shielded VM Instance",
+    create      = false,
+    size        = 1,
+    mode        = "instance",
+    shape       = "VM.Standard2.4",
     platform_config = {
       is_measured_boot_enabled           = true,
       is_secure_boot_enabled             = true,

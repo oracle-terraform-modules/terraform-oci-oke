@@ -14,13 +14,15 @@ pod_nsg_ids       = [] // when cni_type = "npn"
 
 worker_pools = {
   oke-vm-custom-network-flannel = {
-    assign_public_ip = false, create = false,
+    assign_public_ip = false,
+    create           = false,
     subnet_id        = "ocid1.subnet..."
     nsg_ids          = ["ocid1.networksecuritygroup..."]
   },
 
   oke-vm-custom-network-npn = {
-    assign_public_ip = false, create = false,
+    assign_public_ip = false,
+    create           = false,
     subnet_id        = "ocid1.subnet..."
     pod_subnet_id    = "ocid1.subnet..."
     nsg_ids          = ["ocid1.networksecuritygroup..."]
@@ -28,19 +30,36 @@ worker_pools = {
   },
 
   oke-vm-vnics = {
-    mode = "instance-pool", size = 1, create = false,
+    mode   = "instance-pool",
+    size   = 1,
+    create = false,
     secondary_vnics = {
-      vnic0 = { nic_index = 0, subnet_id = "ocid1.subnet..." },
-      vnic1 = { nic_index = 1, subnet_id = "ocid1.subnet..." },
+      vnic0 = {
+        nic_index = 0,
+        subnet_id = "ocid1.subnet..."
+      },
+      vnic1 = {
+        nic_index = 1,
+        subnet_id = "ocid1.subnet..."
+      },
     },
   },
 
   oke-bm-vnics = {
-    mode          = "cluster-network", size = 2, shape = "BM.GPU.B4.8",
-    placement_ads = [1], create = false,
+    mode          = "cluster-network",
+    size          = 2,
+    shape         = "BM.GPU.B4.8",
+    placement_ads = [1],
+    create        = false,
     secondary_vnics = {
-      gpu0 = { nic_index = 0, subnet_id = "ocid1.subnet..." },
-      gpu1 = { nic_index = 1, subnet_id = "ocid1.subnet..." },
+      gpu0 = {
+        nic_index = 0,
+        subnet_id = "ocid1.subnet..."
+      },
+      gpu1 = {
+        nic_index = 1,
+        subnet_id = "ocid1.subnet..."
+      },
     },
   },
 }
