@@ -8,25 +8,34 @@ worker_pools = {
   oke-vm-standard = {},
 
   oke-vm-standard-large = {
-    size   = 1, shape = "VM.Standard.E4.Flex",
-    ocpus  = 8, memory = 128, boot_volume_size = 200,
-    create = false,
+    size             = 1,
+    shape            = "VM.Standard.E4.Flex",
+    ocpus            = 8,
+    memory           = 128,
+    boot_volume_size = 200,
+    create           = false,
   },
 
   oke-vm-standard-ol7 = {
     description = "OKE-managed Node Pool with OKE Oracle Linux 7 image",
-    size        = 1, os = "Oracle Linux", os_version = "7",
+    size        = 1,
+    os          = "Oracle Linux",
+    os_version  = "7",
     create      = false,
   },
 
   oke-vm-standard-ol8 = {
     description = "OKE-managed Node Pool with OKE Oracle Linux 8 image",
-    size        = 1, os = "Oracle Linux", os_version = "8",
+    size        = 1,
+    os          = "Oracle Linux",
+    os_version  = "8",
   },
 
   oke-vm-standard-custom = {
     description = "OKE-managed Node Pool with custom image",
-    image_type  = "custom", image_id = "ocid1.image...", size = 1,
+    image_type  = "custom",
+    image_id    = "ocid1.image...",
+    size        = 1,
     create      = false,
   },
 }
