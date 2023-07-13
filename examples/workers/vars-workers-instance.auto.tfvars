@@ -4,8 +4,12 @@
 worker_pools = {
   oke-vm-instance = {
     description = "Self-managed Instances",
-    mode        = "instance", size = 1,
-    node_labels = { "keya" : "valuea", "keyb" : "valueb" },
+    mode        = "instance",
+    size        = 1,
+    node_labels = {
+      "keya" = "valuea",
+      "keyb" = "valueb"
+    },
     secondary_vnics = {
       "vnic-display-name" = {},
     },

@@ -6,7 +6,8 @@ worker_pool_size = 1
 
 worker_pools = {
   oke-vm-active = {
-    description = "Node pool with active workers", size = 2,
+    description = "Node pool with active workers",
+    size        = 2,
   },
   oke-vm-draining = {
     description = "Node pool with scheduling disabled and draining",

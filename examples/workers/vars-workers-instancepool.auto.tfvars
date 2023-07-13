@@ -4,8 +4,12 @@
 worker_pools = {
   oke-vm-instance-pool = {
     description = "Self-managed Instance Pool with custom image",
-    mode        = "instance-pool", size = 1,
-    node_labels = { "keya" : "valuea", "keyb" : "valueb" },
+    mode        = "instance-pool",
+    size        = 1,
+    node_labels = {
+      "keya" = "valuea",
+      "keyb" = "valueb"
+    },
     secondary_vnics = {
       "vnic-display-name" = {},
     },
