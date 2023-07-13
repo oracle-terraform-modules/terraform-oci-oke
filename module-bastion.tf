@@ -1,8 +1,9 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-// Used to retrieve available bastion images
+// Used to retrieve available bastion images when enabled
 data "oci_core_images" "bastion" {
+  count                    = var.create_bastion ? 1 : 0
   compartment_id           = local.compartment_id
   operating_system         = var.bastion_image_os
   operating_system_version = var.bastion_image_os_version
@@ -10,6 +11,11 @@ data "oci_core_images" "bastion" {
   state                    = "AVAILABLE"
   sort_by                  = "TIMECREATED"
   sort_order               = "DESC"
+
+  filter {
+    name   = "launch_mode"
+    values = ["NATIVE"]
+  }
 }
 
 locals {
@@ -18,8 +24,10 @@ locals {
     : var.bastion_public_ip
   )
 
+  bastion_images    = one(data.oci_core_images.bastion[*].images) # Data source result or null
+  bastion_image_ids = local.bastion_images[*].id                  # Image OCIDs from data source
   bastion_image_id = (var.bastion_image_type == "custom"
-    ? var.bastion_image_id : element(coalescelist(data.oci_core_images.bastion.images[*].id, ["none"]), 0)
+    ? var.bastion_image_id : element(coalescelist(local.bastion_image_ids, ["none"]), 0)
   )
 }
 
