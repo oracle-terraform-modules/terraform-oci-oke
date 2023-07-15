@@ -3,6 +3,7 @@
 
 locals {
   worker_count_expected = coalesce(one(module.workers[*].worker_count_expected), 0)
+  worker_drain_expected = coalesce(one(module.workers[*].worker_drain_expected), 0)
 
   # Distinct list of compartments for enabled worker pools
   worker_compartments = distinct(compact([

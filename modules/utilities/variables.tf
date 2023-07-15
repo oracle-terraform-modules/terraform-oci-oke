@@ -22,6 +22,10 @@ variable "ocir_secret_name" { type = string }
 variable "ocir_secret_namespace" { type = string }
 variable "ocir_username" { type = string }
 
-# Node readiness check
+# Node readiness check, drain
 variable "await_node_readiness" { type = string }
+variable "expected_drain_count" { type = number }
 variable "expected_node_count" { type = number }
+variable "worker_drain_ignore_daemonsets" { type = bool }
+variable "worker_drain_delete_local_data" { type = bool }
+variable "worker_drain_timeout_seconds" { type = number }

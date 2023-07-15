@@ -138,7 +138,12 @@ locals {
 
   # Number of nodes expected from enabled worker pools
   expected_node_count = length(local.enabled_worker_pools) == 0 ? 0 : sum([
-    for k, v in local.enabled_worker_pools : lookup(v, "size", 0)
+    for k, v in local.enabled_worker_pools : lookup(v, "size", var.worker_pool_size)
+  ])
+
+  # Number of nodes expected to be draining in worker pools
+  expected_drain_count = length(local.enabled_worker_pools) == 0 ? 0 : sum([
+    for k, v in local.enabled_worker_pools : tobool(v.drain) ? lookup(v, "size", var.worker_pool_size) : 0
   ])
 
   # Enabled worker_pool map entries for node pools

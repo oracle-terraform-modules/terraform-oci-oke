@@ -43,3 +43,23 @@ variable "ocir_username" {
   description = "A username with access to the OCI Vault secret for OCIR access. Required when 'ocir_secret_id' is provided."
   type        = string
 }
+
+# Worker pool draining
+
+variable "worker_drain_ignore_daemonsets" {
+  default     = true
+  description = "Whether to ignore DaemonSet-managed Pods when draining worker pools. See <a href=https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#drain>kubectl drain</a> for more information."
+  type        = bool
+}
+
+variable "worker_drain_delete_local_data" {
+  default     = true
+  description = "Whether to accept removal of data stored locally on draining worker pools. See <a href=https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#drain>kubectl drain</a> for more information."
+  type        = bool
+}
+
+variable "worker_drain_timeout_seconds" {
+  default     = 900
+  description = "The length of time to wait before giving up on draining nodes in a pool. See <a href=https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#drain>kubectl drain</a> for more information."
+  type        = number
+}
