@@ -25,7 +25,9 @@ module "utilities" {
   ocir_secret_namespace = var.ocir_secret_namespace
   ocir_username         = var.ocir_username
 
-  providers = {
-    oci.home = oci.home
-  }
+  # Worker pool draining
+  expected_drain_count           = local.worker_drain_expected
+  worker_drain_delete_local_data = var.worker_drain_delete_local_data
+  worker_drain_ignore_daemonsets = var.worker_drain_ignore_daemonsets
+  worker_drain_timeout_seconds   = var.worker_drain_timeout_seconds
 }

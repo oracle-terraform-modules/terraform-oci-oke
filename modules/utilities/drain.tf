@@ -2,16 +2,28 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  drain_enabled = var.expected_node_count > 0 && var.worker_pools != null
-  worker_pools_draining = (local.drain_enabled
-    ? { for k, v in var.worker_pools : k => v if tobool(lookup(v, "drain", false)) } : {}
+  drain_enabled = var.expected_drain_count > 0
+  drain_pools = (local.drain_enabled
+    ? tolist([for k, v in var.worker_pools : k if tobool(lookup(v, "drain", false))]) : []
+  )
+
+  drain_commands = formatlist(
+    format(
+      "kubectl drain %v %v %v %v",
+      format("--timeout=%vs", var.worker_drain_timeout_seconds),
+      format("--ignore-daemonsets=%v", var.worker_drain_ignore_daemonsets),
+      format("--delete-emptydir-data=%v", var.worker_drain_delete_local_data),
+      "-l oke.oraclecloud.com/pool.name=%v" # interpolation deferred to formatlist
+    ),
+    local.drain_pools
   )
 }
 
 resource "null_resource" "drain_workers" {
   count = local.drain_enabled ? 1 : 0
   triggers = {
-    drain_workers = jsonencode(sort(keys(local.worker_pools_draining)))
+    drain_pools    = jsonencode(sort(local.drain_pools))
+    drain_commands = jsonencode(local.drain_commands)
   }
 
   connection {
@@ -26,9 +38,6 @@ resource "null_resource" "drain_workers" {
   }
 
   provisioner "remote-exec" {
-    inline = [
-      "echo kubectl get nodes ...",             # TODO List nodes by label for draining pools
-      "echo kubectl drain --ignore-daemonsets", # TODO Drain nodes for draining pools
-    ]
+    inline = local.drain_commands
   }
 }

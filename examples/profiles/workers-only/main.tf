@@ -15,6 +15,7 @@ module "workers_only" {
   vcn_id              = var.vcn_id
   bastion_public_ip   = var.bastion_public_ip
   cluster_id          = var.cluster_id
+  operator_private_ip = var.operator_private_ip
   ssh_public_key_path = var.ssh_public_key_path
 
   create_vcn      = false

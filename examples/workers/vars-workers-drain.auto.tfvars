@@ -4,6 +4,10 @@
 worker_pool_mode = "node-pool"
 worker_pool_size = 1
 
+worker_drain_ignore_daemonsets = true
+worker_drain_delete_local_data = true
+worker_drain_timeout_seconds   = 900
+
 worker_pools = {
   oke-vm-active = {
     description = "Node pool with active workers",
