@@ -1,8 +1,6 @@
 # Workers / Mode: Instance Pool
 
-<table>
 {{#include ./rms_instancepool.md}}
-</table>
 
 ## Usage
 

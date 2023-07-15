@@ -35,6 +35,7 @@ module "workers" {
   cluster_ca_cert        = local.cluster_ca_cert
   cluster_dns            = var.cluster_dns
   cluster_id             = coalesce(var.cluster_id, one(module.cluster[*].cluster_id))
+  cluster_type           = var.cluster_type
   kubernetes_version     = var.kubernetes_version
 
   # Worker pools

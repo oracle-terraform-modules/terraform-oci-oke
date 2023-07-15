@@ -11,7 +11,10 @@ locals {
 
 # https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html
 data "cloudinit_config" "workers" {
-  for_each      = local.enabled_worker_pools
+  for_each = { # Skip generation for mode = virtual-node-pool
+    for k, v in local.enabled_worker_pools : k => v
+    if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool"
+  }
   gzip          = true
   base64_encode = true
 

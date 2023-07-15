@@ -1,8 +1,6 @@
 # Workers / Mode: Node Pool
 
-<table>
 {{#include ./rms_nodepool.md}}
-</table>
 
 ## Usage
 

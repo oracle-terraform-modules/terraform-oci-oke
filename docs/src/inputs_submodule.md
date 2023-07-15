@@ -155,6 +155,7 @@ Sub-modules currently use a sparse definition of inputs required from the root:
 | <a name="input_cluster_ca_cert"></a> [cluster\_ca\_cert](#input\_cluster\_ca\_cert)| Base64+PEM-encoded cluster CA certificate for unmanaged instance pools. Determined automatically when 'create\_cluster' = true or 'cluster\_id' is provided.|  string|  null|  no|
 | <a name="input_cluster_dns"></a> [cluster\_dns](#input\_cluster\_dns)| Cluster DNS resolver IP address. Determined automatically when not set (recommended).|  string|  null|  no|
 | <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id)| An existing OKE cluster OCID when `create_cluster = false`.|  string|  null|  no|
+| <a name="input_cluster_type"></a> [cluster\_type](#input\_cluster\_type)| The cluster type. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengworkingwithenhancedclusters.htm>Working with Enhanced Clusters and Basic Clusters</a> for more information.|  string|  "basic"|  no|
 | <a name="input_cni_type"></a> [cni\_type](#input\_cni\_type)| The CNI for the cluster: 'flannel' or 'npn'. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm>Pod Networking</a>.|  string|  "flannel"|  no|
 | <a name="input_compartment_id"></a> [compartment\_id](#input\_compartment\_id)| The compartment id where resources will be created.|  string|  null|  no|
 | <a name="input_image_id"></a> [image\_id](#input\_image\_id)| Default image for worker pools  when unspecified on a pool.|  string|  null|  no|
