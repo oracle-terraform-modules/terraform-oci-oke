@@ -1,8 +1,6 @@
 # Workers / Mode: Instance
 
-<table>
 {{#include ./rms_instance.md}}
-</table>
 
 ## Usage
 

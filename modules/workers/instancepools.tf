@@ -20,6 +20,12 @@ resource "oci_core_instance_pool" "workers" {
       availability_domain = ad.value
       primary_subnet_id   = each.value.subnet_id
 
+      # Intersect the list of available and configured FDs for this AD
+      fault_domains = tolist(setintersection(
+        each.value.placement_fds,
+        lookup(local.fault_domains_available, ad.value, local.fault_domains_default)
+      ))
+
       dynamic "secondary_vnic_subnets" {
         for_each = lookup(each.value, "secondary_vnics", {})
         iterator = vnic

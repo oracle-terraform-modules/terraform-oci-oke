@@ -57,6 +57,16 @@ variable "cluster_id" {
   type        = string
 }
 
+variable "cluster_type" {
+  default     = "basic"
+  description = "The cluster type. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengworkingwithenhancedclusters.htm>Working with Enhanced Clusters and Basic Clusters</a> for more information."
+  type        = string
+  validation {
+    condition     = contains(["basic", "enhanced"], lower(var.cluster_type))
+    error_message = "Accepted values are 'basic' or 'enhanced'."
+  }
+}
+
 variable "cluster_ca_cert" {
   default     = null
   description = "Base64+PEM-encoded cluster CA certificate for unmanaged instance pools. Determined automatically when 'create_cluster' = true or 'cluster_id' is provided."

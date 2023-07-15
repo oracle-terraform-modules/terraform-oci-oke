@@ -35,11 +35,17 @@ variable "worker_pools" {
 
 variable "worker_pool_mode" {
   default     = "node-pool"
-  description = "Default management mode for workers when unspecified on a pool. Only 'node-pool' is currently supported."
+  description = "Default management mode for workers when unspecified on a pool."
   type        = string
   validation {
-    condition     = contains(["node-pool", "instance", "instance-pool", "cluster-network"], var.worker_pool_mode)
-    error_message = "Accepted values are node-pool, instance-pool, or cluster-network"
+    condition = contains([
+      "node-pool",
+      "virtual-node-pool",
+      "instance",
+      "instance-pool",
+      "cluster-network"
+    ], var.worker_pool_mode)
+    error_message = "Accepted values are node-pool, virtual-node-pool, instance, instance-pool, or cluster-network."
   }
 }
 

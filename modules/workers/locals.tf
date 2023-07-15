@@ -7,6 +7,11 @@ locals {
   ocpus            = max(1, lookup(var.shape, "ocpus", 1))
   shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
 
+  fault_domains_default = formatlist("FD-%v", [1, 2, 3])
+  fault_domains_available = {
+    for ad, fd in data.oci_identity_fault_domains.all : ad => fd
+  }
+
   worker_pool_defaults = {
     allow_autoscaler           = false
     assign_public_ip           = var.assign_public_ip
@@ -30,6 +35,7 @@ locals {
     os                         = var.image_os
     os_version                 = var.image_os_version
     placement_ads              = var.ad_numbers
+    placement_fds              = local.fault_domains_default
     platform_config            = var.platform_config
     pod_nsg_ids                = var.pod_nsg_ids
     pod_subnet_id              = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
@@ -38,6 +44,7 @@ locals {
     shape                      = local.shape
     size                       = var.worker_pool_size
     subnet_id                  = var.worker_subnet_id
+    taints                     = [] # empty pool-specific default
     volume_kms_key_id          = var.volume_kms_key_id
   }
 
@@ -118,7 +125,8 @@ locals {
       )
 
       # Combine global and pool-specific NSGs
-      nsg_ids = compact(concat(var.worker_nsg_ids, pool.nsg_ids))
+      nsg_ids      = compact(concat(var.worker_nsg_ids, pool.nsg_ids))
+      pods_nsg_ids = compact(concat(var.pod_nsg_ids, pool.pod_nsg_ids))
 
       # Add a node label for cluster autoscaler where scheduling is supported
       node_labels = merge(
@@ -136,6 +144,8 @@ locals {
     }) if tobool(pool.create)
   }
 
+  enabled_modes = distinct([for w in values(local.enabled_worker_pools) : w.mode])
+
   # Number of nodes expected from enabled worker pools
   expected_node_count = length(local.enabled_worker_pools) == 0 ? 0 : sum([
     for k, v in local.enabled_worker_pools : lookup(v, "size", var.worker_pool_size)
@@ -148,7 +158,14 @@ locals {
 
   # Enabled worker_pool map entries for node pools
   enabled_node_pools = {
-    for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "node-pool"
+    for k, v in local.enabled_worker_pools : k => v
+    if lookup(v, "mode", "") == "node-pool"
+  }
+
+  # Enabled worker_pool map entries for virtual node pools
+  enabled_virtual_node_pools = {
+    for k, v in local.enabled_worker_pools : k => v
+    if lookup(v, "mode", "") == "virtual-node-pool"
   }
 
   # Enabled worker_pool map entries for instance pools
@@ -186,11 +203,18 @@ locals {
   }
 
   # Worker pool OCI resources enriched with desired/custom parameters
-  worker_node_pools       = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instance_pools   = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_cluster_networks = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instances        = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_pools_output     = merge(local.worker_node_pools, local.worker_instance_pools, local.worker_cluster_networks, local.worker_instances)
-  worker_pool_ids         = { for k, v in local.worker_pools_output : k => v.id }
-  worker_instance_ids     = { for k, v in local.enabled_instances : k => lookup(lookup(oci_core_instance.workers, k, {}), "id", "") }
+  worker_node_pools         = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_instance_pools     = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_instances          = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_pools_output = merge(
+    local.worker_node_pools,
+    local.worker_virtual_node_pools,
+    local.worker_instance_pools,
+    local.worker_cluster_networks,
+    local.worker_instances
+  )
+  worker_pool_ids     = { for k, v in local.worker_pools_output : k => v.id }
+  worker_instance_ids = { for k, v in local.enabled_instances : k => lookup(lookup(oci_core_instance.workers, k, {}), "id", "") }
 }

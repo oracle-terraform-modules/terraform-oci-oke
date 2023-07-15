@@ -1,8 +1,6 @@
 # Workers / Mode: Cluster Network
 
-<table>
 {{#include ./rms_clusternetwork.md}}
-</table>
 
 ## Usage
 

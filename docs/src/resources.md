@@ -54,6 +54,7 @@
 <!-- BEGIN_TF_WORKERS -->
 
 * [oci_containerengine_node_pool.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_node_pool)
+* [oci_containerengine_virtual_node_pool.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_virtual_node_pool)
 * [oci_core_cluster_network.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_cluster_network)
 * [oci_core_instance.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance)
 * [oci_core_instance_configuration.workers](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/core_instance_configuration)
