@@ -14,6 +14,11 @@ variable "config_file_profile" {
   type    = string
 }
 
+variable "operator_private_ip" {
+  default = null
+  type    = string
+}
+
 variable "worker_nsg_ids" {
   default = []
   type    = list(string)
