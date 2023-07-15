@@ -30,6 +30,13 @@ resource "oci_containerengine_node_pool" "workers" {
         availability_domain     = ad.value
         capacity_reservation_id = each.value.capacity_reservation_id
         subnet_id               = each.value.subnet_id
+
+        # Intersect the list of available and configured FDs for this AD
+        fault_domains = tolist(setintersection(
+          each.value.placement_fds,
+          lookup(local.fault_domains_available, ad.value, local.fault_domains_default)
+        ))
+
         dynamic "preemptible_node_config" {
           for_each = each.value.preemptible_config.enable ? [1] : []
           content {

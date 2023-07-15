@@ -219,6 +219,6 @@ The module supports the following configuration for created resources:
 | <a name="input_worker_image_os"></a> [worker\_image\_os](#input\_worker\_image\_os)| Default worker image operating system name when worker\_image\_type = 'oke' or 'platform' and unspecified on a pool.|  string|  "Oracle Linux"|  no|
 | <a name="input_worker_image_os_version"></a> [worker\_image\_os\_version](#input\_worker\_image\_os\_version)| Default worker image operating system version when worker\_image\_type = 'oke' or 'platform' and unspecified on a pool.|  string|  "8"|  no|
 | <a name="input_worker_image_type"></a> [worker\_image\_type](#input\_worker\_image\_type)| Whether to use a platform, OKE, or custom image for worker nodes by default when unspecified on a pool. When custom is set, the worker\_image\_id must be specified.|  string|  "oke"|  no|
-| <a name="input_worker_pool_mode"></a> [worker\_pool\_mode](#input\_worker\_pool\_mode)| Default management mode for workers when unspecified on a pool. Only 'node-pool' is currently supported.|  string|  "node-pool"|  no|
+| <a name="input_worker_pool_mode"></a> [worker\_pool\_mode](#input\_worker\_pool\_mode)| Default management mode for workers when unspecified on a pool.|  string|  "node-pool"|  no|
 | <a name="input_worker_volume_kms_key_id"></a> [worker\_volume\_kms\_key\_id](#input\_worker\_volume\_kms\_key\_id)| The ID of the OCI KMS key to be used as the master encryption key for Boot Volume and Block Volume encryption by default when unspecified on a pool.|  string|  null|  no|
 <!-- END_TF_DOCS -->
