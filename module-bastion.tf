@@ -56,11 +56,11 @@ module "bastion" {
   use_defined_tags = var.use_defined_tags
   tag_namespace    = var.tag_namespace
   defined_tags = merge(var.use_defined_tags ? {
-    "${var.tag_namespace}.state_id" = var.state_id,
+    "${var.tag_namespace}.state_id" = local.state_id,
     "${var.tag_namespace}.role"     = "bastion",
   } : {}, local.bastion_defined_tags)
   freeform_tags = merge(var.use_defined_tags ? {} : {
-    "state_id" = var.state_id,
+    "state_id" = local.state_id,
     "role"     = "bastion",
   }, local.bastion_freeform_tags)
 }
