@@ -73,11 +73,11 @@ module "operator" {
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence
   defined_tags = merge(var.use_defined_tags ? {
-    "${var.tag_namespace}.state_id" = var.state_id,
+    "${var.tag_namespace}.state_id" = local.state_id,
     "${var.tag_namespace}.role"     = "operator",
   } : {}, local.operator_defined_tags)
   freeform_tags = merge(var.use_defined_tags ? {} : {
-    "state_id" = var.state_id,
+    "state_id" = local.state_id,
     "role"     = "operator",
   }, local.operator_freeform_tags)
   use_defined_tags = var.use_defined_tags
