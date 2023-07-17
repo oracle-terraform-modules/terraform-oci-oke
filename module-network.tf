@@ -31,13 +31,13 @@ module "vcn" {
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence
   defined_tags = merge(var.use_defined_tags ? {
-    "${var.tag_namespace}.state_id" = var.state_id,
+    "${var.tag_namespace}.state_id" = local.state_id,
     "${var.tag_namespace}.role"     = "network",
     } : {},
     local.network_defined_tags,
   )
   freeform_tags = merge(var.use_defined_tags ? {} : {
-    "state_id" = var.state_id,
+    "state_id" = local.state_id,
     "role"     = "network",
     },
     local.network_freeform_tags,
