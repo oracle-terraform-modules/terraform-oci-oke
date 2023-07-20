@@ -25,6 +25,8 @@ locals {
     create                     = true
     disable_default_cloud_init = var.disable_default_cloud_init
     drain                      = false
+    eviction_grace_duration    = 0
+    force_node_delete          = true
     extended_metadata          = {} # empty pool-specific default
     image_id                   = var.image_id
     image_type                 = var.image_type
