@@ -79,6 +79,11 @@ resource "oci_containerengine_node_pool" "workers" {
     lookup(each.value, "node_metadata", {}), # pool-specific
   )
 
+  node_eviction_node_pool_settings {
+    eviction_grace_duration              = format("PT%sM", each.value.eviction_grace_duration)
+    is_force_delete_after_grace_duration = tobool(each.value.force_node_delete)
+  }
+
   dynamic "node_shape_config" {
     for_each = length(regexall("Flex", each.value.shape)) > 0 ? [1] : []
     content {
