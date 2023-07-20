@@ -7,7 +7,8 @@ locals {
   ocpus            = max(1, lookup(var.shape, "ocpus", 1))
   shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
 
-  fault_domains_default = formatlist("FD-%v", [1, 2, 3])
+  # Used for default values of required input for virtual node pools
+  fault_domains_all = formatlist("FD-%v", [1, 2, 3])
   fault_domains_available = {
     for ad, fd in data.oci_identity_fault_domains.all : ad => fd
   }
@@ -35,7 +36,6 @@ locals {
     os                         = var.image_os
     os_version                 = var.image_os_version
     placement_ads              = var.ad_numbers
-    placement_fds              = local.fault_domains_default
     platform_config            = var.platform_config
     pod_nsg_ids                = var.pod_nsg_ids
     pod_subnet_id              = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")

@@ -23,8 +23,8 @@ resource "oci_containerengine_virtual_node_pool" "workers" {
 
       # Intersect the list of available and configured FDs for this AD
       fault_domain = tolist(setintersection(
-        each.value.placement_fds,
-        lookup(local.fault_domains_available, ad.value, local.fault_domains_default)
+        try(each.value.placement_fds, local.fault_domains_all),
+        lookup(local.fault_domains_available, ad.value, local.fault_domains_all)
       ))
     }
   }
