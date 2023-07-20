@@ -15,15 +15,8 @@ resource "oci_core_instance_configuration" "workers" {
     launch_details {
       availability_domain = element(each.value.availability_domains, 1)
 
-      # Intersect the list of available and configured FDs for this AD, selecting the first
-      fault_domain = element(tolist(setintersection(
-        each.value.placement_fds,
-        lookup(
-          local.fault_domains_available,
-          element(each.value.availability_domains, 1),
-          each.value.placement_fds
-        )
-      )), 1)
+      # First value specified on pool, or null to select automatically
+      fault_domain = try(each.value.placement_fds[0], null)
 
       compartment_id          = each.value.compartment_id
       defined_tags            = each.value.defined_tags

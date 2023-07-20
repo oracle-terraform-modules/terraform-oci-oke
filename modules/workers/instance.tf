@@ -1,6 +1,7 @@
 resource "oci_core_instance" "workers" {
   for_each             = local.enabled_instances
   availability_domain  = element(each.value.availability_domains, 1)
+  fault_domain         = try(each.value.placement_fds[0], null)
   compartment_id       = each.value.compartment_id
   display_name         = each.key
   preserve_boot_volume = false
