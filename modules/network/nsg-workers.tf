@@ -61,7 +61,7 @@ locals {
       },
     } : {},
 
-    var.allow_node_port_access && local.int_lb_nsg_enabled ? {
+    local.int_lb_nsg_enabled ? {
       "Allow TCP ingress to workers from internal load balancers" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, source = local.int_lb_nsg_id, source_type = local.rule_type_nsg,
       },
@@ -70,7 +70,7 @@ locals {
       },
     } : {},
 
-    var.allow_node_port_access && local.pub_lb_nsg_enabled ? {
+    local.pub_lb_nsg_enabled ? {
       "Allow TCP ingress to workers from public load balancers" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, source = local.pub_lb_nsg_id, source_type = local.rule_type_nsg,
       },
