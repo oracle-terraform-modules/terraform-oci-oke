@@ -100,7 +100,12 @@ output "operator_private_ip" {
 
 output "ssh_to_operator" {
   description = "SSH command for operator host"
+  #value = (local.operator_enabled || coalesce(var.operator_private_ip, "none") != "none"
+  #  ? "ssh${local.ssh_key_arg} -o ProxyCommand='ssh ${local.ssh_key_arg} -W %h:%p ${var.bastion_user}@${local.bastion_public_ip}' ${var.operator_user}@${local.operator_private_ip}" : null
   value = (local.operator_enabled || coalesce(var.operator_private_ip, "none") != "none"
-    ? "ssh${local.ssh_key_arg} -o ProxyCommand='ssh ${local.ssh_key_arg} -W %h:%p ${var.bastion_user}@${local.bastion_public_ip}' ${var.operator_user}@${local.operator_private_ip}" : null
+    ? format("ssh ${local.ssh_key_arg} %s %s",
+      var.create_bastion ? "-o ProxyCommand='ssh ${local.ssh_key_arg} -W %h:%p ${var.bastion_user}@${local.bastion_public_ip}'" : "",
+    "${var.operator_user}@${local.operator_private_ip}") :
+    null
   )
 }
