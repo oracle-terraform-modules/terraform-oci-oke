@@ -2,8 +2,13 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 output "worker_pools" {
-  description = "Created worker pools"
+  description = "Created worker pools (mode != 'instance')"
   value       = local.worker_pools_output
+}
+
+output "worker_instances" {
+  description = "Created worker pools (mode == 'instance')"
+  value       = local.worker_instances
 }
 
 output "worker_pool_ids" {
@@ -11,9 +16,9 @@ output "worker_pool_ids" {
   value       = local.worker_pool_ids
 }
 
-output "worker_instance_ids" {
-  description = "Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances."
-  value       = local.worker_instance_ids
+output "worker_pool_ips" {
+  description = "Created worker instance private IPs by pool for available modes ('node-pool', 'instance')."
+  value       = local.worker_pool_ips
 }
 
 output "worker_count_expected" {

@@ -204,19 +204,39 @@ locals {
     }
   }
 
-  # Worker pool OCI resources enriched with desired/custom parameters
+  # Maps of worker pool OCI resources by pool name enriched with desired/custom parameters for various modes
   worker_node_pools         = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_instance_pools     = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_instances          = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+
+  # Combined map of outputs by pool name for all modes excluding 'instance' (output separately)
   worker_pools_output = merge(
     local.worker_node_pools,
     local.worker_virtual_node_pools,
     local.worker_instance_pools,
     local.worker_cluster_networks,
-    local.worker_instances
   )
-  worker_pool_ids     = { for k, v in local.worker_pools_output : k => v.id }
-  worker_instance_ids = { for k, v in local.enabled_instances : k => lookup(lookup(oci_core_instance.workers, k, {}), "id", "") }
+
+  # OCIDs of pool resources by pool name for modes: 'node-pool', 'virtual-node-pool', 'instance-pool', 'cluster-network'
+  worker_pool_ids = { for k, v in local.worker_pools_output : k => v.id }
+
+  # Map of pool name to list of instance IP addresses for modes: 'instance'
+  worker_instance_ips = {
+    for x, y in {
+      for k, v in local.worker_instances : replace(k, "/-[^-]*$/", "") => # remove index suffix
+      { lookup(v, "id", "") = lookup(v, "private_ip", null) }...          # instances grouped by "pool"
+    } : x => merge(y...)
+  }
+
+  # Map of pool name to list of instance IP addresses for modes: 'node-pool'
+  worker_nodepool_ips = {
+    for k, v in local.worker_node_pools : k => {
+      for n in lookup(v, "nodes", []) : lookup(n, "id", "") => lookup(n, "private_ip", null)
+    }
+  }
+
+  # Yields {<pool name> = {<instance id> = <instance ip>}} for modes: 'node-pool', 'instance'
+  worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
 }
