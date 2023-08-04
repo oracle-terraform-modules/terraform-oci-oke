@@ -84,16 +84,21 @@ module "workers" {
 }
 
 output "worker_pools" {
-  description = "Enabled worker pools"
-  value       = var.output_detail && local.worker_count_expected > 0 ? one(module.workers[*].worker_pools) : null
+  description = "Created worker pools (mode != 'instance')"
+  value       = var.output_detail && local.worker_count_expected > 0 ? try(one(module.workers[*].worker_pools), null) : null
+}
+
+output "worker_instances" {
+  description = "Created worker pools (mode == 'instance')"
+  value       = var.output_detail && local.worker_count_expected > 0 ? try(one(module.workers[*].worker_instances), null) : null
 }
 
 output "worker_pool_ids" {
   description = "Enabled worker pool IDs"
-  value       = local.worker_count_expected > 0 ? one(module.workers[*].worker_pool_ids) : null
+  value       = local.worker_count_expected > 0 ? try(one(module.workers[*].worker_pool_ids), null) : null
 }
 
-output "worker_instance_ids" {
-  description = "Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances."
-  value       = one(module.workers[*].worker_instance_ids)
+output "worker_pool_ips" {
+  description = "Created worker instance private IPs by pool for available modes ('node-pool', 'instance')."
+  value       = local.worker_count_expected > 0 ? try(one(module.workers[*].worker_pool_ips), null) : null
 }
