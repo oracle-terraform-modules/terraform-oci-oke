@@ -34,7 +34,7 @@ jobs:
         name: Install mdbook
         env:
           CARGO_HOME: ./cargo
-        run: cargo install mdbook-admonish mdbook-variables mdbook mdbook-toc mdbook-pagetoc
+        run: cargo install mdbook-admonish@v10.0.2 mdbook-variables mdbook mdbook-toc mdbook-pagetoc
 
   install-tfdocs:
     environment:
