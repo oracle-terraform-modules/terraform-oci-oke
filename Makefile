@@ -83,7 +83,7 @@ tfdocs: terraform-docs iam.tfdocs network.tfdocs bastion.tfdocs cluster.tfdocs w
 
 .PHONY: mdbook
 mdbook:
-	cargo install mdbook-admonish mdbook-variables mdbook
+	cargo install --locked --force mdbook@0.4.34 mdbook-admonish@1.10.2 mdbook-variables@0.2.2 mdbook-toc@0.14.1 mdbook-pagetoc@0.1.7
 
 .PHONY: mdbuild
 mdbuild: mdbook tfdocs ## Generate documention
