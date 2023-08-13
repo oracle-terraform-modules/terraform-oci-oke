@@ -12,7 +12,7 @@ resource "oci_core_subnet" "cp" {
   vcn_id                     = var.vcn_id
 
   lifecycle {
-    ignore_changes = [dns_label]
+    ignore_changes = [dns_label, prohibit_public_ip_on_vnic]
   }
 }
 
