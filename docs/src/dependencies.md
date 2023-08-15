@@ -24,7 +24,6 @@
 |------|--------|---------|
 | <a name="module_bastion"></a> [bastion](#module\_bastion) | ./modules/bastion | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
-| <a name="module_drg"></a> [drg](#module\_drg) | oracle-terraform-modules/drg/oci | 1.0.3 |
 | <a name="module_extensions"></a> [extensions](#module\_extensions) | ./modules/extensions | n/a |
 | <a name="module_iam"></a> [iam](#module\_iam) | ./modules/iam | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
