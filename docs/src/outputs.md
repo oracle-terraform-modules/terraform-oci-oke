@@ -60,9 +60,11 @@
 <!-- BEGIN_TF_WORKERS -->
 
 * **`worker_count_expected`**&nbsp;&nbsp; # of nodes expected from created worker pools
-* **`worker_instance_ids`**&nbsp;&nbsp; Created worker instance IDs (mode == 'instance'). Excludes pool-managed instances.
+* **`worker_drain_expected`**&nbsp;&nbsp; # of nodes expected to be draining in worker pools
+* **`worker_instances`**&nbsp;&nbsp; Created worker pools (mode == 'instance')
 * **`worker_pool_ids`**&nbsp;&nbsp; Created worker pool IDs
-* **`worker_pools`**&nbsp;&nbsp; Created worker pools
+* **`worker_pool_ips`**&nbsp;&nbsp; Created worker instance private IPs by pool for available modes ('node-pool', 'instance').
+* **`worker_pools`**&nbsp;&nbsp; Created worker pools (mode != 'instance')
 
 <!-- END_TF_WORKERS -->
 

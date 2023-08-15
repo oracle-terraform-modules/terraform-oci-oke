@@ -20,8 +20,6 @@ variableGroups:
       - timezone
       - subnets
       - await_node_readiness
-      - calico_helm_values
-      - calico_helm_values_files
 
   - title: "Identity"
     variables:
@@ -117,7 +115,6 @@ variableGroups:
       - dcgm_exporter_install
       - gatekeeper_install
       - multus_install
-      - calico_install
       - cilium_install
       - whereabouts_install
       - sriov_device_plugin_install
@@ -174,18 +171,6 @@ variableGroups:
       - multus_namespace
       - multus_daemonset_url
       - multus_version
-
-  - title: "Calico"
-    visible: calico_install
-    variables:
-      - calico_namespace
-      - calico_reapply
-      - calico_apiserver_install
-      - calico_version
-      - calico_url
-      - calico_typha_replicas
-      - calico_mtu
-      - calico_helm_version
 
   - title: "Cilium"
     visible: cilium_install
@@ -723,44 +708,6 @@ variables:
     description: Tag values for created resources.
     dependsOn:
       compartmentId: ${compartment_ocid}
-
-  # CNI: Calico
-  calico_install:
-    title: Install Calico
-    description: Deploy Calico with Oracle Cloud configuration. See <a href=https://docs.tigera.io/calico/latest/getting-started>Install Calico</a> for more information.
-    type: boolean
-    default: false
-    required: true
-  calico_namespace:
-    title: Kubernetes namespace
-    type: string
-  calico_reapply:
-    title: Re-apply
-    type: boolean
-    default: false
-    required: true
-  calico_apiserver_install:
-    title: Install Calico API Server
-    type: boolean
-    default: false
-    required: true
-  calico_mode:
-    visible: false
-  calico_staging_dir:
-    visible: false
-  calico_typha_install:
-    title: Install Typha
-    visible: ${calico_install}
-  calico_helm_version:
-    visible: false
-  calico_mtu:
-    visible: false
-  calico_typha_replicas:
-    visible: false
-  calico_url:
-    visible: false
-  calico_version:
-    visible: false
 
   # Metrics server
   metrics_server_install:
