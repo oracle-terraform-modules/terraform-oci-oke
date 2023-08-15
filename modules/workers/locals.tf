@@ -72,7 +72,7 @@ locals {
         {
           # Load content from file if local path, attempt base64 decode, or use raw value
           content = contains(keys(part), "content") ? (
-            fileexists(lookup(part, "content")) ? file(lookup(part, "content"))
+            try(fileexists(lookup(part, "content")), false) ? file(lookup(part, "content"))
             : try(base64decode(lookup(part, "content")), lookup(part, "content"))
           ) : ""
           content_type = lookup(part, "content_type", local.default_cloud_init_content_type)
