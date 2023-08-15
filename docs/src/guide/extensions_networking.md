@@ -16,20 +16,6 @@
 
 ****
 
-## Calico CNI
-
-### Usage
-```javascript
-{{#include ../../../examples/extensions/vars-extensions-calico.auto.tfvars:4:}}
-```
-
-### References
-* [System requirements](https://docs.tigera.io/calico/latest/getting-started/openstack/requirements)
-* [Overlay networks](https://docs.tigera.io/calico/latest/networking/determine-best-networking#overlay-networks)
-* [Installing Calico and Setting Up Network Policies](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengsettingupcalico.htm)
-
-****
-
 ## Cilium CNI
 
 ### Usage

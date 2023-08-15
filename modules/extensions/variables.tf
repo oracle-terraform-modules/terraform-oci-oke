@@ -20,17 +20,6 @@ variable "vcn_cidrs" { type = list(string) }
 variable "cni_type" { type = string }
 variable "pods_cidr" { type = string }
 
-# CNI: Calico
-variable "calico_apiserver_install" { type = bool }
-variable "calico_install" { type = bool }
-variable "calico_mode" { type = string }
-variable "calico_mtu" { type = number }
-variable "calico_staging_dir" { type = string }
-variable "calico_typha_install" { type = bool }
-variable "calico_typha_replicas" { type = number }
-variable "calico_url" { type = string }
-variable "calico_version" { type = string }
-
 # CNI: Multus
 variable "multus_install" { type = bool }
 variable "multus_namespace" { type = string }
