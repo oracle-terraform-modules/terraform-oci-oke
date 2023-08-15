@@ -36,7 +36,7 @@ locals {
     "extraEnv.OKE_USE_INSTANCE_PRINCIPAL"        = "true",
     "extraEnv.OCI_SDK_APPEND_USER_AGENT"         = "oci-oke-cluster-autoscaler",
     "image.repository"                           = "iad.ocir.io/oracle/oci-cluster-autoscaler",
-    "image.tag"                                  = "1.24.0-5",
+    "image.tag"                                  = "1.26.2-7",
   }
 }
 

@@ -5,8 +5,8 @@ Deployed using the [cluster-autoscaler Helm chart](https://github.com/kubernetes
 The following parameters may be added on each pool definition to enable management or scheduling of the cluster autoscaler:
 * `allow_autoscaler`: Enable scheduling of the cluster autoscaler deployment on a pool by adding a node label matching the deployment's nodeSelector, and an OCI tag for use with [IAM tag-based policies](https://docs.oracle.com/en-us/iaas/Content/Tagging/Tasks/managingaccesswithtags.htm) granting access to the instances.
 * `autoscale`: Enable cluster autoscaler management of the pool by including a `--nodes` argument for it.
-* `minSize`: Define the minimum scale of a pool managed by the cluster autoscaler. Defaults to `size` when not provided.
-* `maxSize`: Define the minimum scale of a pool managed by the cluster autoscaler. Defaults to `size` when not provided.
+* `min_size`: Define the minimum scale of a pool managed by the cluster autoscaler. Defaults to `size` when not provided.
+* `max_size`: Define the maximum scale of a pool managed by the cluster autoscaler. Defaults to `size` when not provided.
 
 ### Usage
 ```javascript
