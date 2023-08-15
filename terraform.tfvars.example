@@ -1,0 +1,169 @@
+# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# Identity and access parameters
+
+api_fingerprint              = ""
+api_private_key_path         = ""
+home_region                  = "us-ashburn-1"
+region                       = "ap-melbourne-1"
+tenancy_id                   = ""
+user_id                      = ""
+
+# common parameters
+## oci parameters
+compartment_id = ""
+timezone       = "Australia/Sydney"
+
+## ssh keys
+ssh_private_key_path = "~/.ssh/id_ed25519"
+ssh_public_key_path  = "~/.ssh/id_ed25519.pub"
+
+# networking
+create_vcn               = true
+assign_dns               = true
+local_peering_gateways   = {}
+lockdown_default_seclist = true
+vcn_cidrs                = ["10.0.0.0/16"]
+vcn_dns_label            = "oke"
+vcn_name                 = "oke"
+
+## subnets
+subnets = {
+  bastion  = { newbits = 13, netnum = 0, dns_label = "bastion" }
+  operator = { newbits = 13, netnum = 1, dns_label = "operator" }
+  cp       = { newbits = 13, netnum = 2, dns_label = "cp" }
+  int_lb   = { newbits = 11, netnum = 16, dns_label = "ilb" }
+  pub_lb   = { newbits = 11, netnum = 17, dns_label = "plb" }
+  workers  = { newbits = 2, netnum = 1, dns_label = "workers" }
+  pods     = { newbits = 2, netnum = 2, dns_label = "pods" }
+}
+
+nsgs = {}
+
+# Routing
+internet_gateway_route_rules = [
+  #   {
+  #     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
+  #     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
+  #     network_entity_id = "drg_id"            # for internet_gateway_route_rules input variable, you can use special strings "drg", "internet_gateway" or pass a valid OCID using string or any Named Values
+  #     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
+  #   },
+]
+
+nat_gateway_route_rules = [
+  #   {
+  #     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
+  #     destination_type  = "CIDR_BLOCK"     # only CIDR_BLOCK is supported at the moment
+  #     network_entity_id = "drg"            # for nat_gateway_route_rules input variable, you can use special strings "drg", "nat_gateway" or pass a valid OCID using string or any Named Values
+  #     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
+  #   },
+]
+
+# bastion
+create_bastion           = true
+bastion_allowed_cidrs    = ["0.0.0.0/0"]
+bastion_image_os         = "Oracle Linux"
+bastion_image_os_version = "8"
+bastion_image_type       = "platform"
+bastion_type             = "public"
+bastion_upgrade          = false
+
+bastion_shape = {
+  shape            = "VM.Standard.E4.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}
+
+# operator
+create_operator                = true
+operator_image_os              = "Oracle Linux"
+operator_image_os_version      = "8"
+operator_image_type            = "platform"
+operator_pv_transit_encryption = false
+operator_upgrade               = false
+
+operator_shape = {
+  shape            = "VM.Standard.E4.Flex",
+  ocpus            = 1,
+  memory           = 4,
+  boot_volume_size = 50
+}
+
+# iam
+create_iam_autoscaler_policy = "auto"
+create_iam_kms_policy        = "auto"
+create_iam_operator_policy   = "always"
+create_iam_resources         = true
+create_iam_worker_policy     = "auto"
+
+create_iam_tag_namespace = false
+create_iam_defined_tags  = false
+tag_namespace            = "oke"
+use_defined_tags         = false
+
+# oke
+cluster_name       = "oke"
+cluster_type       = "basic"
+cni_type           = "flannel"
+kubernetes_version = "v1.26.2"
+cluster_kms_key_id = ""
+
+## control plane
+control_plane_allowed_cidrs  = ["0.0.0.0/0"]
+control_plane_nsg_ids        = []
+control_plane_type           = "public"
+
+## workers
+worker_cloud_init                 = []
+worker_compartment_id             = ""
+worker_image_id                   = ""
+worker_image_os                   = "Oracle Linux"
+worker_image_os_version           = "8"
+worker_image_type                 = "oke"
+worker_is_public                  = false
+worker_node_labels                = {}
+
+worker_nsg_ids                    = []
+worker_pool_mode                  = "node-pool"
+worker_pool_size                  = 0
+worker_pools                      = {}
+
+worker_shape = {
+  "boot_volume_size": 50,
+  "memory": 16,
+  "ocpus": 2,
+  "shape": "VM.Standard.E4.Flex"
+}
+
+workers_defined_tags     = {}
+workers_freeform_tags    = {}
+
+worker_shape = {
+  shape            = "VM.Standard.E4.Flex",
+  ocpus            = 2,  # Ignored for non-Flex shapes
+  memory           = 16, # Ignored for non-Flex shapes
+  boot_volume_size = 50
+}
+
+# load balancers
+enable_waf                   = false
+load_balancers               = "both"
+preferred_load_balancer      = "public"
+
+# See https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
+# Protocols: All = "all"; ICMP = 1; TCP  = 6; UDP  = 17
+# Source/destination type: NSG ID: "NETWORK_SECURITY_GROUP"; CIDR range: "CIDR_BLOCK"
+allow_rules_internal_lb = {
+  # "Allow TCP ingress to internal load balancers for port 8080 from VCN" : {
+  #   protocol = 6, port = 8080, source = "10.0.0.0/16", source_type = "CIDR_BLOCK",
+  # },
+}
+
+allow_rules_public_lb = {
+  # "Allow TCP ingress to public load balancers for SSL traffic from anywhere" : {
+  #   protocol = 6, port = 443, source = "0.0.0.0/0", source_type = "CIDR_BLOCK",
+  # },
+}
+
