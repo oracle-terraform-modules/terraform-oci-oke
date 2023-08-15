@@ -3,10 +3,11 @@
 
 locals {
   control_plane_nsg_config = try(var.nsgs.cp, { create = "never" })
+  control_plane_nsg_create = coalesce(lookup(local.control_plane_nsg_config, "create", null), "auto")
   control_plane_nsg_enabled = anytrue([
-    lookup(local.control_plane_nsg_config, "create", "auto") == "always",
+    local.control_plane_nsg_create == "always",
     alltrue([
-      lookup(local.control_plane_nsg_config, "create", "auto") == "auto",
+      local.control_plane_nsg_create == "auto",
       coalesce(lookup(local.control_plane_nsg_config, "id", null), "none") == "none",
       var.create_cluster,
     ]),

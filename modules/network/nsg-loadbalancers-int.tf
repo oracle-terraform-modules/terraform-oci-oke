@@ -3,10 +3,11 @@
 
 locals {
   int_lb_nsg_config = try(var.nsgs.int_lb, { create = "never" })
+  int_lb_nsg_create = coalesce(lookup(local.int_lb_nsg_config, "create", null), "auto")
   int_lb_nsg_enabled = anytrue([
-    lookup(local.int_lb_nsg_config, "create", "auto") == "always",
+    local.int_lb_nsg_create == "always",
     alltrue([
-      lookup(local.int_lb_nsg_config, "create", "auto") == "auto",
+      local.int_lb_nsg_create == "auto",
       coalesce(lookup(local.int_lb_nsg_config, "id", null), "none") == "none",
       var.create_cluster, var.load_balancers == "internal" || var.load_balancers == "both",
     ]),

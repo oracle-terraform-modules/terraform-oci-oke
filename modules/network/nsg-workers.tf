@@ -3,10 +3,11 @@
 
 locals {
   worker_nsg_config = try(var.nsgs.workers, { create = "never" })
+  worker_nsg_create = coalesce(lookup(local.worker_nsg_config, "create", null), "auto")
   worker_nsg_enabled = anytrue([
-    lookup(local.worker_nsg_config, "create", "auto") == "always",
+    local.worker_nsg_create == "always",
     alltrue([
-      lookup(local.worker_nsg_config, "create", "auto") == "auto",
+      local.worker_nsg_create == "auto",
       coalesce(lookup(local.worker_nsg_config, "id", null), "none") == "none",
       var.create_cluster,
     ]),
