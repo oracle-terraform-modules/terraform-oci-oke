@@ -1,21 +1,6 @@
 # Copyright (c) 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# CNI: Calico
-
-variable "calico_install" { default = false }
-variable "calico_reapply" { default = false }
-variable "calico_version" { default = "3.24.1" }
-variable "calico_mode" { default = "policy-only" }
-variable "calico_mtu" { default = 0 }
-variable "calico_url" { default = "" }
-variable "calico_apiserver_install" { default = false }
-variable "calico_typha_install" { default = false }
-variable "calico_typha_replicas" { default = 0 }
-variable "calico_staging_dir" { default = "/tmp/calico_install" }
-variable "calico_namespace" { default = "network" }
-variable "calico_helm_version" { default = "3.25.0" }
-
 # CNI: Multus
 
 variable "multus_install" { default = false }

@@ -1,66 +1,6 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
-# CNI: Calico
-
-variable "calico_install" {
-  default     = false
-  description = "Whether to install calico for network pod security policy. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
-  type        = bool
-}
-
-variable "calico_version" {
-  default     = "3.24.1"
-  description = "The version of Calico to install."
-  type        = string
-}
-
-variable "calico_mode" {
-  default     = "policy-only"
-  description = "The type of Calico manifest to install. The default of 'policy-only' is recommended."
-  type        = string
-  validation {
-    condition     = contains(["policy-only", "canal", "vxlan", "ipip", "flannel-migration"], var.calico_mode)
-    error_message = "Accepted values are policy-only, canal, vxlan, ipip, or flannel-migration."
-  }
-}
-
-variable "calico_mtu" {
-  default     = 0
-  description = "Interface MTU for Calico device(s) (0 = auto)."
-  type        = number
-}
-
-variable "calico_url" {
-  default     = ""
-  description = "Optionally override the Calico manifest URL (empty string = auto)."
-  type        = string
-}
-
-variable "calico_apiserver_install" {
-  default     = false
-  description = "Whether to enable the Calico apiserver."
-  type        = bool
-}
-
-variable "calico_typha_install" {
-  default     = false
-  description = "Whether to enable Typha (automatically enabled for > 50 nodes)."
-  type        = bool
-}
-
-variable "calico_typha_replicas" {
-  default     = 0
-  description = "The number of replicas for the Typha deployment (0 = auto)."
-  type        = number
-}
-
-variable "calico_staging_dir" {
-  default     = "/tmp/calico_install"
-  description = "Directory on the operator instance to stage Calico install files."
-  type        = string
-}
-
 # CNI: Multus
 
 variable "multus_install" {

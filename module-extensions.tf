@@ -24,17 +24,6 @@ module "extensions" {
   cni_type  = var.cni_type
   pods_cidr = var.pods_cidr
 
-  # CNI: Calico
-  calico_install           = var.calico_install
-  calico_apiserver_install = var.calico_apiserver_install
-  calico_mode              = var.calico_mode
-  calico_mtu               = var.calico_mtu
-  calico_staging_dir       = var.calico_staging_dir
-  calico_typha_install     = var.calico_typha_install
-  calico_typha_replicas    = var.calico_typha_replicas
-  calico_url               = var.calico_url
-  calico_version           = var.calico_version
-
   # CNI: Multus
   multus_install       = var.multus_install
   multus_namespace     = var.multus_namespace

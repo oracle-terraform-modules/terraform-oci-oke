@@ -79,17 +79,6 @@ module "oke" {
   services_cidr           = var.services_cidr
   use_signed_images       = var.use_signed_images
 
-  # CNI: Calico
-  calico_install           = var.calico_install
-  calico_apiserver_install = var.calico_apiserver_install
-  calico_mode              = var.calico_mode
-  calico_mtu               = var.calico_mtu
-  calico_staging_dir       = var.calico_staging_dir
-  calico_typha_install     = var.calico_typha_install
-  calico_typha_replicas    = var.calico_typha_replicas
-  calico_url               = var.calico_url
-  calico_version           = var.calico_version
-
   # CNI: Cilium
   cilium_install           = var.cilium_install
   cilium_reapply           = var.cilium_reapply
