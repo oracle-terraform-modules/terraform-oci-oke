@@ -3,10 +3,11 @@
 
 locals {
   bastion_nsg_config = try(var.nsgs.bastion, { create = "never" })
+  bastion_nsg_create = coalesce(lookup(local.bastion_nsg_config, "create", null), "auto")
   bastion_nsg_enabled = anytrue([
-    lookup(local.bastion_nsg_config, "create", "auto") == "always",
+    local.bastion_nsg_create == "always",
     alltrue([
-      lookup(local.bastion_nsg_config, "create", "auto") == "auto",
+      local.bastion_nsg_create == "auto",
       coalesce(lookup(local.bastion_nsg_config, "id", null), "none") == "none",
       var.create_cluster, var.create_bastion,
     ]),

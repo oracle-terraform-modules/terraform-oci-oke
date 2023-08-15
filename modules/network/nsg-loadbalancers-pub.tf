@@ -3,10 +3,11 @@
 
 locals {
   pub_lb_nsg_config = try(var.nsgs.pub_lb, { create = "never" })
+  pub_lb_nsg_create = coalesce(lookup(local.pub_lb_nsg_config, "create", null), "auto")
   pub_lb_nsg_enabled = anytrue([
-    lookup(local.pub_lb_nsg_config, "create", "auto") == "always",
+    local.pub_lb_nsg_create == "always",
     alltrue([
-      lookup(local.pub_lb_nsg_config, "create", "auto") == "auto",
+      local.pub_lb_nsg_create == "auto",
       coalesce(lookup(local.pub_lb_nsg_config, "id", null), "none") == "none",
       var.create_cluster, var.load_balancers == "public" || var.load_balancers == "both",
     ]),

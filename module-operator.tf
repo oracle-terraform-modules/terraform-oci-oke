@@ -105,5 +105,6 @@ output "operator_private_ip" {
 output "ssh_to_operator" {
   description = "SSH command for operator host"
   value = local.operator_enabled ? join(" ", concat(["ssh"],
-    local.bastion_proxy_command, local.operator_ssh_args)) : null
+    local.bastion_proxy_command, local.operator_ssh_args)
+  ) : null
 }
