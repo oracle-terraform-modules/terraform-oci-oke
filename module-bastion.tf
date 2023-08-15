@@ -29,6 +29,14 @@ locals {
   bastion_image_id = (var.bastion_image_type == "custom"
     ? var.bastion_image_id : element(coalescelist(local.bastion_image_ids, ["none"]), 0)
   )
+
+  # Bastion SSH ProxyCommand argument used in e.g. ssh_to_operator command output if created/provided
+  bastion_ssh_user_ip = join("@", compact([var.bastion_user, local.bastion_public_ip]))
+  bastion_ssh_args    = compact([local.ssh_key_arg, local.bastion_ssh_user_ip])
+  bastion_ssh_command = join(" ", concat(["ssh"], local.bastion_ssh_args))
+  bastion_proxy_command = try((local.bastion_public_ip == null ? []
+    : ["-o", format("ProxyCommand='ssh -W %%h:%%p %v'", join(" ", local.bastion_ssh_args))]
+  ), [])
 }
 
 module "bastion" {
@@ -77,7 +85,5 @@ output "bastion_public_ip" {
 
 output "ssh_to_bastion" {
   description = "SSH command for bastion host"
-  value = (!var.create_bastion || local.bastion_public_ip == null ? null
-    : "ssh${local.ssh_key_arg} ${var.bastion_user}@${local.bastion_public_ip}"
-  )
+  value       = local.bastion_ssh_command
 }
