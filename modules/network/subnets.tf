@@ -127,7 +127,7 @@ resource "oci_core_subnet" "oke" {
   vcn_id                     = var.vcn_id
   cidr_block                 = lookup(local.subnet_cidrs_all, each.key)
   display_name               = format("%v-%v", each.key, var.state_id)
-  dns_label                  = lookup(local.subnet_dns_labels, each.key)
+  dns_label                  = lookup(local.subnet_dns_labels, each.key, null)
   prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
   route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
   security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
