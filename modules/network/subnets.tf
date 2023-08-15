@@ -42,7 +42,11 @@ locals {
   }
 
   // Combine provided and calculated subnet CIDRs
-  subnet_cidrs_all = merge(local.subnet_cidrs_cidr_input, local.subnet_cidrs_newbits_resolved, local.subnet_cidrs_netnum_newbits_ranges)
+  subnet_cidrs_all = merge(
+    local.subnet_cidrs_cidr_input,
+    local.subnet_cidrs_newbits_resolved,
+    local.subnet_cidrs_netnum_newbits_ranges,
+  )
 
   # Map of subnets for standard components with additional configuration derived
   # TODO enumerate worker pools for public/private overrides, conditional subnets for both
@@ -61,6 +65,13 @@ locals {
       create         = var.create_cluster && contains(["both", "public"], var.load_balancers),
       create_seclist = true, is_public = true, dns_label = "plb",
     }
+  }
+
+  # Map of configured subnets to specified/generated dns_label when enabled
+  # If `assign_dns = true`, use dns_label for subnet if specified or first 2 characters of subnet key
+  subnet_dns_labels = { for k, v in var.subnets :
+    k => coalesce(lookup(v, "dns_label", null), substr(k, 0, 2))
+    if var.assign_dns
   }
 
   # Create subnets if when all are true:
@@ -116,7 +127,7 @@ resource "oci_core_subnet" "oke" {
   vcn_id                     = var.vcn_id
   cidr_block                 = lookup(local.subnet_cidrs_all, each.key)
   display_name               = format("%v-%v", each.key, var.state_id)
-  dns_label                  = var.assign_dns ? lookup(try(lookup(var.subnets, each.key), {}), "dns_label", substr(each.key, 0, 2)) : null
+  dns_label                  = lookup(local.subnet_dns_labels, each.key)
   prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
   route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
   security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
@@ -124,8 +135,10 @@ resource "oci_core_subnet" "oke" {
   freeform_tags              = var.freeform_tags
 
   lifecycle {
-    # TODO reflect default security_list_id instead of ignore
-    ignore_changes = [security_list_ids, freeform_tags, defined_tags, dns_label, display_name, cidr_block]
+    ignore_changes = [
+      freeform_tags, defined_tags, display_name,
+      cidr_block, dns_label, security_list_ids,
+    ]
   }
 }
 

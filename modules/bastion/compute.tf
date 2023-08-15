@@ -63,7 +63,11 @@ resource "oci_core_instance" "bastion" {
   }
 
   lifecycle {
-    ignore_changes = [availability_domain, defined_tags, freeform_tags, metadata, source_details, display_name]
+    ignore_changes = [
+      availability_domain,
+      defined_tags, freeform_tags, display_name,
+      create_vnic_details, metadata, source_details,
+    ]
 
     precondition {
       condition     = coalesce(var.image_id, "none") != "none"

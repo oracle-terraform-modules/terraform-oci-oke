@@ -37,6 +37,10 @@ locals {
   operator_image_id = (var.operator_image_type == "custom"
     ? var.operator_image_id : element(coalescelist(local.operator_image_ids, ["none"]), 0)
   )
+
+  # Operator SSH command args for.ssh_to_operator output if created/provided
+  operator_ssh_user_ip = join("@", compact([var.operator_user, local.operator_private_ip]))
+  operator_ssh_args    = compact([local.ssh_key_arg, local.operator_ssh_user_ip])
 }
 
 module "operator" {
@@ -100,12 +104,6 @@ output "operator_private_ip" {
 
 output "ssh_to_operator" {
   description = "SSH command for operator host"
-  #value = (local.operator_enabled || coalesce(var.operator_private_ip, "none") != "none"
-  #  ? "ssh${local.ssh_key_arg} -o ProxyCommand='ssh ${local.ssh_key_arg} -W %h:%p ${var.bastion_user}@${local.bastion_public_ip}' ${var.operator_user}@${local.operator_private_ip}" : null
-  value = (local.operator_enabled || coalesce(var.operator_private_ip, "none") != "none"
-    ? format("ssh ${local.ssh_key_arg} %s %s",
-      var.create_bastion ? "-o ProxyCommand='ssh ${local.ssh_key_arg} -W %h:%p ${var.bastion_user}@${local.bastion_public_ip}'" : "",
-    "${var.operator_user}@${local.operator_private_ip}") :
-    null
-  )
+  value = local.operator_enabled ? join(" ", concat(["ssh"],
+    local.bastion_proxy_command, local.operator_ssh_args)) : null
 }
