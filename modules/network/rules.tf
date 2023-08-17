@@ -133,6 +133,13 @@ resource "oci_core_network_security_group_security_rule" "oke" {
           tonumber(lookup(each.value, "port", 0)) == local.apiserver_port,
           contains(var.control_plane_allowed_cidrs, local.anywhere),
         ]),
+
+        # TCP ingress to internal load balancer from anywhere has been configured explicitly        
+        contains(keys(var.allow_rules_internal_lb), each.key),        
+
+        # TCP ingress to public load balancer from anywhere has been configured explicitly
+        contains(keys(var.allow_rules_public_lb), each.key),
+
       ])
       error_message = "Unexpected open ingress rule: ${each.key}"
     }
