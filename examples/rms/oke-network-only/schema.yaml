@@ -42,15 +42,12 @@ variableGroups:
       - nat_route_table_id
       - nat_gateway_public_ip_id
       - service_gateway_id
-      - create_drg
-      - drg_id
       - local_peering_gateways
 
   - title: "Security"
     variables:
       - ${create_nsgs}
       - lockdown_default_seclist
-      - enable_waf
 
   - title: "Bastion"
     variables:
@@ -330,28 +327,6 @@ variables:
     required: false
     visible: ${create_nsgs}
 
-  create_drg:
-    title: Create DRG
-    description: Create a Dynamic Routing Gateway and attach it to the VCN.
-    type: boolean
-    default: false
-    required: false
-    visible: false
-  drg_id:
-    title: Dynamic Routing Gateway
-    description: Existing Dynamic Routing Gateway to attach to the VCN.
-    type: ocid
-    required: false
-    visible: { not: [create_drg] }
-  drg_display_name:
-    title: DRG display name
-    visible: ${create_drg}
-  enable_waf:
-    title: Enable WAF
-    type: boolean
-    default: false
-    required: false
-    visible: false
   load_balancers:
     title: Load balancers
     type: enum
@@ -676,7 +651,6 @@ outputGroups:
       - vcn_id
       - ig_route_table_id
       - nat_route_table_id
-      - drg_id
   - title: Bastion
     outputs:
       - bastion_id
@@ -713,9 +687,6 @@ outputs:
   # Network
   vcn_id:
     title: VCN
-    type: ocid
-  drg_id:
-    title: Dynamic routing gateway
     type: ocid
   ig_route_table_id:
     title: Internet gateway route table

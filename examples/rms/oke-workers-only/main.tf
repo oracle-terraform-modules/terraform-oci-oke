@@ -12,7 +12,7 @@ locals {
 }
 
 module "oke" {
-  source    = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x&depth=1"
+  source    = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x-tf12&depth=1"
   providers = { oci.home = oci.home }
 
   # Identity
@@ -53,7 +53,7 @@ module "oke" {
   worker_pool_size = var.worker_pool_size
   worker_pool_mode = lookup({
     "Node Pool"       = "node-pool"
-    "Instances"       = "instances"
+    "Instance"       = "instances"
     "Instance Pool"   = "instance-pool",
     "Cluster Network" = "cluster-network",
   }, var.worker_pool_mode, "node-pool")
@@ -75,7 +75,7 @@ module "oke" {
     format("%v", var.worker_pool_name) = {
       description = lookup({
         "Node Pool"       = "OKE-managed Node Pool"
-        "Instances"       = "Self-managed Instances"
+        "Instance"       = "Self-managed Instances"
         "Instance Pool"   = "Self-managed Instance Pool"
         "Cluster Network" = "Self-managed Cluster Network"
       }, var.worker_pool_mode, "")

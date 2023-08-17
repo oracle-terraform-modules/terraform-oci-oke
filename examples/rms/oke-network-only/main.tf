@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 module "oke" {
-  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x&depth=1"
+  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x-tf12&depth=1"
   providers      = { oci.home = oci.home }
   tenancy_id     = var.tenancy_ocid
   compartment_id = var.compartment_ocid
@@ -27,9 +27,6 @@ module "oke" {
   ig_route_table_id           = var.ig_route_table_id
   local_peering_gateways      = var.local_peering_gateways
   lockdown_default_seclist    = var.lockdown_default_seclist
-  create_drg                  = var.create_drg
-  drg_id                      = var.drg_id
-  drg_display_name            = var.drg_display_name
 
   subnets = {
     bastion = {
@@ -92,7 +89,6 @@ module "oke" {
   allow_rules_public_lb        = var.allow_rules_public_lb
   allow_worker_internet_access = var.allow_worker_internet_access
   allow_worker_ssh_access      = var.allow_worker_ssh_access
-  enable_waf                   = var.enable_waf
   bastion_allowed_cidrs        = compact(split(",", var.bastion_allowed_cidrs))
   control_plane_allowed_cidrs  = compact(split(",", var.control_plane_allowed_cidrs))
   control_plane_is_public      = var.control_plane_is_public

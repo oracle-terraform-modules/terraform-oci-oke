@@ -1,0 +1,62 @@
+name: Publish Terraform OCI OKE RMS Stacks
+on:
+  push:
+    branches:
+      - "5.x-tf12"
+  workflow_dispatch:
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "rms"
+  cancel-in-progress: false
+
+jobs:
+  network-only:
+    environment:
+      name: rms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create archive
+        working-directory: ./examples/rms
+        run: zip -r tfoke-rms-network-only.zip ./oke-network-only
+      - uses: actions/upload-artifact@v3
+        with:
+          name: tfoke-rms-network-only.zip
+          path: ./examples/rms/tfoke-rms-network-only.zip
+          retention-days: 90
+          if-no-files-found: error
+
+  cluster-only:
+    environment:
+      name: rms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create archive
+        working-directory: ./examples/rms
+        run: zip -r tfoke-rms-cluster-only.zip ./oke-cluster-only
+      - uses: actions/upload-artifact@v3
+        with:
+          name: tfoke-rms-cluster-only.zip
+          path: ./examples/rms/tfoke-rms-cluster-only.zip
+          retention-days: 90
+          if-no-files-found: error
+
+  workers-only:
+    environment:
+      name: rms
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create archive
+        working-directory: ./examples/rms
+        run: zip -r tfoke-rms-workers-only.zip ./oke-workers-only
+      - uses: actions/upload-artifact@v3
+        with:
+          name: tfoke-rms-workers-only.zip
+          path: ./examples/rms/tfoke-rms-workers-only.zip
+          retention-days: 90
+          if-no-files-found: error
+

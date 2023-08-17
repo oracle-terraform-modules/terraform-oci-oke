@@ -249,7 +249,7 @@ variables:
     description: Type of Oracle Cloud Compute resources for the created worker nodes.
     type: enum
     default: Instance Pool
-    enum: [Node Pool, Instances, Instance Pool, Cluster Network]
+    enum: [Node Pool, Instance, Instance Pool, Cluster Network]
     required: true
   worker_pool_size:
     title: Number of worker nodes

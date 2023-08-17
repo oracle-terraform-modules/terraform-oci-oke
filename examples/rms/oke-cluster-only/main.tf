@@ -7,7 +7,7 @@ data "oci_secrets_secretbundle" "ocir" {
 }
 
 module "oke" {
-  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x&depth=1"
+  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x-tf12&depth=1"
   providers      = { oci.home = oci.home }
   tenancy_id     = var.tenancy_ocid
   compartment_id = var.compartment_ocid

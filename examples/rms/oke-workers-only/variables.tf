@@ -38,11 +38,11 @@ variable "kubernetes_version" {
 
 # Worker pools
 variable "worker_pool_mode" {
-  default = "Instances"
+  default = "Instance"
   type    = string
   validation {
-    condition     = contains(["Node Pool", "Instances", "Instance Pool", "Cluster Network"], var.worker_pool_mode)
-    error_message = "Accepted values are Node Pool, Instances, Instance Pool, or Cluster Network"
+    condition     = contains(["Node Pool", "Instance", "Instance Pool", "Cluster Network"], var.worker_pool_mode)
+    error_message = "Accepted values are Node Pool, Instance, Instance Pool, or Cluster Network"
   }
 }
 variable "worker_pool_size" {

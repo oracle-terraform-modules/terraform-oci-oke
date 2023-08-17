@@ -6,7 +6,6 @@ output "state_id" { value = module.oke.state_id }
 
 # Network
 output "vcn_id" { value = module.oke.vcn_id }
-output "drg_id" { value = module.oke.drg_id }
 output "ig_route_table_id" { value = module.oke.ig_route_table_id }
 output "nat_route_table_id" { value = module.oke.nat_route_table_id }
 
