@@ -79,14 +79,6 @@ module "oke" {
   services_cidr           = var.services_cidr
   use_signed_images       = var.use_signed_images
 
-  # CNI: Cilium
-  cilium_install           = var.cilium_install
-  cilium_reapply           = var.cilium_reapply
-  cilium_namespace         = var.cilium_namespace
-  cilium_helm_version      = var.cilium_helm_version
-  cilium_helm_values       = var.cilium_helm_values
-  cilium_helm_values_files = var.cilium_helm_values_files
-
   # Metrics server
   metrics_server_install           = var.metrics_server_install
   metrics_server_namespace         = var.metrics_server_namespace
