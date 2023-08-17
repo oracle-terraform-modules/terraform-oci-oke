@@ -27,6 +27,8 @@ output "operator_nsg_id" { value = module.oke.operator_nsg_id }
 output "control_plane_subnet_id" { value = module.oke.control_plane_subnet_id }
 output "control_plane_subnet_cidr" { value = module.oke.control_plane_subnet_cidr }
 output "control_plane_nsg_id" { value = module.oke.control_plane_nsg_id }
+
+# Load balancers
 output "int_lb_subnet_id" { value = module.oke.int_lb_subnet_id }
 output "pub_lb_subnet_id" { value = module.oke.pub_lb_subnet_id }
 output "int_lb_nsg_id" { value = module.oke.int_lb_nsg_id }
@@ -38,6 +40,9 @@ output "pub_lb_subnet_cidr" { value = module.oke.pub_lb_subnet_cidr }
 output "worker_subnet_id" { value = module.oke.worker_subnet_id }
 output "worker_subnet_cidr" { value = module.oke.worker_subnet_cidr }
 output "worker_nsg_id" { value = module.oke.worker_nsg_id }
+
+# Pods
 output "pod_subnet_id" { value = module.oke.pod_subnet_id }
 output "pod_subnet_cidr" { value = module.oke.pod_subnet_cidr }
 output "pod_nsg_id" { value = module.oke.pod_nsg_id }
+

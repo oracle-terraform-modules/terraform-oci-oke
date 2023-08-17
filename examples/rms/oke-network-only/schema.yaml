@@ -646,37 +646,55 @@ outputGroups:
   - title: Terraform
     outputs:
       - state_id
+
   - title: Network
     outputs:
       - vcn_id
       - ig_route_table_id
       - nat_route_table_id
+
   - title: Bastion
     outputs:
       - bastion_id
       - bastion_subnet_id
       - bastion_subnet_cidr
+      - bastion_nsg_id
       - bastion_public_ip
       - bastion_ssh_command
       - bastion_ssh_secret_id
+
   - title: Operator
     outputs:
       - operator_subnet_id
       - operator_subnet_cidr
+      - operator_nsg_id
+
   - title: Cluster
     outputs:
       - control_plane_subnet_id
       - control_plane_subnet_cidr
+      - control_plane_nsg_id
+
+  - title: Load balancers
+    outputs:
       - int_lb_subnet_id
       - int_lb_subnet_cidr
+      - int_lb_nsg_id
       - pub_lb_subnet_id
       - pub_lb_subnet_cidr
+      - pub_lb_nsg_id
+
   - title: Workers
     outputs:
       - worker_subnet_id
       - worker_subnet_cidr
+      - worker_nsg_id
+
+  - title: Pods
+    outputs:
       - pod_subnet_id
       - pod_subnet_cidr
+      - pod_nsg_id
 
 outputs:
   # Terraform
@@ -711,6 +729,9 @@ outputs:
   bastion_subnet_cidr:
     title: Bastion CIDR
     type: string
+  bastion_nsg_id:
+    title: Bastion NSG
+    type: ocid
   bastion_public_ip:
     title: Bastion IP
     type: copyableString
@@ -728,6 +749,9 @@ outputs:
   operator_subnet_cidr:
     title: Operator CIDR
     type: string
+  operator_nsg_id:
+    title: Operator NSG
+    type: ocid
 
   # Cluster
   control_plane_subnet_id:
@@ -736,18 +760,29 @@ outputs:
   control_plane_subnet_cidr:
     title: Control plane CIDR
     type: string
+  control_plane_nsg_id:
+    title: Control plane NSG
+    type: ocid
+
+  # Load balancers
   int_lb_subnet_id:
     title: Internal load balancer subnet
     type: ocid
   int_lb_subnet_cidr:
     title: Internal load balancer CIDR
     type: string
+  int_lb_nsg_id:
+    title: Internal load balancer NSG
+    type: ocid
   pub_lb_subnet_id:
     title: Public load balancer subnet
     type: ocid
   pub_lb_subnet_cidr:
     title: Public load balancer CIDR
     type: string
+  pub_lb_nsg_id:
+    title: Public load balancer NSG
+    type: ocid
 
   # Workers
   worker_subnet_id:
@@ -756,9 +791,18 @@ outputs:
   worker_subnet_cidr:
     title: Worker CIDR
     type: string
+  worker_nsg_id:
+    title: Worker NSG
+    type: ocid
+
+  # Pods
   pod_subnet_id:
     title: Pod subnet
     type: ocid
   pod_subnet_cidr:
     title: Pod CIDR
     type: string
+  pod_nsg_id:
+    title: Pod NSG
+    type: ocid
+
