@@ -6,13 +6,13 @@ locals {
   worker_image_type = contains(["platform", "custom"], lower(var.worker_image_type)) ? "custom" : "oke"
 
   worker_cloud_init = var.worker_cloud_init_configure ? [{
-    content_type = "text/x-shellscript",
-    content      = var.worker_pool_mode == "Node Pool" ? var.worker_cloud_init_oke : var.worker_cloud_init_byon
+    content_type = var.worker_cloud_init_content_type,
+    content      = var.worker_cloud_init
   }] : []
 }
 
 module "oke" {
-  source    = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x&depth=1"
+  source    = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=tf12&depth=1"
   providers = { oci.home = oci.home }
 
   # Identity
@@ -47,25 +47,31 @@ module "oke" {
   cluster_id              = var.cluster_id
   cni_type                = lower(var.cni_type)
   control_plane_is_public = false # workers only need private
+  kubernetes_version      = "v1.27.2"
+
 
   # Workers
   ssh_public_key   = local.ssh_public_key
   worker_pool_size = var.worker_pool_size
   worker_pool_mode = lookup({
-    "Node Pool"       = "node-pool"
-    "Instances"       = "instances"
-    "Instance Pool"   = "instance-pool",
-    "Cluster Network" = "cluster-network",
+    "Node Pool"         = "node-pool"
+    "Virtual Node Pool" = "virtual-node-pool"
+    "Instance"          = "instance"
+    "Instance Pool"     = "instance-pool",
+    "Cluster Network"   = "cluster-network",
   }, var.worker_pool_mode, "node-pool")
 
-  worker_image_type       = lower(local.worker_image_type)
-  worker_image_id         = local.worker_image_id
-  worker_image_os         = var.worker_image_os
-  worker_image_os_version = var.worker_image_os_version
-  worker_cloud_init       = local.worker_cloud_init
+  worker_image_type                 = lower(local.worker_image_type)
+  worker_image_id                   = local.worker_image_id
+  worker_image_os                   = var.worker_image_os
+  worker_image_os_version           = var.worker_image_os_version
+  worker_cloud_init                 = local.worker_cloud_init
+  worker_disable_default_cloud_init = var.worker_disable_default_cloud_init
 
   worker_shape = {
-    shape            = var.worker_shape
+    shape = (var.worker_pool_mode == "Virtual Node Pool"
+      ? var.virtual_worker_shape : var.worker_shape
+    )
     ocpus            = var.worker_ocpus
     memory           = var.worker_memory
     boot_volume_size = var.worker_boot_volume_size
@@ -74,19 +80,24 @@ module "oke" {
   worker_pools = {
     format("%v", var.worker_pool_name) = {
       description = lookup({
-        "Node Pool"       = "OKE-managed Node Pool"
-        "Instances"       = "Self-managed Instances"
-        "Instance Pool"   = "Self-managed Instance Pool"
-        "Cluster Network" = "Self-managed Cluster Network"
+        "Node Pool"         = "OKE-managed Node Pool"
+        "Virtual Node Pool" = "OKE-managed Virtual Node Pool"
+        "Instance"          = "Self-managed Instances"
+        "Instance Pool"     = "Self-managed Instance Pool"
+        "Cluster Network"   = "Self-managed Cluster Network"
       }, var.worker_pool_mode, "")
     }
   }
 
   freeform_tags = {
-    workers = lookup(var.worker_tags, "freeformTags", {})
+    workers = lookup(var.worker_tags, "freeformTags", {
+      created = format("%d", time_static.created.unix),
+    })
   }
 
   defined_tags = {
     workers = lookup(var.worker_tags, "definedTags", {})
   }
 }
+
+resource "time_static" "created" {}

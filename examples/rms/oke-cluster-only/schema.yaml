@@ -48,6 +48,7 @@ variableGroups:
     variables:
       - bastion_public_ip
       - ssh_public_key
+      - ssh_kms_vault_compartment_id
       - ssh_kms_vault_id
       - ssh_kms_secret_id
 
@@ -115,7 +116,6 @@ variableGroups:
       - dcgm_exporter_install
       - gatekeeper_install
       - multus_install
-      - cilium_install
       - whereabouts_install
       - sriov_device_plugin_install
       - sriov_cni_plugin_install
@@ -125,14 +125,13 @@ variableGroups:
   - title: "Cluster Autoscaler"
     visible: cluster_autoscaler_install
     variables:
-      - ${cluster_autoscaler_namespace}
-      - ${cluster_autoscaler_helm_version}
-      - ${cluster_autoscaler_helm_values}
-      - ${cluster_autoscaler_helm_values_files}
+      - cluster_autoscaler_namespace
+      - cluster_autoscaler_helm_version
+      - cluster_autoscaler_helm_values
+      - cluster_autoscaler_helm_values_files
 
   - title: "Metrics Server"
-    visible:
-      and: metrics_server_install
+    visible: metrics_server_install
     variables:
       - metrics_server_namespace
       - metrics_server_helm_version
@@ -142,8 +141,8 @@ variableGroups:
   - title: "Prometheus"
     visible: prometheus_install
     variables:
-      - prometheus_namespace
       - prometheus_reapply
+      - prometheus_namespace
       - prometheus_helm_version
       - prometheus_helm_values
       - prometheus_helm_values_files
@@ -151,8 +150,8 @@ variableGroups:
   - title: "DCGM exporter"
     visible: dcgm_exporter_install
     variables:
-      - dcgm_exporter_namespace
       - dcgm_exporter_reapply
+      - dcgm_exporter_namespace
       - dcgm_exporter_helm_version
       - dcgm_exporter_helm_values
       - dcgm_exporter_helm_values_files
@@ -172,13 +171,6 @@ variableGroups:
       - multus_daemonset_url
       - multus_version
 
-  - title: "Cilium"
-    visible: cilium_install
-    variables:
-      - cilium_namespace
-      - cilium_reapply
-      - cilium_helm_version
-
   - title: "Whereabouts"
     visible: whereabouts_install
     variables:
@@ -189,6 +181,7 @@ variableGroups:
   - title: "SR-IOV Device Plugin"
     visible: sriov_device_plugin_install
     variables:
+      - sriov_device_plugin_install_config
       - sriov_device_plugin_namespace
       - sriov_device_plugin_daemonset_url
       - sriov_device_plugin_version
@@ -199,6 +192,13 @@ variableGroups:
       - sriov_cni_plugin_namespace
       - sriov_cni_plugin_daemonset_url
       - sriov_cni_plugin_version
+
+  - title: "RDMA CNI Plugin"
+    visible: rdma_cni_plugin_install
+    variables:
+      - rdma_cni_plugin_namespace
+      - rdma_cni_plugin_daemonset_url
+      - rdma_cni_plugin_version
 
   - title: "MPI Operator"
     visible: mpi_operator_install
@@ -411,20 +411,27 @@ variables:
     type: oci:core:ssh:publickey
     pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
     required: false
+  ssh_kms_vault_compartment_id:
+    title: SSH Vault Compartment
+    type: oci:identity:compartment:id
+    required: true
+    default: ${compartment_ocid}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
   ssh_kms_vault_id:
     title: SSH Vault
     description: The OCI Vault used to encrypt the SSH key pair.
     type: oci:kms:vault:id
     required: true
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${ssh_kms_vault_compartment_id}
   ssh_kms_secret_id:
     title: SSH Vault secret
     description: The OCI Vault secret containing the SSH private key.
     type: oci:kms:secret:id
     required: true
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${ssh_kms_vault_compartment_id}
       vaultId: ${ssh_kms_vault_id}
 
   # Bastion
@@ -794,6 +801,31 @@ variables:
     title: Helm chart values files
     visible: false
 
+  # DCMG
+  dcgm_exporter_install:
+    title: Install DCGM exporter
+    description: Deploy the Data Center GPU Manager metrics exporter for Prometheus. See <a href=https://github.com/NVIDIA/dcgm-exporter>NVIDIA/dcgm-exporter</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  dcgm_exporter_reapply:
+    title: Re-apply
+    type: boolean
+    default: false
+    required: true
+  dcgm_exporter_namespace:
+    title: Kubernetes namespace
+    type: string
+  dcgm_exporter_helm_version:
+    title: Helm chart version
+    type: string
+  dcgm_exporter_helm_values:
+    title: Helm chart values
+    visible: false
+  dcgm_exporter_helm_values_files:
+    title: Helm chart values files
+    visible: false
+
   # Multus
   multus_install:
     title: Install Multus
@@ -816,6 +848,12 @@ variables:
   sriov_device_plugin_install:
     title: Install SR-IOV device plugin
     description: Deploy SR-IOV device plugin to advertise Virtual Functions (VFs) to Kubernetes. See <a href=https://github.com/k8snetworkplumbingwg/sriov-network-device-plugin/tree/master/deployments>k8snetworkplumbingwg/sriov-network-device-plugin</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  sriov_device_plugin_install_config:
+    title: Install SR-IOV device plugin configuration
+    description: Deploy SR-IOV device plugin ConfigMap with common hardware PCI models on HPC Compute shapes.
     type: boolean
     default: false
     required: true
@@ -845,6 +883,24 @@ variables:
     description: The URL path to the manifest. Leave unset for tags of <a href=https://github.com/openshift/sriov-cni>openshift/sriov-cni</a> using the configured version.
     type: string
   sriov_cni_plugin_version:
+    title: Version
+    type: string
+
+  # RDMA CNI Plugin
+  rdma_cni_plugin_install:
+    title: Install RDMA CNI plugin
+    description: Deploy RDMA CNI plugin to configure Virtual Functions (VFs) for Pod networking with Kubernetes. See <a href=https://github.com/k8snetworkplumbingwg/rdma-cni>k8snetworkplumbingwg/rdma-cni</a> for more information.
+    type: boolean
+    default: false
+    required: true
+  rdma_cni_plugin_namespace:
+    title: Kubernetes namespace
+    type: string
+  rdma_cni_plugin_daemonset_url:
+    title: Daemonset URL
+    description: The URL path to the manifest. Leave unset for tags of <a href=https://github.com/k8snetworkplumbingwg/rdma-cni>k8snetworkplumbingwg/rdma-cni</a> using the configured version.
+    type: string
+  rdma_cni_plugin_version:
     title: Version
     type: string
 

@@ -4,7 +4,6 @@
 variable "create_vcn" { default = true }
 variable "assign_dns" { default = true }
 variable "control_plane_is_public" { default = false }
-variable "enable_waf" { default = false }
 variable "worker_is_public" { default = false }
 
 variable "vcn_name" {
@@ -33,18 +32,6 @@ variable "vcn_create_service_gateway" {
 }
 
 variable "ig_route_table_id" {
-  default = null
-  type    = string
-}
-
-variable "create_drg" { default = false }
-
-variable "drg_display_name" {
-  default = null
-  type    = string
-}
-
-variable "drg_id" {
   default = null
   type    = string
 }

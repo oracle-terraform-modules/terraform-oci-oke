@@ -13,6 +13,10 @@ variable "ssh_kms_secret_id" {
   default = null
   type    = string
 }
+variable "ssh_kms_vault_compartment_id" {
+  default = null
+  type    = string
+}
 
 data "oci_identity_region_subscriptions" "home" {
   tenancy_id = var.tenancy_ocid

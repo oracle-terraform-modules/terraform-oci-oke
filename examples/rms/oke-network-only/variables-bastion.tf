@@ -40,7 +40,7 @@ variable "bastion_image_os" {
 }
 
 variable "bastion_image_os_version" {
-  default = "8.7"
+  default = "8.8"
   type    = string
 }
 

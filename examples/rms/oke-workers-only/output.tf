@@ -27,8 +27,5 @@ output "worker_image_id" { value = local.worker_image_id }
 output "autoscale" { value = var.autoscale }
 
 output "worker_pool_ids" {
-  value = concat(
-    values(coalesce(module.oke.worker_pool_ids, {})),
-    values(coalesce(module.oke.worker_instance_ids, {})),
-  )
+  value = try(values(coalesce(module.oke.worker_pool_ids, {})), null)
 }

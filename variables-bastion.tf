@@ -25,6 +25,12 @@ variable "bastion_availability_domain" {
   type        = string
 }
 
+variable "bastion_await_cloudinit" {
+  default     = true
+  description = "Whether to block until successful connection to bastion and completion of cloud-init."
+  type        = bool
+}
+
 variable "bastion_nsg_ids" {
   description = "An additional list of network security group (NSG) IDs for bastion security."
   default     = []

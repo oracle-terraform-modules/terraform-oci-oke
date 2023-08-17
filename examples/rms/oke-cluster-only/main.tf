@@ -7,7 +7,7 @@ data "oci_secrets_secretbundle" "ocir" {
 }
 
 module "oke" {
-  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=5.x&depth=1"
+  source         = "github.com/oracle-terraform-modules/terraform-oci-oke.git?ref=tf12&depth=1"
   providers      = { oci.home = oci.home }
   tenancy_id     = var.tenancy_ocid
   compartment_id = var.compartment_ocid
@@ -78,14 +78,6 @@ module "oke" {
   preferred_load_balancer = lower(var.preferred_load_balancer)
   services_cidr           = var.services_cidr
   use_signed_images       = var.use_signed_images
-
-  # CNI: Cilium
-  cilium_install           = var.cilium_install
-  cilium_reapply           = var.cilium_reapply
-  cilium_namespace         = var.cilium_namespace
-  cilium_helm_version      = var.cilium_helm_version
-  cilium_helm_values       = var.cilium_helm_values
-  cilium_helm_values_files = var.cilium_helm_values_files
 
   # Metrics server
   metrics_server_install           = var.metrics_server_install

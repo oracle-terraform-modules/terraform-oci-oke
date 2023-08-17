@@ -29,6 +29,7 @@ data "cloudinit_config" "bastion" {
 }
 
 resource "null_resource" "await_cloudinit" {
+  count = var.await_cloudinit ? 1 : 0
   connection {
     host        = oci_core_instance.bastion.public_ip
     user        = var.user

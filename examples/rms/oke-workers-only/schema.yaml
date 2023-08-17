@@ -39,6 +39,7 @@ variableGroups:
 
   - title: "Network"
     variables:
+      - vcn_compartment_ocid
       - vcn_id
       - assign_dns
       - vcn_dns_label
@@ -50,8 +51,6 @@ variableGroups:
   - title: "SSH"
     variables:
       - ssh_public_key
-      - ssh_kms_vault_id
-      - ssh_kms_secret_id
 
   - title: "Image"
     variables:
@@ -66,6 +65,7 @@ variableGroups:
       - worker_pool_name
       - worker_pool_mode
       - worker_shape
+      - virtual_worker_shape
       - worker_pool_size
       - worker_ocpus
       - worker_memory
@@ -76,9 +76,9 @@ variableGroups:
       - worker_volume_kms_key_id
       - worker_pv_transit_encryption
       - worker_cloud_init_configure
+      - worker_disable_default_cloud_init
+      - worker_cloud_init_content_type
       - worker_cloud_init
-      - worker_cloud_init_byon
-      - worker_cloud_init_oke
       - autoscale
       - drain
       - worker_tags
@@ -131,16 +131,22 @@ variables:
     visible: ${use_defined_tags}
 
   # VCN
+  vcn_compartment_ocid:
+    title: VCN Compartment
+    type: oci:identity:compartment:id
+    required: false
+    default: ${compartment_ocid}
+    dependsOn:
+      compartmentId: ${compartment_ocid}
   vcn_id:
     title: Virtual Cloud Network
     type: oci:core:vcn:id
     required: true
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${vcn_compartment_ocid}
   assign_dns:
     title: Assign DNS records
     type: boolean
-    default: false
     required: true
   worker_subnet_id:
     title: Worker subnet
@@ -148,7 +154,7 @@ variables:
     type: oci:core:subnet:id
     required: true
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${vcn_compartment_ocid}
       vcnId: ${vcn_id}
       hidePublicSubnet: false
       hidePrivateSubnet: false
@@ -162,14 +168,14 @@ variables:
     #   allowMultiple: true
     required: true
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${vcn_compartment_ocid}
       vcnId: ${vcn_id}
   pod_subnet_id:
     title: Pod subnet
     description: VCN subnet for the primary network interface of created worker node(s).
     type: oci:core:subnet:id
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${vcn_compartment_ocid}
       vcnId: ${vcn_id}
       hidePublicSubnet: false
       hidePrivateSubnet: false
@@ -182,7 +188,7 @@ variables:
     # additionalProps:
     #   allowMultiple: true
     dependsOn:
-      compartmentId: ${compartment_ocid}
+      compartmentId: ${vcn_compartment_ocid}
       vcnId: ${vcn_id}
 
   # SSH
@@ -191,21 +197,6 @@ variables:
     type: oci:core:ssh:publickey
     pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
     required: false
-  ssh_kms_vault_id:
-    title: SSH Vault
-    description: The OCI Vault used to encrypt the SSH key pair.
-    type: oci:kms:vault:id
-    required: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-  ssh_kms_secret_id:
-    title: SSH Vault secret
-    description: The OCI Vault secret containing the SSH private key.
-    type: oci:kms:secret:id
-    required: true
-    dependsOn:
-      compartmentId: ${compartment_ocid}
-      vaultId: ${ssh_kms_vault_id}
 
   # Cluster
   cluster_id:
@@ -222,8 +213,8 @@ variables:
     enum: [Flannel, NPN]
     allowMultiple: false
     required: true
-    visible:
-      eq: [worker_pool_mode, Node Pool]
+  #    visible:
+  #      eq: [worker_pool_mode, Node Pool]
   apiserver_private_host:
     title: Cluster private endpoint
     description: |
@@ -248,8 +239,9 @@ variables:
     title: Resource type
     description: Type of Oracle Cloud Compute resources for the created worker nodes.
     type: enum
-    default: Instance Pool
-    enum: [Node Pool, Instances, Instance Pool, Cluster Network]
+    default: Node Pool
+    enum:
+      [Node Pool, Virtual Node Pool, Instance, Instance Pool, Cluster Network]
     required: true
   worker_pool_size:
     title: Number of worker nodes
@@ -264,16 +256,39 @@ variables:
     required: true
     dependsOn:
       compartmentId: ${compartment_ocid}
+      worker_pool_mode: ${worker_pool_mode}
+    visible:
+      not:
+        - eq: [worker_pool_mode, Virtual Node Pool]
+  virtual_worker_shape:
+    title: Shape
+    type: enum
+    default: Pod.Standard.E4.Flex
+    enum:
+      - Pod.Standard.A1.Flex
+      - Pod.Standard.E3.Flex
+      - Pod.Standard.E4.Flex
+    required: true
+    dependsOn:
+      worker_pool_mode: ${worker_pool_mode}
+    visible:
+      eq: [worker_pool_mode, Virtual Node Pool]
   worker_ocpus:
     title: OCPUs
     type: number
     default: 2
     required: false
+    visible:
+      not:
+        - eq: [worker_pool_mode, Cluster Network]
   worker_memory:
     title: Memory (GB)
     type: number
     default: 16
     required: false
+    visible:
+      not:
+        - eq: [worker_pool_mode, Cluster Network]
   worker_boot_volume_size:
     title: Boot volume size (GB)
     type: number
@@ -330,44 +345,38 @@ variables:
       eq:
         - worker_image_type
         - Platform
-  worker_cloud_init:
-    visible: false
   worker_cloud_init_configure:
     type: boolean
     title: Custom cloud-init
-  worker_cloud_init_byon:
+  worker_disable_default_cloud_init:
+    type: boolean
+    title: Disable default cloud-init
+    visible: worker_cloud_init_configure
+  worker_cloud_init_content_type:
+    title: Custom cloud-init content type
+    type: enum
+    enum:
+      - text/cloud-config
+      - text/x-shellscript
+      - text/x-include-url
+    visible: worker_cloud_init_configure
+  worker_cloud_init:
     title: Cloud-init script
     type: text
     multiline: true
     required: true
     description: |
       Custom cloud-init script for worker node startup configuration. Must include the default OKE initialization call to join the cluster and begin operation.
-    visible:
-      and:
-        - worker_cloud_init_configure
-        - not:
-            - eq:
-                - worker_pool_mode
-                - Node Pool
-  worker_cloud_init_oke:
-    title: Cloud-init script
-    type: text
-    multiline: true
-    required: true
-    description: |
-      Custom cloud-init script for self-managed worker node startup configuration. Must uncomment and define the two required parameters and include the default OKE initialization call to join the cluster and begin operation.
-    visible:
-      and:
-        - worker_cloud_init_configure
-        - eq:
-            - worker_pool_mode
-            - Node Pool
+    visible: worker_cloud_init_configure
   worker_block_volume_type:
     title: Block volume type
     type: enum
     enum: [Paravirtualized, iSCSI]
     default: Paravirtualized
     required: true
+    visible:
+      not:
+        - eq: [worker_pool_mode, Virtual Node Pool]
   worker_node_labels:
     title: Node labels
     type: map
@@ -377,6 +386,9 @@ variables:
     type: boolean
     default: false
     required: true
+    visible:
+      not:
+        - eq: [worker_pool_mode, Virtual Node Pool]
   worker_volume_kms_vault_id:
     title: KMS volume encryption vault
     description: Vault containing operator volume encryption keys.
@@ -398,15 +410,19 @@ variables:
     type: boolean
     default: false
     visible:
-      eq:
-        - worker_block_volume_type
-        - Paravirtualized
+      and:
+        - eq: [worker_block_volume_type, Paravirtualized]
+        - not:
+            - eq: [worker_pool_mode, Virtual Node Pool]
   kubeproxy_mode:
     title: Kubeproxy mode
     type: enum
     enum: [IPTables, IPVS]
     default: IPTables
     required: true
+    visible:
+      not:
+        - eq: [worker_pool_mode, Virtual Node Pool]
   worker_tags:
     title: Tagging
     type: oci:identity:tag:value
@@ -425,7 +441,6 @@ variables:
       and:
         - eq: [worker_pool_mode, Node Pool]
         - not: [create_iam_autoscaler_policy]
-
   drain:
     title: Cordon & Drain
     description: |
