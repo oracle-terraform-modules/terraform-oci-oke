@@ -24,6 +24,45 @@ The documentation here is currently being reorganised.
 ## News
 
 ***
+### August 18 2023: Announcing release v5.0.0-RC3
+
+- fix: 5.x Fallback to null for undefined subnet dns_label w/ assign_dns=false
+- fix: missing lb rule doesn't allow explicit ingress from anywhere
+
+
+### August 15 2023: Announcing release v5.0.0-RC2
+
+- feat: 5.x Implement node_eviction_node_pool_settings
+- docs: Add clarifying examples for operator instance principal
+- fix: missing lb rule so load balancers become healthy
+- feat: 5.x Update outputs for worker pools/ips/ids, eviction grace in seconds
+- fix: fix ssh_to_operator output if create_bastion is false
+- fix: 5.x Use locked dependency versions for GH mdbook cache
+- fix: 5.x Subnet dns_label, cloud_init error handling, SSH command cleanup
+- fix: 5.x Remove outdated Calico extension by @devoncrouse
+- fix: 5.x Update Cluster Autoscaler docs, image tag
+- fix: 5.x Evaluation for auto NSG creation with defaults
+
+
+### July 20 2023: Announcing release v5.0.0-beta.6
+
+- fix: 5.x Unspecified default placement FDs when mode != virtual-node-pool
+
+### July 20 2023: Announcing release v5.0.0-RC1
+
+- feat: Add 4.x->5.x migration blocks for subnets, cluster
+- feat: 5.x Add extra network extensions, update docs/examples
+- docs: docs updates
+- fix: 5.x Remove unrequired home provider for bastion submodule
+- fix: Update link to Oracle Contributor Agreement
+- fix: 5.x Disable unused datasources, create NSGs with auto defaults
+- fix: ssh_to_operator output use long form
+- docs: improve formatting of examples/workers tfvars
+- docs: improve formatting by putting more variables different lines
+- fix: 5.x Use correct state_id var in resource tags
+- feat: 5.x Implement worker pool drain
+- feat: 5.x Implement virtual node pools
+
 ### June 27 2023: Announcing release v5.0.0-beta.5
 
 - Safe handling of null values in strings on missing/destroy
