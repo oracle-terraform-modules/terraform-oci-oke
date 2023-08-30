@@ -92,21 +92,17 @@ variable "worker_memory" { default = 16 }
 variable "worker_boot_volume_size" { default = 50 }
 variable "worker_pv_transit_encryption" { default = false }
 
+variable "worker_disable_default_cloud_init" { type = bool }
 variable "worker_cloud_init_configure" { type = bool }
-variable "worker_cloud_init_oke" {
+variable "worker_cloud_init_content_type" {
+  default = "text/x-shellscript"
+  type    = string
+}
+variable "worker_cloud_init" {
   default = <<-EOT
   #!/usr/bin/env bash
   curl --fail -H "Authorization: Bearer Oracle" -L0 http://169.254.169.254/opc/v2/instance/metadata/oke_init_script | base64 --decode >/var/run/oke-init.sh
-  bash /etc/oke/oke-install.sh
-  EOT
-  type    = string
-}
-variable "worker_cloud_init_byon" {
-  default = <<-EOT
-  #!/usr/bin/env bash
-  #apiserver_host="10.0.0.1"
-  #ca_base64="LS0tLS1...LS0tCg==" # kubectl config view --raw -o json | jq -rcM '.clusters[0].cluster["certificate-authority-data"]'
-  bash /etc/oke/oke-install.sh --apiserver-endpoint "$\{apiserver_host}" --kubelet-ca-cert "$\{ca_base64}"
+  bash -x /var/run/oke-init.sh
   EOT
   type    = string
 }

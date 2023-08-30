@@ -6,8 +6,8 @@ locals {
   worker_image_type = contains(["platform", "custom"], lower(var.worker_image_type)) ? "custom" : "oke"
 
   worker_cloud_init = var.worker_cloud_init_configure ? [{
-    content_type = "text/x-shellscript",
-    content      = var.worker_pool_mode == "Node Pool" ? var.worker_cloud_init_oke : var.worker_cloud_init_byon
+    content_type = var.worker_cloud_init_content_type,
+    content      = var.worker_cloud_init
   }] : []
 }
 
@@ -53,16 +53,17 @@ module "oke" {
   worker_pool_size = var.worker_pool_size
   worker_pool_mode = lookup({
     "Node Pool"       = "node-pool"
-    "Instance"       = "instances"
+    "Instance"        = "instance"
     "Instance Pool"   = "instance-pool",
     "Cluster Network" = "cluster-network",
   }, var.worker_pool_mode, "node-pool")
 
-  worker_image_type       = lower(local.worker_image_type)
-  worker_image_id         = local.worker_image_id
-  worker_image_os         = var.worker_image_os
-  worker_image_os_version = var.worker_image_os_version
-  worker_cloud_init       = local.worker_cloud_init
+  worker_image_type                 = lower(local.worker_image_type)
+  worker_image_id                   = local.worker_image_id
+  worker_image_os                   = var.worker_image_os
+  worker_image_os_version           = var.worker_image_os_version
+  worker_cloud_init                 = local.worker_cloud_init
+  worker_disable_default_cloud_init = var.worker_disable_default_cloud_init
 
   worker_shape = {
     shape            = var.worker_shape
@@ -75,7 +76,7 @@ module "oke" {
     format("%v", var.worker_pool_name) = {
       description = lookup({
         "Node Pool"       = "OKE-managed Node Pool"
-        "Instance"       = "Self-managed Instances"
+        "Instance"        = "Self-managed Instances"
         "Instance Pool"   = "Self-managed Instance Pool"
         "Cluster Network" = "Self-managed Cluster Network"
       }, var.worker_pool_mode, "")

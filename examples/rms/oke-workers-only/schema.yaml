@@ -76,9 +76,9 @@ variableGroups:
       - worker_volume_kms_key_id
       - worker_pv_transit_encryption
       - worker_cloud_init_configure
+      - worker_disable_default_cloud_init
+      - worker_cloud_init_content_type
       - worker_cloud_init
-      - worker_cloud_init_byon
-      - worker_cloud_init_oke
       - autoscale
       - drain
       - worker_tags
@@ -248,7 +248,7 @@ variables:
     title: Resource type
     description: Type of Oracle Cloud Compute resources for the created worker nodes.
     type: enum
-    default: Instance Pool
+    default: Node Pool
     enum: [Node Pool, Instance, Instance Pool, Cluster Network]
     required: true
   worker_pool_size:
@@ -330,38 +330,29 @@ variables:
       eq:
         - worker_image_type
         - Platform
-  worker_cloud_init:
-    visible: false
   worker_cloud_init_configure:
     type: boolean
     title: Custom cloud-init
-  worker_cloud_init_byon:
+  worker_disable_default_cloud_init:
+    type: boolean
+    title: Disable default cloud-init
+    visible: worker_cloud_init_configure
+  worker_cloud_init_content_type:
+    title: Custom cloud-init content type
+    type: enum
+    enum:
+      - text/cloud-config
+      - text/x-shellscript
+      - text/x-include-url
+    visible: worker_cloud_init_configure
+  worker_cloud_init:
     title: Cloud-init script
     type: text
     multiline: true
     required: true
     description: |
       Custom cloud-init script for worker node startup configuration. Must include the default OKE initialization call to join the cluster and begin operation.
-    visible:
-      and:
-        - worker_cloud_init_configure
-        - not:
-            - eq:
-                - worker_pool_mode
-                - Node Pool
-  worker_cloud_init_oke:
-    title: Cloud-init script
-    type: text
-    multiline: true
-    required: true
-    description: |
-      Custom cloud-init script for self-managed worker node startup configuration. Must uncomment and define the two required parameters and include the default OKE initialization call to join the cluster and begin operation.
-    visible:
-      and:
-        - worker_cloud_init_configure
-        - eq:
-            - worker_pool_mode
-            - Node Pool
+    visible: worker_cloud_init_configure
   worker_block_volume_type:
     title: Block volume type
     type: enum
