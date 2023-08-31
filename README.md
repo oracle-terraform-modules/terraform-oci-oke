@@ -2,12 +2,15 @@
 
 [![Documentation](https://github.com/oracle-terraform-modules/terraform-oci-oke/actions/workflows/mdbook.yaml/badge.svg?branch=5.x-mdbook&status=Documentation)](https://oracle-terraform-modules.github.io/terraform-oci-oke/)
 
+Documentation for this module is available at:
+
+- [Terraform OKE Module](https://oracle-terraform-modules.github.io/terraform-oci-oke/)
+
 This project implements a reusable Terraform module for [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/cloud-infrastructure) to provision an [Oracle Container Engine for Kubernetes (OKE)](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm) cluster with supporting infrastructure.
 
 
-## Documentation
+## Further Documentation
 
--   [Terraform OKE Module](https://oracle-terraform-modules.github.io/terraform-oci-oke/)
 -   [Terraform OCI Provider](https://www.terraform.io/docs/providers/oci/index.html)
 -   [Oracle Cloud Infrastructure](https://docs.cloud.oracle.com/iaas/Content/home.htm)
 -   [Oracle Container Engine](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm)
