@@ -104,7 +104,7 @@ locals {
             "${var.tag_namespace}.pool"               = pool_name,
             "${var.tag_namespace}.cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
           },
-          pool.autoscale ? { "${var.tag_namespace}.oraclecloud.com/cluster_autoscaler" = "managed" } : {},
+          pool.autoscale ? { "${var.tag_namespace}/cluster_autoscaler" = "managed" } : {},
         ) : {},
         var.defined_tags,
         lookup(pool, "defined_tags", {})
