@@ -18,6 +18,6 @@ The File Storage service instance will be created in a separate subnet with acce
 
 You can then review the following documentation for creating persistent volume claim and persistent volume using file storage
 
-Refer to [Provisioning PV and PVC using FSS]() for more information.
+Refer to [Provisioning PVCs on the File Storage Service](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingpersistentvolumeclaim_Provisioning_PVCs_on_FSS.htm) for more information.
 
 **CAUTION:** Running terraform destroy will remove the filesystem storage created using Terraform. Ensure you have taken the necessary backup if needed.
