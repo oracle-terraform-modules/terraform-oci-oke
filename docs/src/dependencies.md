@@ -7,7 +7,7 @@
 | <a name="requirement_cloudinit"></a> [cloudinit](#requirement\_cloudinit) | >= 2.2.0 |
 | <a name="requirement_helm"></a> [helm](#requirement\_helm) | >= 2.9.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.2.1 |
-| <a name="requirement_oci"></a> [oci](#requirement\_oci) | >= 4.115.0 |
+| <a name="requirement_oci"></a> [oci](#requirement\_oci) | >= 4.119.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.4.3 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9.1 |
 
@@ -15,7 +15,7 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | >= 4.115.0 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | >= 4.119.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.4.3 |
 
 ## Modules
