@@ -10,7 +10,7 @@ Scaling changes to the number and size of pools are immediate after changing the
 
 ## Autoscaling
 
-See [Extensions/Cluster Autoscaler](../guide/extensions.md).
+See [Extensions/Cluster Autoscaler](../guide/extensions_cluster_autoscaler.md).
 
 ## Examples
 
