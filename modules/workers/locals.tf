@@ -14,40 +14,44 @@ locals {
   }
 
   worker_pool_defaults = {
-    allow_autoscaler           = false
-    assign_public_ip           = var.assign_public_ip
-    autoscale                  = false
-    block_volume_type          = var.block_volume_type
-    boot_volume_size           = local.boot_volume_size
-    capacity_reservation_id    = var.capacity_reservation_id
-    cloud_init                 = [] # empty pool-specific default
-    compartment_id             = var.compartment_id
-    create                     = true
-    disable_default_cloud_init = var.disable_default_cloud_init
-    drain                      = false
-    eviction_grace_duration    = 300
-    force_node_delete          = true
-    extended_metadata          = {} # empty pool-specific default
-    image_id                   = var.image_id
-    image_type                 = var.image_type
-    memory                     = local.memory
-    mode                       = var.worker_pool_mode
-    node_labels                = var.node_labels
-    nsg_ids                    = [] # empty pool-specific default
-    ocpus                      = local.ocpus
-    os                         = var.image_os
-    os_version                 = var.image_os_version
-    placement_ads              = var.ad_numbers
-    platform_config            = var.platform_config
-    pod_nsg_ids                = var.pod_nsg_ids
-    pod_subnet_id              = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
-    preemptible_config         = var.preemptible_config
-    pv_transit_encryption      = var.pv_transit_encryption
-    shape                      = local.shape
-    size                       = var.worker_pool_size
-    subnet_id                  = var.worker_subnet_id
-    taints                     = [] # empty pool-specific default
-    volume_kms_key_id          = var.volume_kms_key_id
+    allow_autoscaler             = false
+    assign_public_ip             = var.assign_public_ip
+    autoscale                    = false
+    block_volume_type            = var.block_volume_type
+    boot_volume_size             = local.boot_volume_size
+    capacity_reservation_id      = var.capacity_reservation_id
+    cloud_init                   = [] # empty pool-specific default
+    compartment_id               = var.compartment_id
+    create                       = true
+    disable_default_cloud_init   = var.disable_default_cloud_init
+    drain                        = false
+    eviction_grace_duration      = 300
+    force_node_delete            = true
+    extended_metadata            = {} # empty pool-specific default
+    image_id                     = var.image_id
+    image_type                   = var.image_type
+    kubernetes_version           = var.kubernetes_version
+    memory                       = local.memory
+    mode                         = var.worker_pool_mode
+    node_cycling_enabled         = false
+    node_cycling_max_surge       = 1
+    node_cycling_max_unavailable = 0 
+    node_labels                  = var.node_labels
+    nsg_ids                      = [] # empty pool-specific default
+    ocpus                        = local.ocpus
+    os                           = var.image_os
+    os_version                   = var.image_os_version
+    placement_ads                = var.ad_numbers
+    platform_config              = var.platform_config
+    pod_nsg_ids                  = var.pod_nsg_ids
+    pod_subnet_id                = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+    preemptible_config           = var.preemptible_config
+    pv_transit_encryption        = var.pv_transit_encryption
+    shape                        = local.shape
+    size                         = var.worker_pool_size
+    subnet_id                    = var.worker_subnet_id
+    taints                       = [] # empty pool-specific default
+    volume_kms_key_id            = var.volume_kms_key_id
   }
 
   # Merge desired pool configuration onto default values
@@ -88,6 +92,12 @@ locals {
 
       # Use provided image_id for 'custom' type, or first match for all shape + OS criteria
       image_id = (pool.image_type == "custom" ? pool.image_id : element(tolist(setintersection([
+        pool.image_type == "oke" ? 
+          setintersection(
+            lookup(var.image_ids, "oke", null), 
+            lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
+          ) :
+          lookup(var.image_ids, "platform", null), 
         lookup(var.image_ids, pool.image_type, null),
         length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
         length(regexall("A1\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
