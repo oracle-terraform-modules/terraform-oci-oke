@@ -9,7 +9,7 @@ resource "oci_containerengine_node_pool" "workers" {
   compartment_id     = each.value.compartment_id
   defined_tags       = each.value.defined_tags
   freeform_tags      = each.value.freeform_tags
-  kubernetes_version = var.kubernetes_version
+  kubernetes_version = each.value.kubernetes_version
   name               = each.key
   node_shape         = each.value.shape
   ssh_public_key     = var.ssh_public_key
@@ -103,6 +103,12 @@ resource "oci_containerengine_node_pool" "workers" {
     }
   }
 
+  node_pool_cycling_details {
+      is_node_cycling_enabled = each.value.node_cycling_enabled
+      maximum_surge           = each.value.node_cycling_max_surge
+      maximum_unavailable     = each.value.node_cycling_max_unavailable
+  }
+
   node_source_details {
     boot_volume_size_in_gbs = each.value.boot_volume_size
     image_id                = each.value.image_id
@@ -111,11 +117,11 @@ resource "oci_containerengine_node_pool" "workers" {
 
   lifecycle { # prevent resources changes for changed fields
     ignore_changes = [
-      kubernetes_version, # e.g. if changed as part of an upgrade
+      # kubernetes_version, # e.g. if changed as part of an upgrade
       name, defined_tags, freeform_tags,
       node_metadata["user_data"],               # templated cloud-init
       node_config_details[0].placement_configs, # dynamic placement configs
-      node_source_details[0],                   # dynamic image lookup
+      # node_source_details[0],                   # dynamic image lookup
     ]
 
     precondition {
