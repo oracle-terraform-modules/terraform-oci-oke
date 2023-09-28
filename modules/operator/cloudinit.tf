@@ -36,9 +36,9 @@ data "cloudinit_config" "operator" {
           gpgcheck = true
           enabled  = true
         }
-        ol8_olcne15 = {
-          name     = "Oracle Linux Cloud Native Environment 1.5 ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/olcne15/$basearch/"
+        ol8_olcne17 = {
+          name     = "Oracle Linux Cloud Native Environment 1.7 ($basearch)"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/olcne17/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = true
