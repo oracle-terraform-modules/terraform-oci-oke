@@ -9,12 +9,18 @@ This section documents how to upgrade the OKE cluster using this project. At a h
 
 These steps must be performed in order.
 
+<!---
 ```admonish notice
 The out-of-place method is currently the **only** supported method of upgrading a cluster and worker nodes.
 ```
+--->
 
-## Prerequisites
+## Prerequisites 
 
+For in-place upgrade:
+* Enhanced cluster
+
+For out-of-place upgrade:
 * Bastion host is created
 * Operator host is created
 * instance_principal is enabled on operator
@@ -39,6 +45,60 @@ If you have modified the default resources e.g. security lists, you will need to
 ```shell
 terraform apply --target=module.oke.k8s_cluster
 ```
+
+## Upgrading the worker nodes using the in-place method
+
+In-place worker node upgrade is performed using the node_pool [node_cycle operation](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengupgradingk8sworkernode_topic-Performing_an_InPlace_Worker_Node_Upgrade_by_Cycling_an_Existing_Node_Pool.htm).
+
+Set `node_cycling_enabled` for the existing node_pools you want to upgrade and control the node replacement strategy using: `node_cycling_max_surge` and `node_cycling_max_unavailable`.
+
+```properties
+worker_pools = {
+  cycled-node-pool = {
+    description                  = "Cycling nodes in a node_pool.",
+    size                         = 2,
+    node_cycling_enabled         = true
+    node_cycling_max_surge       = 1
+    node_cycling_max_unavailable = 0
+  }
+}
+```
+
+By default, the node_pools are using the same Kubernetes version as the control plane (defined in the `kubernetes_version` variable).
+
+**Note:** You can override each node_pool Kubernetes version via the `kubernetes_version` attribute in the `worker_pools` variable.
+
+```properties
+kubernetes_version = "v1.26.7" # control plane Kubernetes version (used by default for the node_pools).
+
+worker_pools = {
+  cycled-node-pool = {
+    description                  = "Cycling nodes in a node_pool.",
+    size                         = 2,
+    kubernetes_version           = "v1.26.2" # override the default Kubernetes version
+  }
+}
+```
+
+### Worker node image compatibility
+
+If the node_pool is configured to use a custom worker node image (`image_type = custom`), make sure that the worker ndoe image referenced in the `image_id` attribute of the `worker_pools` is compatible with the new `kubernetes_version`.
+
+
+```properties
+kubernetes_version = "v1.26.7" # control plane Kubernetes version (used by default for the node_pools).
+
+worker_pools = {
+  cycled-node-pool = {
+    description                  = "Cycling nodes in a node_pool.",
+    size                         = 2,
+    image_type                   = "custom",
+    image_id                     = "ocid1.image..."
+  }
+}
+```
+
+**Note:** A new `image_id`, compatible with the node_pool `kubernetes_version` is automatically configured when `image_type` is not configured for the node_pool or set to the values (`"oke"` or `"platform"`).
 
 ## Upgrading the worker nodes using the out-of-place method
 

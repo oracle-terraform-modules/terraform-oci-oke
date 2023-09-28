@@ -9,8 +9,8 @@ data "oci_containerengine_node_pool_option" "oke" {
 }
 
 locals {
-  k8s_version_length = length(var.kubernetes_version)
-  k8s_version_only   = substr(var.kubernetes_version, 1, local.k8s_version_length)
+  k8s_versions        = toset(concat([ var.kubernetes_version ], [ for k, v in var.worker_pools: lookup(v, "kubernetes_version", "") if lookup(v, "kubernetes_version", "") != "" ]))
+  k8s_versions_only   = [ for k8_version in local.k8s_versions: trimprefix(lower(k8_version), "v") ]
 
   # OKE managed node pool images
   node_pool_images = try(one(data.oci_containerengine_node_pool_option.oke[*].sources), [])
@@ -34,7 +34,7 @@ locals {
   image_ids = try(merge({
     x86_64   = [for k, v in local.parsed_images : k if v.arch == "x86_64"]
     aarch64  = [for k, v in local.parsed_images : k if v.arch == "aarch64"]
-    oke      = [for k, v in local.parsed_images : k if v.image_type == "oke" && v.k8s_version == local.k8s_version_only]
+    oke      = [for k, v in local.parsed_images : k if v.image_type == "oke" && contains(local.k8s_versions_only, v.k8s_version)]
     platform = [for k, v in local.parsed_images : k if v.image_type == "platform"]
     gpu      = [for k, v in local.parsed_images : k if v.is_gpu]
     nongpu   = [for k, v in local.parsed_images : k if !v.is_gpu]
@@ -42,5 +42,8 @@ locals {
     # Include groups for OS name and major version
     # https://developer.hashicorp.com/terraform/language/expressions/for#grouping-results
     for k, v in local.parsed_images : format("%v %v", v.os, split(".", v.os_version)[0]) => k...
-  }), {})
+    }, {
+    # Include groups for referenced Kubernetes versions
+    for k, v in local.parsed_images : format("%v", v.k8s_version) => k... if contains(local.k8s_versions_only, v.k8s_version)
+    }), {})
 }

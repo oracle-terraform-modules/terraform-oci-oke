@@ -25,6 +25,7 @@
     - [Scaling](./guide/workers_scaling.md)
     - [Storage](./guide/workers_storage.md)
     - [Draining](./guide/workers_drain.md)
+    - [Node-Cycle](./guide/workers_node_cycle.md)
   - [Load balancers](./guide/loadbalancers.md)    
   - [Bastion](./guide/bastion.md)
     - [SSH](./guide/bastion_ssh.md)
