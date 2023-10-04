@@ -19,7 +19,7 @@ locals {
       "Allow TCP egress from internal load balancers to workers for Node Ports" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
-      "Allow ICMP egress from internal load balancersto worker nodes for path discovery" : {
+      "Allow ICMP egress from internal load balancers to worker nodes for path discovery" : {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow TCP egress from internal load balancers to workers for health checks" : {
