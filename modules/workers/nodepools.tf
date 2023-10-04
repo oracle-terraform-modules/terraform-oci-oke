@@ -80,15 +80,15 @@ resource "oci_containerengine_node_pool" "workers" {
   )
 
   node_eviction_node_pool_settings {
-    eviction_grace_duration              = ( floor(tonumber(each.value.eviction_grace_duration) / 60) > 0 ?
-                                              ( each.value.eviction_grace_duration > 3600 ?
-                                                format("PT%dM", 60) :
-                                                ( each.value.eviction_grace_duration % 60 == 0 ?
-                                                    format("PT%dM", floor(each.value.eviction_grace_duration / 60)) :
-                                                    format("PT%dM%dS", floor(each.value.eviction_grace_duration / 60), each.value.eviction_grace_duration % 60)
-                                                )
-                                              ) :
-                                              format("PT%dS", each.value.eviction_grace_duration)
+    eviction_grace_duration = (floor(tonumber(each.value.eviction_grace_duration) / 60) > 0 ?
+      (each.value.eviction_grace_duration > 3600 ?
+        format("PT%dM", 60) :
+        (each.value.eviction_grace_duration % 60 == 0 ?
+          format("PT%dM", floor(each.value.eviction_grace_duration / 60)) :
+          format("PT%dM%dS", floor(each.value.eviction_grace_duration / 60), each.value.eviction_grace_duration % 60)
+        )
+      ) :
+      format("PT%dS", each.value.eviction_grace_duration)
     )
     is_force_delete_after_grace_duration = tobool(each.value.force_node_delete)
   }
@@ -104,9 +104,9 @@ resource "oci_containerengine_node_pool" "workers" {
   }
 
   node_pool_cycling_details {
-      is_node_cycling_enabled = each.value.node_cycling_enabled
-      maximum_surge           = each.value.node_cycling_max_surge
-      maximum_unavailable     = each.value.node_cycling_max_unavailable
+    is_node_cycling_enabled = each.value.node_cycling_enabled
+    maximum_surge           = each.value.node_cycling_max_surge
+    maximum_unavailable     = each.value.node_cycling_max_unavailable
   }
 
   node_source_details {

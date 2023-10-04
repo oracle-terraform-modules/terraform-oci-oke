@@ -25,7 +25,7 @@ locals {
 module "vcn" {
   count          = var.create_vcn ? 1 : 0
   source         = "oracle-terraform-modules/vcn/oci"
-  version        = "3.5.3"
+  version        = "3.5.4"
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
   # Standard tags as defined if enabled for use, or freeform
@@ -43,7 +43,7 @@ module "vcn" {
     local.network_freeform_tags,
   )
 
-  # attached_drg_id = var.drg_id != null ? var.drg_id : (var.create_drg ? module.drg[0].drg_id : null)
+  attached_drg_id = var.drg_id != null ? var.drg_id : (tobool(var.create_drg) ? module.drg[0].drg_id : null)
 
   create_internet_gateway = alltrue([
     var.vcn_create_internet_gateway != "never",    # always disable
@@ -77,16 +77,22 @@ module "vcn" {
   vcn_name                     = coalesce(var.vcn_name, "oke-${local.state_id}")
 }
 
-# module "drg" {
-#   count          = var.create_drg || var.drg_id != null ? 1 : 0
-#   source         = "oracle-terraform-modules/drg/oci"
-#   version        = "1.0.3"
-#   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
+module "drg" {
+  count          = tobool(var.create_drg) || var.drg_id != null ? 1 : 0
+  source         = "oracle-terraform-modules/drg/oci"
+  version        = "1.0.5"
+  compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
-#   drg_id              = var.drg_id # existing DRG ID or null
-#   drg_display_name    = coalesce(var.drg_display_name, "oke-${local.state_id}")
-#   drg_vcn_attachments = var.drg_attachments
-# }
+  drg_id           = one([var.drg_id]) # existing DRG ID or null
+  drg_display_name = coalesce(var.drg_display_name, "oke-${local.state_id}")
+  drg_vcn_attachments = tobool(var.create_drg) ? { for k, v in module.vcn : k => {
+    # gets the vcn_id values dynamically from the vcn module 
+    vcn_id : v.vcn_id
+    vcn_transit_routing_rt_id : null
+    drg_route_table_id : null
+    }
+  } : var.drg_attachments
+}
 
 module "network" {
   source           = "./modules/network"
