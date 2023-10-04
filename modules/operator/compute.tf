@@ -94,6 +94,7 @@ resource "oci_core_instance" "operator" {
 
 resource "null_resource" "operator_changed" {
   triggers = {
+    cloud_init      = jsonencode(var.cloud_init)
     image_id        = var.image_id
     install_helm    = var.install_helm
     install_k9s     = var.install_k9s
