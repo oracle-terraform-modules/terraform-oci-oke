@@ -9,8 +9,8 @@ data "oci_containerengine_node_pool_option" "oke" {
 }
 
 locals {
-  k8s_versions        = toset(concat([ var.kubernetes_version ], [ for k, v in var.worker_pools: lookup(v, "kubernetes_version", "") if lookup(v, "kubernetes_version", "") != "" ]))
-  k8s_versions_only   = [ for k8_version in local.k8s_versions: trimprefix(lower(k8_version), "v") ]
+  k8s_versions      = toset(concat([var.kubernetes_version], [for k, v in var.worker_pools : lookup(v, "kubernetes_version", "") if lookup(v, "kubernetes_version", "") != ""]))
+  k8s_versions_only = [for k8_version in local.k8s_versions : trimprefix(lower(k8_version), "v")]
 
   # OKE managed node pool images
   node_pool_images = try(one(data.oci_containerengine_node_pool_option.oke[*].sources), [])
@@ -45,5 +45,5 @@ locals {
     }, {
     # Include groups for referenced Kubernetes versions
     for k, v in local.parsed_images : format("%v", v.k8s_version) => k... if contains(local.k8s_versions_only, v.k8s_version)
-    }), {})
+  }), {})
 }

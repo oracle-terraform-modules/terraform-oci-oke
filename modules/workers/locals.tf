@@ -35,7 +35,7 @@ locals {
     mode                         = var.worker_pool_mode
     node_cycling_enabled         = false
     node_cycling_max_surge       = 1
-    node_cycling_max_unavailable = 0 
+    node_cycling_max_unavailable = 0
     node_labels                  = var.node_labels
     nsg_ids                      = [] # empty pool-specific default
     ocpus                        = local.ocpus
@@ -92,12 +92,12 @@ locals {
 
       # Use provided image_id for 'custom' type, or first match for all shape + OS criteria
       image_id = (pool.image_type == "custom" ? pool.image_id : element(tolist(setintersection([
-        pool.image_type == "oke" ? 
-          setintersection(
-            lookup(var.image_ids, "oke", null), 
-            lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
-          ) :
-          lookup(var.image_ids, "platform", null), 
+        pool.image_type == "oke" ?
+        setintersection(
+          lookup(var.image_ids, "oke", null),
+          lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
+        ) :
+        lookup(var.image_ids, "platform", null),
         lookup(var.image_ids, pool.image_type, null),
         length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
         length(regexall("A1\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
