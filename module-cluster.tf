@@ -19,7 +19,7 @@ locals {
   cluster_id      = var.create_cluster ? one(module.cluster[*].cluster_id) : var.cluster_id
   cluster_name    = var.cluster_name
 
-  cluster-context = "context-${substr(local.cluster_id, (length(local.cluster_id) - 11), length(local.cluster_id))}"
+  cluster-context = try(format("context-%s", substr(local.cluster_id, -11, -1)), "")
 
   kubeconfig_public  = var.control_plane_is_public ? try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", ""), local.cluster-context, var.cluster_name)), tomap({})) : null
   kubeconfig_private = try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", ""), local.cluster-context, var.cluster_name)), tomap({}))
