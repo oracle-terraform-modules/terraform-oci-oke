@@ -63,6 +63,7 @@ variable "cluster_autoscaler_namespace" { type = string }
 variable "cluster_autoscaler_helm_version" { type = string }
 variable "cluster_autoscaler_helm_values" { type = map(string) }
 variable "cluster_autoscaler_helm_values_files" { type = list(string) }
+variable "expected_autoscale_worker_pools" { type = number }
 
 # Prometheus
 variable "prometheus_install" { type = bool }
