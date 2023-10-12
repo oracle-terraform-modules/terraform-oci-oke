@@ -9,7 +9,7 @@ locals {
     alltrue([
       local.bastion_nsg_create == "auto",
       coalesce(lookup(local.bastion_nsg_config, "id", null), "none") == "none",
-      var.create_cluster, var.create_bastion,
+      var.create_bastion,
     ]),
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
