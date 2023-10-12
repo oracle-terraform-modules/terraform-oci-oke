@@ -30,3 +30,8 @@ output "worker_drain_expected" {
   description = "# of nodes expected to be draining in worker pools"
   value       = local.expected_drain_count
 }
+
+output "worker_pool_autoscale_expected" {
+  description = "# of worker pools expected with autoscale enabled from created worker pools"
+  value       = local.expected_autoscale_worker_pools
+}

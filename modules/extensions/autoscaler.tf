@@ -12,7 +12,7 @@ locals {
   cluster_autoscaler_enabled = alltrue([
     var.cluster_autoscaler_install,
     var.expected_node_count > 0,
-    length(local.worker_pools_autoscaling) > 0,
+    var.expected_autoscale_worker_pools > 0,
   ])
 
   # Templated Helm manifest values
