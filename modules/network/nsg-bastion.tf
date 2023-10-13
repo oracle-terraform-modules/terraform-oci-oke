@@ -20,6 +20,11 @@ locals {
         protocol = local.tcp_protocol, port = local.ssh_port, source = cidr, source_type = local.rule_type_cidr,
       }
     },
+    {
+      "Allow TCP egress from bastion to OCI services" : {
+        protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
+      },
+    },
     local.operator_nsg_enabled ? {
       "Allow SSH egress from bastion to operator" = {
         protocol = local.tcp_protocol, port = local.ssh_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg,
