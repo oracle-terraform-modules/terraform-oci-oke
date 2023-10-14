@@ -7,6 +7,12 @@ locals {
 
   # https://canonical-cloud-init.readthedocs-hosted.com/en/latest/reference/merging.html
   default_cloud_init_merge_type = "list(append)+dict(no_replace,recurse_list)+str(append)"
+
+  baserepo        = "ol${var.operator_image_os_version}"
+  developer_EPEL  = "${local.baserepo}_developer_EPEL"
+  olcne17         = "${local.baserepo}_olcne17"
+  developer_olcne = "${local.baserepo}_developer_olcne"
+
 }
 
 # https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html
@@ -29,23 +35,23 @@ data "cloudinit_config" "operator" {
         var.install_helm ? "helm" : null,
       ])
       yum_repos = {
-        ol8_developer_EPEL = {
+        "${local.developer_EPEL}" = {
           name     = "Oracle Linux $releasever EPEL Packages for Development ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/developer/EPEL/$basearch/"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/developer/EPEL/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = true
         }
-        ol8_olcne17 = {
+        "${local.olcne17}" = {
           name     = "Oracle Linux Cloud Native Environment 1.7 ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/olcne17/$basearch/"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/olcne17/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = true
         }
-        ol8_developer_olcne = {
+        "${local.developer_olcne}" = {
           name     = "Developer Preview for Oracle Linux Cloud Native Environment ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL8/developer/olcne/$basearch/"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/developer/olcne/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = false
