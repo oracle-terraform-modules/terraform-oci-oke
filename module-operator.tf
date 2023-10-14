@@ -54,25 +54,26 @@ module "operator" {
   bastion_user = var.bastion_user
 
   # Operator
-  assign_dns            = var.assign_dns
-  availability_domain   = coalesce(var.operator_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
-  cloud_init            = var.operator_cloud_init
-  image_id              = local.operator_image_id
-  install_helm          = var.operator_install_helm
-  install_k9s           = var.operator_install_k9s
-  install_kubectx       = var.operator_install_kubectx
-  kubeconfig            = yamlencode(local.kubeconfig_private)
-  kubernetes_version    = var.kubernetes_version
-  nsg_ids               = compact(flatten([var.operator_nsg_ids, try(module.network.operator_nsg_id, null)]))
-  pv_transit_encryption = var.operator_pv_transit_encryption
-  shape                 = var.operator_shape
-  ssh_private_key       = sensitive(local.ssh_private_key) # to await cloud-init completion
-  ssh_public_key        = local.ssh_public_key
-  subnet_id             = try(module.network.operator_subnet_id, "") # safe destroy; validated in submodule
-  timezone              = var.timezone
-  upgrade               = var.operator_upgrade
-  user                  = var.operator_user
-  volume_kms_key_id     = var.operator_volume_kms_key_id
+  assign_dns                = var.assign_dns
+  availability_domain       = coalesce(var.operator_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
+  cloud_init                = var.operator_cloud_init
+  image_id                  = local.operator_image_id
+  install_helm              = var.operator_install_helm
+  install_k9s               = var.operator_install_k9s
+  install_kubectx           = var.operator_install_kubectx
+  kubeconfig                = yamlencode(local.kubeconfig_private)
+  kubernetes_version        = var.kubernetes_version
+  nsg_ids                   = compact(flatten([var.operator_nsg_ids, try(module.network.operator_nsg_id, null)]))
+  operator_image_os_version = var.operator_image_os_version
+  pv_transit_encryption     = var.operator_pv_transit_encryption
+  shape                     = var.operator_shape
+  ssh_private_key           = sensitive(local.ssh_private_key) # to await cloud-init completion
+  ssh_public_key            = local.ssh_public_key
+  subnet_id                 = try(module.network.operator_subnet_id, "") # safe destroy; validated in submodule
+  timezone                  = var.timezone
+  upgrade                   = var.operator_upgrade
+  user                      = var.operator_user
+  volume_kms_key_id         = var.operator_volume_kms_key_id
 
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence
