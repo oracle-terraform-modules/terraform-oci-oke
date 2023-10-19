@@ -19,13 +19,13 @@ data "oci_core_images" "bastion" {
 }
 
 locals {
-  bastion_public_ip = (var.create_bastion
-    ? one(module.bastion[*].public_ip)
+  bastion_public_ip = (var.create_bastion && length(module.bastion) > 0
+    ? lookup(element(module.bastion, 0), "public_ip", var.bastion_public_ip)
     : var.bastion_public_ip
   )
 
-  bastion_images    = one(data.oci_core_images.bastion[*].images) # Data source result or null
-  bastion_image_ids = local.bastion_images[*].id                  # Image OCIDs from data source
+  bastion_images    = try(data.oci_core_images.bastion[0].images, tolist([])) # Data source result or empty
+  bastion_image_ids = local.bastion_images[*].id                              # Image OCIDs from data source
   bastion_image_id = (var.bastion_image_type == "custom"
     ? var.bastion_image_id : element(coalescelist(local.bastion_image_ids, ["none"]), 0)
   )
