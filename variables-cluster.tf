@@ -8,7 +8,7 @@ variable "create_cluster" {
 }
 
 variable "cluster_name" {
-  default     = null
+  default     = "oke"
   description = "The name of oke cluster."
   type        = string
 }

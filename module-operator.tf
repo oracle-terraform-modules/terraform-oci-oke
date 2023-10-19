@@ -20,8 +20,8 @@ data "oci_core_images" "operator" {
 
 locals {
   // The private IP of the operator instance, whether created in this TF state or existing provided by ID
-  operator_private_ip = (local.cluster_enabled && var.create_operator
-    ? one(module.operator[*].private_ip)
+  operator_private_ip = (local.cluster_enabled && var.create_operator && length(module.operator) > 0
+    ? lookup(element(module.operator, 0), "private_ip", var.operator_private_ip)
     : var.operator_private_ip
   )
 
@@ -32,8 +32,8 @@ locals {
   ])
 
   // The resolved image ID for the created operator instance
-  operator_images    = one(data.oci_core_images.operator[*].images) # Data source result or null
-  operator_image_ids = local.operator_images[*].id                  # Image OCIDs from data source
+  operator_images    = try(data.oci_core_images.operator[0].images, tolist([])) # Data source result or empty
+  operator_image_ids = local.operator_images[*].id                              # Image OCIDs from data source
   operator_image_id = (var.operator_image_type == "custom"
     ? var.operator_image_id : element(coalescelist(local.operator_image_ids, ["none"]), 0)
   )
