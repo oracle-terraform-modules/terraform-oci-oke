@@ -13,6 +13,19 @@ resource "oci_core_instance_configuration" "workers" {
     instance_type = "compute"
 
     launch_details {
+      agent_config {
+        are_all_plugins_disabled = each.value.agent_config.are_all_plugins_disabled
+        is_management_disabled   = each.value.agent_config.is_management_disabled
+        is_monitoring_disabled   = each.value.agent_config.is_monitoring_disabled
+        dynamic "plugins_config" {
+          for_each = each.value.agent_config.plugins_config
+          content {
+            name          = each.key
+            desired_state = each.value
+          }
+        }
+      }
+
       availability_domain = element(each.value.availability_domains, 1)
 
       # First value specified on pool, or null to select automatically

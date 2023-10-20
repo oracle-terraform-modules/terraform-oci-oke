@@ -60,6 +60,7 @@ module "workers" {
   max_pods_per_node          = var.max_pods_per_node
   node_labels                = var.worker_node_labels
   node_metadata              = var.worker_node_metadata
+  agent_config               = var.agent_config
   platform_config            = var.platform_config
   pod_nsg_ids                = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [try(module.network.pod_nsg_id, null)] : [])
   pod_subnet_id              = try(module.network.pod_subnet_id, "") # safe destroy; validated in submodule
