@@ -14,6 +14,12 @@ locals {
   }
 
   worker_pool_defaults = {
+    agent_config = {
+      are_all_plugins_disabled = false
+      is_management_disabled   = false
+      is_monitoring_disabled   = false
+      plugins_config           = {}
+    }
     allow_autoscaler             = false
     assign_public_ip             = var.assign_public_ip
     autoscale                    = false

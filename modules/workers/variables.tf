@@ -302,3 +302,14 @@ variable "platform_config" {
     percentage_of_cores_enabled                    = optional(bool),
   })
 }
+
+variable "agent_config" {
+  default     = null
+  description = "Default agent_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/InstanceAgentConfig for more information."
+  type = object({
+    are_all_plugins_disabled = bool,
+    is_management_disabled   = bool,
+    is_monitoring_disabled   = bool,
+    plugins_config           = map(string),
+  })
+}
