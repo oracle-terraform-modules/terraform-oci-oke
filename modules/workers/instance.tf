@@ -46,9 +46,16 @@ resource "oci_core_instance" "workers" {
   }
 
   agent_config {
-    are_all_plugins_disabled = false
-    is_management_disabled   = false
-    is_monitoring_disabled   = false
+    are_all_plugins_disabled = each.value.agent_config.are_all_plugins_disabled
+    is_management_disabled   = each.value.agent_config.is_management_disabled
+    is_monitoring_disabled   = each.value.agent_config.is_monitoring_disabled
+    dynamic "plugins_config" {
+      for_each = each.value.agent_config.plugins_config
+      content {
+        name          = each.key
+        desired_state = each.value
+      }
+    }
   }
 
   create_vnic_details {
