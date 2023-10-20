@@ -8,6 +8,11 @@
 {{#include ../../../examples/workers/vars-workers-clusternetwork.auto.tfvars:4:}}
 ```
 
+Instance agent configuration:
+```javascript
+{{#include ../../../examples/workers/vars-workers-agent.auto.tfvars:4:}}
+```
+
 ## References
 * [Cluster Networks with Instance Pools](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingclusternetworks.htm#Managing_Cluster_Networks)
 * [Large Clusters, Lowest Latency: Cluster Networking on Oracle Cloud Infrastructure](https://blogs.oracle.com/cloud-infrastructure/post/large-clusters-lowest-latency-cluster-networking-on-oracle-cloud-infrastructure)
