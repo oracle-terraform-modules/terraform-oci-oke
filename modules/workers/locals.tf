@@ -174,11 +174,11 @@ locals {
     for k, v in local.enabled_worker_pools : tobool(v.drain) ? lookup(v, "size", var.worker_pool_size) : 0
   ])
 
-   # Number of work pools in the worker pools with autoscale enabled
+  # Number of work pools in the worker pools with autoscale enabled
   expected_autoscale_worker_pools = length(local.enabled_worker_pools) == 0 ? 0 : sum([
     for k, v in local.enabled_worker_pools : tobool(v.autoscale) ? 1 : 0
   ])
- 
+
   # Enabled worker_pool map entries for node pools
   enabled_node_pools = {
     for k, v in local.enabled_worker_pools : k => v

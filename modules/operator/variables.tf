@@ -20,7 +20,7 @@ variable "install_kubectx" { type = bool }
 variable "kubeconfig" { type = string }
 variable "kubernetes_version" { type = string }
 variable "nsg_ids" { type = list(string) }
-variable "operator_image_os_version" { type = string}
+variable "operator_image_os_version" { type = string }
 variable "pv_transit_encryption" { type = bool }
 variable "shape" { type = map(any) }
 variable "ssh_private_key" {
