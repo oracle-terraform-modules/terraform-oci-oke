@@ -15,8 +15,8 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_oci"></a> [oci](#provider\_oci) | >= 4.119.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 3.4.3 |
+| <a name="provider_oci"></a> [oci](#provider\_oci) | 5.17.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | 3.5.1 |
 
 ## Modules
 
@@ -24,12 +24,13 @@
 |------|--------|---------|
 | <a name="module_bastion"></a> [bastion](#module\_bastion) | ./modules/bastion | n/a |
 | <a name="module_cluster"></a> [cluster](#module\_cluster) | ./modules/cluster | n/a |
+| <a name="module_drg"></a> [drg](#module\_drg) | oracle-terraform-modules/drg/oci | 1.0.5 |
 | <a name="module_extensions"></a> [extensions](#module\_extensions) | ./modules/extensions | n/a |
 | <a name="module_iam"></a> [iam](#module\_iam) | ./modules/iam | n/a |
 | <a name="module_network"></a> [network](#module\_network) | ./modules/network | n/a |
 | <a name="module_operator"></a> [operator](#module\_operator) | ./modules/operator | n/a |
 | <a name="module_utilities"></a> [utilities](#module\_utilities) | ./modules/utilities | n/a |
-| <a name="module_vcn"></a> [vcn](#module\_vcn) | oracle-terraform-modules/vcn/oci | 3.5.3 |
+| <a name="module_vcn"></a> [vcn](#module\_vcn) | oracle-terraform-modules/vcn/oci | 3.5.4 |
 | <a name="module_workers"></a> [workers](#module\_workers) | ./modules/workers | n/a |
 
 ## Resources
