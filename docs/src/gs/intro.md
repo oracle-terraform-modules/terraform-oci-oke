@@ -14,14 +14,31 @@
 This module automates the provisioning of an [OKE][uri-oci-oke] cluster.
 
 ```admonish notice
-The documentation here is for 5.x **only**. The documentation for earlier versions can be found on the [GitHub repo][uri-terraform-oci-oke].
+The documentation here is for 5.x **only**. The documentation for earlier versions can be found on the [GitHub repo][uri-terraform-oci-oke] on the relevant branch.
 ```
 
 ```admonish warning
-The documentation here is currently being reorganised.
+The documentation here is still being reorganised.
 ```
 
 ## News
+
+***
+### October 25 2023: Announcing release v5.0.0
+- https://github.com/oracle-terraform-modules/terraform-oci-oke/releases
+
+***
+### August 24 2023: Announcing release v5.0.0-RC5
+
+- docs: Push link to documentation further up in README
+- fix: 5.x Distinguish A1 from A10 shape for image selection
+- fix issues with the cluster_autoscaler defined_tags for worker nodes
+
+***
+### August 24 2023: Announcing release v5.0.0-RC4
+
+- docs: updated releases
+- fix: 5.x Include user-configured defined tags with cluster
 
 ***
 ### August 18 2023: Announcing release v5.0.0-RC3
