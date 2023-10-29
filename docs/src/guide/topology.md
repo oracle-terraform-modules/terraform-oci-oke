@@ -170,7 +170,7 @@ Because of the increased attack surface area, we ***do not*** recommend running 
 ### Private workers
 
 [ ![](../images/privateworkers.svg) ](../images/privateworkers-large.svg)
-*Figure 7: Deploying public workers*
+*Figure 7: Deploying private workers*
 
 When deployed in private mode, the worker subnet will be deployed as a private subnet and route to the NAT Gateway instead. This considerably reduces the surface attack area and improves the security posture of your OKE cluster as well as the rest of your infrastructure.
 
