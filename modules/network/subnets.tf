@@ -137,7 +137,7 @@ resource "oci_core_subnet" "oke" {
   lifecycle {
     ignore_changes = [
       freeform_tags, defined_tags, display_name,
-      cidr_block, dns_label, security_list_ids,
+      cidr_block, dns_label, security_list_ids, vcn_id, route_table_id,
     ]
   }
 }
@@ -158,7 +158,7 @@ resource "oci_core_security_list" "oke" {
 
   lifecycle {
     ignore_changes = [
-      freeform_tags, defined_tags, display_name,
+      freeform_tags, defined_tags, display_name, vcn_id,
       ingress_security_rules, egress_security_rules, # ignore for CCM-management
     ]
   }
