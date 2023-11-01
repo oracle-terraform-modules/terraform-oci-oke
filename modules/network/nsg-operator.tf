@@ -46,7 +46,7 @@ resource "oci_core_network_security_group" "operator" {
   defined_tags   = var.defined_tags
   freeform_tags  = var.freeform_tags
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags, display_name]
+    ignore_changes = [defined_tags, freeform_tags, display_name, vcn_id]
   }
 }
 
