@@ -91,6 +91,8 @@ locals {
         }
       ]
 
+      agent_config = coalesce(var.agent_config, pool.agent_config, local.worker_pool_defaults.agent_config)
+
       # Translate configured + available AD numbers e.g. 2 into tenancy/compartment-specific names
       availability_domains = compact([for ad_number in tolist(setintersection(pool.placement_ads, var.ad_numbers)) :
         lookup(var.ad_numbers_to_names, ad_number, null)
