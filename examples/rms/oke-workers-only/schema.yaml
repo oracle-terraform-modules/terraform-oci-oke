@@ -83,6 +83,33 @@ variableGroups:
       - drain
       - worker_tags
 
+  - title: "Oracle Cloud Agent"
+    visible:
+      and:
+        - not: { eq: [worker_pool_mode, Node Pool] }
+        - not: { eq: [worker_pool_mode, Virtual Node Pool] }
+    variables:
+      - agent_are_all_plugins_disabled
+      - agent_is_management_disabled
+      - agent_is_monitoring_disabled
+  - title: "Oracle Cloud Agent plugins"
+    visible:
+      and:
+        - not: { eq: [worker_pool_mode, Node Pool] }
+        - not: { eq: [worker_pool_mode, Virtual Node Pool] }
+    variables:
+      - agent_plugin_bastion
+      - agent_plugin_block_volume_management
+      - agent_plugin_compute_hpc_rdma_authentication
+      - agent_plugin_compute_hpc_rdma_auto_configuration
+      - agent_plugin_compute_instance_monitoring
+      - agent_plugin_compute_instance_run_command
+      - agent_plugin_compute_rdma_gpu_monitoring
+      - agent_plugin_custom_logs_monitoring
+      - agent_plugin_management_agent
+      - agent_plugin_oracle_autonomous_linux
+      - agent_plugin_os_management_service_agent
+
 variables:
   # Identity
   current_user_ocid:
@@ -181,6 +208,8 @@ variables:
       hidePrivateSubnet: false
       hideRegionalSubnet: false
       hideAdSubnet: false
+    visible:
+      eq: [cni_type, "NPN"]
   pod_nsg_id:
     title: Pod Network Security Group
     description: Network Security Groups for the created worker node(s), used to configure network access to instances. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengnetworkconfig.htm#securitylistconfig>Security Rule Configuration in ... Network Security Groups</a> for more information.
@@ -190,6 +219,8 @@ variables:
     dependsOn:
       compartmentId: ${vcn_compartment_ocid}
       vcnId: ${vcn_id}
+    visible:
+      eq: [cni_type, "NPN"]
 
   # SSH
   ssh_public_key:
@@ -449,6 +480,66 @@ variables:
     default: false
     required: true
 
+  # Oracle Cloud Agent (OCA) configuration
+  agent_are_all_plugins_disabled:
+    type: boolean
+    title: Disable all plugins?
+    default: false
+  agent_is_management_disabled:
+    type: boolean
+    title: Disable management?
+    default: false
+  agent_is_monitoring_disabled:
+    type: boolean
+    title: Disable monitoring?
+    default: false
+
+  # Oracle Cloud Agent (OCA) plugins
+  agent_plugin_bastion:
+    type: boolean
+    title: Enable Bastion?
+    default: false
+  agent_plugin_block_volume_management:
+    type: boolean
+    title: Enable block volume management?
+    default: false
+  agent_plugin_compute_hpc_rdma_authentication:
+    type: boolean
+    title: Enable RDMA authentication?
+    default: false
+  agent_plugin_compute_hpc_rdma_auto_configuration:
+    type: boolean
+    title: Enable RDMA auto-configuration?
+    default: false
+  agent_plugin_compute_instance_monitoring:
+    type: boolean
+    title: Enable Instance monitoring?
+    default: true
+  agent_plugin_compute_instance_run_command:
+    type: boolean
+    title: Enable run command?
+    default: true
+  agent_plugin_compute_rdma_gpu_monitoring:
+    type: boolean
+    title: Enable RDMA GPU monitoring?
+    default: false
+  agent_plugin_custom_logs_monitoring:
+    type: boolean
+    title: Enable custom logs monitoring?
+    default: true
+  agent_plugin_management_agent:
+    type: boolean
+    title: Enable management agent?
+    default: true
+  agent_plugin_oracle_autonomous_linux:
+    type: boolean
+    title: Enable Oracle Autonomous Linux?
+    default: false
+  agent_plugin_os_management_service_agent:
+    type: boolean
+    title: Enable OS management service agent?
+    default: false
+
 outputGroups:
   - title: Identity
     outputs:
@@ -474,6 +565,22 @@ outputGroups:
       - worker_shape
       - worker_image_id
       - autoscale
+  - title: Oracle Cloud Agent
+    outputs:
+      - agent_are_all_plugins_disabled
+      - agent_is_management_disabled
+      - agent_is_monitoring_disabled
+      - agent_plugin_bastion
+      - agent_plugin_block_volume_management
+      - agent_plugin_compute_hpc_rdma_authentication
+      - agent_plugin_compute_hpc_rdma_auto_configuration
+      - agent_plugin_compute_instance_monitoring
+      - agent_plugin_compute_instance_run_command
+      - agent_plugin_compute_rdma_gpu_monitoring
+      - agent_plugin_custom_logs_monitoring
+      - agent_plugin_management_agent
+      - agent_plugin_oracle_autonomous_linux
+      - agent_plugin_os_management_service_agent
 
 outputs:
   state_id:

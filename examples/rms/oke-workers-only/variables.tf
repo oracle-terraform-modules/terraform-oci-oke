@@ -130,3 +130,73 @@ variable "worker_tags" {
   default = {}
   type    = map(any)
 }
+
+variable "agent_are_all_plugins_disabled" {
+  default = false
+  type    = bool
+}
+
+variable "agent_is_management_disabled" {
+  default = false
+  type    = bool
+}
+
+variable "agent_is_monitoring_disabled" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_bastion" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_block_volume_management" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_compute_hpc_rdma_authentication" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_compute_hpc_rdma_auto_configuration" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_compute_instance_monitoring" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_compute_instance_run_command" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_compute_rdma_gpu_monitoring" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_custom_logs_monitoring" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_management_agent" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_oracle_autonomous_linux" {
+  default = false
+  type    = bool
+}
+
+variable "agent_plugin_os_management_service_agent" {
+  default = false
+  type    = bool
+}

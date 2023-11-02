@@ -89,6 +89,25 @@ module "oke" {
     }
   }
 
+  agent_config = {
+    are_all_plugins_disabled = var.agent_are_all_plugins_disabled
+    is_management_disabled   = var.agent_is_management_disabled
+    is_monitoring_disabled   = var.agent_is_monitoring_disabled
+    plugins_config = {
+      "Bastion"                             = var.agent_plugin_bastion ? "ENABLED" : "DISABLED"
+      "Block Volume Management"             = var.agent_plugin_block_volume_management ? "ENABLED" : "DISABLED"
+      "Compute HPC RDMA Authentication"     = var.agent_plugin_compute_hpc_rdma_authentication ? "ENABLED" : "DISABLED"
+      "Compute HPC RDMA Auto-Configuration" = var.agent_plugin_compute_hpc_rdma_auto_configuration ? "ENABLED" : "DISABLED"
+      "Compute Instance Monitoring"         = var.agent_plugin_compute_instance_monitoring ? "ENABLED" : "DISABLED"
+      "Compute Instance Run Command"        = var.agent_plugin_compute_instance_run_command ? "ENABLED" : "DISABLED"
+      "Compute RDMA GPU Monitoring"         = var.agent_plugin_compute_rdma_gpu_monitoring ? "ENABLED" : "DISABLED"
+      "Custom Logs Monitoring"              = var.agent_plugin_custom_logs_monitoring ? "ENABLED" : "DISABLED"
+      "Management Agent"                    = var.agent_plugin_management_agent ? "ENABLED" : "DISABLED"
+      "Oracle Autonomous Linux"             = var.agent_plugin_oracle_autonomous_linux ? "ENABLED" : "DISABLED"
+      "OS Management Service Agent"         = var.agent_plugin_os_management_service_agent ? "ENABLED" : "DISABLED"
+    }
+  }
+
   freeform_tags = {
     workers = lookup(var.worker_tags, "freeformTags", {
       created = format("%d", time_static.created.unix),

@@ -20,8 +20,8 @@ resource "oci_core_instance_configuration" "workers" {
         dynamic "plugins_config" {
           for_each = each.value.agent_config.plugins_config
           content {
-            name          = each.key
-            desired_state = each.value
+            name          = plugins_config.key
+            desired_state = plugins_config.value
           }
         }
       }
