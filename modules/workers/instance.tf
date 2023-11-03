@@ -110,6 +110,7 @@ resource "oci_core_instance" "workers" {
     }
 
     ignore_changes = [
+      agent_config, # TODO Not updateable; remove when supported
       defined_tags, freeform_tags, display_name,
       metadata["cluster_ca_cert"], metadata["user_data"],
       create_vnic_details[0].defined_tags,
