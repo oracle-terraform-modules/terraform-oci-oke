@@ -242,3 +242,9 @@ output "network_security_rules" {
 #   description = "Dynamic routing gateway ID"
 #   value       = try(one(module.drg[*].drg_id), null)
 # }
+
+# LPG
+output "lpg_all_attributes" {
+  description = "all attributes of created lpg"
+  value       = try(one(module.vcn[*].lpg_all_attributes), null)
+}
