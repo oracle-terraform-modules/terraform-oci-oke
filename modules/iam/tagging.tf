@@ -63,7 +63,7 @@ resource "oci_identity_tag_namespace" "oke" {
   compartment_id = var.compartment_id
   description    = "Tag namespace for OKE resources"
   name           = var.tag_namespace
-  defined_tags   = local.defined_tags
+  # defined_tags   = local.defined_tags
   freeform_tags  = local.freeform_tags
   lifecycle {
     ignore_changes = [defined_tags, freeform_tags]
@@ -75,7 +75,7 @@ resource "oci_identity_tag" "oke" {
   for_each         = local.create_iam_tag_namespace ? local.tags : {} #{ for k, v in oci_identity_tag_namespace.oke : k => local.tags } # local.create_iam_tag_namespace ? local.tags : {}
   description      = each.value
   name             = each.key
-  defined_tags     = local.defined_tags
+  # defined_tags     = local.defined_tags
   freeform_tags    = local.freeform_tags
   tag_namespace_id = one(oci_identity_tag_namespace.oke[*].id)
 
