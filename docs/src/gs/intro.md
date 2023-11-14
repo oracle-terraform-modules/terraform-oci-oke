@@ -27,7 +27,7 @@ The documentation here is still being reorganised.
 ### October 25 2023: Announcing release v5.0.0
 - https://github.com/oracle-terraform-modules/terraform-oci-oke/releases
 
-***
+<!-- ***
 ### August 24 2023: Announcing release v5.0.0-RC5
 
 - docs: Push link to documentation further up in README
@@ -106,7 +106,7 @@ The documentation here is still being reorganised.
 - 5.x Merge redundant shape results for platform_config type lookup
 - Include empty default for pool extended_metadata
 
-***
+*** -->
 
 ### May 9 2023: Announcing release v4.5.9
 
