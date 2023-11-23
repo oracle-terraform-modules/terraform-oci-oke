@@ -25,7 +25,7 @@ locals {
 module "vcn" {
   count          = var.create_vcn ? 1 : 0
   source         = "oracle-terraform-modules/vcn/oci"
-  version        = "3.5.5"
+  version        = "3.6.0"
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
   # Standard tags as defined if enabled for use, or freeform
