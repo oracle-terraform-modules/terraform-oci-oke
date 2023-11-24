@@ -58,6 +58,7 @@ module "operator" {
   availability_domain       = coalesce(var.operator_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
   cloud_init                = var.operator_cloud_init
   image_id                  = local.operator_image_id
+  install_cilium            = var.cilium_install
   install_helm              = var.operator_install_helm
   install_k9s               = var.operator_install_k9s
   install_kubectx           = var.operator_install_kubectx

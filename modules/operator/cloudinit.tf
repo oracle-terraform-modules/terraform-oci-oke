@@ -12,6 +12,8 @@ locals {
   developer_EPEL  = "${local.baserepo}_developer_EPEL"
   olcne17         = "${local.baserepo}_olcne17"
   developer_olcne = "${local.baserepo}_developer_olcne"
+  arch_amd        = "amd64"
+  arch_arm        = "aarch64"
 
 }
 
@@ -150,6 +152,25 @@ data "cloudinit_config" "operator" {
         ]
       })
       filename   = "20-k9s.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
+  }
+
+  # Optional cilium cli installation
+  dynamic "part" {
+    for_each = var.install_cilium ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt)",
+          "CLI_ARCH=${local.arch_amd}",
+          "if [ '$(uname -m)' = ${local.arch_arm} ]; then CLI_ARCH=${local.arch_arm}; fi",
+          "curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz",
+          "tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin"
+        ]
+      })
+      filename   = "20-cilium.yml"
       merge_type = local.default_cloud_init_merge_type
     }
   }

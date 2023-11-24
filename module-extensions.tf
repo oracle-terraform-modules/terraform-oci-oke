@@ -24,6 +24,15 @@ module "extensions" {
   cni_type  = var.cni_type
   pods_cidr = var.pods_cidr
 
+  # CNI: Cilium
+  cilium_install           = var.cilium_install
+  cilium_reapply           = var.cilium_reapply
+  cilium_namespace         = var.cilium_namespace
+  cilium_helm_version      = var.cilium_helm_version
+  cilium_helm_values       = var.cilium_helm_values
+  cilium_helm_values_files = var.cilium_helm_values_files
+
+
   # CNI: Multus
   multus_install       = var.multus_install
   multus_namespace     = var.multus_namespace
