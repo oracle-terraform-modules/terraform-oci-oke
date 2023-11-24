@@ -14,6 +14,7 @@ variable "assign_dns" { type = bool }
 variable "availability_domain" { type = string }
 variable "cloud_init" { type = list(map(string)) }
 variable "image_id" { type = string }
+variable "install_cilium" { type = bool }
 variable "install_helm" { type = bool }
 variable "install_k9s" { type = bool }
 variable "install_kubectx" { type = bool }

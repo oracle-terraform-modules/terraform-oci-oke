@@ -20,6 +20,14 @@ variable "vcn_cidrs" { type = list(string) }
 variable "cni_type" { type = string }
 variable "pods_cidr" { type = string }
 
+# CNI: Cilium
+variable "cilium_install" { type = bool }
+variable "cilium_reapply" { type = bool }
+variable "cilium_namespace" { type = string }
+variable "cilium_helm_version" { type = string }
+variable "cilium_helm_values" { type = map(string) }
+variable "cilium_helm_values_files" { type = list(string) }
+
 # CNI: Multus
 variable "multus_install" { type = bool }
 variable "multus_namespace" { type = string }
