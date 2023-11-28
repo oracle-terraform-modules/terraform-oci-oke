@@ -21,8 +21,6 @@ variableGroups:
   - title: "Identity"
     variables:
       - compartment_ocid
-      - create_iam_tag_namespace
-      - create_iam_defined_tags
       - use_defined_tags
       - tag_namespace
 
@@ -149,11 +147,7 @@ variables:
     type: boolean
   tag_namespace:
     title: Tag namespace for standard TF OKE defined tags (must exist with tags pre-created)
-    visible:
-      or:
-        - ${create_iam_tag_namespace}
-        - ${create_iam_defined_tags}
-        - ${use_defined_tags}
+    visible: ${use_defined_tags}
 
   # VCN
   create_vcn:
