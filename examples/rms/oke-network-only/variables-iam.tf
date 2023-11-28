@@ -26,8 +26,6 @@ variable "api_fingerprint" {
   type    = string
 }
 
-variable "create_iam_tag_namespace" { default = false }
-variable "create_iam_defined_tags" { default = false }
 variable "use_defined_tags" {
   default     = false
   description = "Add existing tags in the configured namespace to created resources when applicable."
