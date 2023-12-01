@@ -15,7 +15,7 @@ data "cloudinit_config" "workers" {
     for k, v in local.enabled_worker_pools : k => v
     if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool"
   }
-  gzip          = true
+  gzip          = false
   base64_encode = true
 
   # Include global and pool-specific custom cloud init MIME parts
