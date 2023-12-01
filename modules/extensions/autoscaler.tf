@@ -6,7 +6,7 @@
 
 locals {
   # Active worker pools that should be managed by the cluster autoscaler
-  worker_pools_autoscaling = { for k, v in var.worker_pools : k => v if tobool(lookup(v, "autoscale", false)) }
+  worker_pools_autoscaling = nonsensitive({ for k, v in var.worker_pools : k => v if tobool(lookup(v, "autoscale", false)) })
 
   # Whether to enable cluster autoscaler deployment based on configuration, active nodes, and autoscaling pools
   cluster_autoscaler_enabled = alltrue([
@@ -24,7 +24,10 @@ locals {
     "extraArgs.v"                                = "4",
     "extraArgs.stderrthreshold"                  = "info",
     "extraArgs.max-node-provision-time"          = "25m",
-    "extraArgs.scale-down-unneeded-time"         = "2m",
+    "extraArgs.scale-down-unneeded-time"         = "5m",
+    "extraArgs.scale-down-utilization-threshold" = "0.6",
+    "extraArgs.skip-nodes-with-system-pods"      = "true",
+    "extraArgs.skip-nodes-with-local-storage"    = "true",
     "extraArgs.unremovable-node-recheck-timeout" = "5m",
     "extraArgs.balance-similar-node-groups"      = "true",
     "extraArgs.balancing-ignore-label"           = "displayName",
