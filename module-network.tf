@@ -248,3 +248,7 @@ output "lpg_all_attributes" {
   description = "all attributes of created lpg"
   value       = try(one(module.vcn[*].lpg_all_attributes), null)
 }
+
+output "nat_gateway_all_attributes" {
+  value = module.vcn[*].nat_gateway_all_attributes
+}
