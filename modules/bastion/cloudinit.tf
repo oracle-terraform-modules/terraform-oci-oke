@@ -8,6 +8,15 @@ data "cloudinit_config" "bastion" {
 
   part {
     content_type = "text/cloud-config"
+    # https://cloudinit.readthedocs.io/en/latest/reference/examples.html#run-commands-on-first-boot
+    content = <<-EOT
+    runcmd:
+    - dnf config-manager --disable ol8_addons --disable ol8_appstream
+    EOT
+  }
+
+  part {
+    content_type = "text/cloud-config"
     # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
     content  = jsonencode({ package_upgrade = var.upgrade })
     filename = "10-packages.yml"
