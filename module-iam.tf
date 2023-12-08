@@ -55,7 +55,8 @@ module "iam" {
   source                       = "./modules/iam"
   compartment_id               = local.compartment_id
   state_id                     = local.state_id
-  tenancy_id                   = local.tenancy_id
+  tenancy_id                   = local.iam_compartment_id
+  identity_domain_name         = local.identity_domain_name
   cluster_id                   = local.cluster_id
   create_iam_resources         = var.create_iam_resources
   create_iam_autoscaler_policy = local.create_iam_autoscaler_policy

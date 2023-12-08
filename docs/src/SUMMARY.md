@@ -8,6 +8,7 @@
   - [Identity](./guide/identity.md)
     - [Policies](./guide/identity_policies.md)
     - [Tags](./guide/identity_tags.md)
+    - [Identity Domain](./guide/identity_domain.md)
   - [Network](./guide/network.md)
     - [Subnets](./guide/network_subnets.md)
     - [Network Security Groups](./guide/network_nsgs.md)    
