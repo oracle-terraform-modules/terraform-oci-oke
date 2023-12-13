@@ -3,7 +3,7 @@
 
 module "extensions" {
   source   = "./modules/extensions"
-  count    = local.operator_enabled ? 1 : 0
+  count    = alltrue([var.create_cluster,local.operator_enabled]) ? 1 : 0
   region   = var.region
   state_id = local.state_id
 
