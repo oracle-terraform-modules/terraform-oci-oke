@@ -40,6 +40,9 @@ locals {
     "extraEnv.OCI_SDK_APPEND_USER_AGENT"         = "oci-oke-cluster-autoscaler",
     "image.repository"                           = "iad.ocir.io/oracle/oci-cluster-autoscaler",
     "image.tag"                                  = "1.26.2-7",
+    "tolerations[0].key"                         = "autoscaler",
+    "tolerations[0].operator"                    = "Exists",
+    "tolerations[0].effect"                      = "NoSchedule",
   }
 }
 
