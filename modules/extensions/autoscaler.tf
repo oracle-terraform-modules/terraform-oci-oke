@@ -70,7 +70,6 @@ data "helm_template" "cluster_autoscaler" {
     iterator = helm_value
     content {
       name  = helm_value.key
-      type  = "string"
       value = helm_value.value
     }
   }
@@ -80,6 +79,7 @@ data "helm_template" "cluster_autoscaler" {
     iterator = helm_value
     content {
       name  = helm_value.key
+      type  = "string"
       value = helm_value.value
     }
   }
