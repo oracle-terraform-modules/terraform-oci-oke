@@ -92,6 +92,13 @@ module "drg" {
     drg_route_table_id : null
     }
   } : var.drg_attachments
+
+  # rpc parameters
+  remote_peering_connections = { for k, v in var.remote_peering_connections : k => {
+    "rpc_acceptor_id"     = try(v.rpc_acceptor_id, null),
+    "rpc_acceptor_region" = try(v.rpc_acceptor_region, null)
+    }
+  }
 }
 
 module "network" {
