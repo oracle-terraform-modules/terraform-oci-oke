@@ -40,13 +40,14 @@ module "cluster" {
   state_id       = local.state_id
 
   # Network
-  vcn_id                  = local.vcn_id
-  cni_type                = var.cni_type
-  control_plane_is_public = var.control_plane_is_public
-  control_plane_nsg_ids   = compact(flatten([var.control_plane_nsg_ids, try(module.network.control_plane_nsg_id, null)]))
-  control_plane_subnet_id = try(module.network.control_plane_subnet_id, "") # safe destroy; validated in submodule
-  pods_cidr               = var.pods_cidr
-  services_cidr           = var.services_cidr
+  vcn_id                            = local.vcn_id
+  cni_type                          = var.cni_type
+  control_plane_is_public           = var.control_plane_is_public
+  assign_public_ip_to_control_plane = var.assign_public_ip_to_control_plane
+  control_plane_nsg_ids             = compact(flatten([var.control_plane_nsg_ids, try(module.network.control_plane_nsg_id, null)]))
+  control_plane_subnet_id           = try(module.network.control_plane_subnet_id, "") # safe destroy; validated in submodule
+  pods_cidr                         = var.pods_cidr
+  services_cidr                     = var.services_cidr
   service_lb_subnet_id = (var.preferred_load_balancer == "public"
     ? try(module.network.pub_lb_subnet_id, "") # safe destroy; validated in submodule
     : try(module.network.int_lb_subnet_id, "")

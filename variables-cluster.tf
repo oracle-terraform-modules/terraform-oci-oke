@@ -29,6 +29,12 @@ variable "control_plane_is_public" {
   type        = bool
 }
 
+variable "assign_public_ip_to_control_plane" {
+  default     = false
+  description = "An additional variable to toggle public IP on Kubernetes control plane endpoint when its public."
+  type        = bool
+}
+
 variable "control_plane_nsg_ids" {
   default     = []
   description = "An additional list of network security groups (NSG) ids for the cluster endpoint."

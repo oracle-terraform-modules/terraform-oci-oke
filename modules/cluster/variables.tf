@@ -12,6 +12,7 @@ variable "cluster_type" { type = string }
 variable "cni_type" { type = string }
 variable "control_plane_is_public" { type = bool }
 variable "control_plane_nsg_ids" { type = set(string) }
+variable "assign_public_ip_to_control_plane" { type = bool }
 variable "control_plane_subnet_id" { type = string }
 variable "image_signing_keys" { type = set(string) }
 variable "kubernetes_version" { type = string }
