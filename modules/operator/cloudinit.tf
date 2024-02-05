@@ -10,11 +10,10 @@ locals {
 
   baserepo        = "ol${var.operator_image_os_version}"
   developer_EPEL  = "${local.baserepo}_developer_EPEL"
-  olcne17         = "${local.baserepo}_olcne17"
+  olcne18         = "${local.baserepo}_olcne18"
   developer_olcne = "${local.baserepo}_developer_olcne"
   arch_amd        = "amd64"
   arch_arm        = "aarch64"
-
 }
 
 # https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html
@@ -32,9 +31,10 @@ data "cloudinit_config" "operator" {
       packages = compact([
         "git",
         "jq",
-        "kubectl",
         "python3-oci-cli",
         var.install_helm ? "helm" : null,
+        var.install_istioctl ? "istio-istioctl" : null,
+        var.install_kubectl_from_repo ? "kubectl": null,
       ])
       yum_repos = {
         "${local.developer_EPEL}" = {
@@ -44,9 +44,9 @@ data "cloudinit_config" "operator" {
           gpgcheck = true
           enabled  = true
         }
-        "${local.olcne17}" = {
-          name     = "Oracle Linux Cloud Native Environment 1.7 ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/olcne17/$basearch/"
+        "${local.olcne18}" = {
+          name     = "Oracle Linux Cloud Native Environment 1.8 ($basearch)"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/olcne18/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = true
@@ -99,6 +99,24 @@ data "cloudinit_config" "operator" {
     })
     filename   = "10-growpart.yml"
     merge_type = local.default_cloud_init_merge_type
+  }
+
+  # kubectl installation
+  dynamic "part" {
+    for_each = var.install_kubectl_from_repo ? [] : [1]
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "CLI_ARCH='${local.arch_amd}'",
+          "if [ \"$(uname -m)\" = ${local.arch_arm} ]; then CLI_ARCH='arm64'; fi",
+          "curl -LO https://dl.k8s.io/release/${var.kubernetes_version}/bin/linux/$CLI_ARCH/kubectl",
+          "install -o root -g root -m 0755 kubectl /usr/bin/kubectl"
+        ]
+      })
+      filename   = "20-kubectl.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
   }
 
   # kubectx/kubens installation
@@ -164,8 +182,8 @@ data "cloudinit_config" "operator" {
       content = jsonencode({
         runcmd = [
           "CILIUM_CLI_VERSION=$(curl -s https://raw.githubusercontent.com/cilium/cilium-cli/master/stable.txt)",
-          "CLI_ARCH=${local.arch_amd}",
-          "if [ '$(uname -m)' = ${local.arch_arm} ]; then CLI_ARCH=${local.arch_arm}; fi",
+          "CLI_ARCH='${local.arch_amd}'",
+          "if [ \"$(uname -m)\" = ${local.arch_arm} ]; then CLI_ARCH='arm64'; fi",
           "curl -L --fail --remote-name-all https://github.com/cilium/cilium-cli/releases/download/$CILIUM_CLI_VERSION/cilium-linux-$CLI_ARCH.tar.gz",
           "tar xzvfC cilium-linux-$CLI_ARCH.tar.gz /usr/local/bin"
         ]
