@@ -65,9 +65,21 @@ variable "operator_install_helm" {
   type        = bool
 }
 
+variable "operator_install_istioctl" {
+  default     = false
+  description = "Whether to install istioctl on the created operator host."
+  type        = bool
+}
+
 variable "operator_install_k9s" {
   default     = false
   description = "Whether to install k9s on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
+variable "operator_install_kubectl_from_repo" {
+  default     = true
+  description = "Whether to install kubectl on the created operator host from olcne repo."
   type        = bool
 }
 
