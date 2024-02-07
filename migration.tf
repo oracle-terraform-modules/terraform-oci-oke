@@ -49,3 +49,10 @@ moved {
   from = module.oke.oci_containerengine_node_pool.nodepools
   to   = module.workers[0].oci_containerengine_node_pool.workers
 }
+
+# IAM
+
+moved {
+  from = module.iam.oci_identity_policy.cluster[0]
+  to   = module.iam.oci_identity_policy.after_cluster[0]
+}
