@@ -60,8 +60,10 @@ module "operator" {
   image_id                  = local.operator_image_id
   install_cilium            = var.cilium_install
   install_helm              = var.operator_install_helm
+  install_istioctl          = var.operator_install_istioctl
   install_k9s               = var.operator_install_k9s
   install_kubectx           = var.operator_install_kubectx
+  install_kubectl_from_repo = var.operator_install_kubectl_from_repo
   kubeconfig                = yamlencode(local.kubeconfig_private)
   kubernetes_version        = var.kubernetes_version
   nsg_ids                   = compact(flatten([var.operator_nsg_ids, try(module.network.operator_nsg_id, null)]))
@@ -75,6 +77,7 @@ module "operator" {
   upgrade                   = var.operator_upgrade
   user                      = var.operator_user
   volume_kms_key_id         = var.operator_volume_kms_key_id
+
 
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence
