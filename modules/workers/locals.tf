@@ -2,10 +2,11 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  boot_volume_size = lookup(var.shape, "boot_volume_size", 50)
-  memory           = lookup(var.shape, "memory", 4)
-  ocpus            = max(1, lookup(var.shape, "ocpus", 1))
-  shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+  boot_volume_size        = lookup(var.shape, "boot_volume_size", 50)
+  boot_volume_vpus_per_gb = lookup(var.shape, "boot_volume_vpus_per_gb", 10)
+  memory                  = lookup(var.shape, "memory", 4)
+  ocpus                   = max(1, lookup(var.shape, "ocpus", 1))
+  shape                   = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
 
   # Used for default values of required input for virtual node pools
   fault_domains_all = formatlist("FD-%v", [1, 2, 3])
@@ -25,6 +26,7 @@ locals {
     autoscale                    = false
     block_volume_type            = var.block_volume_type
     boot_volume_size             = local.boot_volume_size
+    boot_volume_vpus_per_gb      = local.boot_volume_vpus_per_gb
     capacity_reservation_id      = var.capacity_reservation_id
     cloud_init                   = [] # empty pool-specific default
     compartment_id               = var.compartment_id
