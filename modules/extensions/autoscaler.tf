@@ -9,11 +9,20 @@ locals {
   worker_pools_autoscaling = { for k, v in var.worker_pools : k => v if tobool(lookup(v, "autoscale", false)) }
 
   # Whether to enable cluster autoscaler deployment based on configuration, active nodes, and autoscaling pools
-  cluster_autoscaler_enabled = alltrue([
+  remote_cluster_autoscaler_enabled = alltrue([
     var.cluster_autoscaler_install,
     var.expected_node_count > 0,
     var.expected_autoscale_worker_pools > 0,
+    var.cluster_autoscaler_remote_exec
   ])
+
+  local_cluster_autoscaler_enabled = alltrue([
+    var.cluster_autoscaler_install,
+    var.expected_node_count > 0,
+    var.expected_autoscale_worker_pools > 0,
+    var.cluster_autoscaler_remote_exec == false
+  ])
+
 
   # Templated Helm manifest values
   cluster_autoscaler_manifest      = sensitive(one(data.helm_template.cluster_autoscaler[*].manifest))
@@ -118,7 +127,7 @@ data "helm_template" "cluster_autoscaler" {
 }
 
 resource "null_resource" "cluster_autoscaler" {
-  count = local.cluster_autoscaler_enabled ? 1 : 0
+  count = local.remote_cluster_autoscaler_enabled ? 1 : 0
 
   triggers = {
     manifest_md5 = try(md5(local.cluster_autoscaler_manifest), null)
@@ -146,5 +155,17 @@ resource "null_resource" "cluster_autoscaler" {
 
   provisioner "remote-exec" {
     inline = ["kubectl apply -f ${local.cluster_autoscaler_manifest_path}"]
+  }
+}
+
+resource "null_resource" "local_cluster_autoscaler" {
+  count = local.local_cluster_autoscaler_enabled ? 1 : 0
+
+  triggers = {
+    manifest_md5 = try(md5(local.cluster_autoscaler_manifest), null)
+  }
+
+  provisioner "local-exec" {
+    inline = ["cat ${local.cluster_autoscaler_manifest} | kubectl apply --dry-run='client' -f -"]
   }
 }
