@@ -50,7 +50,7 @@ locals {
 }
 
 data "helm_template" "cluster_autoscaler" {
-  count        = local.cluster_autoscaler_enabled ? 1 : 0
+  count        = local.remote_cluster_autoscaler_enabled || local.local_cluster_autoscaler_enabled ? 1 : 0
   chart        = "cluster-autoscaler"
   repository   = "https://kubernetes.github.io/autoscaler"
   version      = var.cluster_autoscaler_helm_version
