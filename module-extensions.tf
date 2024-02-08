@@ -53,6 +53,7 @@ module "extensions" {
   cluster_autoscaler_helm_values       = var.cluster_autoscaler_helm_values
   cluster_autoscaler_helm_values_files = var.cluster_autoscaler_helm_values_files
   expected_autoscale_worker_pools      = coalesce(one(module.workers[*].worker_pool_autoscale_expected), 0)
+  cluster_autoscaler_remote_exec       = var.cluster_autoscaler_remote_exec
 
   # Gatekeeper
   gatekeeper_install           = var.gatekeeper_install
