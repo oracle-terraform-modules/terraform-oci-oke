@@ -166,6 +166,6 @@ resource "null_resource" "local_cluster_autoscaler" {
   }
 
   provisioner "local-exec" {
-    inline = ["cat ${local.cluster_autoscaler_manifest} | kubectl apply --dry-run='client' -f -"]
+    command = "cat ${local.cluster_autoscaler_manifest} | kubectl apply --dry-run='client' -f -"
   }
 }
