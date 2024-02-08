@@ -17,6 +17,10 @@ The following parameters may be added on each pool definition to enable manageme
 
 Don't set `allow_autoscaler` and `autoscale` to `true` on the same pool. This will cause the cluster autoscaler pod to be unschedulable as the `oke.oraclecloud.com/cluster_autoscaler: managed` node label will override the `oke.oraclecloud.com/cluster_autoscaler: allowed` node label specified by the cluster autoscaler `nodeSelector` pod attribute.
 
+If you aren't using the operator you can deploy the helm chart using your the same device that is running Terraform.
+Just set `var.cluster_autoscaler_remote_exec` to `false`, and make sure your kubectl config is set via `KUBE_CONFIG_PATH`
+environment variable.
+
 ### Usage
 ```javascript
 {{#include ../../../examples/extensions/vars-extensions-cluster-autoscaler.auto.tfvars:4:}}
