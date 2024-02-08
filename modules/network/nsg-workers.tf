@@ -33,7 +33,7 @@ locals {
       "Allow TCP egress from workers to OKE control plane" : {
         protocol = local.tcp_protocol, port = local.oke_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
-      "Allow TCP ingress to workers for health check from OKE control plane" : {
+      "Allow TCP egress to OKE control plane from workers for health check" : {
         protocol = local.tcp_protocol, port = local.kubelet_api_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
       "Allow ALL ingress to workers from Kubernetes control plane for webhooks served by workers" : {
