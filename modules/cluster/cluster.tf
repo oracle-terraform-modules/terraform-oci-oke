@@ -16,7 +16,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   endpoint_config {
-    is_public_ip_enabled = var.control_plane_is_public ? var.assign_public_ip_to_control_plane : var.control_plane_is_public
+    is_public_ip_enabled = var.control_plane_is_public && var.assign_public_ip_to_control_planeßß
     nsg_ids              = var.control_plane_nsg_ids
     subnet_id            = var.control_plane_subnet_id
   }
