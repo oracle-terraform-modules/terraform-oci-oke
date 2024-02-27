@@ -31,7 +31,7 @@ variable "control_plane_is_public" {
 
 variable "assign_public_ip_to_control_plane" {
   default     = false
-  description = "An additional variable to toggle public IP on Kubernetes control plane endpoint when its public."
+  description = "Whether to assign a public IP address to the API endpoint for public access. Requires the control plane subnet to be public to assign a public IP address."
   type        = bool
 }
 

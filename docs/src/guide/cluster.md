@@ -5,6 +5,7 @@ See also:
 
 The OKE parameters concern mainly the following:
 * whether you want your OKE control plane to be public or private
+* whether to assign a public IP address to the API endpoint for public access
 * whether you want to deploy public or private worker nodes
 * whether you want to allow NodePort or ssh access to the worker nodes
 * Kubernetes options such as dashboard, networking
