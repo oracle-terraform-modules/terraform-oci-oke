@@ -79,6 +79,12 @@ variable "drg_id" {
   type        = string
 }
 
+variable "drg_compartment_id" {
+  default     = null
+  description = "Compartment for the DRG resource. Can be used to override network_compartment_id."
+  type        = string
+}
+
 variable "drg_attachments" {
   description = "DRG attachment configurations."
   type        = any
