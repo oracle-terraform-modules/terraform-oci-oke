@@ -39,6 +39,7 @@ locals {
     image_id                     = var.image_id
     image_type                   = var.image_type
     kubernetes_version           = var.kubernetes_version
+    max_pods_per_node            = min(max(var.max_pods_per_node, 1), 110)
     memory                       = local.memory
     mode                         = var.worker_pool_mode
     node_cycling_enabled         = false
