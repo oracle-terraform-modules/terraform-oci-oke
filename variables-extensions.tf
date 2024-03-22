@@ -367,3 +367,23 @@ variable "gatekeeper_helm_values_files" {
   type        = list(string)
 }
 
+# Service Account
+
+variable "create_service_account" {
+  default     = false
+  description = "Wether to create a service account or not."
+  type        = bool
+}
+
+variable "service_accounts" {
+  default     = {
+    kubeconfigsa = {
+      sa_name = "kubeconfigsa"
+      sa_namespace = "kube-system"
+      sa_cluster_role = "cluster-admin"
+      sa_cluster_role_binding = "kubeconfigsa-crb"
+    }
+  }
+  description = "Map of service accounts and associated parameters."
+  type        = map(any)
+}

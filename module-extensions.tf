@@ -3,7 +3,8 @@
 
 module "extensions" {
   source   = "./modules/extensions"
-  count    = alltrue([var.create_cluster,local.operator_enabled]) ? 1 : 0
+  depends_on = [ module.network ]
+  count    = alltrue([var.create_cluster, local.operator_enabled]) ? 1 : 0
   region   = var.region
   state_id = local.state_id
 
@@ -106,4 +107,8 @@ module "extensions" {
   mpi_operator_namespace      = var.mpi_operator_namespace
   mpi_operator_deployment_url = var.mpi_operator_deployment_url
   mpi_operator_version        = var.mpi_operator_version
+
+  # Service Account
+  create_service_account               = var.create_service_account
+  service_accounts                     = var.service_accounts
 }
