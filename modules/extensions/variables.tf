@@ -101,3 +101,7 @@ variable "gatekeeper_namespace" { type = string }
 variable "gatekeeper_helm_version" { type = string }
 variable "gatekeeper_helm_values" { type = map(string) }
 variable "gatekeeper_helm_values_files" { type = list(string) }
+
+# Service Account
+variable "create_service_account" { type = bool }
+variable "service_accounts" { type = map(any) }
