@@ -2,14 +2,28 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Used to retrieve cluster CA certificate or configure local kube context
+
+data "oci_containerengine_clusters" "cluster" {
+  count          = local.cluster_enabled ? 1 : 0
+  compartment_id = local.compartment_id
+
+  state = ["ACTIVE","UPDATING"]
+  filter {
+    name = "id"
+    values = [local.cluster_id]
+  }
+}
+
 data "oci_containerengine_cluster_kube_config" "public" {
-  count      = local.cluster_enabled && var.control_plane_is_public ? 1 : 0
+  count      = local.cluster_enabled && length(local.public_endpoint) > 0 ? 1 : 0
+
   cluster_id = local.cluster_id
   endpoint   = "PUBLIC_ENDPOINT"
 }
 
 data "oci_containerengine_cluster_kube_config" "private" {
   count      = local.cluster_enabled ? 1 : 0
+
   cluster_id = local.cluster_id
   endpoint   = "PRIVATE_ENDPOINT"
 }
@@ -21,6 +35,8 @@ locals {
 
   cluster-context = try(format("context-%s", substr(local.cluster_id, -11, -1)), "")
 
+  cluster_endpoints  = one(flatten(data.oci_containerengine_clusters.cluster[*].clusters[*].endpoints))
+  public_endpoint    = local.cluster_endpoints != null ? lookup(local.cluster_endpoints, "public_endpoint", "") : ""
   kubeconfig_public  = var.control_plane_is_public ? try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", ""), local.cluster-context, var.cluster_name)), tomap({})) : null
   kubeconfig_private = try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", ""), local.cluster-context, var.cluster_name)), tomap({}))
 
