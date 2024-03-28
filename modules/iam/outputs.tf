@@ -3,7 +3,7 @@
 
 output "dynamic_group_ids" {
   description = "Cluster IAM dynamic group IDs"
-  value = local.has_policy_statements ? compact([
+  value = local.has_policy_statements_before_cluster || local.has_policy_statements_after_cluster ? compact([
     one(oci_identity_dynamic_group.cluster[*].id),
     one(oci_identity_dynamic_group.workers[*].id),
     one(oci_identity_dynamic_group.autoscaling[*].id),
@@ -13,5 +13,8 @@ output "dynamic_group_ids" {
 
 output "policy_statements" {
   description = "Cluster IAM policy statements"
-  value       = local.has_policy_statements ? local.policy_statements : null
+  value       = local.has_policy_statements_before_cluster || local.has_policy_statements_after_cluster ? distinct(compact(flatten([
+    local.policy_statements_before_cluster,
+    local.policy_statements_after_cluster,
+  ]))) : null
 }
