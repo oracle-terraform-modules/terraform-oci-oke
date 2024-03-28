@@ -3,26 +3,26 @@
 
 # Used to retrieve cluster CA certificate or configure local kube context
 
-data "oci_containerengine_clusters" "cluster" {
-  count          = local.cluster_enabled ? 1 : 0
+data "oci_containerengine_clusters" "existing_cluster" {
+  count          = var.cluster_id != null ? 1 : 0
   compartment_id = local.compartment_id
 
   state = ["ACTIVE","UPDATING"]
   filter {
     name = "id"
-    values = [local.cluster_id]
+    values = [var.cluster_id]
   }
 }
 
 data "oci_containerengine_cluster_kube_config" "public" {
-  count      = local.cluster_enabled && length(local.public_endpoint) > 0 ? 1 : 0
+  count      = local.cluster_enabled && local.public_endpoint_available ? 1 : 0
 
   cluster_id = local.cluster_id
   endpoint   = "PUBLIC_ENDPOINT"
 }
 
 data "oci_containerengine_cluster_kube_config" "private" {
-  count      = local.cluster_enabled ? 1 : 0
+  count      = local.cluster_enabled && local.private_endpoint_available ? 1 : 0
 
   cluster_id = local.cluster_id
   endpoint   = "PRIVATE_ENDPOINT"
@@ -35,10 +35,11 @@ locals {
 
   cluster-context = try(format("context-%s", substr(local.cluster_id, -11, -1)), "")
 
-  cluster_endpoints  = one(flatten(data.oci_containerengine_clusters.cluster[*].clusters[*].endpoints))
-  public_endpoint    = local.cluster_endpoints != null ? lookup(local.cluster_endpoints, "public_endpoint", "") : ""
-  kubeconfig_public  = var.control_plane_is_public ? try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", ""), local.cluster-context, var.cluster_name)), tomap({})) : null
-  kubeconfig_private = try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", ""), local.cluster-context, var.cluster_name)), tomap({}))
+  existing_cluster_endpoints  = coalesce(one(flatten(data.oci_containerengine_clusters.existing_cluster[*].clusters[*].endpoints)), tomap({}))
+  public_endpoint_available   = var.cluster_id != null ? length(lookup(local.existing_cluster_endpoints, "public_endpoint", "")) > 0 : var.control_plane_is_public && var.assign_public_ip_to_control_plane
+  private_endpoint_available  = var.cluster_id != null ? length(lookup(local.existing_cluster_endpoints, "private_endpoint", "")) > 0 : true
+  kubeconfig_public           = var.control_plane_is_public ? try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", ""), local.cluster-context, var.cluster_name)), tomap({})) : null
+  kubeconfig_private          = try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", ""), local.cluster-context, var.cluster_name)), tomap({}))
 
   kubeconfig_clusters = try(lookup(local.kubeconfig_private, "clusters", []), [])
   apiserver_private_host = (var.create_cluster
@@ -143,13 +144,13 @@ output "cluster_id" {
 
 output "cluster_endpoints" {
   description = "Endpoints for the OKE cluster"
-  value       = var.create_cluster ? one(module.cluster[*].endpoints) : null
+  value       = var.create_cluster ? one(module.cluster[*].endpoints) : local.existing_cluster_endpoints
 }
 
 output "cluster_kubeconfig" {
   description = "OKE kubeconfig"
   value = var.output_detail ? (
-    var.control_plane_is_public ? local.kubeconfig_public : local.kubeconfig_private
+    local.public_endpoint_available ? local.kubeconfig_public : local.kubeconfig_private
   ) : null
 }
 
