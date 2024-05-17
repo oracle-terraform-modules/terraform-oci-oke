@@ -11,7 +11,7 @@ data "cloudinit_config" "bastion" {
     # https://cloudinit.readthedocs.io/en/latest/reference/examples.html#run-commands-on-first-boot
     content = <<-EOT
     runcmd:
-    - dnf config-manager --disable ol8_addons --disable ol8_appstream
+    - dnf config-manager --disable ol${var.bastion_image_os_version}_addons --disable ol${var.bastion_image_os_version}_appstream
     EOT
   }
 

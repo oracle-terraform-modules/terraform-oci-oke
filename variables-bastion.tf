@@ -60,7 +60,7 @@ variable "bastion_image_os" {
 }
 
 variable "bastion_image_os_version" {
-  default     = "8.8"
+  default     = "8"
   description = "Bastion image operating system version when bastion_image_type = 'platform'."
   type        = string
 }
