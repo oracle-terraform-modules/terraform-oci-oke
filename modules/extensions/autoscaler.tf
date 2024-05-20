@@ -63,16 +63,7 @@ data "helm_template" "cluster_autoscaler" {
   }
 
   dynamic "set" {
-    for_each = local.cluster_autoscaler_defaults
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      value = helm_value.value
-    }
-  }
-
-  dynamic "set" {
-    for_each = var.cluster_autoscaler_helm_values
+    for_each = merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_helm_values)
     iterator = helm_value
     content {
       name  = helm_value.key

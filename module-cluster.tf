@@ -131,10 +131,6 @@ module "cluster" {
     },
     local.service_lb_freeform_tags,
   )
-
-  providers = {
-    oci.home = oci.home
-  }
 }
 
 output "cluster_id" {

@@ -137,10 +137,6 @@ module "network" {
   vcn_cidrs                    = local.vcn_cidrs
   vcn_id                       = local.vcn_id
   worker_is_public             = var.worker_is_public
-
-  providers = {
-    oci.home = oci.home
-  }
 }
 
 # VCN
