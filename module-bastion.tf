@@ -46,18 +46,19 @@ module "bastion" {
   compartment_id = local.compartment_id
 
   # Bastion
-  assign_dns          = var.assign_dns
-  availability_domain = coalesce(var.bastion_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
-  image_id            = local.bastion_image_id
-  nsg_ids             = try(compact(flatten([var.bastion_nsg_ids, [try(module.network.bastion_nsg_id, null)]])), [])
-  is_public           = var.bastion_is_public
-  shape               = var.bastion_shape
-  ssh_private_key     = sensitive(local.ssh_private_key) # to await cloud-init completion
-  ssh_public_key      = local.ssh_public_key
-  subnet_id           = try(module.network.bastion_subnet_id, "") # safe destroy; validated in submodule
-  timezone            = var.timezone
-  upgrade             = var.bastion_upgrade
-  user                = var.bastion_user
+  assign_dns               = var.assign_dns
+  availability_domain      = coalesce(var.bastion_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
+  bastion_image_os_version = var.bastion_image_os_version
+  image_id                 = local.bastion_image_id
+  nsg_ids                  = try(compact(flatten([var.bastion_nsg_ids, [try(module.network.bastion_nsg_id, null)]])), [])
+  is_public                = var.bastion_is_public
+  shape                    = var.bastion_shape
+  ssh_private_key          = sensitive(local.ssh_private_key) # to await cloud-init completion
+  ssh_public_key           = local.ssh_public_key
+  subnet_id                = try(module.network.bastion_subnet_id, "") # safe destroy; validated in submodule
+  timezone                 = var.timezone
+  upgrade                  = var.bastion_upgrade
+  user                     = var.bastion_user
 
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence
