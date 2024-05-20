@@ -5,12 +5,9 @@ terraform {
   required_version = ">= 1.2.0"
 
   required_providers {
-
     oci = {
-      configuration_aliases = [oci.home]
-      source                = "oracle/oci"
-      version               = ">= 4.119.0"
+      source  = "oracle/oci"
+      version = ">= 4.119.0"
     }
-
   }
 }
