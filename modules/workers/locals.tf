@@ -58,6 +58,7 @@ locals {
     pv_transit_encryption        = var.pv_transit_encryption
     shape                        = local.shape
     size                         = var.worker_pool_size
+    ignore_size                  = false
     subnet_id                    = var.worker_subnet_id
     taints                       = [] # empty pool-specific default
     volume_kms_key_id            = var.volume_kms_key_id
@@ -190,6 +191,16 @@ locals {
     if lookup(v, "mode", "") == "node-pool"
   }
 
+  enabled_node_pools_with_ignore_size = {
+    for k, v in local.enabled_node_pools : k => v
+    if lookup(v, "ignore_size", "") == true
+  }
+
+  enabled_node_pools_without_ignore_size = {
+    for k, v in local.enabled_node_pools : k => v
+    if lookup(v, "ignore_size", "") == false
+  }
+
   # Enabled worker_pool map entries for virtual node pools
   enabled_virtual_node_pools = {
     for k, v in local.enabled_worker_pools : k => v
@@ -231,11 +242,13 @@ locals {
   }
 
   # Maps of worker pool OCI resources by pool name enriched with desired/custom parameters for various modes
-  worker_node_pools         = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instance_pools     = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instances          = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_node_pools_with_ignore_size    = { for k, v in oci_containerengine_node_pool.workers_ignore_size : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_node_pools_without_ignore_size = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_node_pools                     = merge(local.worker_node_pools_without_ignore_size, local.worker_node_pools_with_ignore_size)
+  worker_virtual_node_pools             = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_instance_pools                 = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_cluster_networks               = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_instances                      = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
 
   # Combined map of outputs by pool name for all modes excluding 'instance' (output separately)
   worker_pools_output = merge(
