@@ -6,7 +6,7 @@ locals {
   operator_nsg_create = coalesce(lookup(local.operator_nsg_config, "create", null), "auto")
   operator_nsg_enabled = anytrue([
     local.operator_nsg_create == "always",
-    alltrue([
+    anytrue([
       local.operator_nsg_create == "auto",
       coalesce(lookup(local.operator_nsg_config, "id", null), "none") == "none",
       var.create_cluster, var.create_operator,
