@@ -1,4 +1,4 @@
-# Copyright (c) 2022, 2023 Oracle Corporation and/or its affiliates.
+# Copyright (c) 2022, 2024 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Dynamic resource block for Node Pool groups defined in worker_pools
@@ -121,7 +121,7 @@ resource "oci_containerengine_node_pool" "workers" {
       name, defined_tags, freeform_tags,
       node_metadata["user_data"],               # templated cloud-init
       node_config_details[0].placement_configs, # dynamic placement configs
-      # node_source_details[0],                   # dynamic image lookup
+      node_config_details[0].size,              # cluster autoscaler management
     ]
 
     precondition {

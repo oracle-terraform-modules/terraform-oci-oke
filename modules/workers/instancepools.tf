@@ -1,4 +1,4 @@
-# Copyright (c) 2022, 2023 Oracle Corporation and/or its affiliates.
+# Copyright (c) 2022, 2024 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Dynamic resource block for Instance Pool groups defined in worker_pools
@@ -38,6 +38,7 @@ resource "oci_core_instance_pool" "workers" {
     ignore_changes = [
       display_name, defined_tags, freeform_tags,
       placement_configurations,
+      size, # cluster autoscaler management
     ]
 
     precondition {
