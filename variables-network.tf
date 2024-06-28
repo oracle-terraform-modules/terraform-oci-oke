@@ -262,6 +262,12 @@ variable "allow_rules_public_lb" {
   type        = any
 }
 
+variable "allow_rules_workers" {
+  default     = {}
+  description = "A map of additional rules to allow traffic for the workers."
+  type        = any
+}
+
 variable "control_plane_allowed_cidrs" {
   default     = []
   description = "The list of CIDR blocks from which the control plane can be accessed."

@@ -53,6 +53,12 @@ allow_rules_public_lb = {
   # },
 }
 
+allow_rules_workers = {
+  # "Allow TCP ingress to workers for port 8080 from VCN" : {
+  #   protocol = 6, port = 8080, source = "10.0.0.0/16", source_type = "CIDR_BLOCK",
+  # },
+}
+
 # Dynamic routing gateway (DRG)
 create_drg       = false # true/*false
 drg_display_name = "drg"

@@ -16,6 +16,7 @@ variable "allow_node_port_access" { type = bool }
 variable "allow_pod_internet_access" { type = bool }
 variable "allow_rules_internal_lb" { type = any }
 variable "allow_rules_public_lb" { type = any }
+variable "allow_rules_workers" { type = any }
 variable "allow_worker_internet_access" { type = bool }
 variable "allow_worker_ssh_access" { type = bool }
 variable "allow_bastion_cluster_access" { type = bool }

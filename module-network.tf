@@ -115,6 +115,7 @@ module "network" {
   allow_pod_internet_access    = var.allow_pod_internet_access
   allow_rules_internal_lb      = var.allow_rules_internal_lb
   allow_rules_public_lb        = var.allow_rules_public_lb
+  allow_rules_workers          = var.allow_rules_workers
   allow_worker_internet_access = var.allow_worker_internet_access
   allow_worker_ssh_access      = var.allow_worker_ssh_access
   allow_bastion_cluster_access = var.allow_bastion_cluster_access
