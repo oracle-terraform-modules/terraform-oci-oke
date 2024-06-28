@@ -112,7 +112,9 @@ locals {
       "Allow UDP egress from workers for NFS to FSS mounts" : {
         protocol = local.udp_protocol, port = local.fss_nfs_port_min, destination = local.fss_nsg_id, destination_type = local.rule_type_nsg,
       },
-  } : {}) : {}
+    } : {},
+    var.allow_rules_workers
+    ) : {}
 }
 
 resource "oci_core_network_security_group" "workers" {
