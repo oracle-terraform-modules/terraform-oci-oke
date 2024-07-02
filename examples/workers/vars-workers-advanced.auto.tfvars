@@ -33,6 +33,7 @@ worker_pools = {
     os          = "Oracle Linux",
     os_version  = "7",
     autoscale   = true,
+    ignore_size = true
   },
   wg_np-vm-ol8 = {
     description = "OKE-managed Node Pool with OKE Oracle Linux 8 image",
@@ -43,6 +44,7 @@ worker_pools = {
     os          = "Oracle Linux",
     os_version  = "8",
     autoscale   = true,
+    ignore_size = true
   },
   wg_np-vm-custom = {
     description      = "OKE-managed Node Pool with custom image",
