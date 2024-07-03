@@ -36,6 +36,7 @@ locals {
     eviction_grace_duration      = 300
     force_node_delete            = true
     extended_metadata            = {} # empty pool-specific default
+    ignore_initial_pool_size     = false
     image_id                     = var.image_id
     image_type                   = var.image_type
     kubernetes_version           = var.kubernetes_version
@@ -231,9 +232,9 @@ locals {
   }
 
   # Maps of worker pool OCI resources by pool name enriched with desired/custom parameters for various modes
-  worker_node_pools         = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_node_pools         = { for k, v in merge(oci_containerengine_node_pool.tfscaled_workers, oci_containerengine_node_pool.autoscaled_workers) : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instance_pools     = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_instance_pools     = { for k, v in merge(oci_core_instance_pool.tfscaled_workers, oci_core_instance_pool.autoscaled_workers) : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
   worker_instances          = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
 
