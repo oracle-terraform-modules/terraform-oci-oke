@@ -29,6 +29,12 @@ variable "control_plane_is_public" {
   type        = bool
 }
 
+variable "assign_public_ip_to_control_plane" {
+  default     = false
+  description = "Whether to assign a public IP address to the API endpoint for public access. Requires the control plane subnet to be public to assign a public IP address."
+  type        = bool
+}
+
 variable "control_plane_nsg_ids" {
   default     = []
   description = "An additional list of network security groups (NSG) ids for the cluster endpoint."

@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_identity_availability_domains" "all" {
-  compartment_id = local.compartment_id
+  compartment_id = local.tenancy_id != "unknown" ? local.tenancy_id : local.compartment_id
 }
 
 locals {

@@ -9,7 +9,7 @@ locals {
   )
   rdma_cni_plugin_manifest_path        = join("/", [local.yaml_manifest_path, "rdma-cni-daemonset.yaml"])
   rdma_cni_plugin_manifest_status_code = one(data.http.rdma_cni_plugin[*].status_code)
-  rdma_cni_plugin_manifest_content     = sensitive(one(data.http.rdma_cni_plugin[*].response_body))
+  rdma_cni_plugin_manifest_content     = one(data.http.rdma_cni_plugin[*].response_body)
 }
 
 data "http" "rdma_cni_plugin" {

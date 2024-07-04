@@ -1,4 +1,4 @@
-# Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
+# Copyright (c) 2017, 2024 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 terraform {
@@ -10,19 +10,14 @@ terraform {
       version = ">= 2.2.0"
     }
 
-    helm = {
-      source  = "hashicorp/helm"
-      version = ">= 2.9.0"
-    }
-
     null = {
       source  = "hashicorp/null"
       version = ">= 3.2.1"
     }
 
     oci = {
-      source  = "oracle/oci"
-      version = ">= 4.119.0"
+      source                = "oracle/oci"
+      version               = ">= 4.119.0"
     }
   }
 }

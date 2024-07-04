@@ -79,6 +79,12 @@ variable "drg_id" {
   type        = string
 }
 
+variable "drg_compartment_id" {
+  default     = null
+  description = "Compartment for the DRG resource. Can be used to override network_compartment_id."
+  type        = string
+}
+
 variable "drg_attachments" {
   description = "DRG attachment configurations."
   type        = any
@@ -253,6 +259,12 @@ variable "allow_rules_internal_lb" {
 variable "allow_rules_public_lb" {
   default     = {}
   description = "A map of additional rules to allow incoming traffic for public load balancers."
+  type        = any
+}
+
+variable "allow_rules_workers" {
+  default     = {}
+  description = "A map of additional rules to allow traffic for the workers."
   type        = any
 }
 

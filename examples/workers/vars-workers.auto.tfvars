@@ -24,9 +24,13 @@ worker_volume_kms_key_id     = null
 
 worker_shape = {
   shape            = "VM.Standard.E4.Flex",
-  ocpus            = 2,  # Ignored for non-Flex shapes
-  memory           = 16, # Ignored for non-Flex shapes
+  ocpus            = 2  # Ignored for non-Flex shapes
+  memory           = 16 # Ignored for non-Flex shapes
   boot_volume_size = 50
+
+  # https://docs.oracle.com/en-us/iaas/Content/Block/Concepts/blockvolumeperformance.htm
+  # Supported for mode = "cluster-network" | "instance-pool" | "instance" (self-managed) only
+  boot_volume_vpus_per_gb = 10 # 10: Balanced, 20: High, 30-120: Ultra High (requires multipath)
 }
 
 worker_pools = {}

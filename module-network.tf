@@ -2,7 +2,7 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 data "oci_core_vcn" "oke" {
-  count  = coalesce(var.vcn_id, "none") != "none" ? 1 : 0
+  count  = var.create_vcn ? 0 : 1
   vcn_id = coalesce(var.vcn_id, "none")
 }
 
@@ -78,14 +78,15 @@ module "vcn" {
 }
 
 module "drg" {
-  count          = tobool(var.create_drg) || var.drg_id != null ? 1 : 0
-  source         = "oracle-terraform-modules/drg/oci"
-  version        = "1.0.5"
-  compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
+  count              = tobool(var.create_drg) || var.drg_id != null ? 1 : 0
+  source             = "oracle-terraform-modules/drg/oci"
+  version            = "1.0.6"
+  compartment_id     = coalesce(var.network_compartment_id, local.compartment_id)
+  drg_compartment_id = var.drg_compartment_id
 
-  drg_id           = one([var.drg_id]) # existing DRG ID or null
-  drg_display_name = coalesce(var.drg_display_name, "oke-${local.state_id}")
-  drg_vcn_attachments = tobool(var.create_drg) ? { for k, v in module.vcn : k => {
+  drg_id              = one([var.drg_id]) # existing DRG ID or null
+  drg_display_name    = coalesce(var.drg_display_name, "oke-${local.state_id}")
+  drg_vcn_attachments = tobool(var.create_drg) || var.drg_id != null ? { for k, v in module.vcn : k => {
     # gets the vcn_id values dynamically from the vcn module 
     vcn_id : v.vcn_id
     vcn_transit_routing_rt_id : null
@@ -114,6 +115,7 @@ module "network" {
   allow_pod_internet_access    = var.allow_pod_internet_access
   allow_rules_internal_lb      = var.allow_rules_internal_lb
   allow_rules_public_lb        = var.allow_rules_public_lb
+  allow_rules_workers          = var.allow_rules_workers
   allow_worker_internet_access = var.allow_worker_internet_access
   allow_worker_ssh_access      = var.allow_worker_ssh_access
   allow_bastion_cluster_access = var.allow_bastion_cluster_access
@@ -136,10 +138,6 @@ module "network" {
   vcn_cidrs                    = local.vcn_cidrs
   vcn_id                       = local.vcn_id
   worker_is_public             = var.worker_is_public
-
-  providers = {
-    oci.home = oci.home
-  }
 }
 
 # VCN

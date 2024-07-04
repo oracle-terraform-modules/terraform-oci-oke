@@ -2,14 +2,28 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 # Used to retrieve cluster CA certificate or configure local kube context
+
+data "oci_containerengine_clusters" "existing_cluster" {
+  count          = var.cluster_id != null ? 1 : 0
+  compartment_id = local.compartment_id
+
+  state = ["ACTIVE","UPDATING"]
+  filter {
+    name = "id"
+    values = [var.cluster_id]
+  }
+}
+
 data "oci_containerengine_cluster_kube_config" "public" {
-  count      = local.cluster_enabled && var.control_plane_is_public ? 1 : 0
+  count      = local.cluster_enabled && local.public_endpoint_available ? 1 : 0
+
   cluster_id = local.cluster_id
   endpoint   = "PUBLIC_ENDPOINT"
 }
 
 data "oci_containerengine_cluster_kube_config" "private" {
-  count      = local.cluster_enabled ? 1 : 0
+  count      = local.cluster_enabled && local.private_endpoint_available ? 1 : 0
+
   cluster_id = local.cluster_id
   endpoint   = "PRIVATE_ENDPOINT"
 }
@@ -21,8 +35,11 @@ locals {
 
   cluster-context = try(format("context-%s", substr(local.cluster_id, -11, -1)), "")
 
-  kubeconfig_public  = var.control_plane_is_public ? try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", ""), local.cluster-context, var.cluster_name)), tomap({})) : null
-  kubeconfig_private = try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", ""), local.cluster-context, var.cluster_name)), tomap({}))
+  existing_cluster_endpoints  = coalesce(one(flatten(data.oci_containerengine_clusters.existing_cluster[*].clusters[*].endpoints)), tomap({}))
+  public_endpoint_available   = var.cluster_id != null ? length(lookup(local.existing_cluster_endpoints, "public_endpoint", "")) > 0 : var.control_plane_is_public && var.assign_public_ip_to_control_plane
+  private_endpoint_available  = var.cluster_id != null ? length(lookup(local.existing_cluster_endpoints, "private_endpoint", "")) > 0 : true
+  kubeconfig_public           = var.control_plane_is_public ? try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.public), "content", ""), local.cluster-context, var.cluster_name)), tomap({})) : null
+  kubeconfig_private          = try(yamldecode(replace(lookup(one(data.oci_containerengine_cluster_kube_config.private), "content", ""), local.cluster-context, var.cluster_name)), tomap({}))
 
   kubeconfig_clusters = try(lookup(local.kubeconfig_private, "clusters", []), [])
   apiserver_private_host = (var.create_cluster
@@ -40,13 +57,14 @@ module "cluster" {
   state_id       = local.state_id
 
   # Network
-  vcn_id                  = local.vcn_id
-  cni_type                = var.cni_type
-  control_plane_is_public = var.control_plane_is_public
-  control_plane_nsg_ids   = compact(flatten([var.control_plane_nsg_ids, try(module.network.control_plane_nsg_id, null)]))
-  control_plane_subnet_id = try(module.network.control_plane_subnet_id, "") # safe destroy; validated in submodule
-  pods_cidr               = var.pods_cidr
-  services_cidr           = var.services_cidr
+  vcn_id                            = local.vcn_id
+  cni_type                          = var.cni_type
+  control_plane_is_public           = var.control_plane_is_public
+  assign_public_ip_to_control_plane = var.assign_public_ip_to_control_plane
+  control_plane_nsg_ids             = compact(flatten([var.control_plane_nsg_ids, try(module.network.control_plane_nsg_id, null)]))
+  control_plane_subnet_id           = try(module.network.control_plane_subnet_id, "") # safe destroy; validated in submodule
+  pods_cidr                         = var.pods_cidr
+  services_cidr                     = var.services_cidr
   service_lb_subnet_id = (var.preferred_load_balancer == "public"
     ? try(module.network.pub_lb_subnet_id, "") # safe destroy; validated in submodule
     : try(module.network.int_lb_subnet_id, "")
@@ -113,10 +131,6 @@ module "cluster" {
     },
     local.service_lb_freeform_tags,
   )
-
-  providers = {
-    oci.home = oci.home
-  }
 }
 
 output "cluster_id" {
@@ -126,13 +140,13 @@ output "cluster_id" {
 
 output "cluster_endpoints" {
   description = "Endpoints for the OKE cluster"
-  value       = var.create_cluster ? one(module.cluster[*].endpoints) : null
+  value       = var.create_cluster ? one(module.cluster[*].endpoints) : local.existing_cluster_endpoints
 }
 
 output "cluster_kubeconfig" {
   description = "OKE kubeconfig"
   value = var.output_detail ? (
-    var.control_plane_is_public ? local.kubeconfig_public : local.kubeconfig_private
+    local.public_endpoint_available ? local.kubeconfig_public : local.kubeconfig_private
   ) : null
 }
 

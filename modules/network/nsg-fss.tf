@@ -27,18 +27,18 @@ locals {
       protocol = local.udp_protocol, port = local.fss_nfs_port_min, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
     },
     "Allow TCP ingress for NFS from workers" : {
-      protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
+      protocol = local.tcp_protocol, port_min = local.fss_nfs_port_min, port_max = local.fss_nfs_port_max, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
     },
 
     # Egress
-    "Allow UDP egress for NFS portmapper to workers" : {
-      protocol = local.udp_protocol, port = local.fss_nfs_portmapper_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+    "Allow UDP egress for NFS portmapper to the workers" : {
+      protocol = local.udp_protocol, source_port_min = local.fss_nfs_portmapper_port, source_port_max = local.fss_nfs_portmapper_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
     },
-    "Allow TCP egress for NFS portmapper to workers" : {
-      protocol = local.tcp_protocol, port = local.fss_nfs_portmapper_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+    "Allow TCP egress for NFS portmapper to the workers" : {
+      protocol = local.tcp_protocol, source_port_min = local.fss_nfs_portmapper_port, source_port_max = local.fss_nfs_portmapper_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
     },
-    "Allow TCP egress for NFS to workers" : {
-      protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+    "Allow TCP egress for NFS to the workers" : {
+      protocol = local.tcp_protocol, source_port_min = local.fss_nfs_port_min, source_port_max = local.fss_nfs_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
     },
   } : {}
 }

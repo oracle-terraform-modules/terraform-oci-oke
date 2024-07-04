@@ -79,7 +79,7 @@ locals {
   # - Subnet is configured with newbits and/or netnum/cidr
   # - Not configured with create == 'never'
   # - Not configured with an existing 'id'
-  subnets_to_create = length(var.vcn_cidrs) > 0 ? merge(
+  subnets_to_create = try(merge(
     { for k, v in local.subnet_info : k =>
       # Override `create = true` if configured with "always"
       merge(v, lookup(try(lookup(var.subnets, k), { create = "never" }), "create", "auto") == "always" ? { "create" = true } : {})
@@ -92,7 +92,7 @@ locals {
         ]),
       ])
     }
-  ) : {}
+  ), {})
 
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
