@@ -73,7 +73,7 @@ jobs:
         env:
           CARGO_HOME: ./cargo
         run: |
-          export PATH=`pwd`/cargo/bin:${PATH}
+          export PATH=${PWD}/cargo/bin:${PATH}
           cd docs
           mdbook-admonish install
       - name: Generate docs
@@ -81,7 +81,7 @@ jobs:
         env:
           CARGO_HOME: ./cargo
         run: |
-          export PATH=`pwd`/tfdocs:`pwd`/cargo/bin:${PATH}
+          export PATH=${PWD}/tfdocs:${PWD}/cargo/bin:${PATH}
           make mdbuild
           touch ./docs/book/.nojekyll
 
