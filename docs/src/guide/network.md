@@ -15,7 +15,7 @@ Optional creation of VCN subnets, Network Security Groups, NSG Rules, and more.
 ### Create Common Network Resources
 
 ```javascript
-{{#include ../../examples/network/vars-network-only-common.auto.tfvars:4:}}
+{{#include ../../../examples/network/vars-network.auto.tfvars:4:}}
 ```
 
 ## References
