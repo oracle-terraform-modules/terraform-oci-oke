@@ -8,7 +8,7 @@ title = "Terraform OCI module for OKE"
 [output.html]
 curly-quotes = false
 git-repository-url = "https://github.com/oracle-terraform-modules/terraform-oci-oke"
-additional-css = ["./src/css/mdbook-admonish.css", "theme/pagetoc.css"]
+additional-css = ["./src/css/mdbook-admonish.css", "theme/pagetoc.css", "./mdbook-admonish.css"]
 additional-js  = ["theme/pagetoc.js"]
 default-theme = "light"
 

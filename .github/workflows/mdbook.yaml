@@ -22,7 +22,7 @@ jobs:
       name: github-pages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         continue-on-error: true
         id: cache-mdbook
         with:
@@ -40,7 +40,7 @@ jobs:
       name: github-pages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-tfdocs
         with:
           key: tfdocs
@@ -58,13 +58,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         continue-on-error: true
         with:
           key: mdbook
           path: ./cargo/**/*
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: tfdocs
           path: ./tfdocs/terraform-docs
