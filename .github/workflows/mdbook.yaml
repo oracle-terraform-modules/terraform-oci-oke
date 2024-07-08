@@ -22,7 +22,7 @@ jobs:
       name: github-pages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         continue-on-error: true
         id: cache-mdbook
         with:
@@ -32,15 +32,14 @@ jobs:
         name: Install mdbook
         env:
           CARGO_HOME: ./cargo
-        # run: cargo install --locked --force mdbook@0.4.34 mdbook-admonish@1.10.2 mdbook-variables@0.2.2 mdbook-toc@0.14.1 mdbook-pagetoc@0.1.7
-        run: cargo install --locked --force mdbook@0.4.34 mdbook-admonish@1.17.1 mdbook-variables@0.2.4 mdbook-toc@0.14.2 mdbook-pagetoc@0.2.0
+        run: cargo install --locked --force mdbook@0.4.40 mdbook-admonish@1.18.0 mdbook-variables@0.2.4 mdbook-toc@0.14.2 mdbook-pagetoc@0.2.0
 
   install-tfdocs:
     environment:
       name: github-pages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         id: cache-tfdocs
         with:
           key: tfdocs
@@ -58,23 +57,30 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
         continue-on-error: true
         with:
           key: mdbook
           path: ./cargo/**/*
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: tfdocs
           path: ./tfdocs/terraform-docs
-
+      - name: Install mdbook-admonish
+        shell: bash
+        env:
+          CARGO_HOME: ./cargo
+        run: |
+          export PATH=${PWD}/cargo/bin:${PATH}
+          cd docs
+          mdbook-admonish install --css-dir src/css
       - name: Generate docs
         shell: bash
         env:
           CARGO_HOME: ./cargo
         run: |
-          export PATH=`pwd`/tfdocs:`pwd`/cargo/bin:${PATH}
+          export PATH=${PWD}/tfdocs:${PWD}/cargo/bin:${PATH}
           make mdbuild
           touch ./docs/book/.nojekyll
 
