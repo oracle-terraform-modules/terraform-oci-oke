@@ -6,3 +6,4 @@ cluster_autoscaler_namespace         = "kube-system"
 cluster_autoscaler_helm_version      = "9.24.0"
 cluster_autoscaler_helm_values       = {}
 cluster_autoscaler_helm_values_files = []
+cluster_autoscaler_remote_exec       = true
