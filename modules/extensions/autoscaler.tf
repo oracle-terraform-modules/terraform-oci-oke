@@ -24,10 +24,7 @@ locals {
     "extraArgs.v"                                = "4",
     "extraArgs.stderrthreshold"                  = "info",
     "extraArgs.max-node-provision-time"          = "25m",
-    "extraArgs.scale-down-unneeded-time"         = "5m",
-    "extraArgs.scale-down-utilization-threshold" = "0.6",
-    "extraArgs.skip-nodes-with-system-pods"      = "true",
-    "extraArgs.skip-nodes-with-local-storage"    = "true",
+    "extraArgs.scale-down-unneeded-time"         = "2m",
     "extraArgs.unremovable-node-recheck-timeout" = "5m",
     "extraArgs.balance-similar-node-groups"      = "true",
     "extraArgs.balancing-ignore-label"           = "displayName",
@@ -66,20 +63,10 @@ data "helm_template" "cluster_autoscaler" {
   }
 
   dynamic "set" {
-    for_each = local.cluster_autoscaler_defaults
+    for_each = merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_helm_values)
     iterator = helm_value
     content {
       name  = helm_value.key
-      value = helm_value.value
-    }
-  }
-
-  dynamic "set" {
-    for_each = var.cluster_autoscaler_helm_values
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      type  = "string"
       value = helm_value.value
     }
   }
