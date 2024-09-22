@@ -131,6 +131,9 @@ module "cluster" {
     },
     local.service_lb_freeform_tags,
   )
+  depends_on = [
+    module.iam_cluster_prerequisites,
+  ]
 }
 
 output "cluster_id" {
