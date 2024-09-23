@@ -22,7 +22,7 @@ resource "oci_identity_policy" "cluster" {
   count          = local.has_policy_statements ? 1 : 0
   compartment_id = var.compartment_id
   description    = format("Policies for OKE Terraform state %v", var.state_id)
-  name           = local.cluster_group_name
+  name           = var.policy_name
   statements     = local.policy_statements
   defined_tags   = local.defined_tags
   freeform_tags  = local.freeform_tags

@@ -23,6 +23,7 @@ variable "create_iam_autoscaler_policy" { type = bool }
 variable "create_iam_kms_policy" { type = bool }
 variable "create_iam_operator_policy" { type = bool }
 variable "create_iam_worker_policy" { type = bool }
+variable "policy_name" { type = string }
 
 # KMS
 variable "cluster_kms_key_id" { type = string }
