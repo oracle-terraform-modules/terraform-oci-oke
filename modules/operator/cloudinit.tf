@@ -260,7 +260,7 @@ data "cloudinit_config" "operator" {
     content {
       # Load content from file if local path, attempt base64 decode, or use raw value
       content = contains(keys(part.value), "content") ? (
-        fileexists(lookup(part.value, "content")) ? file(lookup(part.value, "content"))
+        try(fileexists(lookup(part.value, "content")), false) ? file(lookup(part.value, "content"))
         : try(base64decode(lookup(part.value, "content")), lookup(part.value, "content"))
       ) : ""
       content_type = lookup(part.value, "content_type", local.default_cloud_init_content_type)
