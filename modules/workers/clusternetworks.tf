@@ -36,7 +36,7 @@ resource "oci_core_cluster_network" "workers" {
     ignore_changes = [
       display_name, defined_tags, freeform_tags,
       instance_pools[0].defined_tags,
-      instance_pools[0].freeform_tags,
+      instance_pools[0].freeform_tags
     ]
 
     precondition {

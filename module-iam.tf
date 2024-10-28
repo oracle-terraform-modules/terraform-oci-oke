@@ -77,8 +77,8 @@ module "iam_cluster_prerequisites" {
   operator_volume_kms_key_id = var.operator_volume_kms_key_id
   worker_volume_kms_key_id   = var.worker_volume_kms_key_id
 
-  autoscaler_compartments = local.autoscaler_compartments
-  worker_compartments     = local.worker_compartments
+  autoscaler_compartments = []
+  worker_compartments     = []
 
   providers = {
     oci.home = oci.home
