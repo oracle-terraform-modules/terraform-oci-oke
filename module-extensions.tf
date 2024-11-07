@@ -1,6 +1,13 @@
 # Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
+locals {
+  cluster_private_endpoint = ( var.create_cluster ? 
+    coalesce(split(":", lookup(one(module.cluster[*].endpoints), "private_endpoint", ""))...) : 
+    coalesce(split(":", lookup(local.existing_cluster_endpoints, "private_endpoint", ""))...)
+  )
+}
+
 module "extensions" {
   source   = "./modules/extensions"
   depends_on = [ module.network ]
@@ -12,6 +19,7 @@ module "extensions" {
   kubernetes_version  = var.kubernetes_version
   expected_node_count = local.worker_count_expected
   worker_pools        = one(module.workers[*].worker_pools)
+  cluster_private_endpoint = local.cluster_private_endpoint
 
   # Bastion/operator connection
   ssh_private_key = sensitive(local.ssh_private_key)

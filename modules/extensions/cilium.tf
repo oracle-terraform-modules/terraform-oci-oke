@@ -2,45 +2,47 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  cilium_helm_crds_file       = join("/", [local.yaml_manifest_path, "cilium.crds.yaml"])
-  cilium_helm_manifest_file   = join("/", [local.yaml_manifest_path, "cilium.manifest.yaml"])
-  cilium_helm_values_file     = join("/", [local.yaml_manifest_path, "cilium.values.yaml"])
-  cilium_net_attach_def_file  = join("/", [local.yaml_manifest_path, "cilium.net_attach_def.yaml"])
-  cilium_veth_config_map_file = join("/", [local.yaml_manifest_path, "cilium.cni_config_map.yaml"])
+  cilium_helm_crds_file            = join("/", [local.yaml_manifest_path, "cilium.crds.yaml"])
+  cilium_helm_manifest_file        = join("/", [local.yaml_manifest_path, "cilium.manifest.yaml"])
+  cilium_helm_values_file          = join("/", [local.yaml_manifest_path, "cilium.values.yaml"])
+  cilium_helm_values_override_file = join("/", [local.yaml_manifest_path, "cilium.values-override.yaml"])
+  cilium_net_attach_def_file       = join("/", [local.yaml_manifest_path, "cilium.net_attach_def.yaml"])
+  cilium_veth_config_map_file      = join("/", [local.yaml_manifest_path, "cilium.cni_config_map.yaml"])
 
-  cilium_helm_crds     = one(data.helm_template.cilium[*].crds)
-  cilium_helm_manifest = one(data.helm_template.cilium[*].manifest)
+  cilium_helm_crds            = one(data.helm_template.cilium[*].crds)
+  cilium_helm_values_override = one(data.helm_template.cilium[*].values)
+  
+  cilium_helm_repository      = "https://helm.cilium.io"
 
   cilium_vxlan_cni = {
     install      = true
-    chainingMode = "none"
     exclusive    = true # !var.multus_install
-  }
-
-  # TODO Support Flannel w/ generic-veth & tunnel disabled
-  cilium_tunnel = "vxlan" # var.cni_type == "flannel" ? "disabled" : "vxlan"
-  cilium_flannel_cni = {
-    install      = true
-    chainingMode = "generic-veth"
-    configMap    = "cni-configuration"
-    customConf   = var.cni_type == "flannel"
-    exclusive    = !var.multus_install
   }
 
   cilium_helm_values = {
     annotateK8sNode                 = true
-    cluster                         = { name = "oke-${var.state_id}" }
-    clustermesh                     = { useAPIServer = true }
+    cluster                         = {
+      name = "oke-${var.state_id}"
+      id   = 1
+    }
+    clustermesh                     = { 
+      useAPIServer = false 
+      apiserver = {
+        kvstoremesh = {
+          enabled = false
+        }
+      }
+    }
     cni                             = local.cilium_vxlan_cni
-    containerRuntime                = { integration = "crio" }
-    installIptablesRules            = true
     installNoConntrackIptablesRules = false
     ipam                            = { mode = "kubernetes" }
-    ipv4NativeRoutingCIDR           = element(var.vcn_cidrs, 0)
-    kubeProxyReplacement            = "disabled"
+    kubeProxyReplacement            = false
+    k8sServiceHost                  = var.cluster_private_endpoint
+    k8sServicePort                  = "6443"
     pmtuDiscovery                   = { enabled = true }
-    tunnel                          = local.cilium_tunnel
-
+    rollOutCiliumPods               = true
+    tunnelProtocol                  = local.cilium_tunnel
+    
     hubble = {
       metrics = {
         dashboards = { enabled = var.prometheus_install }
@@ -52,19 +54,9 @@ locals {
 
     k8s = {
       requireIPv4PodCIDR   = true # wait for Kubernetes to provide the PodCIDR (ipam kubernetes)
-      enableIPv4Masquerade = true # var.cni_type != "flannel"  # masquerade IPv4 traffic leaving the node from endpoints
     }
 
     # Prometheus metrics
-    metrics = {
-      dashboards = { enabled = var.prometheus_install }
-      #   # serviceMonitor = { enabled = var.prometheus_enabled }
-    }
-
-    prometheus = {
-      enabled = var.prometheus_install
-      # serviceMonitor = { enabled = var.prometheus_enabled }
-    }
 
     operator = {
       prometheus = {
@@ -74,6 +66,17 @@ locals {
     }
   }
 
+ # TODO Support Flannel w/ generic-veth & tunnel disabled
+  cilium_tunnel = "vxlan" # var.cni_type == "flannel" ? "disabled" : "vxlan"
+
+  cilium_flannel_cni = {
+    install      = true
+    chainingMode = "generic-veth"
+    configMap    = "cni-configuration"
+    customConf   = var.cni_type == "flannel"
+    exclusive    = !var.multus_install
+  }
+  
   cilium_net_attach_def_conf = {
     cniVersion = "0.3.1"
     name       = "cilium"
@@ -126,15 +129,16 @@ locals {
     data = { "cni-config" = jsonencode(local.cilium_veth_conf) }
   }
 
-  cilium_net_attach_def_yaml  = yamlencode(local.cilium_net_attach_def)
-  cilium_veth_config_map_yaml = yamlencode(local.cilium_veth_config_map)
-  cilium_helm_values_yaml     = yamlencode(local.cilium_helm_values)
+  cilium_net_attach_def_yaml       = yamlencode(local.cilium_net_attach_def)
+  cilium_veth_config_map_yaml      = yamlencode(local.cilium_veth_config_map)
+  cilium_helm_values_yaml          = yamlencode(merge(local.cilium_helm_values, var.cilium_helm_values))
+  cilium_helm_values_override_yaml = local.cilium_helm_values_override != null ? join("\n", local.cilium_helm_values_override) : ""
 }
 
 data "helm_template" "cilium" {
   count        = var.cilium_install ? 1 : 0
   chart        = "cilium"
-  repository   = "https://helm.cilium.io"
+  repository   = local.cilium_helm_repository
   version      = var.cilium_helm_version
   kube_version = var.kubernetes_version
 
@@ -165,7 +169,7 @@ resource "null_resource" "cilium" {
   triggers = {
     helm_version = var.cilium_helm_version
     crds_md5     = try(md5(join("\n", local.cilium_helm_crds)), null)
-    manifest_md5 = try(md5(local.cilium_helm_manifest), null)
+    manifest_md5 = try(md5(local.cilium_helm_values_override_yaml), null)
     reapply      = var.cilium_reapply ? uuid() : null
   }
 
@@ -190,24 +194,19 @@ resource "null_resource" "cilium" {
   }
 
   provisioner "file" {
-    content     = local.cilium_helm_manifest
-    destination = local.cilium_helm_manifest_file
+    content     = local.cilium_helm_values_override_yaml
+    destination = local.cilium_helm_values_override_file
   }
 
-  provisioner "file" {
-    content     = local.cilium_helm_values_yaml
-    destination = local.cilium_helm_values_file
-  }
+  # provisioner "file" {
+  #   content     = local.cilium_net_attach_def_yaml
+  #   destination = local.cilium_net_attach_def_file
+  # }
 
-  provisioner "file" {
-    content     = local.cilium_net_attach_def_yaml
-    destination = local.cilium_net_attach_def_file
-  }
-
-  provisioner "file" {
-    content     = local.cilium_veth_config_map_yaml
-    destination = local.cilium_veth_config_map_file
-  }
+  # provisioner "file" {
+  #   content     = local.cilium_veth_config_map_yaml
+  #   destination = local.cilium_veth_config_map_file
+  # }
 
   provisioner "remote-exec" {
     inline = [for c in compact([
@@ -219,7 +218,7 @@ resource "null_resource" "cilium" {
       format(local.kubectl_apply_server_ns_file, var.cilium_namespace, local.cilium_helm_crds_file),
 
       # Install full manifest
-      format(local.kubectl_apply_ns_file, var.cilium_namespace, local.cilium_helm_manifest_file),
+      format(local.helm_upgrade_install, "cilium", "cilium", local.cilium_helm_repository, var.cilium_helm_version, var.cilium_namespace, local.cilium_helm_values_override_file),
 
       # Install Network Attachment Definition when Multus is enabled
       # var.multus_install ? format(local.kubectl_apply_file, local.cilium_net_attach_def_file) : null,
