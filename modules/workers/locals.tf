@@ -157,7 +157,6 @@ locals {
         {
           "oke.oraclecloud.com/tf.module"          = "terraform-oci-oke"
           "oke.oraclecloud.com/tf.state_id"        = var.state_id
-          # "oke.oraclecloud.com/tf.workspace"       = terraform.workspace
           "oke.oraclecloud.com/pool.name"          = pool_name
           "oke.oraclecloud.com/pool.mode"          = pool.mode
           "oke.oraclecloud.com/cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled"

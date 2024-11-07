@@ -7,6 +7,7 @@ variable "state_id" { type = string }
 variable "worker_pools" { type = any }
 variable "kubernetes_version" { type = string }
 variable "expected_node_count" { type = number }
+variable "cluster_private_endpoint" { type = string }
 
 # Connection
 variable "bastion_host" { type = string }
@@ -25,7 +26,7 @@ variable "cilium_install" { type = bool }
 variable "cilium_reapply" { type = bool }
 variable "cilium_namespace" { type = string }
 variable "cilium_helm_version" { type = string }
-variable "cilium_helm_values" { type = map(string) }
+variable "cilium_helm_values" { type = any }
 variable "cilium_helm_values_files" { type = list(string) }
 
 # CNI: Multus
