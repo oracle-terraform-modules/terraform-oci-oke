@@ -157,7 +157,6 @@ locals {
         {
           "oke.oraclecloud.com/tf.module"          = "terraform-oci-oke"
           "oke.oraclecloud.com/tf.state_id"        = var.state_id
-          "oke.oraclecloud.com/tf.workspace"       = terraform.workspace
           "oke.oraclecloud.com/pool.name"          = pool_name
           "oke.oraclecloud.com/pool.mode"          = pool.mode
           "oke.oraclecloud.com/cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled"
@@ -232,11 +231,11 @@ locals {
   }
 
   # Maps of worker pool OCI resources by pool name enriched with desired/custom parameters for various modes
-  worker_node_pools         = { for k, v in merge(oci_containerengine_node_pool.tfscaled_workers, oci_containerengine_node_pool.autoscaled_workers) : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instance_pools     = { for k, v in merge(oci_core_instance_pool.tfscaled_workers, oci_core_instance_pool.autoscaled_workers) : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instances          = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_node_pools         = { for k, v in merge(oci_containerengine_node_pool.tfscaled_workers, oci_containerengine_node_pool.autoscaled_workers) : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_instance_pools     = { for k, v in merge(oci_core_instance_pool.tfscaled_workers, oci_core_instance_pool.autoscaled_workers) : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_instances          = { for k, v in oci_core_instance.workers : k => merge(lookup(local.worker_pools_final, k, {}), v) }
 
   # Combined map of outputs by pool name for all modes excluding 'instance' (output separately)
   worker_pools_output = merge(

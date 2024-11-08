@@ -119,7 +119,6 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
     ignore_changes = [
       # kubernetes_version, # e.g. if changed as part of an upgrade
       name, defined_tags, freeform_tags,
-      node_metadata["user_data"],               # templated cloud-init
       node_config_details[0].placement_configs, # dynamic placement configs
       # node_source_details[0],                   # dynamic image lookup
     ]
@@ -274,7 +273,6 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
     ignore_changes = [
       # kubernetes_version, # e.g. if changed as part of an upgrade
       name, defined_tags, freeform_tags,
-      node_metadata["user_data"],               # templated cloud-init
       node_config_details[0].placement_configs, # dynamic placement configs
       node_config_details[0].size               # size
     ]

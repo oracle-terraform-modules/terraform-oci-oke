@@ -44,10 +44,45 @@ locals {
   create_iam_kms_policy = anytrue([
     var.create_iam_kms_policy == "always",
     var.create_iam_kms_policy == "auto" && anytrue([
-      coalesce(var.worker_volume_kms_key_id, "none") != "none",
+      # coalesce(var.worker_volume_kms_key_id, "none") != "none", ## Validated in group-workers.tf in the IAM module.
       coalesce(var.cluster_kms_key_id, "none") != "none",
     ])
   ])
+  default_policy_name       = format("oke-cluster-%v", local.state_id)
+  prerequisites_policy_name = format("oke-cluster-prerequisites-%v", local.state_id)
+}
+
+# Default IAM sub-module implementation for OKE cluster
+module "iam_cluster_prerequisites" {
+  source                       = "./modules/iam"
+  compartment_id               = local.compartment_id
+  state_id                     = local.state_id
+  tenancy_id                   = local.tenancy_id
+  cluster_id                   = var.cluster_id
+  create_iam_resources         = var.create_iam_resources
+  create_iam_autoscaler_policy = false
+  create_iam_kms_policy        = local.create_iam_kms_policy
+  create_iam_operator_policy   = false
+  create_iam_worker_policy     = false
+  policy_name                  = local.prerequisites_policy_name
+
+  create_iam_tag_namespace = var.create_iam_tag_namespace
+  create_iam_defined_tags  = var.create_iam_defined_tags
+  defined_tags             = local.iam_defined_tags
+  freeform_tags            = local.iam_freeform_tags
+  tag_namespace            = var.tag_namespace
+  use_defined_tags         = var.use_defined_tags
+
+  cluster_kms_key_id         = var.cluster_kms_key_id
+  operator_volume_kms_key_id = var.operator_volume_kms_key_id
+  worker_volume_kms_key_id   = var.worker_volume_kms_key_id
+
+  autoscaler_compartments = []
+  worker_compartments     = []
+
+  providers = {
+    oci.home = oci.home
+  }
 }
 
 # Default IAM sub-module implementation for OKE cluster
@@ -59,9 +94,10 @@ module "iam" {
   cluster_id                   = local.cluster_id
   create_iam_resources         = var.create_iam_resources
   create_iam_autoscaler_policy = local.create_iam_autoscaler_policy
-  create_iam_kms_policy        = local.create_iam_kms_policy
+  create_iam_kms_policy        = false
   create_iam_operator_policy   = local.create_iam_operator_policy
   create_iam_worker_policy     = local.create_iam_worker_policy
+  policy_name                  = local.default_policy_name
 
   create_iam_tag_namespace = var.create_iam_tag_namespace
   create_iam_defined_tags  = var.create_iam_defined_tags
@@ -89,10 +125,16 @@ output "availability_domains" {
 
 output "dynamic_group_ids" {
   description = "Cluster IAM dynamic group IDs"
-  value       = module.iam.dynamic_group_ids
+  value       = concat(
+    coalesce(module.iam_cluster_prerequisites.dynamic_group_ids, []),
+    coalesce(module.iam.dynamic_group_ids, [])
+  )
 }
 
 output "policy_statements" {
   description = "Cluster IAM policy statements"
-  value       = module.iam.policy_statements
+  value       = concat(
+    coalesce(module.iam_cluster_prerequisites.policy_statements, []),
+    coalesce(module.iam.policy_statements, [])
+  )
 }

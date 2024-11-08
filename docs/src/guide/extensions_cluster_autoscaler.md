@@ -1,5 +1,9 @@
 # Extensions: Standalone Cluster Autoscaler
 
+**Note**: For the cluster autoscaler you should choose **only one** of the options:
+- the stand-alone cluster-autoscaler deployment, using this extension
+- the [cluster-autoscaler add-on](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengconfiguringclusteraddons-configurationarguments.htm#contengconfiguringclusteraddons-configurationarguments_ClusterAutoscaler), using the [addons](./cluster_addons.md).
+
 Deployed using the [cluster-autoscaler Helm chart](https://github.com/kubernetes/autoscaler/tree/master/charts/cluster-autoscaler) with configuration from the `worker_pools` variable.
 
 The module is using the `oke.oraclecloud.com/cluster_autoscaler` nodepool label to facilitate the understanding of how the Kubernetes cluster auto-scaler will interact with the node:
