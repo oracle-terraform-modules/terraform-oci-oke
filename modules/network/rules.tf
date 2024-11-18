@@ -24,9 +24,21 @@ locals {
       network_security_group_id = lookup(y, "nsg_id")
       direction                 = contains(keys(y), "source") ? "INGRESS" : "EGRESS"
       protocol                  = lookup(y, "protocol")
-      source                    = lookup(y, "source", null)
+      source                    = (
+        alltrue([
+          upper(lookup(y, "source_type", "")) == local.rule_type_nsg,
+          length(regexall("ocid\\d+\\.networksecuritygroup", lower(lookup(y, "source", "")))) == 0]) ?
+          lookup(local.all_nsg_ids, lower(lookup(y, "source", "")), null) :
+          lookup(y, "source", null)
+      )
       source_type               = lookup(y, "source_type", null)
-      destination               = lookup(y, "destination", null)
+      destination               = (
+        alltrue([
+          upper(lookup(y, "destination_type", "")) == local.rule_type_nsg,
+          length(regexall("ocid\\d+\\.networksecuritygroup", lower(lookup(y, "destination", "")))) == 0]) ?
+          lookup(local.all_nsg_ids, lower(lookup(y, "destination", "")), null) :
+          lookup(y, "destination", null)
+      )
       destination_type          = lookup(y, "destination_type", null)
   }) }
 

@@ -51,11 +51,20 @@ allow_rules_public_lb = {
   # "Allow TCP ingress to public load balancers for SSL traffic from anywhere" : {
   #   protocol = 6, port = 443, source = "0.0.0.0/0", source_type = "CIDR_BLOCK",
   # },
+  # "Allow UDP egress to workers port range 50000-52767 from Public LBs" : {
+  #   protocol = 17, destination_port_min = 50000, destination_port_max=52767, destination = "workers", destination_type = "NETWORK_SECURITY_GROUP"
+  # },
 }
 
 allow_rules_workers = {
   # "Allow TCP ingress to workers for port 8080 from VCN" : {
   #   protocol = 6, port = 8080, source = "10.0.0.0/16", source_type = "CIDR_BLOCK",
+  # },
+  # "Allow UDP ingress to workers for port range 50000-52767 from Public LBs" : {
+  #   protocol = 17, destination_port_min = 50000, destination_port_max=52767, source = "pub_lb", source_type = "NETWORK_SECURITY_GROUP"
+  # },
+  # "Allow TCP ingress to workers for port range 8888-8888 from existing NSG" : {
+  #   protocol = 6, destination_port_min = 8888, destination_port_max=8888, source = "ocid1.networksecuritygroup.oc1.eu-frankfurt-1.aaaaaaaai6z4le2ji7dkpmuwff4525b734wrjlifjqkrzlr5qctgxdsyoyra", source_type = "NETWORK_SECURITY_GROUP"
   # },
 }
 
