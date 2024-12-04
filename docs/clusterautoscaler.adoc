@@ -1,4 +1,4 @@
-= Using the Oracle Container Engine for Kubernetes Cluster Autoscaler
+= Using the OKE Cluster Autoscaler
 :idprefix:
 :idseparator: -
 :sectlinks:
@@ -23,7 +23,7 @@
 :uri-upgrade-oke: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengupgradingk8sworkernode.htm
 :uri-variables: {uri-rel-file-base}/variables.tf
 
-This section documents how to deploy the Oracle Container Engine for Kubernetes (OKE) Cluster Autoscaler when using this project. At a high level, deploying the Kubernetes Cluster Autoscaler consists of 3 steps:
+This section documents how to deploy the OCI Kubernetes Engine(OKE) Cluster Autoscaler when using this project. At a high level, deploying the Kubernetes Cluster Autoscaler consists of 3 steps:
 
 1. Deploy an _unmanaged_ node pool i.e. a node pool that is not managed by the Kubernetes Cluster Autoscaler. We'll refer to this node pool as the _autoscaler_ node pool.
 2. Create a dynamic group and policy to allow worker nodes to manage node pools. The dynamic group uses defined tags to add worker nodes from the autoscaler node pool to the managed node pools.

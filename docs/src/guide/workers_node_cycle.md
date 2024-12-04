@@ -3,7 +3,7 @@
 
 Cycling nodes simplifies both the upgrading of the Kubernetes and host OS versions running on the managed worker nodes, and the updating of other worker node properties.
 
-When you set `node_cycling_enabled` to `true` for a node pool, Container Engine for Kubernetes will compare the properties of the existing nodes in the node pool with the properties of the node_pool. If any of the following attributes is not aligned, the node is marked for replacement:
+When you set `node_cycling_enabled` to `true` for a node pool, OKE will compare the properties of the existing nodes in the node pool with the properties of the node_pool. If any of the following attributes is not aligned, the node is marked for replacement:
   - `kubernetes_version`
   - `node_labels`
   - `compute_shape` (`shape`, `ocpus`, `memory`)
@@ -16,9 +16,9 @@ When you set `node_cycling_enabled` to `true` for a node pool, Container Engine 
   - `volume_kms_key_id`
   - `pv_transit_encryption`
 
-The `node_cycling_max_surge` (default: `1`) and `node_cycling_max_unavailable` (default: `0`) node_pool attributes can be configured with absolute values or percentage values, calculated relative to the node_pool `size`. These attributes determine how the Container Engine for Kubernetes will replace the nodes with a stale config in the node_pool.
+The `node_cycling_max_surge` (default: `1`) and `node_cycling_max_unavailable` (default: `0`) node_pool attributes can be configured with absolute values or percentage values, calculated relative to the node_pool `size`. These attributes determine how OKE will replace the nodes with a stale config in the node_pool.
 
-When cycling nodes, the Container Engine for Kubernetes cordons, drains, and terminates nodes according to the node pool's cordon and drain options.
+When cycling nodes, the OKE cordons, drains, and terminates nodes according to the node pool's cordon and drain options.
 
 **Notes:**
 - It's strongly recommended to use [readiness probes](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) and [PodDisruptionBudgets](https://kubernetes.io/docs/tasks/run-application/configure-pdb/) to reduce the impact of the node replacement operation.
@@ -40,4 +40,4 @@ When cycling nodes, the Container Engine for Kubernetes cordons, drains, and ter
 ## References
 * [oci_containerengine_node_pool](https://registry.terraform.io/providers/oracle/oci/latest/docs/resources/containerengine_node_pool)
 * [Performing an In-Place Worker Node Update by Cycling Nodes in an Existing Node Pool](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengupgradingimageworkernode_topic-Performing_an_InPlace_Worker_Node_Update_By_Cycling_an_Existing_Node_Pool.htm)
-* [Introducing On Demand Node Cycling for Oracle Container Engine for Kubernetes](https://blogs.oracle.com/cloud-infrastructure/post/node-cycling-container-engine-kubernetes-oke)
+* [Introducing On Demand Node Cycling for OCI Kubernetes Engine](https://blogs.oracle.com/cloud-infrastructure/post/node-cycling-container-engine-kubernetes-oke)

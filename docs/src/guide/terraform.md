@@ -28,7 +28,7 @@ kubectl installed on the operator host by default and the kubeconfig file is set
 ****
 The `instance principal` of the operator must be granted `MANAGE` on target cluster for configuration of an admin user context.
 * [Steps to Enable Instances to Call Services](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm#setup)
-* [Writing Policies for Container Engine for Kubernetes](https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm)
+* [Writing Policies for OCI Kubernetes Engine](https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm)
 ****
 
 An alias "*k*" will be created for kubectl on the operator host. 
