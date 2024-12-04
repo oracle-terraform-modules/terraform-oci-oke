@@ -7,7 +7,7 @@
 [uri-terraform-oci-drg]: https://github.com/oracle-terraform-modules/terraform-oci-drg
 [uri-terraform-oci-oke]: https://github.com/oracle-terraform-modules/terraform-oci-oke
 [uri-terraform-options]: ./inputs_submodule.html#cluster
-# Oracle Container Engine for Kubernetes (OKE) Terraform Module
+# OCI Kubernetes Engine (OKE) Terraform Module
 
 ## Introduction
 
@@ -24,45 +24,26 @@ The documentation here is still being reorganised.
 ## News
 
 ***
-### May 20 2024: Announcing v5.1.7
-- fix symlinks issues and cluster autoscaler defaults override
+### December 4, 2024: Announcing v5.2.2
+- feat: add support to reference module nsgs in the nsg rules
 
-### May 18 2024: Announcing v5.1.6 
-- fix: versions file in submodules
+### November 18, 2024: Announcing v5.2.1
+- fix: operator custom cloud-init error by @mcouto-sossego in #950
+- feat: added rules to allow UDP to be used for node port ranges by @robo-cap in #961
 
-### April 11 2024: Announcing v5.1.5
-- Create OKE VCN DRG attachment when existing DRG is specified
-- fix FSS NSGs
+### November 7, 2024: Announcing v5.2.0
+- Add support for stateless rules
+- Fix KMS policy - cluster dependency
+- Add cluster addon support
+- Allow cloud-init update for nodepools
+- Add several improvements and fixes
+- Cilium extension upgrade to 1.16
+- Fix pod nsg bug
 
-### March 28 2024: Announcing v5.1.4
-- add nodepool support for max_pods_per_node
-- Add service account extension
-- Improve logic for kube_config datasource
-- fix: Remove unknown resource counts from derived inputs
-- fix issue introduced by #909 with new clusters and #873
-
-### March 4 2024: Announcing v5.1.3
-- Fix in NSG rule for health check (incorrect direction, or incorrect description?)
-- feat: Configurable boot volume VPUs/GB on self-managed
-- docs: example of using this module in multi-cluster mode with Istio
-- Fix : Wrong control_plane_is_public behavior for OKE cluster
-- Update drg module version.
-
-### February 6 2024: Announcing v5.1.2
-- Improve operator package installation
-
-### January 17 2024: Announcing v5.1.1
-- feat: upgraded default Autonomous Linux to 8.8 by
-- fix: operator nsg is not created when cluster is disabled
-- feat: added ability to create rpc to peer vcn to other vcns
-
-### November 29 2023: Announcing release v5.1.0
-- added Cilium CNI 
-- https://github.com/oracle-terraform-modules/terraform-oci-oke/releases/tag/v5.1.0
-
-***
-### October 25 2023: Announcing release v5.0.0
-- https://github.com/oracle-terraform-modules/terraform-oci-oke/releases
+### July 9, 2024: Announcing v5.1.8
+- allow user to add additional rules to the workers NSG
+-  docs: updated main page, mdbook component versions
+-  Add support to ignore_initial_pool_size attribute on nodepools
 
 <!-- ***
 ### August 24 2023: Announcing release v5.0.0-RC5
