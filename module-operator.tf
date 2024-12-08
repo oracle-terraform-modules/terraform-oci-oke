@@ -64,6 +64,7 @@ module "operator" {
   install_k9s               = var.operator_install_k9s
   install_kubectx           = var.operator_install_kubectx
   install_kubectl_from_repo = var.operator_install_kubectl_from_repo
+  install_stern             = var.operator_install_stern
   kubeconfig                = yamlencode(local.kubeconfig_private)
   kubernetes_version        = var.kubernetes_version
   nsg_ids                   = compact(flatten([var.operator_nsg_ids, try(module.network.operator_nsg_id, null)]))

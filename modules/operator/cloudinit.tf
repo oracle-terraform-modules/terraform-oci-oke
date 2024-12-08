@@ -32,6 +32,7 @@ data "cloudinit_config" "operator" {
         "git",
         "jq",
         "python3-oci-cli",
+        "golang",
         var.install_helm ? "helm" : null,
         var.install_istioctl ? "istio-istioctl" : null,
         var.install_kubectl_from_repo ? "kubectl": null,
@@ -189,6 +190,23 @@ data "cloudinit_config" "operator" {
         ]
       })
       filename   = "20-cilium.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
+  }
+
+  # stern installation
+  dynamic "part" {
+    for_each = var.install_kubectx ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "go install github.com/stern/stern@v1.30",
+          "mv $HOME/go/bin/stern /usr/local/bin/",
+          "ln -s /usr/local/bin/stern /usr/bin/stern"
+        ]
+      })
+      filename   = "20-stern.yml"
       merge_type = local.default_cloud_init_merge_type
     }
   }
