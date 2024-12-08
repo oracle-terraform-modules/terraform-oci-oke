@@ -61,7 +61,7 @@ variable "clusters" {
 }
 
 variable "kubernetes_version" {
-  default     = "v1.28.2"
+  default     = "v1.30.1"
   description = "The version of Kubernetes to use."
   type        = string
 }

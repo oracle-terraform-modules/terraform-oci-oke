@@ -23,6 +23,7 @@ variable "install_kubectl_from_repo" {
   default = true
 }
 variable "install_kubectx" { type = bool }
+variable "install_stern" { type = bool }
 variable "kubeconfig" { type = string }
 variable "kubernetes_version" { type = string }
 variable "nsg_ids" { type = list(string) }
