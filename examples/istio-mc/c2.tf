@@ -4,13 +4,13 @@
 module "c2" {
 
   source  = "oracle-terraform-modules/oke/oci"
-  version = "5.1.1"
+  version = "5.2.2"
 
   count = lookup(lookup(var.clusters, "c2"), "enabled") ? 1 : 0
 
   home_region = lookup(local.regions, var.home_region)
-  
-  region      = lookup(local.regions, lookup(lookup(var.clusters, "c2"), "region"))
+
+  region = lookup(local.regions, lookup(lookup(var.clusters, "c2"), "region"))
 
   tenancy_id = var.tenancy_id
 
@@ -49,7 +49,6 @@ module "c2" {
     int_lb  = { newbits = 11, netnum = 16, dns_label = "ilb" }
     pub_lb  = { newbits = 11, netnum = 17, dns_label = "plb" }
     workers = { newbits = 2, netnum = 1, dns_label = "workers" }
-    pods    = { newbits = 2, netnum = 2, dns_label = "pods" }
   }
 
   # bastion host
@@ -76,32 +75,53 @@ module "c2" {
 
 
   # node pools
-  kubeproxy_mode                    = "iptables"
-  worker_pool_mode                  = "node-pool"
-  worker_pools                      = var.nodepools
-  worker_cloud_init                 = local.worker_cloud_init
-  worker_image_type                 = "oke"
+  kubeproxy_mode    = "iptables"
+  worker_pool_mode  = "node-pool"
+  worker_pools      = var.nodepools
+  worker_cloud_init = local.worker_cloud_init
+  worker_image_type = "oke"
 
   # oke load balancers
   load_balancers          = "both"
   preferred_load_balancer = "public"
 
-  allow_rules_internal_lb = {
+  allow_rules_internal_lb = merge({
     for p in local.service_mesh_ports :
-
-    format("Allow ingress to port %v", p) => {
-      protocol = local.tcp_protocol, port = p, source = lookup(lookup(var.clusters, "c1"), "vcn"), source_type = local.rule_type_cidr,
+    format("Allow ingress to port %v  from cluster c1", p) => {
+      protocol    = local.tcp_protocol, port = p, source = lookup(lookup(var.clusters, "c1"), "vcn"),
+      source_type = local.rule_type_cidr,
     }
-  }
+    },
+    {
+      for c in var.clusters : format("Allow TCP ingress from cluster %v for Cilium clustermesh", lookup(c, "name")) => {
+        protocol = local.tcp_protocol, port = 2379, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
+      } if lookup(c, "name") != "c2"
+    },
+    {
+      for c in var.clusters :
+      format("Allow UDP ingress from cluster %v for cross-cluster DNS lookup via NLB for Coherence WKA", lookup(c, "name"))
+      => {
+        protocol = local.udp_protocol, port = 53, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
+      } if lookup(c, "name") != "c2"
+    },
+  )
 
-  allow_rules_public_lb = {
-
+  allow_rules_public_lb = merge({
     for p in local.public_lb_allowed_ports :
-
     format("Allow ingress to port %v", p) => {
       protocol = local.tcp_protocol, port = p, source = "0.0.0.0/0", source_type = local.rule_type_cidr,
     }
-  }
+    },
+  )
+
+  allow_rules_workers = merge(
+    {
+      for c in var.clusters :
+      format("Allow UDP ingress to workers from cluster %v for default VXLAN", lookup(c, "name")) => {
+        protocol = local.udp_protocol, port = 8472, source = lookup(c, "vcn"), source_type = local.rule_type_cidr
+      } if lookup(c, "name") != "c2"
+    },
+  )
 
   user_id = var.user_id
 

@@ -1,4 +1,4 @@
-# provider
+    # provider
 api_fingerprint = ""
 
 api_private_key_path = "~/.oci/oci_rsa.pem"
