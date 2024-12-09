@@ -20,7 +20,7 @@ locals {
   bastion_ip = one(element([module.c1[*].bastion_public_ip], 0))
 
   operator_ip = one(element([module.c1[*].operator_private_ip], 0))
-  
+
   # TODO: check when is 15021 required for public
   public_lb_allowed_ports = [80, 443, 15021]
 

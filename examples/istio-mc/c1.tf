@@ -19,7 +19,7 @@ module "c1" {
 
   # ssh keys
   ssh_private_key_path = var.ssh_private_key_path
-  ssh_public_key_path = var.ssh_public_key_path
+  ssh_public_key_path  = var.ssh_public_key_path
 
   # networking
   create_drg       = var.oke_control_plane == "private" ? true : false
@@ -32,48 +32,48 @@ module "c1" {
   nat_gateway_route_rules = var.oke_control_plane == "private" ? [
     for k, v in var.clusters :
     {
-      destination = lookup(v, "vcn")
+      destination       = lookup(v, "vcn")
       destination_type  = "CIDR_BLOCK"
       network_entity_id = "drg"
       description       = "Routing to allow connectivity to ${title(k)} cluster"
     } if k != "c1"
   ] : []
 
-  vcn_cidrs = [lookup(lookup(var.clusters, "c1"), "vcn")]
+  vcn_cidrs     = [lookup(lookup(var.clusters, "c1"), "vcn")]
   vcn_dns_label = "c1"
-  vcn_name = "c1"
+  vcn_name      = "c1"
 
   #subnets
   subnets = {
-    bastion = { newbits = 13, netnum = 0, dns_label = "bastion" }
+    bastion  = { newbits = 13, netnum = 0, dns_label = "bastion" }
     operator = { newbits = 13, netnum = 1, dns_label = "operator" }
-    cp = { newbits = 13, netnum = 2, dns_label = "cp" }
-    int_lb = { newbits = 11, netnum = 16, dns_label = "ilb" }
-    pub_lb = { newbits = 11, netnum = 17, dns_label = "plb" }
-    workers = { newbits = 2, netnum = 1, dns_label = "workers" }
+    cp       = { newbits = 13, netnum = 2, dns_label = "cp" }
+    int_lb   = { newbits = 11, netnum = 16, dns_label = "ilb" }
+    pub_lb   = { newbits = 11, netnum = 17, dns_label = "plb" }
+    workers  = { newbits = 2, netnum = 1, dns_label = "workers" }
   }
 
   # bastion host
-  create_bastion = true
+  create_bastion        = true
   bastion_allowed_cidrs = ["0.0.0.0/0"]
-  bastion_upgrade = false
+  bastion_upgrade       = false
 
   # operator host
   create_operator            = true
   operator_upgrade           = false
   create_iam_resources       = true
   create_iam_operator_policy = "always"
-  operator_install_k9s = true
+  operator_install_k9s       = true
 
   # oke cluster options
-  cluster_name            = "c1"
-  cluster_type            = var.cluster_type
-  cni_type                = var.preferred_cni
-  control_plane_is_public = var.oke_control_plane == "public"
+  cluster_name                = "c1"
+  cluster_type                = var.cluster_type
+  cni_type                    = var.preferred_cni
+  control_plane_is_public     = var.oke_control_plane == "public"
   control_plane_allowed_cidrs = [local.anywhere]
-  kubernetes_version      = var.kubernetes_version
-  pods_cidr = lookup(lookup(var.clusters, "c1"), "pods")
-  services_cidr = lookup(lookup(var.clusters, "c1"), "services")
+  kubernetes_version          = var.kubernetes_version
+  pods_cidr                   = lookup(lookup(var.clusters, "c1"), "pods")
+  services_cidr               = lookup(lookup(var.clusters, "c1"), "services")
 
 
   # node pools
@@ -82,7 +82,7 @@ module "c1" {
   worker_pool_mode        = "node-pool"
   worker_pools            = var.nodepools
   worker_cloud_init       = local.worker_cloud_init
-  worker_image_type = "oke"
+  worker_image_type       = "oke"
 
   # oke load balancers
   load_balancers          = "both"
@@ -94,18 +94,18 @@ module "c1" {
       protocol    = local.tcp_protocol, port = p, source = lookup(lookup(var.clusters, "c2"), "vcn"),
       source_type = local.rule_type_cidr,
     }
-  },
+    },
     {
       for c in var.clusters : format("Allow TCP ingress from cluster %v for Cilium clustermesh", lookup(c, "name")) => {
-      protocol = local.tcp_protocol, port = 2379, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
-    } if lookup(c, "name") != "c1"
+        protocol = local.tcp_protocol, port = 2379, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
+      } if lookup(c, "name") != "c1"
     },
     {
       for c in var.clusters :
       format("Allow UDP ingress from cluster %v for cross-cluster DNS lookup via NLB for Coherence WKA", lookup(c, "name"))
       => {
-      protocol = local.udp_protocol, port = 53, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
-    } if lookup(c, "name") != "c1"
+        protocol = local.udp_protocol, port = 53, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
+      } if lookup(c, "name") != "c1"
     },
   )
 
@@ -114,15 +114,15 @@ module "c1" {
     format("Allow ingress to port %v", p) => {
       protocol = local.tcp_protocol, port = p, source = "0.0.0.0/0", source_type = local.rule_type_cidr,
     }
-  },
+    },
   )
 
   allow_rules_workers = merge(
     {
       for c in var.clusters :
       format("Allow UDP ingress to workers from cluster %v for default VXLAN", lookup(c, "name")) => {
-      protocol = local.udp_protocol, port = 8472, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
-    } if lookup(c, "name") != "c1"
+        protocol = local.udp_protocol, port = 8472, source = lookup(c, "vcn"), source_type = local.rule_type_cidr,
+      } if lookup(c, "name") != "c1"
     },
   )
 

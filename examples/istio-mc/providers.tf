@@ -4,7 +4,7 @@
 provider "oci" {
   fingerprint         = var.api_fingerprint
   private_key_path    = var.api_private_key_path
-  region              = lookup(local.regions,var.home_region)
+  region              = lookup(local.regions, var.home_region)
   tenancy_ocid        = var.tenancy_id
   user_ocid           = var.user_id
   alias               = "home"
@@ -14,7 +14,7 @@ provider "oci" {
 provider "oci" {
   fingerprint         = var.api_fingerprint
   private_key_path    = var.api_private_key_path
-  region              = lookup(local.regions,lookup(lookup(var.clusters,"c1"),"region"))
+  region              = lookup(local.regions, lookup(lookup(var.clusters, "c1"), "region"))
   tenancy_ocid        = var.tenancy_id
   user_ocid           = var.user_id
   alias               = "c1"
@@ -24,7 +24,7 @@ provider "oci" {
 provider "oci" {
   fingerprint         = var.api_fingerprint
   private_key_path    = var.api_private_key_path
-  region              = lookup(local.regions,lookup(lookup(var.clusters,"c2"),"region"))
+  region              = lookup(local.regions, lookup(lookup(var.clusters, "c2"), "region"))
   tenancy_ocid        = var.tenancy_id
   user_ocid           = var.user_id
   alias               = "c2"

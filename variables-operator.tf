@@ -90,7 +90,7 @@ variable "operator_install_kubectx" {
 }
 
 variable "operator_install_stern" {
-  default = true
+  default = false
   description = "Whether to install stern on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type = bool
 }

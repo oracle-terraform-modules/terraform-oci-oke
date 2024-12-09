@@ -3,5 +3,5 @@
 
 output "ssh_to_operator" {
   description = "convenient command to ssh to the Admin operator host"
-  value       = one(element([module.c1[*].ssh_to_operator],0))
+  value       = one(element([module.c1[*].ssh_to_operator], 0))
 }
