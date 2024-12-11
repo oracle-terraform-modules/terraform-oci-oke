@@ -19,5 +19,18 @@ worker_pools = {
     mode        = "instance-pool",
     size        = 1,
     burst       = "BASELINE_1_8",   # Valid values BASELINE_1_8,BASELINE_1_2
-  }
+  },
+  oke-vm-instance-pool-with-block-volume = {
+    description = "Self-managed Instance Pool with block volume",
+    mode        = "instance-pool",
+    size        = 1,
+    disable_block_volume = false,
+    block_volume_size_in_gbs = 60,
+  },
+  oke-vm-instance-pool-without-block-volume = {
+    description = "Self-managed Instance Pool without block volume",
+    mode        = "instance-pool",
+    size        = 1,
+    disable_block_volume = true,
+  },
 }
