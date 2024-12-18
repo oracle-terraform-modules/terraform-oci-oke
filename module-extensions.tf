@@ -4,7 +4,10 @@
 locals {
   cluster_private_endpoint = ( var.create_cluster ? 
     coalesce(split(":", lookup(one(module.cluster[*].endpoints), "private_endpoint", ""))...) : 
-    coalesce(split(":", lookup(local.existing_cluster_endpoints, "private_endpoint", ""))...)
+    ( length(local.existing_cluster_endpoints) > 0 ?
+      coalesce(split(":", lookup(local.existing_cluster_endpoints, "private_endpoint", ""))...):
+      null
+    )
   )
 }
 
