@@ -4,6 +4,7 @@
 cluster_addons = {
   "CertManager" = {
     remove_addon_resources_on_delete = true
+    override_existing = true           # Default is false if not specified
     # The list of supported configurations for the cluster addons is here: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengconfiguringclusteraddons-configurationarguments.htm#contengconfiguringclusteraddons-configurationarguments_CertificateManager
     configurations = [
       {
