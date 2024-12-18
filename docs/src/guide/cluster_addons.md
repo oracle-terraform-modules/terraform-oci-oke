@@ -10,6 +10,8 @@ Cluster add-on removal (using the `cluster_addons_to_remove` variable) requires 
 - the stand-alone cluster-autoscaler deployment, using the [extension module](./extensions_cluster_autoscaler.md)
 - the cluster-autoscaler add-on
 
+When customizing the configuration of an existing addon, use the flag `override_existing=true`. Default value is false if not specified.
+
 ## Example usage
 ```javascript
 {{#include ../../../examples/cluster-addons/vars-cluster-addons.auto.tfvars:4:}}
