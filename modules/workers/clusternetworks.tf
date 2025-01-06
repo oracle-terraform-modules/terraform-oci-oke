@@ -45,11 +45,6 @@ resource "oci_core_cluster_network" "workers" {
     }
 
     precondition {
-      condition     = var.cni_type == "flannel"
-      error_message = "Cluster Networks require a cluster with `cni_type = flannel`."
-    }
-
-    precondition {
       condition     = each.value.autoscale == false
       error_message = "Cluster Networks do not support cluster autoscaler management."
     }
