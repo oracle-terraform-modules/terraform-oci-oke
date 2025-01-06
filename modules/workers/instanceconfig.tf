@@ -61,6 +61,9 @@ resource "oci_core_instance_configuration" "workers" {
           secondary_vnics          = jsonencode(lookup(each.value, "secondary_vnics", {}))
           ssh_authorized_keys      = var.ssh_public_key
           user_data                = lookup(lookup(data.cloudinit_config.workers, each.key, {}), "rendered", "")
+          oke-native-pod-networking = var.cni_type == "npn" ? true : false
+          oke-max-pods              = var.max_pods_per_node
+          pod-subnets               = try(module.network.pod_subnet_id, "")
         },
 
         # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
