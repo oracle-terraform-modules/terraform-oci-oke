@@ -64,6 +64,7 @@ resource "oci_core_instance_configuration" "workers" {
           oke-native-pod-networking = var.cni_type == "npn" ? true : false
           oke-max-pods              = var.max_pods_per_node
           pod-subnets               = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+          pod-nsgids                = join(",", each.value.pod_nsg_ids)
         },
 
         # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
