@@ -56,6 +56,7 @@ module "workers" {
   image_os                   = var.worker_image_os
   image_os_version           = var.worker_image_os_version
   image_type                 = var.worker_image_type
+  indexed_images             = local.indexed_images
   kubeproxy_mode             = var.kubeproxy_mode
   max_pods_per_node          = var.max_pods_per_node
   node_labels                = alltrue([var.cluster_type == "basic", var.cilium_install == true]) ? merge(var.worker_node_labels, {"oci.oraclecloud.com/custom-k8s-networking" = true}) : var.worker_node_labels

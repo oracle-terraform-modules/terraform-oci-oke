@@ -138,6 +138,12 @@ variable "image_ids" {
   type        = any
 }
 
+variable "indexed_images" {
+  default     = {}
+  description = "Map of images."
+  type        = any
+}
+
 variable "ssh_public_key" {
   default     = null
   description = "The contents of the SSH public key file. Used to allow login for workers/bastion/operator with corresponding private key."
