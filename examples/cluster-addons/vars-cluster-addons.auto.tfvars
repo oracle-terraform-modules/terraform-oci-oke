@@ -13,6 +13,28 @@ cluster_addons = {
       }
     ]
   }
+  # Prevent Flannel pods from being scheduled using a non-existing label as nodeSelector
+  "Flannel" = {
+    remove_addon_resources_on_delete = true
+    override_existing = true # Override the existing configuration with this one, if Flannel addon in already enabled
+    configurations = [
+      {
+        key   = "nodeSelectors"
+        value = "{\"addon\":\"no-schedule\"}"
+      }
+    ],
+  },
+  # Prevent Kube-Proxy pods from being scheduled using a non-existing label as nodeSelector
+  "KubeProxy" = {
+    remove_addon_resources_on_delete = true
+    override_existing = true # Override the existing configuration with this one, if KubeProxy addon in already enabled
+    configurations = [
+      {
+        key   = "nodeSelectors"
+        value = "{\"addon\":\"no-schedule\"}"
+      }
+    ],
+  }
 }
 
 cluster_addons_to_remove = {
