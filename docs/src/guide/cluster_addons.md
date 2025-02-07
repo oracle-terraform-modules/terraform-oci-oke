@@ -6,7 +6,11 @@ This module provides the option to remove [Essential addons](https://docs.oracle
 
 Cluster add-on removal (using the `cluster_addons_to_remove` variable) requires the creation of the operator host.
 
-If the operator host is not provisioned, it is possible to customize the essential add-ons configuration and prevent the pods from being scheduled. For example, using this approach you can install a custom CNI & KubeProxy replacement.
+To list the available cluster add-ons for a specific Kubernetes version you can run the following oci-cli command:
+
+```
+oci ce addon-option list --kubernetes-version <k8s-version>
+```
 
 **Note**: For the cluster autoscaler you should choose **only one** of the options:
 - the stand-alone cluster-autoscaler deployment, using the [extension module](./extensions_cluster_autoscaler.md)

@@ -13,6 +13,10 @@ cluster_addons = {
       }
     ]
   }
+  # The NvidiaGpuPlugin is disabled by default. To enable it, add the following block to the cluster_addons variable
+  "NvidiaGpuPlugin" = {
+    remove_addon_resources_on_delete = true
+  },
   # Prevent Flannel pods from being scheduled using a non-existing label as nodeSelector
   "Flannel" = {
     remove_addon_resources_on_delete = true
