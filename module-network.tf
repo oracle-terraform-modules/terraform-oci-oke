@@ -113,7 +113,9 @@ module "network" {
 
   allow_node_port_access       = var.allow_node_port_access
   allow_pod_internet_access    = var.allow_pod_internet_access
+  allow_rules_cp               = var.allow_rules_cp
   allow_rules_internal_lb      = var.allow_rules_internal_lb
+  allow_rules_pods             = var.allow_rules_pods
   allow_rules_public_lb        = var.allow_rules_public_lb
   allow_rules_workers          = var.allow_rules_workers
   allow_worker_internet_access = var.allow_worker_internet_access

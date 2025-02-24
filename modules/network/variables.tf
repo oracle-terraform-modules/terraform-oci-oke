@@ -14,7 +14,9 @@ variable "use_defined_tags" { type = bool }
 # Network
 variable "allow_node_port_access" { type = bool }
 variable "allow_pod_internet_access" { type = bool }
+variable "allow_rules_cp" { type = any }
 variable "allow_rules_internal_lb" { type = any }
+variable "allow_rules_pods" { type = any }
 variable "allow_rules_public_lb" { type = any }
 variable "allow_rules_workers" { type = any }
 variable "allow_worker_internet_access" { type = bool }
@@ -40,12 +42,13 @@ variable "worker_is_public" { type = bool }
 
 variable "subnets" {
   type = map(object({
-    create    = optional(string)
-    id        = optional(string)
-    newbits   = optional(string)
-    netnum    = optional(string)
-    cidr      = optional(string)
-    dns_label = optional(string)
+    create       = optional(string)
+    id           = optional(string)
+    newbits      = optional(string)
+    netnum       = optional(string)
+    cidr         = optional(string)
+    display_name = optional(string)
+    dns_label    = optional(string)
   }))
 }
 
