@@ -53,6 +53,7 @@ locals {
         protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
       }
     } : {},
+    var.allow_rules_pods
   ) : {}
 }
 

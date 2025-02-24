@@ -74,6 +74,7 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
       }
     },
+    var.allow_rules_cp
   ) : {}
 }
 
