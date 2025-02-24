@@ -2,4 +2,4 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 cluster_name       = "oke-example"
-kubernetes_version = "v1.26.2"
+kubernetes_version = "v1.31.1"

@@ -8,3 +8,7 @@ output "cluster_id" {
 output "endpoints" {
   value = one(oci_containerengine_cluster.k8s_cluster.endpoints)
 }
+
+output "cluster" {
+  value = oci_containerengine_cluster.k8s_cluster
+}

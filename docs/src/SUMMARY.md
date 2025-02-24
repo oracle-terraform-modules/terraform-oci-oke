@@ -12,6 +12,7 @@
     - [Subnets](./guide/network_subnets.md)
     - [Network Security Groups](./guide/network_nsgs.md)    
   - [Cluster](./guide/cluster.md)
+    - [Cluster OIDC](./guide/cluster_oidc.md)
     - [Cluster Add-ons](./guide/cluster_addons.md)
   - [Workers](./guide/workers.md)
     - [Mode](./guide/workers_mode.md)
