@@ -65,6 +65,18 @@ variable "operator_install_helm" {
   type        = bool
 }
 
+variable "operator_install_helm_from_repo" {
+  default     = false
+  description = "Whether to install Helm on the created operator host."
+  type        = bool
+}
+
+variable "operator_install_oci_cli_from_repo" {
+  default     = false
+  description = "Whether to install OCI from repo on the created operator host."
+  type        = bool
+}
+
 variable "operator_install_istioctl" {
   default     = false
   description = "Whether to install istioctl on the created operator host."
@@ -90,9 +102,9 @@ variable "operator_install_kubectx" {
 }
 
 variable "operator_install_stern" {
-  default = false
+  default     = false
   description = "Whether to install stern on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
-  type = bool
+  type        = bool
 }
 
 variable "operator_shape" {
@@ -128,4 +140,10 @@ variable "operator_private_ip" {
   default     = null
   description = "The IP address of an existing operator host. Ignored when create_operator = true."
   type        = string
+}
+
+variable "operator_await_cloudinit" {
+  default     = true
+  description = "Whether to block until successful connection to operator and completion of cloud-init."
+  type        = bool
 }

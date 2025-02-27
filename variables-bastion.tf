@@ -87,3 +87,9 @@ variable "bastion_upgrade" {
   description = "Whether to upgrade bastion packages after provisioning."
   type        = bool
 }
+
+variable "bastion_await_cloudinit" {
+  default     = true
+  description = "Whether to block until successful connection to bastion and completion of cloud-init."
+  type        = bool
+}
