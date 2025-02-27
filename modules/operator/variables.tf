@@ -10,12 +10,15 @@ variable "bastion_host" { type = string }
 variable "bastion_user" { type = string }
 
 # Operator
+variable "await_cloudinit" { type = string }
 variable "assign_dns" { type = bool }
 variable "availability_domain" { type = string }
 variable "cloud_init" { type = list(map(string)) }
 variable "image_id" { type = string }
 variable "install_cilium" { type = bool }
+variable "install_oci_cli_from_repo" { type = bool }
 variable "install_helm" { type = bool }
+variable "install_helm_from_repo" { type = bool }
 variable "install_istioctl" { type = bool }
 variable "install_k9s" { type = bool }
 variable "install_kubectl_from_repo" { 

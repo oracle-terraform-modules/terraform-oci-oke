@@ -46,6 +46,7 @@ module "bastion" {
   compartment_id = local.compartment_id
 
   # Bastion
+  await_cloudinit          = var.bastion_await_cloudinit
   assign_dns               = var.assign_dns
   availability_domain      = coalesce(var.bastion_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
   bastion_image_os_version = var.bastion_image_os_version

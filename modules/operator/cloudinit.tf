@@ -102,9 +102,26 @@ data "cloudinit_config" "operator" {
     merge_type = local.default_cloud_init_merge_type
   }
 
+
+  # OCI CLI installation from repo
+  dynamic "part" {
+    for_each = var.install_oci_cli_from_repo ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "curl -LO https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh",
+          "su -c 'bash /install.sh --accept-all-defaults' - ${var.user}",
+        ]
+      })
+      filename   = "20-oci_cli_from_repo.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
+  }
+
   # kubectl installation
   dynamic "part" {
-    for_each = var.install_kubectl_from_repo ? [] : [1]
+    for_each = var.install_kubectl_from_repo ? [1] : []
     content {
       content_type = "text/cloud-config"
       content = jsonencode({
@@ -112,7 +129,7 @@ data "cloudinit_config" "operator" {
           "CLI_ARCH='${local.arch_amd}'",
           "if [ \"$(uname -m)\" = ${local.arch_arm} ]; then CLI_ARCH='arm64'; fi",
           "curl -LO https://dl.k8s.io/release/${var.kubernetes_version}/bin/linux/$CLI_ARCH/kubectl",
-          "install -o root -g root -m 0755 kubectl /usr/bin/kubectl"
+          "install -o root -g root -m 0755 kubectl /usr/bin/kubectl",
         ]
       })
       filename   = "20-kubectl.yml"
@@ -133,6 +150,23 @@ data "cloudinit_config" "operator" {
         ]
       })
       filename   = "20-kubectx.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
+  }
+
+  # Helm installation from repo
+  dynamic "part" {
+    for_each = var.install_helm_from_repo ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3",
+          "chmod 700 get_helm.sh",
+          "./get_helm.sh",
+        ]
+      })
+      filename   = "20-helm_from_repo.yml"
       merge_type = local.default_cloud_init_merge_type
     }
   }
@@ -166,7 +200,7 @@ data "cloudinit_config" "operator" {
       content_type = "text/cloud-config"
       content = jsonencode({
         runcmd = [
-          "curl -LO https://github.com/derailed/k9s/releases/download/v0.27.2/k9s_Linux_amd64.tar.gz",
+          "curl -LO https://github.com/derailed/k9s/releases/download/v0.40.5/k9s_Linux_amd64.tar.gz",
           "tar -xvzf k9s_Linux_amd64.tar.gz && mv ./k9s /usr/bin/k9s",
         ]
       })
@@ -196,7 +230,7 @@ data "cloudinit_config" "operator" {
 
   # stern installation
   dynamic "part" {
-    for_each = var.install_kubectx ? [1] : []
+    for_each = var.install_stern ? [1] : []
     content {
       content_type = "text/cloud-config"
       content = jsonencode({
@@ -311,6 +345,7 @@ data "cloudinit_config" "operator" {
 }
 
 resource "null_resource" "await_cloudinit" {
+  count = var.await_cloudinit ? 1 : 0
   connection {
     bastion_host        = var.bastion_host
     bastion_user        = var.bastion_user
