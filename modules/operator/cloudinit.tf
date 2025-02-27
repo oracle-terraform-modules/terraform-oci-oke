@@ -255,6 +255,7 @@ data "cloudinit_config" "operator" {
           content = <<-EOT
             export OCI_CLI_AUTH=instance_principal
             export TERM=xterm-256color
+            export OCI_PYTHON_SDK_NO_SERVICE_IMPORTS=True
             source <(kubectl completion bash)
             alias k='kubectl'
             alias ktx='kubectx'
