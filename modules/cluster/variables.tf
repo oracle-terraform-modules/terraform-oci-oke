@@ -31,3 +31,8 @@ variable "persistent_volume_defined_tags" { type = map(string) }
 variable "persistent_volume_freeform_tags" { type = map(string) }
 variable "service_lb_defined_tags" { type = map(string) }
 variable "service_lb_freeform_tags" { type = map(string) }
+
+# OIDC
+variable "open_id_connect_discovery_enabled" { type = bool }
+variable "open_id_connect_token_auth_enabled" { type = bool }
+variable "open_id_connect_token_authentication_config" { type = any }

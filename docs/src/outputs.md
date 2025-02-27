@@ -53,6 +53,7 @@
 
 * **`cluster_id`**&nbsp;&nbsp; 
 * **`endpoints`**&nbsp;&nbsp; 
+* **`cluster`**&nbsp;&nbsp; 
 
 <!-- END_TF_CLUSTER -->
 

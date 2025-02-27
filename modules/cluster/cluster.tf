@@ -39,6 +39,39 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   options {
+
+    dynamic "open_id_connect_token_authentication_config" {
+      for_each = var.open_id_connect_token_auth_enabled ? [1] : []
+
+      content {
+        is_open_id_connect_auth_enabled = var.open_id_connect_token_auth_enabled
+
+
+        issuer_url         = lookup(var.open_id_connect_token_authentication_config, "issuer_url", null)
+        ca_certificate     = lookup(var.open_id_connect_token_authentication_config, "ca_certificate", null)
+        client_id          = lookup(var.open_id_connect_token_authentication_config, "client_id", null)
+        signing_algorithms = lookup(var.open_id_connect_token_authentication_config, "signing_algorithms", null)
+
+        groups_claim  = lookup(var.open_id_connect_token_authentication_config, "groups_claim", null)
+        groups_prefix = lookup(var.open_id_connect_token_authentication_config, "groups_prefix", null)
+
+        username_claim  = lookup(var.open_id_connect_token_authentication_config, "username_claim", null)
+        username_prefix = lookup(var.open_id_connect_token_authentication_config, "username_prefix", null)
+
+        dynamic "required_claims" {
+          for_each = lookup(var.open_id_connect_token_authentication_config, "required_claims", [])
+          content {
+            key    = lookup(required_claims.value, "key")
+            value  = lookup(required_claims.value, "value")
+          }
+        }
+      }
+    }
+
+    open_id_connect_discovery {
+      is_open_id_connect_discovery_enabled = var.open_id_connect_discovery_enabled
+    }
+
     kubernetes_network_config {
       pods_cidr     = var.pods_cidr
       services_cidr = var.services_cidr
