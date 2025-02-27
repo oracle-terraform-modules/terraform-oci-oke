@@ -67,7 +67,7 @@ variable "operator_install_helm" {
 
 variable "operator_install_helm_from_repo" {
   default     = false
-  description = "Whether to install Helm on the created operator host."
+  description = "Whether to install Helm from the repo on the created operator host."
   type        = bool
 }
 
@@ -91,7 +91,7 @@ variable "operator_install_k9s" {
 
 variable "operator_install_kubectl_from_repo" {
   default     = true
-  description = "Whether to install kubectl on the created operator host from olcne repo."
+  description = "Whether to install kubectl from the repo on the created operator host."
   type        = bool
 }
 
