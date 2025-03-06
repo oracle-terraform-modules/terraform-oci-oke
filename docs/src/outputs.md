@@ -52,7 +52,10 @@
 <!-- BEGIN_TF_CLUSTER -->
 
 * **`cluster_id`**&nbsp;&nbsp; 
-* **`endpoints`**&nbsp;&nbsp; 
+* **`cluster_endpoints`**&nbsp;&nbsp; 
+* **`cluster_oidc_discovery_endpoint`**&nbsp;&nbsp; 
+* **`cluster_kubeconfig`**&nbsp;&nbsp; 
+* **`cluster_ca_cert`**&nbsp;&nbsp; 
 
 <!-- END_TF_CLUSTER -->
 

@@ -106,3 +106,21 @@ variable "preferred_load_balancer" {
     error_message = "Accepted values are public or internal."
   }
 }
+
+variable "oidc_discovery_enabled" {
+  default     = false
+  description = "Whether the cluster has OIDC Discovery enabled. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengOpenIDConnect-Discovery.htm>OIDC Discovery configuration documentation</a>."
+  type        = bool
+}
+
+variable "oidc_token_auth_enabled" {
+  default     = false
+  description = "Whether the cluster has OIDC Auth Config enabled."
+  type        = bool
+}
+
+variable "oidc_token_authentication_config" {
+  default     = {}
+  description = "The properties that configure OIDC token authentication in kube-apiserver. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengOpenIDConnect-Authentication.htm>OIDC Token Authentication configuration documentation</a>."
+  type        = any
+}
