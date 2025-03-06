@@ -83,6 +83,10 @@ resource "oci_core_instance" "workers" {
       secondary_vnics          = jsonencode(lookup(each.value, "secondary_vnics", {}))
       ssh_authorized_keys      = var.ssh_public_key
       user_data                = lookup(lookup(data.cloudinit_config.workers, lookup(each.value, "key", ""), {}), "rendered", "")
+      oke-native-pod-networking = var.cni_type == "npn" ? true : false
+      oke-max-pods              = var.max_pods_per_node
+      pod-subnets               = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+      pod-nsgids                = var.cni_type == "npn" ? join(",", each.value.pod_nsg_ids) : null
     },
 
     # Only provide cluster DNS service address if set explicitly; determined automatically in practice.

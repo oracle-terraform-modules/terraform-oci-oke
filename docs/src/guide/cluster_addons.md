@@ -1,6 +1,6 @@
 # Cluster Add-ons
 
-With this module to manage both essential and optional add-ons on **enhanced** OKE clusters. 
+With this module you can manage both essential and optional add-ons on **enhanced** OKE clusters. 
 
 This module provides the option to remove [Essential addons](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengintroducingclusteraddons.htm#contengintroducingclusteraddons__section-essential-addons) and to manage, both essential & [optional addons](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengintroducingclusteraddons.htm#contengintroducingclusteraddons__section-optional-addons).
 
