@@ -270,4 +270,15 @@ locals {
 
   # Yields {<pool name> = {<instance id> = <instance ip>}} for modes: 'node-pool', 'instance'
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
+  
+  # Map of nodepools using Ubuntu images.
+  ubuntu_worker_pools = {
+    for k, v in local.enabled_worker_pools : k => {
+      kubernetes_major_version = substr(lookup(v, "kubernetes_version", ""), 1, 4)
+      kubernetes_minor_version = substr(lookup(v, "kubernetes_version", ""), 1, -1)
+      ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
+    }
+    if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
+      contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+  }
 }
