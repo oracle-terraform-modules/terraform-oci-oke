@@ -318,3 +318,13 @@ variable "agent_config" {
     plugins_config           = map(string),
   })
 }
+
+#
+# Workers: compute-cluster
+#
+
+variable "compute_clusters" {
+  default     = {}
+  description = "Whether to create compute clusters shared by nodes across multiple worker pools enabled for 'compute-cluster'."
+  type        = map(any)
+}

@@ -104,20 +104,20 @@ locals {
 
       # Use provided image_id for 'custom' type, or first match for all shape + OS criteria
       image_id = (
-        pool.image_type == "custom" ? 
-          pool.image_id : 
-          element(split("###", element(reverse(sort([for entry in tolist(setintersection([
-            pool.image_type == "oke" ?
-            setintersection(
-              lookup(var.image_ids, "oke", null),
-              lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
-            ) :
-            lookup(var.image_ids, "platform", null),
-            lookup(var.image_ids, pool.image_type, null),
-            length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
-            length(regexall("A[12]\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
-            lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
-          ]...)): "${var.indexed_images[entry].sort_key}###${entry}"])), 0)), 1)
+        pool.image_type == "custom" ?
+        pool.image_id :
+        element(split("###", element(reverse(sort([for entry in tolist(setintersection([
+          pool.image_type == "oke" ?
+          setintersection(
+            lookup(var.image_ids, "oke", null),
+            lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
+          ) :
+          lookup(var.image_ids, "platform", null),
+          lookup(var.image_ids, pool.image_type, null),
+          length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
+          length(regexall("A[12]\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
+          lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
+        ]...)) : "${var.indexed_images[entry].sort_key}###${entry}"])), 0)), 1)
       )
 
       # Standard tags as defined if enabled for use
@@ -224,6 +224,16 @@ locals {
     for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "cluster-network"
   }
 
+  # Enabled worker_pool map entries for compute clusters
+  enabled_compute_clusters = {
+    for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "compute-cluster"
+  }
+
+  # Prepare a map workers node enabled for compute_clusters { "pool_id###worker_id" => pool_values }
+  compute_cluster_instance_ids_map = { for k, v in local.enabled_compute_clusters : k => toset(lookup(v, "instance_ids", [])) }
+  compute_cluster_instance_ids     = toset(concat(flatten([for k, v in local.compute_cluster_instance_ids_map : [for id in v : format("%s###%s", k, id)]])))
+  compute_cluster_instance_map     = { for id in local.compute_cluster_instance_ids : id => lookup(local.enabled_compute_clusters, element(split("###", id), 0), {}) }
+
   # Sanitized worker_pools output; some conditionally-used defaults would be misleading
   worker_pools_final = {
     for pool_name, pool in local.enabled_worker_pools : pool_name => { for a, b in pool : a => b
@@ -270,4 +280,8 @@ locals {
 
   # Yields {<pool name> = {<instance id> = <instance ip>}} for modes: 'node-pool', 'instance'
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
+}
+
+output "test" {
+  value = local.compute_cluster_instance_ids
 }
