@@ -29,6 +29,11 @@ locals {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     },
+    var.enable_ipv6 ? {
+      "Allow ICMPv6 egress from public load balancers to worker nodes for path discovery" : {
+        protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
     var.enable_waf ? local.waf_rules : {},
     var.allow_rules_public_lb,
   ) : {}

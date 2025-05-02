@@ -30,3 +30,17 @@ resource "oci_identity_policy" "cluster" {
     ignore_changes = [defined_tags, freeform_tags]
   }
 }
+
+resource "oci_identity_policy" "cluster_ipv6" {
+  provider       = oci.home
+  count          = var.enable_ipv6 && var.create_iam_resources ? 1 : 0
+  compartment_id = var.network_compartment_id
+  description    = format("Policies for OKE Terraform state %v", var.state_id)
+  name           = var.policy_name
+  statements     = [format("Allow any-user to use ipv6s in compartment %s where all { request.principal.id = '%s' }", var.network_compartment_id, var.cluster_id )]
+  defined_tags   = local.defined_tags
+  freeform_tags  = local.freeform_tags
+  lifecycle {
+    ignore_changes = [defined_tags, freeform_tags]
+  }
+}

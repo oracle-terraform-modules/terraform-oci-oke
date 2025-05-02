@@ -14,12 +14,36 @@ locals {
   vcn_lookup             = coalesce(one(data.oci_core_vcn.oke[*].cidr_blocks), [])
   vcn_lookup_cidr_blocks = flatten(local.vcn_lookup)
   vcn_cidrs              = var.create_vcn ? var.vcn_cidrs : local.vcn_lookup_cidr_blocks
-
+  vcn_ipv6_cidr          = var.create_vcn ? one(try(coalescelist(module.vcn[0].vcn_all_attributes["ipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["byoipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["ipv6private_cidr_blocks"]), [])) : one(try(coalescelist(data.oci_core_vcn.oke[0].ipv6cidr_blocks, data.oci_core_vcn.oke[0].byoipv6cidr_blocks, data.oci_core_vcn.oke[0].ipv6private_cidr_blocks), []))
   # Created route table if enabled, else var.ig_route_table_id
   ig_route_table_id = var.create_vcn ? try(one(module.vcn[*].ig_route_id), var.ig_route_table_id) : var.ig_route_table_id
 
   # Created route table if enabled, else var.nat_route_table_id
   nat_route_table_id = var.create_vcn ? try(one(module.vcn[*].nat_route_id), var.ig_route_table_id) : var.nat_route_table_id
+
+  create_internet_gateway = alltrue([
+    var.vcn_create_internet_gateway != "never",    # always disable
+    anytrue([                                      # enable for configurations that generally utilize it
+      var.vcn_create_internet_gateway == "always", # always enable
+      var.create_bastion && var.bastion_is_public, # enable for public bastion
+      var.control_plane_is_public,                 # enable for cluster w/ public endpoint
+      var.load_balancers != "internal",            # enable for cluster w/ public load balancers
+    ])
+  ])
+
+  create_nat_gateway = alltrue([
+    var.vcn_create_nat_gateway != "never",                # always disable
+    anytrue([                                             # enable for configurations that generally utilize it
+      var.vcn_create_nat_gateway == "always",             # always enable
+      !var.worker_is_public,                              # enable for private workers
+      var.create_operator,                                # enable for operator
+      !var.control_plane_is_public,                       # enable for cluster w/ private endpoint
+      contains(["internal", "both"], var.load_balancers), # enable for cluster w/ private load balancers
+    ])
+  ])
+
+  internet_gateway_id = var.create_vcn ? try(one(module.vcn[*].internet_gateway_id), var.internet_gateway_id) : var.internet_gateway_id
+  nat_gateway_id      = var.create_vcn ? try(one(module.vcn[*].nat_gateway_id), var.nat_gateway_id) : var.nat_gateway_id
 }
 
 module "vcn" {
@@ -45,26 +69,9 @@ module "vcn" {
 
   attached_drg_id = var.drg_id != null ? var.drg_id : (tobool(var.create_drg) ? module.drg[0].drg_id : null)
 
-  create_internet_gateway = alltrue([
-    var.vcn_create_internet_gateway != "never",    # always disable
-    anytrue([                                      # enable for configurations that generally utilize it
-      var.vcn_create_internet_gateway == "always", # always enable
-      var.create_bastion && var.bastion_is_public, # enable for public bastion
-      var.control_plane_is_public,                 # enable for cluster w/ public endpoint
-      var.load_balancers != "internal",            # enable for cluster w/ public load balancers
-    ])
-  ])
+  create_internet_gateway = local.create_internet_gateway
 
-  create_nat_gateway = alltrue([
-    var.vcn_create_nat_gateway != "never",                # always disable
-    anytrue([                                             # enable for configurations that generally utilize it
-      var.vcn_create_nat_gateway == "always",             # always enable
-      !var.worker_is_public,                              # enable for private workers
-      var.create_operator,                                # enable for operator
-      !var.control_plane_is_public,                       # enable for cluster w/ private endpoint
-      contains(["internal", "both"], var.load_balancers), # enable for cluster w/ private load balancers
-    ])
-  ])
+  create_nat_gateway = local.create_nat_gateway
 
   create_service_gateway       = var.vcn_create_service_gateway != "never"
   internet_gateway_route_rules = var.internet_gateway_route_rules
@@ -72,9 +79,11 @@ module "vcn" {
   lockdown_default_seclist     = var.lockdown_default_seclist
   nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
   nat_gateway_route_rules      = var.nat_gateway_route_rules
-  vcn_cidrs                    = local.vcn_cidrs
-  vcn_dns_label                = var.assign_dns ? coalesce(var.vcn_dns_label, local.state_id) : null
-  vcn_name                     = coalesce(var.vcn_name, "oke-${local.state_id}")
+
+  enable_ipv6   = var.enable_ipv6
+  vcn_cidrs     = local.vcn_cidrs
+  vcn_dns_label = var.assign_dns ? coalesce(var.vcn_dns_label, local.state_id) : null
+  vcn_name      = coalesce(var.vcn_name, "oke-${local.state_id}")
 }
 
 module "drg" {
@@ -84,8 +93,8 @@ module "drg" {
   compartment_id     = coalesce(var.network_compartment_id, local.compartment_id)
   drg_compartment_id = var.drg_compartment_id
 
-  drg_id              = one([var.drg_id]) # existing DRG ID or null
-  drg_display_name    = coalesce(var.drg_display_name, "oke-${local.state_id}")
+  drg_id           = one([var.drg_id]) # existing DRG ID or null
+  drg_display_name = coalesce(var.drg_display_name, "oke-${local.state_id}")
   drg_vcn_attachments = tobool(var.create_drg) || var.drg_id != null ? { for k, v in module.vcn : k => {
     # gets the vcn_id values dynamically from the vcn module 
     vcn_id : v.vcn_id
@@ -129,15 +138,22 @@ module "network" {
   control_plane_is_public      = var.control_plane_is_public
   create_cluster               = var.create_cluster
   create_bastion               = var.create_bastion
+  create_internet_gateway      = local.create_internet_gateway
+  create_nat_gateway           = local.create_nat_gateway
+  enable_ipv6                  = var.enable_ipv6
   nsgs                         = var.nsgs
   create_operator              = local.operator_enabled
   drg_attachments              = var.drg_attachments
   enable_waf                   = var.enable_waf
   ig_route_table_id            = local.ig_route_table_id
+  igw_ngw_mixed_route_id       = var.igw_ngw_mixed_route_id
+  internet_gateway_id          = local.internet_gateway_id
   load_balancers               = var.load_balancers
+  nat_gateway_id               = local.nat_gateway_id
   nat_route_table_id           = local.nat_route_table_id
   subnets                      = var.subnets
   vcn_cidrs                    = local.vcn_cidrs
+  vcn_ipv6_cidr                = local.vcn_ipv6_cidr
   vcn_id                       = local.vcn_id
   worker_is_public             = var.worker_is_public
 }

@@ -13,4 +13,6 @@ kubernetes_version                = "v1.32.1"
 pods_cidr                         = "10.244.0.0/16"
 services_cidr                     = "10.96.0.0/16"
 use_signed_images                 = false // true/*false
-enable_ipv6                       = false //true/*false
+
+# Enable OIDC discovery
+oidc_discovery_enabled = true

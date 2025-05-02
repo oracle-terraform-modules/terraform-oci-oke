@@ -51,7 +51,7 @@ clusters = {
 5. Configure additional parameters if necessary:
 
 ```
-kubernetes_version = "v1.28.2"
+kubernetes_version = "v1.32.1"
 
 cluster_type = "basic"
 

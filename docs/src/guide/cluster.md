@@ -12,6 +12,7 @@ The OKE parameters concern mainly the following:
 * number of node pools and their respective size of the cluster
 * services and pods cidr blocks
 * whether to use encryption
+* whether you want to enable [dual-stack](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/conteng_ipv4-and-ipv6.htm): IPv4 & IPv6 
 
 ```admonish notice
  If you need to change the default services and pods' CIDRs, note the following:

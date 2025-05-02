@@ -51,6 +51,12 @@ variable "cni_type" {
   }
 }
 
+variable "enable_ipv6" {
+  default     = false
+  description = "Whether to create a dual-stack (IPv4/IPv6) cluster."
+  type        = bool
+}
+
 variable "pods_cidr" {
   default     = "10.244.0.0/16"
   description = "The CIDR range used for IP addresses by the pods. A /16 CIDR is generally sufficient. This CIDR should not overlap with any subnet range in the VCN (it can also be outside the VCN CIDR range). Ignored when cni_type = 'npn'."

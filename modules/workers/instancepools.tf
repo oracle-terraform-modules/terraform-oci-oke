@@ -4,7 +4,7 @@
 # Dynamic resource block for Instance Pool groups defined in worker_pools
 resource "oci_core_instance_pool" "tfscaled_workers" {
   # Create an OCI Instance Pool resource for each enabled entry of the worker_pools map with that mode.
-  for_each                  = { for key, value in local.enabled_instance_pools: key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == false }
+  for_each                  = { for key, value in local.enabled_instance_pools : key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == false }
   compartment_id            = each.value.compartment_id
   display_name              = each.key
   size                      = each.value.size
@@ -59,7 +59,7 @@ resource "oci_core_instance_pool" "tfscaled_workers" {
 
 resource "oci_core_instance_pool" "autoscaled_workers" {
   # Create an OCI Instance Pool resource for each enabled entry of the worker_pools map with that mode.
-  for_each                  = { for key, value in local.enabled_instance_pools: key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == true }
+  for_each                  = { for key, value in local.enabled_instance_pools : key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == true }
   compartment_id            = each.value.compartment_id
   display_name              = each.key
   size                      = each.value.size
