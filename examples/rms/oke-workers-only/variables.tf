@@ -32,7 +32,7 @@ variable "cluster_id" {
 }
 variable "cni_type" { default = "Flannel" }
 variable "kubernetes_version" {
-  default = "v1.26.2"
+  default = "v1.32.1"
   type    = string
 }
 

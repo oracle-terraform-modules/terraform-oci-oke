@@ -10,6 +10,7 @@ variable "cluster_kms_key_id" { type = string }
 variable "cluster_name" { type = string }
 variable "cluster_type" { type = string }
 variable "cni_type" { type = string }
+variable "enable_ipv6" { type = bool }
 variable "control_plane_is_public" { type = bool }
 variable "control_plane_nsg_ids" { type = set(string) }
 variable "assign_public_ip_to_control_plane" { type = bool }

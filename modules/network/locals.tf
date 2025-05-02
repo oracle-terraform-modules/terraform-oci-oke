@@ -17,12 +17,15 @@ locals {
 
   # Protocols
   # See https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml
-  all_protocols = "all"
-  icmp_protocol = 1
-  tcp_protocol  = 6
-  udp_protocol  = 17
+  all_protocols   = "all"
+  icmp_protocol   = 1
+  icmpv6_protocol = 58
+  tcp_protocol    = 6
+  udp_protocol    = 17
+
 
   anywhere          = "0.0.0.0/0"
+  anywhere_ipv6     = "::/0"
   rule_type_nsg     = "NETWORK_SECURITY_GROUP"
   rule_type_cidr    = "CIDR_BLOCK"
   rule_type_service = "SERVICE_CIDR_BLOCK"

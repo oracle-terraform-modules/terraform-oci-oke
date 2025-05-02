@@ -11,22 +11,22 @@ locals {
 
   cilium_helm_crds            = one(data.helm_template.cilium[*].crds)
   cilium_helm_values_override = one(data.helm_template.cilium[*].values)
-  
-  cilium_helm_repository      = "https://helm.cilium.io"
+
+  cilium_helm_repository = "https://helm.cilium.io"
 
   cilium_vxlan_cni = {
-    install      = true
-    exclusive    = true # !var.multus_install
+    install   = true
+    exclusive = true # !var.multus_install
   }
 
   cilium_helm_values = {
-    annotateK8sNode                 = true
-    cluster                         = {
+    annotateK8sNode = true
+    cluster = {
       name = "oke-${var.state_id}"
       id   = 1
     }
-    clustermesh                     = { 
-      useAPIServer = false 
+    clustermesh = {
+      useAPIServer = false
       apiserver = {
         kvstoremesh = {
           enabled = false
@@ -42,7 +42,7 @@ locals {
     pmtuDiscovery                   = { enabled = true }
     rollOutCiliumPods               = true
     tunnelProtocol                  = local.cilium_tunnel
-    
+
     hubble = {
       metrics = {
         dashboards = { enabled = var.prometheus_install }
@@ -53,7 +53,7 @@ locals {
     }
 
     k8s = {
-      requireIPv4PodCIDR   = true # wait for Kubernetes to provide the PodCIDR (ipam kubernetes)
+      requireIPv4PodCIDR = true # wait for Kubernetes to provide the PodCIDR (ipam kubernetes)
     }
 
     # Prometheus metrics
@@ -66,7 +66,7 @@ locals {
     }
   }
 
- # TODO Support Flannel w/ generic-veth & tunnel disabled
+  # TODO Support Flannel w/ generic-veth & tunnel disabled
   cilium_tunnel = "vxlan" # var.cni_type == "flannel" ? "disabled" : "vxlan"
 
   cilium_flannel_cni = {
@@ -76,7 +76,7 @@ locals {
     customConf   = var.cni_type == "flannel"
     exclusive    = !var.multus_install
   }
-  
+
   cilium_net_attach_def_conf = {
     cniVersion = "0.3.1"
     name       = "cilium"

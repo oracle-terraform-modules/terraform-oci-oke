@@ -13,4 +13,26 @@ kubernetes_version                = "v1.32.1"
 pods_cidr                         = "10.244.0.0/16"
 services_cidr                     = "10.96.0.0/16"
 use_signed_images                 = false // true/*false
-enable_ipv6                       = false //true/*false
+
+# Enable OIDC token authentication for Github Actions using API server flags
+oidc_token_auth_enabled = true
+oidc_token_authentication_config = {
+  client_id      = "oke-kubernetes-cluster" # Must match the audience in the GitHub Actions workflow.
+  issuer_url     = "https://token.actions.githubusercontent.com",
+  username_claim = "sub"
+  required_claims = [
+    {
+      key   = "repository",
+      value = "GITHUB_ACCOUNT/GITHUB_REPOSITORY"
+    },
+    {
+      key   = "workflow",
+      value = "oke-oidc" # Must match the workflow name.
+    },
+    {
+      key   = "ref"
+      value = "refs/heads/main"
+    }
+  ],
+}
+

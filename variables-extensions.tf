@@ -376,11 +376,11 @@ variable "create_service_account" {
 }
 
 variable "service_accounts" {
-  default     = {
+  default = {
     kubeconfigsa = {
-      sa_name = "kubeconfigsa"
-      sa_namespace = "kube-system"
-      sa_cluster_role = "cluster-admin"
+      sa_name                 = "kubeconfigsa"
+      sa_namespace            = "kube-system"
+      sa_cluster_role         = "cluster-admin"
       sa_cluster_role_binding = "kubeconfigsa-crb"
     }
   }

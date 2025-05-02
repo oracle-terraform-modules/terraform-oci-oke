@@ -4,7 +4,7 @@
 # Dynamic resource block for Node Pool groups defined in worker_pools
 resource "oci_containerengine_node_pool" "tfscaled_workers" {
   # Create an OKE node pool resource for each enabled entry of the worker_pools map with that mode.
-  for_each           = { for key, value in local.enabled_node_pools: key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == false }
+  for_each           = { for key, value in local.enabled_node_pools : key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == false }
   cluster_id         = var.cluster_id
   compartment_id     = each.value.compartment_id
   defined_tags       = each.value.defined_tags
@@ -158,7 +158,7 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
 
 resource "oci_containerengine_node_pool" "autoscaled_workers" {
   # Create an OKE node pool resource for each enabled entry of the worker_pools map with that mode.
-  for_each           = { for key, value in local.enabled_node_pools: key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == true }
+  for_each           = { for key, value in local.enabled_node_pools : key => value if tobool(lookup(value, "ignore_initial_pool_size", false)) == true }
   cluster_id         = var.cluster_id
   compartment_id     = each.value.compartment_id
   defined_tags       = each.value.defined_tags

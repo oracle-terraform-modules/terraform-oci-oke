@@ -47,6 +47,15 @@ locals {
       },
     },
 
+    var.enable_ipv6 ? {
+      "Allow ICMPv6 ingress to workers for path discovery" : {
+        protocol = local.icmpv6_protocol, port = local.all_ports, source = local.anywhere_ipv6, source_type = local.rule_type_cidr,
+      },
+      "Allow ICMPv6 egress from workers for path discovery" : {
+        protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.anywhere_ipv6, destination_type = local.rule_type_cidr,
+      },
+    } : {},
+
     local.pod_nsg_enabled ? {
       "Allow ALL egress from workers to pods" : {
         protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg,
@@ -56,11 +65,18 @@ locals {
       },
     } : {},
 
-    var.allow_worker_internet_access ? {
-      "Allow ALL egress from workers to internet" : {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
-      },
-    } : {},
+    var.allow_worker_internet_access ?
+    merge(
+      var.enable_ipv6 ? {
+        "Allow ALL IPv6 egress from workers to internet" = {
+          protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere_ipv6, destination_type = local.rule_type_cidr,
+        }
+      } : {},
+      {
+        "Allow ALL egress from workers to internet" : {
+          protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
+        },
+    }) : {},
 
     local.int_lb_nsg_enabled ? {
       "Allow TCP ingress to workers from internal load balancers" : {
@@ -120,7 +136,7 @@ locals {
       },
     } : {},
     var.allow_rules_workers
-    ) : {}
+  ) : {}
 }
 
 resource "oci_core_network_security_group" "workers" {

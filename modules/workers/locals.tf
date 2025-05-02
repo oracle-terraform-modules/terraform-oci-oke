@@ -104,20 +104,20 @@ locals {
 
       # Use provided image_id for 'custom' type, or first match for all shape + OS criteria
       image_id = (
-        pool.image_type == "custom" ? 
-          pool.image_id : 
-          element(split("###", element(reverse(sort([for entry in tolist(setintersection([
-            pool.image_type == "oke" ?
-            setintersection(
-              lookup(var.image_ids, "oke", null),
-              lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
-            ) :
-            lookup(var.image_ids, "platform", null),
-            lookup(var.image_ids, pool.image_type, null),
-            length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
-            length(regexall("A[12]\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
-            lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
-          ]...)): "${var.indexed_images[entry].sort_key}###${entry}"])), 0)), 1)
+        pool.image_type == "custom" ?
+        pool.image_id :
+        element(split("###", element(reverse(sort([for entry in tolist(setintersection([
+          pool.image_type == "oke" ?
+          setintersection(
+            lookup(var.image_ids, "oke", null),
+            lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
+          ) :
+          lookup(var.image_ids, "platform", null),
+          lookup(var.image_ids, pool.image_type, null),
+          length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
+          length(regexall("A[12]\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
+          lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
+        ]...)) : "${var.indexed_images[entry].sort_key}###${entry}"])), 0)), 1)
       )
 
       # Standard tags as defined if enabled for use

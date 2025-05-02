@@ -18,6 +18,6 @@ worker_pools = {
     description = "Self-managed Instance With Bursting",
     mode        = "instance",
     size        = 1,
-    burst       = "BASELINE_1_8",   # Valid values BASELINE_1_8,BASELINE_1_2
+    burst       = "BASELINE_1_8", # Valid values BASELINE_1_8,BASELINE_1_2
   },
 }

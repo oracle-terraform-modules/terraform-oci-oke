@@ -4,12 +4,12 @@
 cluster_addons = {
   "CertManager" = {
     remove_addon_resources_on_delete = true
-    override_existing = true           # Default is false if not specified
+    override_existing                = true # Default is false if not specified
     # The list of supported configurations for the cluster addons is here: https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengconfiguringclusteraddons-configurationarguments.htm#contengconfiguringclusteraddons-configurationarguments_CertificateManager
     configurations = [
       {
-        key          = "numOfReplicas"
-        value        = "1"
+        key   = "numOfReplicas"
+        value = "1"
       }
     ]
   }
@@ -20,7 +20,7 @@ cluster_addons = {
   # Prevent Flannel pods from being scheduled using a non-existing label as nodeSelector
   "Flannel" = {
     remove_addon_resources_on_delete = true
-    override_existing = true # Override the existing configuration with this one, if Flannel addon in already enabled
+    override_existing                = true # Override the existing configuration with this one, if Flannel addon in already enabled
     configurations = [
       {
         key   = "nodeSelectors"
@@ -31,7 +31,7 @@ cluster_addons = {
   # Prevent Kube-Proxy pods from being scheduled using a non-existing label as nodeSelector
   "KubeProxy" = {
     remove_addon_resources_on_delete = true
-    override_existing = true # Override the existing configuration with this one, if KubeProxy addon in already enabled
+    override_existing                = true # Override the existing configuration with this one, if KubeProxy addon in already enabled
     configurations = [
       {
         key   = "nodeSelectors"
