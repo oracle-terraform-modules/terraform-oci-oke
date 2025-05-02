@@ -38,6 +38,9 @@ module "workers" {
   cluster_type           = var.cluster_type
   kubernetes_version     = var.kubernetes_version
 
+  # Compute clusters
+  compute_clusters = var.worker_compute_clusters
+
   # Worker pools
   worker_pool_mode = var.worker_pool_mode
   worker_pool_size = var.worker_pool_size
