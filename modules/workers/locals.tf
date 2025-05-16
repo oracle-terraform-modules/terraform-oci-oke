@@ -46,6 +46,7 @@ locals {
     node_cycling_enabled         = false
     node_cycling_max_surge       = 1
     node_cycling_max_unavailable = 0
+    node_cycling_modes           = ["INSTANCE_REPLACE"]
     node_labels                  = var.node_labels
     nsg_ids                      = [] # empty pool-specific default
     ocpus                        = local.ocpus
