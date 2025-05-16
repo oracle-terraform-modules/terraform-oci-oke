@@ -15,7 +15,8 @@ resource "oci_core_instance" "workers" {
   dynamic "shape_config" {
     for_each = length(regexall("Flex", each.value.shape)) > 0 ? [1] : []
     content {
-      ocpus = each.value.ocpus
+      baseline_ocpu_utilization = lookup(each.value, "burst", "BASELINE_1_1")
+      ocpus                     = each.value.ocpus
       memory_in_gbs = ( # If > 64GB memory/core, correct input to exactly 64GB memory/core
         (each.value.memory / each.value.ocpus) > 64 ? each.value.ocpus * 64 : each.value.memory
       )
@@ -73,15 +74,19 @@ resource "oci_core_instance" "workers" {
 
   metadata = merge(
     {
-      apiserver_host           = var.apiserver_private_host
-      cluster_ca_cert          = var.cluster_ca_cert
-      oke-k8version            = var.kubernetes_version
-      oke-kubeproxy-proxy-mode = var.kubeproxy_mode
-      oke-tenancy-id           = var.tenancy_id
-      oke-initial-node-labels  = join(",", [for k, v in each.value.node_labels : format("%v=%v", k, v)])
-      secondary_vnics          = jsonencode(lookup(each.value, "secondary_vnics", {}))
-      ssh_authorized_keys      = var.ssh_public_key
-      user_data                = lookup(lookup(data.cloudinit_config.workers, lookup(each.value, "key", ""), {}), "rendered", "")
+      apiserver_host            = var.apiserver_private_host
+      cluster_ca_cert           = var.cluster_ca_cert
+      oke-k8version             = var.kubernetes_version
+      oke-kubeproxy-proxy-mode  = var.kubeproxy_mode
+      oke-tenancy-id            = var.tenancy_id
+      oke-initial-node-labels   = join(",", [for k, v in each.value.node_labels : format("%v=%v", k, v)])
+      secondary_vnics           = jsonencode(lookup(each.value, "secondary_vnics", {}))
+      ssh_authorized_keys       = var.ssh_public_key
+      user_data                 = lookup(lookup(data.cloudinit_config.workers, lookup(each.value, "key", ""), {}), "rendered", "")
+      oke-native-pod-networking = var.cni_type == "npn" ? true : false
+      oke-max-pods              = var.max_pods_per_node
+      pod-subnets               = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+      pod-nsgids                = var.cni_type == "npn" ? join(",", each.value.pod_nsg_ids) : null
     },
 
     # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
@@ -94,6 +99,7 @@ resource "oci_core_instance" "workers" {
 
   source_details {
     boot_volume_size_in_gbs = each.value.boot_volume_size
+    boot_volume_vpus_per_gb = each.value.boot_volume_vpus_per_gb
     source_id               = each.value.image_id
     source_type             = "image"
   }

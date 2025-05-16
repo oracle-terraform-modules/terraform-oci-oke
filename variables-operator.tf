@@ -65,15 +65,45 @@ variable "operator_install_helm" {
   type        = bool
 }
 
+variable "operator_install_helm_from_repo" {
+  default     = false
+  description = "Whether to install Helm from the repo on the created operator host."
+  type        = bool
+}
+
+variable "operator_install_oci_cli_from_repo" {
+  default     = false
+  description = "Whether to install OCI from repo on the created operator host."
+  type        = bool
+}
+
+variable "operator_install_istioctl" {
+  default     = false
+  description = "Whether to install istioctl on the created operator host."
+  type        = bool
+}
+
 variable "operator_install_k9s" {
   default     = false
   description = "Whether to install k9s on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
+variable "operator_install_kubectl_from_repo" {
+  default     = true
+  description = "Whether to install kubectl from the repo on the created operator host."
+  type        = bool
+}
+
 variable "operator_install_kubectx" {
   default     = true
   description = "Whether to install kubectx/kubens on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
+variable "operator_install_stern" {
+  default     = false
+  description = "Whether to install stern on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
@@ -110,4 +140,10 @@ variable "operator_private_ip" {
   default     = null
   description = "The IP address of an existing operator host. Ignored when create_operator = true."
   type        = string
+}
+
+variable "operator_await_cloudinit" {
+  default     = true
+  description = "Whether to block until successful connection to operator and completion of cloud-init."
+  type        = bool
 }

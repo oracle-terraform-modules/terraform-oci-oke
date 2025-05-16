@@ -9,6 +9,14 @@ locals {
   default_cloud_init_merge_type = "list(append)+dict(no_replace,recurse_list)+str(append)"
 }
 
+data "oci_core_image" "workers" {
+  for_each = { # Skip generation for mode = virtual-node-pool
+    for k, v in local.enabled_worker_pools : k => v
+    if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool"
+  }
+  image_id = each.value.image_id
+}
+
 # https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/cloudinit_config.html
 data "cloudinit_config" "workers" {
   for_each = { # Skip generation for mode = virtual-node-pool
@@ -88,9 +96,38 @@ data "cloudinit_config" "workers" {
     }
   }
 
+  # OKE setup and initialization for Ubuntu images
+  dynamic "part" {
+    for_each = !each.value.disable_default_cloud_init && lookup(local.ubuntu_worker_pools, each.key, null) != null ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#apt-configure
+        apt = {
+          sources = {
+            oke-node = {
+              source =  format("deb [trusted=yes] https://objectstorage.us-sanjose-1.oraclecloud.com/p/45eOeErEDZqPGiymXZwpeebCNb5lnwzkcQIhtVf6iOF44eet_efdePaF7T8agNYq/n/odx-oke/b/okn-repositories-private/o/prod/ubuntu-%s/kubernetes-%s stable main", 
+              lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", "22.04") == "22.04" ? "jammy" : "noble", 
+              lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "kubernetes_major_version", ""))
+            }
+          }
+        }
+        package_update = true
+        packages = [{
+          apt = [format("oci-oke-node-all-%s", lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "kubernetes_minor_version", ""))]
+        }]
+        runcmd = [
+          "oke bootstrap"
+        ]
+      })
+      filename   = "50-oke-ubuntu.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
+  }
+
   # OKE startup initialization
   dynamic "part" {
-    for_each = each.value.disable_default_cloud_init ? [] : [1]
+    for_each = !each.value.disable_default_cloud_init && lookup(local.ubuntu_worker_pools, each.key, null) == null ? [1] : []
     content {
       content_type = "text/x-shellscript"
       content      = file("${path.module}/cloudinit-oke.sh")
@@ -141,6 +178,18 @@ data "cloudinit_config" "workers" {
       Each pool-specific cloud_init map entry must include a 'content_type' field prefixed with 'text/'.
       See https://cloudinit.readthedocs.io/en/latest/explanation/format.html#mime-multi-part-archive.
       ${each.key}["cloud_init"]: ${try(jsonencode(each.value.cloud_init), "invalid")}
+      EOT
+    }
+
+    precondition {
+      condition = lookup(local.ubuntu_worker_pools, each.key, null) == null || (
+        lookup(local.ubuntu_worker_pools, each.key, null) != null &&
+          contains(["22.04", "24.04"], lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", ""))
+      )
+      error_message = <<-EOT
+      Supported Ubuntu versions are "22.04" and "24.04".
+      See https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingubuntubasedworkernodes.htm#contengcreatingubuntubasedworkernodes_availabilitycompatibility.
+      ${each.key}: ${jsonencode(lookup(local.ubuntu_worker_pools, each.key, {}))}
       EOT
     }
   }

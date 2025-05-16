@@ -27,6 +27,12 @@ Subnets are created for core components managed within the module, namely:
 {{#include ../../../examples/network/vars-network-subnets-create-cidr.auto.tfvars:4:}}
 ```
 
+## Create new subnets with IPv4 and IPv6 (CIDR notation)
+
+```javascript
+{{#include ../../../examples/network/vars-network-subnets-create-cidr-ipv4-and-ipv6.tfvars:4:}}
+```
+
 ## Use existing subnets
 
 ```javascript

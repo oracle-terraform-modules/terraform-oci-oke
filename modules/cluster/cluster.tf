@@ -16,7 +16,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   endpoint_config {
-    is_public_ip_enabled = var.control_plane_is_public
+    is_public_ip_enabled = var.control_plane_is_public && var.assign_public_ip_to_control_plane
     nsg_ids              = var.control_plane_nsg_ids
     subnet_id            = var.control_plane_subnet_id
   }
@@ -39,6 +39,45 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   options {
+
+    dynamic "open_id_connect_token_authentication_config" {
+      for_each = var.oidc_token_auth_enabled ? [1] : []
+
+      content {
+        is_open_id_connect_auth_enabled = var.oidc_token_auth_enabled
+
+
+        issuer_url         = lookup(var.oidc_token_authentication_config, "issuer_url", null)
+        ca_certificate     = lookup(var.oidc_token_authentication_config, "ca_certificate", null)
+        client_id          = lookup(var.oidc_token_authentication_config, "client_id", null)
+        signing_algorithms = lookup(var.oidc_token_authentication_config, "signing_algorithms", null)
+
+        groups_claim  = lookup(var.oidc_token_authentication_config, "groups_claim", null)
+        groups_prefix = lookup(var.oidc_token_authentication_config, "groups_prefix", null)
+
+        username_claim  = lookup(var.oidc_token_authentication_config, "username_claim", null)
+        username_prefix = lookup(var.oidc_token_authentication_config, "username_prefix", null)
+
+        dynamic "required_claims" {
+          for_each = lookup(var.oidc_token_authentication_config, "required_claims", [])
+          content {
+            key   = lookup(required_claims.value, "key")
+            value = lookup(required_claims.value, "value")
+          }
+        }
+        configuration_file = lookup(var.oidc_token_authentication_config, "configuration_file", null)
+      }
+    }
+
+    dynamic "open_id_connect_discovery" {
+      for_each = var.oidc_discovery_enabled ? [1] : []
+      content {
+        is_open_id_connect_discovery_enabled = var.oidc_discovery_enabled
+      }
+    }
+
+
+
     kubernetes_network_config {
       pods_cidr     = var.pods_cidr
       services_cidr = var.services_cidr
@@ -55,6 +94,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     service_lb_subnet_ids = compact([var.service_lb_subnet_id])
+    ip_families           = var.enable_ipv6 ? ["IPv4", "IPv6"] : ["IPv4"]
   }
 
   timeouts {
@@ -62,7 +102,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
+    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options, options["kubernetes_network_config"]]
 
     precondition {
       condition     = var.service_lb_subnet_id != null

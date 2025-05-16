@@ -8,6 +8,15 @@ data "cloudinit_config" "bastion" {
 
   part {
     content_type = "text/cloud-config"
+    # https://cloudinit.readthedocs.io/en/latest/reference/examples.html#run-commands-on-first-boot
+    content = <<-EOT
+    runcmd:
+    - ${format("dnf config-manager --disable ol%v_addons --disable ol%v_appstream", var.bastion_image_os_version, var.bastion_image_os_version)}
+    EOT
+  }
+
+  part {
+    content_type = "text/cloud-config"
     # https://cloudinit.readthedocs.io/en/latest/reference/modules.html#package-update-upgrade-install
     content  = jsonencode({ package_upgrade = var.upgrade })
     filename = "10-packages.yml"
@@ -29,6 +38,7 @@ data "cloudinit_config" "bastion" {
 }
 
 resource "null_resource" "await_cloudinit" {
+  count = var.await_cloudinit ? 1 : 0
   connection {
     host        = oci_core_instance.bastion.public_ip
     user        = var.user

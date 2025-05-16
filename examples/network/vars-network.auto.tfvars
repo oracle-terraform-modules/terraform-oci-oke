@@ -12,6 +12,7 @@ vcn_id                   = null            # Ignored if create_vcn = true
 vcn_cidrs                = ["10.0.0.0/16"] # Ignored if create_vcn = false
 vcn_dns_label            = "oke"           # Ignored if create_vcn = false
 vcn_name                 = "oke"           # Ignored if create_vcn = false
+enable_ipv6              = false           # true/*false
 
 # Subnets
 subnets = {
@@ -51,6 +52,21 @@ allow_rules_public_lb = {
   # "Allow TCP ingress to public load balancers for SSL traffic from anywhere" : {
   #   protocol = 6, port = 443, source = "0.0.0.0/0", source_type = "CIDR_BLOCK",
   # },
+  # "Allow UDP egress to workers port range 50000-52767 from Public LBs" : {
+  #   protocol = 17, destination_port_min = 50000, destination_port_max=52767, destination = "workers", destination_type = "NETWORK_SECURITY_GROUP"
+  # },
+}
+
+allow_rules_workers = {
+  # "Allow TCP ingress to workers for port 8080 from VCN" : {
+  #   protocol = 6, port = 8080, source = "10.0.0.0/16", source_type = "CIDR_BLOCK",
+  # },
+  # "Allow UDP ingress to workers for port range 50000-52767 from Public LBs" : {
+  #   protocol = 17, destination_port_min = 50000, destination_port_max=52767, source = "pub_lb", source_type = "NETWORK_SECURITY_GROUP"
+  # },
+  # "Allow TCP ingress to workers for port range 8888-8888 from existing NSG" : {
+  #   protocol = 6, destination_port_min = 8888, destination_port_max=8888, source = "ocid1.networksecuritygroup.oc1.eu-frankfurt-1.aaaaaaaai6z4le2ji7dkpmuwff4525b734wrjlifjqkrzlr5qctgxdsyoyra", source_type = "NETWORK_SECURITY_GROUP"
+  # },
 }
 
 # Dynamic routing gateway (DRG)
@@ -59,7 +75,8 @@ drg_display_name = "drg"
 drg_id           = null
 
 # Routing
-ig_route_table_id = null # Optional ID of existing internet gateway route table
+ig_route_table_id   = null # Optional ID of existing internet gateway route table
+internet_gateway_id = null # Optional ID of existing internet gateway
 internet_gateway_route_rules = [
   #   {
   #     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
@@ -69,6 +86,9 @@ internet_gateway_route_rules = [
   #   },
 ]
 
+igw_ngw_mixed_route_id = null # Optional ID of existing mixed route table NAT GW for IPv4 and Internet GW for IPv6
+
+nat_gateway_id           = null # Optional ID of existing NAT gateway
 nat_gateway_public_ip_id = "none"
 nat_route_table_id       = null # Optional ID of existing NAT gateway route table
 nat_gateway_route_rules = [

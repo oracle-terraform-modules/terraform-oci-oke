@@ -22,7 +22,7 @@ variable "cilium_namespace" {
 }
 
 variable "cilium_helm_version" {
-  default     = "1.14.4"
+  default     = "1.16.3"
   description = "Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`."
   type        = string
 }
@@ -30,7 +30,7 @@ variable "cilium_helm_version" {
 variable "cilium_helm_values" {
   default     = {}
   description = "Map of individual Helm chart values. See https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template."
-  type        = map(string)
+  type        = any
 }
 
 variable "cilium_helm_values_files" {
@@ -367,3 +367,23 @@ variable "gatekeeper_helm_values_files" {
   type        = list(string)
 }
 
+# Service Account
+
+variable "create_service_account" {
+  default     = false
+  description = "Wether to create a service account or not."
+  type        = bool
+}
+
+variable "service_accounts" {
+  default = {
+    kubeconfigsa = {
+      sa_name                 = "kubeconfigsa"
+      sa_namespace            = "kube-system"
+      sa_cluster_role         = "cluster-admin"
+      sa_cluster_role_binding = "kubeconfigsa-crb"
+    }
+  }
+  description = "Map of service accounts and associated parameters."
+  type        = map(any)
+}

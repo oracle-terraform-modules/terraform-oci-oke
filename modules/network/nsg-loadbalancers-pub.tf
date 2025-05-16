@@ -19,6 +19,9 @@ locals {
       "Allow TCP egress from public load balancers to workers nodes for NodePort traffic" : {
         protocol = local.tcp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
+      "Allow UDP egress from public load balancers to workers nodes for NodePort traffic" : {
+        protocol = local.udp_protocol, port_min = local.node_port_min, port_max = local.node_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+      },
       "Allow TCP egress from public load balancers to worker nodes for health checks" : {
         protocol = local.tcp_protocol, port = local.health_check_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
@@ -26,6 +29,11 @@ locals {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     },
+    var.enable_ipv6 ? {
+      "Allow ICMPv6 egress from public load balancers to worker nodes for path discovery" : {
+        protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
     var.enable_waf ? local.waf_rules : {},
     var.allow_rules_public_lb,
   ) : {}

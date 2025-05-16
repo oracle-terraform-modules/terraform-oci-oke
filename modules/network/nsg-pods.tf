@@ -48,11 +48,29 @@ locals {
         protocol = local.icmp_protocol, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr,
       }
     },
-    var.allow_pod_internet_access ? {
-      "Allow ALL egress from pods to internet" = {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
-      }
+
+    var.enable_ipv6 ? {
+      "Allow ICMPv6 ingress to pods for path discovery" : {
+        protocol = local.icmpv6_protocol, port = local.all_ports, source = local.anywhere_ipv6, source_type = local.rule_type_cidr,
+      },
+      "Allow ICMPv6 egress from pods for path discovery" : {
+        protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.anywhere_ipv6, destination_type = local.rule_type_cidr,
+      },
     } : {},
+
+    var.allow_pod_internet_access ?
+    merge(
+      var.enable_ipv6 ? {
+        "Allow ALL IPv6 egress from pods to internet" = {
+          protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere_ipv6, destination_type = local.rule_type_cidr,
+        }
+      } : {},
+      {
+        "Allow ALL egress from pods to internet" = {
+          protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr,
+        }
+    }) : {},
+    var.allow_rules_pods
   ) : {}
 }
 

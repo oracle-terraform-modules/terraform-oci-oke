@@ -1,0 +1,22 @@
+# Copyright (c) 2017, 2024 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# to reuse an existing drg, set to false
+create_drg       = true
+
+drg_display_name = "drg"
+
+# to reuse an existing drg, provide the drg ocid
+drg_id           = null
+
+# 
+remote_peering_connections = {
+  # unpeered rpc
+  rpc1 = {}
+
+  # peered rpc
+  rpc2 : {
+       "rpc_acceptor_id" : "ocid1.remotepeeringconnection.oc1.aaaaaa"
+       "rpc_acceptor_region" : "us-ashburn-1"
+  }
+}

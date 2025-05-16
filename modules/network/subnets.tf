@@ -48,13 +48,37 @@ locals {
     local.subnet_cidrs_netnum_newbits_ranges,
   )
 
+  # IPv6 Default CIDRs
+  default_ipv6_cidrs = {
+    bastion  = { ipv6_cidr = "8, 0" }
+    operator = { ipv6_cidr = "8, 1" }
+    cp       = { ipv6_cidr = "8, 2" }
+    int_lb   = { ipv6_cidr = "8, 3" }
+    pub_lb   = { ipv6_cidr = "8, 4" }
+    workers  = { ipv6_cidr = "8, 5" }
+    pods     = { ipv6_cidr = "8, 6" }
+    fss      = { ipv6_cidr = "8, 7" }
+  }
+
+  # Add default ipv6 cidrs to var.subnets if missing
+  subnets_with_ipv6_cidr_defaults = { for k, v in var.subnets :
+    k => merge(v, lookup(v, "ipv6_cidr", null) == null ? lookup(local.default_ipv6_cidrs, k, { "ipv6_cidr" : "::/0" }) : {})
+  }
+
+  # Generate IPv6 CIDRs
+  subnets_ipv6_cidr = var.enable_ipv6 == true ? {
+    for k, v in local.subnets_with_ipv6_cidr_defaults : k => merge(v, {
+      "ipv6_cidr" = length(regexall("^\\d+,[ ]?\\d+$", lookup(v, "ipv6_cidr"))) > 0 ? cidrsubnet(var.vcn_ipv6_cidr, tonumber(split(",", lookup(v, "ipv6_cidr"))[0]), tonumber(trim(split(",", lookup(v, "ipv6_cidr"))[1], " "))) : lookup(v, "ipv6_cidr")
+    }) if try(v.create, "auto") != "never"
+  } : { for k, v in var.subnets : k => merge(v, { "ipv6_cidr" : null }) if try(v.create, "auto") != "never" }
+
   # Map of subnets for standard components with additional configuration derived
   # TODO enumerate worker pools for public/private overrides, conditional subnets for both
   subnet_info = {
     bastion  = { create = var.create_bastion, is_public = var.bastion_is_public }
-    cp       = { create = var.create_cluster, is_public = var.control_plane_is_public }
-    workers  = { create = var.create_cluster, is_public = var.worker_is_public }
-    pods     = { create = var.create_cluster && var.cni_type == "npn" }
+    cp       = { create = var.create_cluster, is_public = var.enable_ipv6 == true ? true : var.control_plane_is_public }
+    workers  = { create = var.create_cluster, is_public = var.enable_ipv6 == true ? true : var.worker_is_public }
+    pods     = { create = var.create_cluster && var.cni_type == "npn", is_public = var.enable_ipv6 == true ? true : false }
     operator = { create = var.create_operator }
     fss      = { create = contains(keys(var.subnets), "fss") }
     int_lb = {
@@ -79,7 +103,7 @@ locals {
   # - Subnet is configured with newbits and/or netnum/cidr
   # - Not configured with create == 'never'
   # - Not configured with an existing 'id'
-  subnets_to_create = length(var.vcn_cidrs) > 0 ? merge(
+  subnets_to_create = try(merge(
     { for k, v in local.subnet_info : k =>
       # Override `create = true` if configured with "always"
       merge(v, lookup(try(lookup(var.subnets, k), { create = "never" }), "create", "auto") == "always" ? { "create" = true } : {})
@@ -92,11 +116,18 @@ locals {
         ]),
       ])
     }
-  ) : {}
+  ), {})
 
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
   }
+
+  create_mixed_igw_ngw_route_table = alltrue([
+    var.enable_ipv6 == true,
+    var.create_internet_gateway == true,
+    var.create_nat_gateway == true,
+    var.igw_ngw_mixed_route_id == null
+  ])
 }
 
 resource "null_resource" "validate_subnets" {
@@ -120,24 +151,64 @@ resource "null_resource" "validate_subnets" {
   }
 }
 
-resource "oci_core_subnet" "oke" {
-  for_each = local.subnets_to_create
+resource "oci_core_route_table" "igw_ngw_mixed_route_id" {
+  count = local.create_mixed_igw_ngw_route_table ? 1 : 0
 
-  compartment_id             = var.compartment_id
-  vcn_id                     = var.vcn_id
-  cidr_block                 = lookup(local.subnet_cidrs_all, each.key)
-  display_name               = format("%v-%v", each.key, var.state_id)
-  dns_label                  = lookup(local.subnet_dns_labels, each.key, null)
-  prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
-  route_table_id             = !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
-  security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
-  defined_tags               = var.defined_tags
-  freeform_tags              = var.freeform_tags
+  compartment_id = var.compartment_id
+  display_name   = format("%v-%v", "igw-ngw-mixed-rt", var.state_id)
+  vcn_id         = var.vcn_id
+  defined_tags   = var.defined_tags
+  freeform_tags  = var.freeform_tags
+  route_rules {
+    #Required
+    network_entity_id = var.nat_gateway_id
+
+    description      = "Default route for IPv4."
+    destination      = local.anywhere
+    destination_type = local.rule_type_cidr
+  }
+
+  route_rules {
+    #Required
+    network_entity_id = var.internet_gateway_id
+
+    description      = "Default route for IPv6."
+    destination      = local.anywhere_ipv6
+    destination_type = local.rule_type_cidr
+  }
 
   lifecycle {
     ignore_changes = [
-      freeform_tags, defined_tags, display_name,
-      cidr_block, dns_label, security_list_ids, vcn_id, route_table_id,
+      freeform_tags, defined_tags,
+    ]
+  }
+}
+
+resource "oci_core_subnet" "oke" {
+  for_each = local.subnets_to_create
+
+  compartment_id = var.compartment_id
+  vcn_id         = var.vcn_id
+  cidr_block     = lookup(local.subnet_cidrs_all, each.key)
+  display_name = (lookup(var.subnets, each.key, null) != null ?
+    (lookup(var.subnets[each.key], "display_name", null) != null ?
+      var.subnets[each.key]["display_name"] :
+      format("%v-%v", each.key, var.state_id)
+    ) :
+    format("%v-%v", each.key, var.state_id)
+  )
+  dns_label                  = lookup(local.subnet_dns_labels, each.key, null)
+  prohibit_public_ip_on_vnic = !tobool(lookup(each.value, "is_public", false))
+  route_table_id             = var.enable_ipv6 && var.cni_type == "npn" && each.key == "pods" ? coalesce(one(oci_core_route_table.igw_ngw_mixed_route_id[*].id), var.igw_ngw_mixed_route_id) : !tobool(lookup(each.value, "is_public", false)) ? var.nat_route_table_id : var.ig_route_table_id
+  security_list_ids          = compact([lookup(lookup(oci_core_security_list.oke, each.key, {}), "id", null)])
+  defined_tags               = var.defined_tags
+  freeform_tags              = var.freeform_tags
+  ipv6cidr_block             = var.enable_ipv6 ? lookup(local.subnets_ipv6_cidr[each.key], "ipv6_cidr", null) : null
+
+  lifecycle {
+    ignore_changes = [
+      freeform_tags, defined_tags,
+      cidr_block, dns_label, security_list_ids, vcn_id,
     ]
   }
 }

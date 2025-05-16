@@ -10,8 +10,10 @@ variable "cluster_kms_key_id" { type = string }
 variable "cluster_name" { type = string }
 variable "cluster_type" { type = string }
 variable "cni_type" { type = string }
+variable "enable_ipv6" { type = bool }
 variable "control_plane_is_public" { type = bool }
 variable "control_plane_nsg_ids" { type = set(string) }
+variable "assign_public_ip_to_control_plane" { type = bool }
 variable "control_plane_subnet_id" { type = string }
 variable "image_signing_keys" { type = set(string) }
 variable "kubernetes_version" { type = string }
@@ -30,3 +32,8 @@ variable "persistent_volume_defined_tags" { type = map(string) }
 variable "persistent_volume_freeform_tags" { type = map(string) }
 variable "service_lb_defined_tags" { type = map(string) }
 variable "service_lb_freeform_tags" { type = map(string) }
+
+# OIDC
+variable "oidc_discovery_enabled" { type = bool }
+variable "oidc_token_auth_enabled" { type = bool }
+variable "oidc_token_authentication_config" { type = any }

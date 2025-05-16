@@ -29,6 +29,12 @@ variable "control_plane_is_public" {
   type        = bool
 }
 
+variable "assign_public_ip_to_control_plane" {
+  default     = false
+  description = "Whether to assign a public IP address to the API endpoint for public access. Requires the control plane subnet to be public to assign a public IP address."
+  type        = bool
+}
+
 variable "control_plane_nsg_ids" {
   default     = []
   description = "An additional list of network security groups (NSG) ids for the cluster endpoint."
@@ -43,6 +49,12 @@ variable "cni_type" {
     condition     = contains(["flannel", "npn"], var.cni_type)
     error_message = "Accepted values are flannel or npn"
   }
+}
+
+variable "enable_ipv6" {
+  default     = false
+  description = "Whether to create a dual-stack (IPv4/IPv6) cluster."
+  type        = bool
 }
 
 variable "pods_cidr" {
@@ -99,4 +111,22 @@ variable "preferred_load_balancer" {
     condition     = contains(["public", "internal"], var.preferred_load_balancer)
     error_message = "Accepted values are public or internal."
   }
+}
+
+variable "oidc_discovery_enabled" {
+  default     = false
+  description = "Whether the cluster has OIDC Discovery enabled. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengOpenIDConnect-Discovery.htm>OIDC Discovery configuration documentation</a>."
+  type        = bool
+}
+
+variable "oidc_token_auth_enabled" {
+  default     = false
+  description = "Whether the cluster has OIDC Auth Config enabled."
+  type        = bool
+}
+
+variable "oidc_token_authentication_config" {
+  default     = {}
+  description = "The properties that configure OIDC token authentication in kube-apiserver. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengOpenIDConnect-Authentication.htm>OIDC Token Authentication configuration documentation</a>."
+  type        = any
 }

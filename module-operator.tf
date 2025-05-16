@@ -26,7 +26,7 @@ locals {
   )
 
   // Whether the operator is enabled, i.e. created in this TF state or existing provided by ID
-  operator_enabled = alltrue([
+  operator_enabled = anytrue([
     (local.cluster_enabled || coalesce(var.cluster_id, "none") != "none"),
     (var.create_operator || coalesce(var.operator_private_ip, "none") != "none"),
   ])
@@ -44,7 +44,7 @@ locals {
 }
 
 module "operator" {
-  count          = var.create_operator ? 1 : 0
+  count          = var.create_bastion && var.create_operator ? 1 : 0
   source         = "./modules/operator"
   state_id       = local.state_id
   compartment_id = local.compartment_id
@@ -54,14 +54,20 @@ module "operator" {
   bastion_user = var.bastion_user
 
   # Operator
+  await_cloudinit           = var.operator_await_cloudinit
   assign_dns                = var.assign_dns
   availability_domain       = coalesce(var.operator_availability_domain, lookup(local.ad_numbers_to_names, local.ad_numbers[0]))
   cloud_init                = var.operator_cloud_init
   image_id                  = local.operator_image_id
   install_cilium            = var.cilium_install
   install_helm              = var.operator_install_helm
+  install_helm_from_repo    = var.operator_install_helm_from_repo
+  install_oci_cli_from_repo = var.operator_install_oci_cli_from_repo
+  install_istioctl          = var.operator_install_istioctl
   install_k9s               = var.operator_install_k9s
   install_kubectx           = var.operator_install_kubectx
+  install_kubectl_from_repo = var.operator_install_kubectl_from_repo
+  install_stern             = var.operator_install_stern
   kubeconfig                = yamlencode(local.kubeconfig_private)
   kubernetes_version        = var.kubernetes_version
   nsg_ids                   = compact(flatten([var.operator_nsg_ids, try(module.network.operator_nsg_id, null)]))
@@ -75,6 +81,7 @@ module "operator" {
   upgrade                   = var.operator_upgrade
   user                      = var.operator_user
   volume_kms_key_id         = var.operator_volume_kms_key_id
+
 
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence

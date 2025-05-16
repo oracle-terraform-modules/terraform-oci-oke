@@ -5,11 +5,12 @@
 
 worker_pools = {
   np-autoscaled = {
-    description = "Node pool managed by cluster autoscaler",
-    size        = 2,
-    min_size    = 1,
-    max_size    = 3,
-    autoscale   = true,
+    description              = "Node pool managed by cluster autoscaler",
+    size                     = 2,
+    min_size                 = 1,
+    max_size                 = 3,
+    autoscale                = true,
+    ignore_initial_pool_size = true
   },
   np-autoscaler = {
     description      = "Node pool with cluster autoscaler scheduling allowed",

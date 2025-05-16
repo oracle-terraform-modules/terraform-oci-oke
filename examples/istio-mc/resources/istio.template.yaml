@@ -1,0 +1,58 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  values:
+    global:
+      meshID: ${mesh_id}
+      multiCluster:
+        clusterName: ${cluster}
+      network: ${mesh_network}
+  components:
+    egressGateways:
+      - name: istio-egressgateway
+        enabled: true
+    ingressGateways:
+      - name: istio-ingressgateway
+        enabled: true
+        k8s:
+          serviceAnnotations:
+            service.beta.kubernetes.io/oci-load-balancer-internal: "false"
+            service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+            service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "50"
+            service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+            service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "None"
+            oci.oraclecloud.com/oci-network-security-groups: "${pub_nsg_id}"
+      - name: istio-eastwestgateway
+        enabled: true
+        k8s:
+          serviceAnnotations:
+            service.beta.kubernetes.io/oci-load-balancer-internal: "true"
+            service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+            service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "50"
+            service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+            service.beta.kubernetes.io/oci-load-balancer-security-list-management-mode: "None"
+            service.beta.kubernetes.io/oci-load-balancer-subnet1: "${int_lb_subnet_id}"
+            oci.oraclecloud.com/oci-network-security-groups: "${int_nsg_id}"
+          env:
+          - name: ISTIO_META_REQUESTED_NETWORK_VIEW
+            value: ${mesh_network}
+          - name: ISTIO_META_ROUTER_MODE
+            value: "sni-dnat"
+          service:
+            ports:
+            - name: status-port
+              port: 15021
+              targetPort: 15021
+            - name: tls
+              port: 15443
+              targetPort: 15443
+            - name: tls-istiod
+              port: 15012
+              targetPort: 15012
+            - name: tls-webhook
+              port: 15017
+              targetPort: 15017
+        label:
+          app: istio-eastwestgateway
+          istio: eastwestgateway
+          topology.istio.io/network: ${mesh_network}

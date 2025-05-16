@@ -113,7 +113,7 @@ variables:
   create_iam_worker_policy:
     title: Authorize instance(s) to join the target cluster
     description: |
-      Create the required Identity policy with a dynamic group to authorize self-managed worker node membership for an OKE cluster, e.g. `Allow dynamic-group ... to {CLUSTER_JOIN} in compartment id ... where { target.cluster.id = '...' }`. See <a href=https://docs.oracle.com/en-us/iaas/Content/Identity/policyreference/contengpolicyreference.htm#Details_for_Container_Engine_for_Kubernetes>Container Engine for Kubernetes Self-managed nodes</a> for more information.
+      Create the required Identity policy with a dynamic group to authorize self-managed worker node membership for an OKE cluster, e.g. `Allow dynamic-group ... to {CLUSTER_JOIN} in compartment id ... where { target.cluster.id = '...' }`. See <a href=https://docs.oracle.com/en-us/iaas/Content/Identity/policyreference/contengpolicyreference.htm#Details_for_Container_Engine_for_Kubernetes>OKE Self-managed nodes</a> for more information.
     type: boolean
     default: false
     required: true

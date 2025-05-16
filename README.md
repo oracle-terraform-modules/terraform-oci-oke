@@ -6,14 +6,14 @@ Documentation for this module is available at:
 
 - [Terraform OKE Module](https://oracle-terraform-modules.github.io/terraform-oci-oke/)
 
-This project implements a reusable Terraform module for [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/cloud-infrastructure) to provision an [Oracle Container Engine for Kubernetes (OKE)](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm) cluster with supporting infrastructure.
+This project implements a reusable Terraform module for [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/cloud-infrastructure) to provision an [OCI Kubernetes Engine (OKE)](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm) cluster with supporting infrastructure.
 
 
 ## Further Documentation
 
 -   [Terraform OCI Provider](https://www.terraform.io/docs/providers/oci/index.html)
 -   [Oracle Cloud Infrastructure](https://docs.cloud.oracle.com/iaas/Content/home.htm)
--   [Oracle Container Engine](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm)
+-   [OCI Kubernetes Engine](https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm)
 
 ## Acknowledgement
 
@@ -24,4 +24,4 @@ Code derived and adapted from [Terraform OKE Sample](https://github.com/terrafor
 Learn how to [contribute](./CONTRIBUTING.md).
 
 ## License
-Copyright (c) 2017, 2023 Oracle Corporation and/or its affiliates. Licensed under the [Universal Permissive License 1.0](./LICENSE) as shown at [https://oss.oracle.com/licenses/upl](https://oss.oracle.com/licenses/upl/).
+Copyright (c) 2017, 2024 Oracle Corporation and/or its affiliates. Licensed under the [Universal Permissive License 1.0](./LICENSE) as shown at [https://oss.oracle.com/licenses/upl](https://oss.oracle.com/licenses/upl/).

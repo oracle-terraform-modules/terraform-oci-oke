@@ -49,15 +49,45 @@ variable "vcn_create_service_gateway" {
   }
 }
 
+variable "vcn_enable_ipv6_gua" {
+  default     = true
+  description = "Whether to enable IPv6 GUA when IPv6 is enabled."
+  type        = bool
+}
+
+variable "vcn_ipv6_ula_cidrs" {
+  default     = []
+  description = "IPv6 ULA CIDR blocks to be used for the VCN."
+  type        = list(string)
+}
+
+variable "internet_gateway_id" {
+  default     = null
+  description = "Optional ID of existing Internet gateway in VCN."
+  type        = string
+}
+
 variable "ig_route_table_id" {
   default     = null
-  description = "Optional ID of existing internet gateway in VCN."
+  description = "Optional ID of existing internet gateway route table in VCN."
+  type        = string
+}
+
+variable "nat_gateway_id" {
+  default     = null
+  description = "Optional ID of existing NAT gateway in VCN."
   type        = string
 }
 
 variable "nat_route_table_id" {
   default     = null
-  description = "Optional ID of existing NAT gateway in VCN."
+  description = "Optional ID of existing NAT gateway route table in VCN."
+  type        = string
+}
+
+variable "igw_ngw_mixed_route_id" {
+  default     = null
+  description = "Optional ID of the existing route table in VCN using IGW for IPv6 and NGW for IPv4."
   type        = string
 }
 
@@ -77,6 +107,24 @@ variable "drg_id" {
   default     = null
   description = "ID of an external created Dynamic Routing Gateway to be attached to the VCN."
   type        = string
+}
+
+variable "drg_compartment_id" {
+  default     = null
+  description = "Compartment for the DRG resource. Can be used to override network_compartment_id."
+  type        = string
+}
+
+variable "drg_attachments" {
+  description = "DRG attachment configurations."
+  type        = any
+  default     = {}
+}
+
+variable "remote_peering_connections" {
+  description = "Map of parameters to add and optionally to peer to remote peering connections. Key-only items represent local acceptors and no peering attempted; items containing key and values represent local requestor and must have the OCID and region of the remote acceptor to peer to"
+  type        = map(any)
+  default     = {}
 }
 
 variable "internet_gateway_route_rules" {
@@ -111,22 +159,24 @@ variable "nat_gateway_public_ip_id" {
 
 variable "subnets" {
   default = {
-    bastion  = { newbits = 13 }
-    operator = { newbits = 13 }
-    cp       = { newbits = 13 }
-    int_lb   = { newbits = 11 }
-    pub_lb   = { newbits = 11 }
-    workers  = { newbits = 4 }
-    pods     = { newbits = 2 }
+    bastion  = { newbits = 13, ipv6_cidr = "8, 0" }
+    operator = { newbits = 13, ipv6_cidr = "8, 1" }
+    cp       = { newbits = 13, ipv6_cidr = "8, 2" }
+    int_lb   = { newbits = 11, ipv6_cidr = "8, 3" }
+    pub_lb   = { newbits = 11, ipv6_cidr = "8, 4" }
+    workers  = { newbits = 4, ipv6_cidr = "8, 5" }
+    pods     = { newbits = 2, ipv6_cidr = "8, 6" }
   }
   description = "Configuration for standard subnets. The 'create' parameter of each entry defaults to 'auto', creating subnets when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
   type = map(object({
-    create    = optional(string)
-    id        = optional(string)
-    newbits   = optional(string)
-    netnum    = optional(string)
-    cidr      = optional(string)
-    dns_label = optional(string)
+    create       = optional(string)
+    id           = optional(string)
+    newbits      = optional(string)
+    netnum       = optional(string)
+    cidr         = optional(string)
+    display_name = optional(string)
+    dns_label    = optional(string)
+    ipv6_cidr    = optional(string)
   }))
   validation {
     condition = alltrue([
@@ -136,10 +186,10 @@ variable "subnets" {
   }
   validation {
     condition = alltrue([
-      for v in flatten([for k, v in var.subnets : keys(v)]) : contains(["create", "id", "cidr", "netnum", "newbits", "dns_label"], v)
+      for v in flatten([for k, v in var.subnets : keys(v)]) : contains(["create", "id", "cidr", "netnum", "newbits", "display_name", "dns_label", "ipv6_cidr"], v)
     ])
     error_message = format("Invalid subnet configuration keys: %s", jsonencode(distinct([
-      for v in flatten([for k, v in var.subnets : keys(v)]) : v if !contains(["create", "id", "cidr", "netnum", "newbits", "dns_label"], v)
+      for v in flatten([for k, v in var.subnets : keys(v)]) : v if !contains(["create", "id", "cidr", "netnum", "newbits", "display_name", "dns_label", "ipv6_cidr"], v)
     ])))
   }
 }
@@ -232,15 +282,33 @@ variable "allow_bastion_cluster_access" {
   type        = bool
 }
 
+variable "allow_rules_cp" {
+  default     = {}
+  description = "A map of additional rules to allow traffic for the OKE control plane."
+  type        = any
+}
+
 variable "allow_rules_internal_lb" {
   default     = {}
   description = "A map of additional rules to allow incoming traffic for internal load balancers."
   type        = any
 }
 
+variable "allow_rules_pods" {
+  default     = {}
+  description = "A map of additional rules to allow traffic for the pods."
+  type        = any
+}
+
 variable "allow_rules_public_lb" {
   default     = {}
   description = "A map of additional rules to allow incoming traffic for public load balancers."
+  type        = any
+}
+
+variable "allow_rules_workers" {
+  default     = {}
+  description = "A map of additional rules to allow traffic for the workers."
   type        = any
 }
 
@@ -256,8 +324,3 @@ variable "enable_waf" {
   default     = false
 }
 
-variable "drg_attachments" {
-  description = "DRG attachment configurations."
-  type        = any
-  default     = {}
-}

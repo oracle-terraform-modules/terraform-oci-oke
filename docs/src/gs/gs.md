@@ -15,30 +15,151 @@ The documentation here is for 5.x **only**. The documentation for earlier versio
 
 ### Clone the repo
 
-Clone the git repo and checkout the 5.x branch:
+Clone the git repo:
 
 ```
 git clone https://github.com/oracle-terraform-modules/terraform-oci-oke.git tfoke
 cd tfoke
-git checkout 5.x
 ```
 
 ### Create
 
-Initialize a working directory containing Terraform configuration files, and optionally upgrade module dependencies:
+1. Create 2 OCI providers and add them to providers.tf:
+
+```
+provider "oci" {
+  fingerprint      = var.api_fingerprint
+  private_key_path = var.api_private_key_path
+  region           = var.region
+  tenancy_ocid     = var.tenancy_id
+  user_ocid        = var.user_id
+}
+
+provider "oci" {
+  fingerprint      = var.api_fingerprint
+  private_key_path = var.api_private_key_path
+  region           = var.home_region
+  tenancy_ocid     = var.tenancy_id
+  user_ocid        = var.user_id
+  alias            = "home"
+}
+```
+
+2. Initialize a working directory containing Terraform configuration files, and optionally upgrade module dependencies:
 ```
 terraform init --upgrade
 ```
 
-Run the plan and apply commands to create OKE cluster and other components:
+3. Create a terraform.tfvars and provide the necessary parameters:
+
+```
+# Identity and access parameters
+api_fingerprint      = "00:ab:12:34:56:cd:78:90:12:34:e5:fa:67:89:0b:1c"
+api_private_key_path = "~/.oci/oci_rsa.pem"
+
+home_region = "us-ashburn-1"
+region      = "ap-sydney-1"
+tenancy_id  = "ocid1.tenancy.oc1.."
+user_id     = "ocid1.user.oc1.."
+
+# general oci parameters
+compartment_id = "ocid1.compartment.oc1.."
+timezone       = "Australia/Sydney"
+
+# ssh keys
+ssh_private_key_path = "~/.ssh/id_ed25519"
+ssh_public_key_path  = "~/.ssh/id_ed25519.pub"
+
+# networking
+create_vcn               = true
+assign_dns               = true
+lockdown_default_seclist = true
+vcn_cidrs                = ["10.0.0.0/16"]
+vcn_dns_label            = "oke"
+vcn_name                 = "oke"
+
+# Subnets
+subnets = {
+  bastion  = { newbits = 13, netnum = 0, dns_label = "bastion", create="always" }
+  operator = { newbits = 13, netnum = 1, dns_label = "operator", create="always" }
+  cp       = { newbits = 13, netnum = 2, dns_label = "cp", create="always" }
+  int_lb   = { newbits = 11, netnum = 16, dns_label = "ilb", create="always" }
+  pub_lb   = { newbits = 11, netnum = 17, dns_label = "plb", create="always" }
+  workers  = { newbits = 2, netnum = 1, dns_label = "workers", create="always" }
+  pods     = { newbits = 2, netnum = 2, dns_label = "pods", create="always" }
+}
+
+# bastion
+create_bastion           = true
+bastion_allowed_cidrs    = ["0.0.0.0/0"]
+bastion_user             = "opc"
+
+# operator
+create_operator                = true
+operator_install_k9s           = true
+
+
+# iam
+create_iam_operator_policy   = "always"
+create_iam_resources         = true
+
+create_iam_tag_namespace = false // true/*false
+create_iam_defined_tags  = false // true/*false
+tag_namespace            = "oke"
+use_defined_tags         = false // true/*false
+
+# cluster
+create_cluster     = true
+cluster_name       = "oke"
+cni_type           = "flannel"
+kubernetes_version = "v1.29.1"
+pods_cidr          = "10.244.0.0/16"
+services_cidr      = "10.96.0.0/16"
+
+# Worker pool defaults
+worker_pool_size = 0
+worker_pool_mode = "node-pool"
+
+# Worker defaults
+await_node_readiness     = "none"
+
+worker_pools = {
+  np1 = {
+    shape              = "VM.Standard.E4.Flex",
+    ocpus              = 2,
+    memory             = 32,
+    size               = 1,
+    boot_volume_size   = 50,
+    kubernetes_version = "v1.29.1"
+  }
+  np2 = {
+     shape            = "VM.Standard.E4.Flex",
+     ocpus            = 2,
+     memory           = 32,
+     size             = 3,
+     boot_volume_size = 150,
+     kubernetes_version = "v1.29.1"
+  }
+}
+
+# Security
+allow_node_port_access       = false
+allow_worker_internet_access = true
+allow_worker_ssh_access      = true
+control_plane_allowed_cidrs  = ["0.0.0.0/0"]
+control_plane_is_public      = false
+load_balancers               = "both"
+preferred_load_balancer      = "public"
+
+```
+
+4. Run the plan and apply commands to create OKE cluster and other components:
 ```
 terraform plan
 terraform apply
 ```
 
-You can create a Kubernetes cluster with the latest version of Kubernetes available in OKE using this terraform script. By default the `kubernetes_version` parameter in terraform.tfvars.example is set as "LATEST". Refer to [Terraform Options][uri-terraform-options] for other available parameters for OKE.
-
-Use the parameter *cluster_name* to change the name of the cluster as needed.
+You can create a Kubernetes cluster with the latest version of Kubernetes available in OKE using this terraform script.
 
 ### Connect
 
@@ -49,7 +170,7 @@ kubectl is installed on the operator host by default and the kubeconfig file is 
 ****
 The `instance principal` of the operator must be granted `MANAGE` on target cluster for configuration of an admin user context.
 * [Steps to Enable Instances to Call Services](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm#setup)
-* [Writing Policies for Container Engine for Kubernetes](https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm)
+* [Writing Policies for OCI Kubernetes Engine](https://docs.oracle.com/en-us/iaas/Content/Identity/Reference/contengpolicyreference.htm)
 ****
 
 An alias "*k*" will be created for kubectl on the operator host. 

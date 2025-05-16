@@ -2,10 +2,11 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  boot_volume_size = lookup(var.shape, "boot_volume_size", 50)
-  memory           = lookup(var.shape, "memory", 4)
-  ocpus            = max(1, lookup(var.shape, "ocpus", 1))
-  shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+  boot_volume_size        = lookup(var.shape, "boot_volume_size", 50)
+  boot_volume_vpus_per_gb = lookup(var.shape, "boot_volume_vpus_per_gb", 10)
+  memory                  = lookup(var.shape, "memory", 4)
+  ocpus                   = max(1, lookup(var.shape, "ocpus", 1))
+  shape                   = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
 
   # Used for default values of required input for virtual node pools
   fault_domains_all = formatlist("FD-%v", [1, 2, 3])
@@ -25,6 +26,7 @@ locals {
     autoscale                    = false
     block_volume_type            = var.block_volume_type
     boot_volume_size             = local.boot_volume_size
+    boot_volume_vpus_per_gb      = local.boot_volume_vpus_per_gb
     capacity_reservation_id      = var.capacity_reservation_id
     cloud_init                   = [] # empty pool-specific default
     compartment_id               = var.compartment_id
@@ -34,9 +36,11 @@ locals {
     eviction_grace_duration      = 300
     force_node_delete            = true
     extended_metadata            = {} # empty pool-specific default
+    ignore_initial_pool_size     = false
     image_id                     = var.image_id
     image_type                   = var.image_type
     kubernetes_version           = var.kubernetes_version
+    max_pods_per_node            = min(max(var.max_pods_per_node, 1), 110)
     memory                       = local.memory
     mode                         = var.worker_pool_mode
     node_cycling_enabled         = false
@@ -99,18 +103,22 @@ locals {
       ])
 
       # Use provided image_id for 'custom' type, or first match for all shape + OS criteria
-      image_id = (pool.image_type == "custom" ? pool.image_id : element(tolist(setintersection([
-        pool.image_type == "oke" ?
-        setintersection(
-          lookup(var.image_ids, "oke", null),
-          lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
-        ) :
-        lookup(var.image_ids, "platform", null),
-        lookup(var.image_ids, pool.image_type, null),
-        length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
-        length(regexall("A1\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
-        lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
-      ]...)), 0))
+      image_id = (
+        pool.image_type == "custom" ?
+        pool.image_id :
+        element(split("###", element(reverse(sort([for entry in tolist(setintersection([
+          pool.image_type == "oke" ?
+          setintersection(
+            lookup(var.image_ids, "oke", null),
+            lookup(var.image_ids, trimprefix(lower(pool.kubernetes_version), "v"), null)
+          ) :
+          lookup(var.image_ids, "platform", null),
+          lookup(var.image_ids, pool.image_type, null),
+          length(regexall("GPU", pool.shape)) > 0 ? var.image_ids.gpu : var.image_ids.nongpu,
+          length(regexall("A[12]\\.", pool.shape)) > 0 ? var.image_ids.aarch64 : var.image_ids.x86_64,
+          lookup(var.image_ids, format("%v %v", pool.os, split(".", pool.os_version)[0]), null),
+        ]...)) : "${var.indexed_images[entry].sort_key}###${entry}"])), 0)), 1)
+      )
 
       # Standard tags as defined if enabled for use
       # User-provided freeform tags are merged and take precedence
@@ -153,10 +161,10 @@ locals {
         {
           "oke.oraclecloud.com/tf.module"          = "terraform-oci-oke"
           "oke.oraclecloud.com/tf.state_id"        = var.state_id
-          "oke.oraclecloud.com/tf.workspace"       = terraform.workspace
           "oke.oraclecloud.com/pool.name"          = pool_name
           "oke.oraclecloud.com/pool.mode"          = pool.mode
           "oke.oraclecloud.com/cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled"
+          "oci.oraclecloud.com/vcn-native-ip-cni"  = var.cni_type == "npn" ? true : false
         },
         pool.autoscale ? { "oke.oraclecloud.com/cluster_autoscaler" = "managed" } : {},
         pool.node_labels,
@@ -228,11 +236,11 @@ locals {
   }
 
   # Maps of worker pool OCI resources by pool name enriched with desired/custom parameters for various modes
-  worker_node_pools         = { for k, v in oci_containerengine_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instance_pools     = { for k, v in oci_core_instance_pool.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
-  worker_instances          = { for k, v in oci_core_instance.workers : k => merge(v, lookup(local.worker_pools_final, k, {})) }
+  worker_node_pools         = { for k, v in merge(oci_containerengine_node_pool.tfscaled_workers, oci_containerengine_node_pool.autoscaled_workers) : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_virtual_node_pools = { for k, v in oci_containerengine_virtual_node_pool.workers : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_instance_pools     = { for k, v in merge(oci_core_instance_pool.tfscaled_workers, oci_core_instance_pool.autoscaled_workers) : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_cluster_networks   = { for k, v in oci_core_cluster_network.workers : k => merge(lookup(local.worker_pools_final, k, {}), v) }
+  worker_instances          = { for k, v in oci_core_instance.workers : k => merge(lookup(local.worker_pools_final, k, {}), v) }
 
   # Combined map of outputs by pool name for all modes excluding 'instance' (output separately)
   worker_pools_output = merge(
@@ -262,4 +270,15 @@ locals {
 
   # Yields {<pool name> = {<instance id> = <instance ip>}} for modes: 'node-pool', 'instance'
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
+  
+  # Map of nodepools using Ubuntu images.
+  ubuntu_worker_pools = {
+    for k, v in local.enabled_worker_pools : k => {
+      kubernetes_major_version = substr(lookup(v, "kubernetes_version", ""), 1, 4)
+      kubernetes_minor_version = substr(lookup(v, "kubernetes_version", ""), 1, -1)
+      ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
+    }
+    if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
+      contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+  }
 }

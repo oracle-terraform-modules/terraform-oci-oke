@@ -7,7 +7,7 @@
 [uri-terraform-oci-drg]: https://github.com/oracle-terraform-modules/terraform-oci-drg
 [uri-terraform-oci-oke]: https://github.com/oracle-terraform-modules/terraform-oci-oke
 [uri-terraform-options]: ./inputs_submodule.html#cluster
-# Oracle Container Engine for Kubernetes (OKE) Terraform Module
+# OCI Kubernetes Engine (OKE) Terraform Module
 
 ## Introduction
 
@@ -24,8 +24,26 @@ The documentation here is still being reorganised.
 ## News
 
 ***
-### October 25 2023: Announcing release v5.0.0
-- https://github.com/oracle-terraform-modules/terraform-oci-oke/releases
+### December 4, 2024: Announcing v5.2.2
+- feat: add support to reference module nsgs in the nsg rules
+
+### November 18, 2024: Announcing v5.2.1
+- fix: operator custom cloud-init error by @mcouto-sossego in #950
+- feat: added rules to allow UDP to be used for node port ranges by @robo-cap in #961
+
+### November 7, 2024: Announcing v5.2.0
+- Add support for stateless rules
+- Fix KMS policy - cluster dependency
+- Add cluster addon support
+- Allow cloud-init update for nodepools
+- Add several improvements and fixes
+- Cilium extension upgrade to 1.16
+- Fix pod nsg bug
+
+### July 9, 2024: Announcing v5.1.8
+- allow user to add additional rules to the workers NSG
+-  docs: updated main page, mdbook component versions
+-  Add support to ignore_initial_pool_size attribute on nodepools
 
 <!-- ***
 ### August 24 2023: Announcing release v5.0.0-RC5

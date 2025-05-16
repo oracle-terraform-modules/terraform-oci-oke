@@ -60,7 +60,7 @@ variable "bastion_image_os" {
 }
 
 variable "bastion_image_os_version" {
-  default     = "8.7"
+  default     = "8"
   description = "Bastion image operating system version when bastion_image_type = 'platform'."
   type        = string
 }
@@ -85,5 +85,11 @@ variable "bastion_is_public" {
 variable "bastion_upgrade" {
   default     = false
   description = "Whether to upgrade bastion packages after provisioning."
+  type        = bool
+}
+
+variable "bastion_await_cloudinit" {
+  default     = true
+  description = "Whether to block until successful connection to bastion and completion of cloud-init."
   type        = bool
 }

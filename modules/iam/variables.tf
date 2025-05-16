@@ -4,10 +4,11 @@
 # Common
 variable "cluster_id" { type = string }
 variable "compartment_id" { type = string }
+variable "network_compartment_id" { type = string }
 variable "state_id" { type = string }
 variable "tenancy_id" { type = string }
 variable "worker_compartments" { type = list(string) }
-
+variable "enable_ipv6" { type = bool }
 # Tags
 variable "create_iam_defined_tags" { type = bool }
 variable "create_iam_tag_namespace" { type = bool }
@@ -23,6 +24,7 @@ variable "create_iam_autoscaler_policy" { type = bool }
 variable "create_iam_kms_policy" { type = bool }
 variable "create_iam_operator_policy" { type = bool }
 variable "create_iam_worker_policy" { type = bool }
+variable "policy_name" { type = string }
 
 # KMS
 variable "cluster_kms_key_id" { type = string }

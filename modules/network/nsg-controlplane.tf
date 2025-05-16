@@ -47,6 +47,14 @@ locals {
         protocol = local.icmp_protocol, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
       },
     },
+    var.enable_ipv6 ? {
+      "Allow ICMPv6 egress for path discovery to worker nodes" : {
+        protocol = local.icmpv6_protocol, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+      },
+      "Allow ICMPv6 ingress for path discovery from worker nodes" : {
+        protocol = local.icmpv6_protocol, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
+      },
+    } : {},
     local.operator_nsg_enabled ? {
       "Allow TCP ingress to kube-apiserver from operator instance" : {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg,
@@ -61,10 +69,7 @@ locals {
       },
       "Allow TCP egress from OKE control plane to pods" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg,
-      },
-      "Allow TCP ingress from pods to kube-apiserver" : {
-        protocol = local.tcp_protocol, port = local.oke_port, source = local.pod_nsg_id, source_type = local.rule_type_nsg,
-      },
+      }
     } : {},
     (var.allow_bastion_cluster_access && local.bastion_nsg_enabled) ? {
       "Allow TCP ingress to kube-apiserver from bastion host" = {
@@ -77,6 +82,7 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
       }
     },
+    var.allow_rules_cp
   ) : {}
 }
 
