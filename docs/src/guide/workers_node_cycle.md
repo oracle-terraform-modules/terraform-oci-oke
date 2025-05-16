@@ -23,8 +23,8 @@ The `node_cycling_modes` attribute supports two node cycling modes:
 - `BOOT_VOLUME_REPLACE` cycling swaps the boot volume on the same node.
 
 **Notes:**
-- Only a subset of fields (`kubernetes_version`, `image_id`, `boot_volume_size`, `node_metadata`, `ssh_public_key`) can be changed with `BOOT_VOLUME_REPLACE` cycling.
-- The cycling operation will attempt to bring all nodes in the NodePool in sync with the NodePool specification. If `BOOT_VOLUME_REPLACE` cycling mode is chosen, and the node needs changes to fields that can not be updated via a `BOOT_VOLUME_REPLACE` cycle, the cycle attempt for that node will fail. The operation has to be retried with cycle mode changed to `INSTANCE_REPLACE` in this case.
+- Only a subset of fields (`kubernetes_version`, `image_id`, `boot_volume_size`, `node_metadata`, `ssh_public_key`, `volume_kms_key_id`) can be changed with `BOOT_VOLUME_REPLACE` cycling.
+- The cycling operation will attempt to bring all nodes in the NodePool in sync with the NodePool specification. If `BOOT_VOLUME_REPLACE` cycling mode is chosen, and the node needs changes to fields that can not be updated via a `BOOT_VOLUME_REPLACE` cycle, the cycle attempt for that node will fail. The cycle_mode has to be changed to `INSTANCE_REPLACE` and the node-cycle operation needs to be retried.
 
 When cycling nodes, the OKE cordons, drains, and terminates nodes according to the node pool's cordon and drain options.
 

@@ -10,5 +10,6 @@ worker_pools = {
     node_cycling_enabled         = true
     node_cycling_max_surge       = "25%"
     node_cycling_max_unavailable = 0
+    node_cycling_mode            = ["INSTANCE_REPLACE"] #alternative value is BOOT_VOLUME_REPLACE. Only a single mode is supported.
   }
 }
