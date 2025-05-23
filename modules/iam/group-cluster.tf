@@ -14,7 +14,9 @@ locals {
   cluster_policy_statements = coalesce(var.cluster_kms_key_id, "none") != "none" ? tolist([format(
     "Allow dynamic-group %v to use keys in compartment id %v where target.key.id = '%v'",
     local.cluster_group_name, var.compartment_id, var.cluster_kms_key_id,
-  )]) : []
+  ), format("Allow dynamic-group %v to read instance-images in compartment id %v",
+    local.cluster_group_name, var.compartment_id)
+  ]) : []
 }
 
 resource "oci_identity_dynamic_group" "cluster" {
