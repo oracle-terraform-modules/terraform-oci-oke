@@ -46,6 +46,7 @@ locals {
     node_cycling_enabled         = false
     node_cycling_max_surge       = 1
     node_cycling_max_unavailable = 0
+    node_cycling_mode            = ["instance"]
     node_labels                  = var.node_labels
     nsg_ids                      = [] # empty pool-specific default
     ocpus                        = local.ocpus
@@ -169,7 +170,16 @@ locals {
         pool.autoscale ? { "oke.oraclecloud.com/cluster_autoscaler" = "managed" } : {},
         pool.node_labels,
       )
+
+      # Override Node-cycling mode
+      node_cycling_mode = pool.node_cycling_mode != null ? [ for entry in pool.node_cycling_mode: lookup(local.supported_node_cycling_mode, lower(entry)) ] : null
+      
     }) if tobool(pool.create)
+  }
+  
+  supported_node_cycling_mode = {
+    instance    = "INSTANCE_REPLACE"
+    boot_volume = "BOOT_VOLUME_REPLACE"
   }
 
   enabled_modes = distinct([for w in values(local.enabled_worker_pools) : w.mode])
@@ -270,4 +280,15 @@ locals {
 
   # Yields {<pool name> = {<instance id> = <instance ip>}} for modes: 'node-pool', 'instance'
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
+  
+  # Map of nodepools using Ubuntu images.
+  ubuntu_worker_pools = {
+    for k, v in local.enabled_worker_pools : k => {
+      kubernetes_major_version = substr(lookup(v, "kubernetes_version", ""), 1, 4)
+      kubernetes_minor_version = substr(lookup(v, "kubernetes_version", ""), 1, -1)
+      ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
+    }
+    if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
+      contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+  }
 }

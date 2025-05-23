@@ -10,5 +10,6 @@ worker_pools = {
     node_cycling_enabled         = true
     node_cycling_max_surge       = "25%"
     node_cycling_max_unavailable = 0
+    node_cycling_mode            = ["instance"] # An alternative value is boot_volume. Only a single mode is supported.
   }
 }

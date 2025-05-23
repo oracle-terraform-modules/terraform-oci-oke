@@ -18,6 +18,14 @@ When you set `node_cycling_enabled` to `true` for a node pool, OKE will compare 
 
 The `node_cycling_max_surge` (default: `1`) and `node_cycling_max_unavailable` (default: `0`) node_pool attributes can be configured with absolute values or percentage values, calculated relative to the node_pool `size`. These attributes determine how OKE will replace the nodes with a stale config in the node_pool.
 
+The `node_cycling_mode` attribute supports two node cycling modes:
+- `instance` - (default) - cycling deletes and recreates a new node with the changes applied.
+- `boot_volume` cycling swaps the boot volume on the same node.
+
+**Notes:**
+- Only a subset of fields (`kubernetes_version`, `image_id`, `boot_volume_size`, `node_metadata`, `ssh_public_key`, `volume_kms_key_id`) can be changed with `boot_volume` cycling.
+- The cycling operation will attempt to bring all nodes in the NodePool in sync with the NodePool specification. If `boot_volume` cycling mode is chosen, and the node needs changes to fields that can not be updated via a `boot_volume` cycle, the cycle attempt for that node will fail. The cycle_mode has to be changed to `instance` and the node-cycle operation needs to be retried.
+
 When cycling nodes, the OKE cordons, drains, and terminates nodes according to the node pool's cordon and drain options.
 
 **Notes:**

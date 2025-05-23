@@ -69,8 +69,11 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
       }
     }
 
-    open_id_connect_discovery {
-      is_open_id_connect_discovery_enabled = var.oidc_discovery_enabled
+    dynamic "open_id_connect_discovery" {
+      for_each = var.oidc_discovery_enabled ? [1] : []
+      content {
+        is_open_id_connect_discovery_enabled = var.oidc_discovery_enabled
+      }
     }
 
 
