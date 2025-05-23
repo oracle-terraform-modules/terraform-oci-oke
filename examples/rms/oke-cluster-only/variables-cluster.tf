@@ -25,7 +25,7 @@ variable "services_cidr" {
   default = "10.96.0.0/16"
   type    = string
 }
-variable "kubernetes_version" { default = "v1.26.2" }
+variable "kubernetes_version" { default = "v1.32.1" }
 
 variable "cluster_kms_vault_id" {
   default = null

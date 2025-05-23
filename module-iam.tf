@@ -80,6 +80,9 @@ module "iam_cluster_prerequisites" {
   autoscaler_compartments = []
   worker_compartments     = []
 
+  enable_ipv6            = false
+  network_compartment_id = var.network_compartment_id
+
   providers = {
     oci.home = oci.home
   }
@@ -113,6 +116,9 @@ module "iam" {
   autoscaler_compartments = local.autoscaler_compartments
   worker_compartments     = local.worker_compartments
 
+  enable_ipv6            = var.enable_ipv6
+  network_compartment_id = var.network_compartment_id
+
   providers = {
     oci.home = oci.home
   }
@@ -125,7 +131,7 @@ output "availability_domains" {
 
 output "dynamic_group_ids" {
   description = "Cluster IAM dynamic group IDs"
-  value       = concat(
+  value = concat(
     coalesce(module.iam_cluster_prerequisites.dynamic_group_ids, []),
     coalesce(module.iam.dynamic_group_ids, [])
   )
@@ -133,7 +139,7 @@ output "dynamic_group_ids" {
 
 output "policy_statements" {
   description = "Cluster IAM policy statements"
-  value       = concat(
+  value = concat(
     coalesce(module.iam_cluster_prerequisites.policy_statements, []),
     coalesce(module.iam.policy_statements, [])
   )

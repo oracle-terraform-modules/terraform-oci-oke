@@ -24,22 +24,22 @@ locals {
       network_security_group_id = lookup(y, "nsg_id")
       direction                 = contains(keys(y), "source") ? "INGRESS" : "EGRESS"
       protocol                  = lookup(y, "protocol")
-      source                    = (
+      source = (
         alltrue([
           upper(lookup(y, "source_type", "")) == local.rule_type_nsg,
-          length(regexall("ocid\\d+\\.networksecuritygroup", lower(lookup(y, "source", "")))) == 0]) ?
-          lookup(local.all_nsg_ids, lower(lookup(y, "source", "")), null) :
-          lookup(y, "source", null)
+        length(regexall("ocid\\d+\\.networksecuritygroup", lower(lookup(y, "source", "")))) == 0]) ?
+        lookup(local.all_nsg_ids, lower(lookup(y, "source", "")), null) :
+        lookup(y, "source", null)
       )
-      source_type               = lookup(y, "source_type", null)
-      destination               = (
+      source_type = lookup(y, "source_type", null)
+      destination = (
         alltrue([
           upper(lookup(y, "destination_type", "")) == local.rule_type_nsg,
-          length(regexall("ocid\\d+\\.networksecuritygroup", lower(lookup(y, "destination", "")))) == 0]) ?
-          lookup(local.all_nsg_ids, lower(lookup(y, "destination", "")), null) :
-          lookup(y, "destination", null)
+        length(regexall("ocid\\d+\\.networksecuritygroup", lower(lookup(y, "destination", "")))) == 0]) ?
+        lookup(local.all_nsg_ids, lower(lookup(y, "destination", "")), null) :
+        lookup(y, "destination", null)
       )
-      destination_type          = lookup(y, "destination_type", null)
+      destination_type = lookup(y, "destination_type", null)
   }) }
 
   # Dynamic map of all NSG IDs for enabled NSGs
@@ -72,33 +72,33 @@ resource "oci_core_network_security_group_security_rule" "oke" {
       tonumber(lookup(each.value, "port", 0)) != local.all_ports ? [each.value] : []
     )
     content {
-      dynamic destination_port_range {
-         for_each = ( 
-          (contains(keys(tcp_options.value), "destination_port_min" ) &&
-          contains(keys(tcp_options.value), "destination_port_max" )) || 
-          (contains(keys(tcp_options.value), "source_port_min" ) &&
-          contains(keys(tcp_options.value), "source_port_max" ))
-          ) ? []: [tcp_options.value]
-          content {
-            min = tonumber(lookup(destination_port_range.value, "port_min", lookup(destination_port_range.value, "port", 0)))
-            max = tonumber(lookup(destination_port_range.value, "port_max", lookup(destination_port_range.value, "port", 0)))
-          }
+      dynamic "destination_port_range" {
+        for_each = (
+          (contains(keys(tcp_options.value), "destination_port_min") &&
+          contains(keys(tcp_options.value), "destination_port_max")) ||
+          (contains(keys(tcp_options.value), "source_port_min") &&
+          contains(keys(tcp_options.value), "source_port_max"))
+        ) ? [] : [tcp_options.value]
+        content {
+          min = tonumber(lookup(destination_port_range.value, "port_min", lookup(destination_port_range.value, "port", 0)))
+          max = tonumber(lookup(destination_port_range.value, "port_max", lookup(destination_port_range.value, "port", 0)))
+        }
       }
       dynamic "destination_port_range" {
-        for_each = (contains(keys(tcp_options.value), "destination_port_min") && 
-          contains(keys(tcp_options.value), "destination_port_max") ) ? [tcp_options.value]: []
-          content {
-            min = tonumber(lookup(destination_port_range.value, "destination_port_min", 0))
-            max = tonumber(lookup(destination_port_range.value, "destination_port_max", 0))
-          }
+        for_each = (contains(keys(tcp_options.value), "destination_port_min") &&
+        contains(keys(tcp_options.value), "destination_port_max")) ? [tcp_options.value] : []
+        content {
+          min = tonumber(lookup(destination_port_range.value, "destination_port_min", 0))
+          max = tonumber(lookup(destination_port_range.value, "destination_port_max", 0))
+        }
       }
       dynamic "source_port_range" {
-        for_each = (contains(keys(tcp_options.value), "source_port_min") && 
-          contains(keys(tcp_options.value), "source_port_max") ) ? [tcp_options.value]: []
-          content {
-            min = tonumber(lookup(source_port_range.value, "source_port_min", 0))
-            max = tonumber(lookup(source_port_range.value, "source_port_max", 0))
-          }
+        for_each = (contains(keys(tcp_options.value), "source_port_min") &&
+        contains(keys(tcp_options.value), "source_port_max")) ? [tcp_options.value] : []
+        content {
+          min = tonumber(lookup(source_port_range.value, "source_port_min", 0))
+          max = tonumber(lookup(source_port_range.value, "source_port_max", 0))
+        }
       }
     }
   }
@@ -109,32 +109,32 @@ resource "oci_core_network_security_group_security_rule" "oke" {
     )
     content {
       dynamic "destination_port_range" {
-        for_each = ( 
-          (contains(keys(udp_options.value), "destination_port_min" ) &&
-          contains(keys(udp_options.value), "destination_port_max" )) || 
-          (contains(keys(udp_options.value), "source_port_min" ) &&
-          contains(keys(udp_options.value), "source_port_max" ))
-          ) ? []: [udp_options.value]
+        for_each = (
+          (contains(keys(udp_options.value), "destination_port_min") &&
+          contains(keys(udp_options.value), "destination_port_max")) ||
+          (contains(keys(udp_options.value), "source_port_min") &&
+          contains(keys(udp_options.value), "source_port_max"))
+        ) ? [] : [udp_options.value]
         content {
           min = tonumber(lookup(destination_port_range.value, "port_min", lookup(destination_port_range.value, "port", 0)))
           max = tonumber(lookup(destination_port_range.value, "port_max", lookup(destination_port_range.value, "port", 0)))
         }
       }
       dynamic "destination_port_range" {
-        for_each = (contains(keys(udp_options.value), "destination_port_min") && 
-          contains(keys(udp_options.value), "destination_port_max") ) ? [udp_options.value]: []
-          content {
-            min = tonumber(lookup(destination_port_range.value, "destination_port_min", 0))
-            max = tonumber(lookup(destination_port_range.value, "destination_port_max", 0))
-          }
+        for_each = (contains(keys(udp_options.value), "destination_port_min") &&
+        contains(keys(udp_options.value), "destination_port_max")) ? [udp_options.value] : []
+        content {
+          min = tonumber(lookup(destination_port_range.value, "destination_port_min", 0))
+          max = tonumber(lookup(destination_port_range.value, "destination_port_max", 0))
+        }
       }
       dynamic "source_port_range" {
-        for_each = (contains(keys(udp_options.value), "source_port_min") && 
-          contains(keys(udp_options.value), "source_port_max") ) ? [udp_options.value]: []
-          content {
-            min = tonumber(lookup(source_port_range.value, "source_port_min", 0))
-            max = tonumber(lookup(source_port_range.value, "source_port_max", 0))
-          }
+        for_each = (contains(keys(udp_options.value), "source_port_min") &&
+        contains(keys(udp_options.value), "source_port_max")) ? [udp_options.value] : []
+        content {
+          min = tonumber(lookup(source_port_range.value, "source_port_min", 0))
+          max = tonumber(lookup(source_port_range.value, "source_port_max", 0))
+        }
       }
     }
   }
@@ -147,12 +147,20 @@ resource "oci_core_network_security_group_security_rule" "oke" {
     }
   }
 
+  dynamic "icmp_options" {
+    for_each = tostring(each.value.protocol) == tostring(local.icmpv6_protocol) ? [1] : []
+    content {
+      type = 2
+      code = 0
+    }
+  }
+
   lifecycle {
     precondition {
-      condition = tostring(each.value.protocol) == tostring(local.icmp_protocol) || contains(keys(each.value), "port") || (
+      condition = contains([tostring(local.icmp_protocol), tostring(local.icmpv6_protocol)], tostring(each.value.protocol)) || contains(keys(each.value), "port") || (
         contains(keys(each.value), "port_min") && contains(keys(each.value), "port_max")) || (
         contains(keys(each.value), "source_port_min") && contains(keys(each.value), "source_port_max") || (
-        contains(keys(each.value), "destination_port_min") && contains(keys(each.value), "destination_port_max")
+          contains(keys(each.value), "destination_port_min") && contains(keys(each.value), "destination_port_max")
         )
       )
       error_message = "TCP/UDP rule must contain a port or port range: '${each.key}'"
@@ -160,7 +168,7 @@ resource "oci_core_network_security_group_security_rule" "oke" {
 
     precondition {
       condition = (
-        tostring(each.value.protocol) == tostring(local.icmp_protocol)
+        contains([tostring(local.icmp_protocol), tostring(local.icmpv6_protocol)], tostring(each.value.protocol))
         || can(tonumber(each.value.port))
         || (can(tonumber(each.value.port_min)) && can(tonumber(each.value.port_max)))
         || (can(tonumber(each.value.source_port_min)) && can(tonumber(each.value.source_port_max)))

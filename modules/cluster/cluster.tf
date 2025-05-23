@@ -61,8 +61,8 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
         dynamic "required_claims" {
           for_each = lookup(var.oidc_token_authentication_config, "required_claims", [])
           content {
-            key    = lookup(required_claims.value, "key")
-            value  = lookup(required_claims.value, "value")
+            key   = lookup(required_claims.value, "key")
+            value = lookup(required_claims.value, "value")
           }
         }
         configuration_file = lookup(var.oidc_token_authentication_config, "configuration_file", null)
@@ -72,6 +72,8 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     open_id_connect_discovery {
       is_open_id_connect_discovery_enabled = var.oidc_discovery_enabled
     }
+
+
 
     kubernetes_network_config {
       pods_cidr     = var.pods_cidr
@@ -89,6 +91,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     service_lb_subnet_ids = compact([var.service_lb_subnet_id])
+    ip_families           = var.enable_ipv6 ? ["IPv4", "IPv6"] : ["IPv4"]
   }
 
   timeouts {
@@ -96,7 +99,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options]
+    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options, options["kubernetes_network_config"]]
 
     precondition {
       condition     = var.service_lb_subnet_id != null

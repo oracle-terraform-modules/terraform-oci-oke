@@ -23,7 +23,7 @@ clusters = {
   c2 = { region = "melbourne", vcn = "10.2.0.0/16", pods = "10.202.0.0/16", services = "10.102.0.0/16", enabled = true }
 }
 
-kubernetes_version = "v1.28.2"
+kubernetes_version = "v1.32.1"
 
 cluster_type = "basic"
 

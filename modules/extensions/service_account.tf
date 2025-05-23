@@ -3,13 +3,13 @@
 
 locals {
   sa_with_cluster_role_bindings = {
-    for k, v in var.service_accounts: k => v
+    for k, v in var.service_accounts : k => v
     if lookup(v, "sa_cluster_role_binding", null) != null
   }
   sa_with_role_bindings = {
-    for k, v in var.service_accounts: k => v
+    for k, v in var.service_accounts : k => v
     if lookup(v, "sa_role_binding", null) != null
-  } 
+  }
 }
 
 resource "null_resource" "service_account_crb" {
@@ -49,7 +49,7 @@ resource "null_resource" "service_account_crb" {
   }
 
   provisioner "remote-exec" {
-    when = destroy
+    when       = destroy
     on_failure = continue
     inline = [
       "kubectl delete clusterrolebinding ${self.triggers.service_account_cluster_role_binding}",
@@ -72,11 +72,11 @@ resource "null_resource" "service_account_rb" {
   for_each = var.create_service_account ? local.sa_with_role_bindings : {}
 
   triggers = {
-    service_account_name                 = each.value.sa_name
-    service_account_namespace            = each.value.sa_namespace
-    service_account_cluster_role         = each.value.sa_cluster_role
-    service_account_role                 = lookup(each.value, "sa_role", "") 
-    service_account_role_binding         = each.value.sa_role_binding
+    service_account_name         = each.value.sa_name
+    service_account_namespace    = each.value.sa_namespace
+    service_account_cluster_role = each.value.sa_cluster_role
+    service_account_role         = lookup(each.value, "sa_role", "")
+    service_account_role_binding = each.value.sa_role_binding
 
     # Parameters ignored as triggers in the life_cycle block. Required to establish connections.
     bastion_host    = var.bastion_host
@@ -102,13 +102,13 @@ resource "null_resource" "service_account_rb" {
       "kubectl get ns ${self.triggers.service_account_namespace} || kubectl create ns ${self.triggers.service_account_namespace}",
       "kubectl create sa -n ${self.triggers.service_account_namespace} ${self.triggers.service_account_name}",
       self.triggers.service_account_role != "" ?
-        "kubectl create rolebinding -n ${self.triggers.service_account_namespace} ${self.triggers.service_account_role_binding} --role=${self.triggers.service_account_role} --serviceaccount=${self.triggers.service_account_namespace}:${self.triggers.service_account_name}" :
-        "kubectl create rolebinding -n ${self.triggers.service_account_namespace} ${self.triggers.service_account_role_binding} --clusterrole=${self.triggers.service_account_cluster_role} --serviceaccount=${self.triggers.service_account_namespace}:${self.triggers.service_account_name}"
+      "kubectl create rolebinding -n ${self.triggers.service_account_namespace} ${self.triggers.service_account_role_binding} --role=${self.triggers.service_account_role} --serviceaccount=${self.triggers.service_account_namespace}:${self.triggers.service_account_name}" :
+      "kubectl create rolebinding -n ${self.triggers.service_account_namespace} ${self.triggers.service_account_role_binding} --clusterrole=${self.triggers.service_account_cluster_role} --serviceaccount=${self.triggers.service_account_namespace}:${self.triggers.service_account_name}"
     ]
   }
 
   provisioner "remote-exec" {
-    when = destroy
+    when       = destroy
     on_failure = continue
     inline = [
       "kubectl delete rolebinding -n ${self.triggers.service_account_namespace} ${self.triggers.service_account_role_binding}",

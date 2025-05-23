@@ -27,14 +27,20 @@ locals {
       },
     },
 
-    local.bastion_nsg_enabled ? {
-      "Allow ICMP ingress to operator from bastion for path discovery" : {
-        protocol = local.icmp_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
-      }
-      "Allow SSH ingress to operator from bastion" : {
-        protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
-      }
-    } : {},
+    local.bastion_nsg_enabled ? merge(
+      var.enable_ipv6 ? {
+        "Allow ICMPv6 ingress to operator from bastion for path discovery" : {
+          protocol = local.icmpv6_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
+        }
+      } : {},
+      {
+        "Allow ICMP ingress to operator from bastion for path discovery" : {
+          protocol = local.icmp_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
+        }
+        "Allow SSH ingress to operator from bastion" : {
+          protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
+        }
+    }) : {},
   ) : {}
 }
 

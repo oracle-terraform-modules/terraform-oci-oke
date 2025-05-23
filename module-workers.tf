@@ -38,6 +38,9 @@ module "workers" {
   cluster_type           = var.cluster_type
   kubernetes_version     = var.kubernetes_version
 
+  # Compute clusters
+  compute_clusters = var.worker_compute_clusters
+
   # Worker pools
   worker_pool_mode = var.worker_pool_mode
   worker_pool_size = var.worker_pool_size
@@ -59,7 +62,7 @@ module "workers" {
   indexed_images             = local.indexed_images
   kubeproxy_mode             = var.kubeproxy_mode
   max_pods_per_node          = var.max_pods_per_node
-  node_labels                = alltrue([var.cluster_type == "basic", var.cilium_install == true]) ? merge(var.worker_node_labels, {"oci.oraclecloud.com/custom-k8s-networking" = true}) : var.worker_node_labels
+  node_labels                = alltrue([var.cluster_type == "basic", var.cilium_install == true]) ? merge(var.worker_node_labels, { "oci.oraclecloud.com/custom-k8s-networking" = true }) : var.worker_node_labels
   node_metadata              = var.worker_node_metadata
   agent_config               = var.agent_config
   platform_config            = var.platform_config

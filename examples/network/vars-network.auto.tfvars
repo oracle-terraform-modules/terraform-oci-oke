@@ -12,6 +12,7 @@ vcn_id                   = null            # Ignored if create_vcn = true
 vcn_cidrs                = ["10.0.0.0/16"] # Ignored if create_vcn = false
 vcn_dns_label            = "oke"           # Ignored if create_vcn = false
 vcn_name                 = "oke"           # Ignored if create_vcn = false
+enable_ipv6              = false           # true/*false
 
 # Subnets
 subnets = {
@@ -74,7 +75,8 @@ drg_display_name = "drg"
 drg_id           = null
 
 # Routing
-ig_route_table_id = null # Optional ID of existing internet gateway route table
+ig_route_table_id   = null # Optional ID of existing internet gateway route table
+internet_gateway_id = null # Optional ID of existing internet gateway
 internet_gateway_route_rules = [
   #   {
   #     destination       = "192.168.0.0/16" # Route Rule Destination CIDR
@@ -84,6 +86,9 @@ internet_gateway_route_rules = [
   #   },
 ]
 
+igw_ngw_mixed_route_id = null # Optional ID of existing mixed route table NAT GW for IPv4 and Internet GW for IPv6
+
+nat_gateway_id           = null # Optional ID of existing NAT gateway
 nat_gateway_public_ip_id = "none"
 nat_route_table_id       = null # Optional ID of existing NAT gateway route table
 nat_gateway_route_rules = [
