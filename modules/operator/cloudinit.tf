@@ -10,7 +10,7 @@ locals {
 
   baserepo        = "ol${var.operator_image_os_version}"
   developer_EPEL  = "${local.baserepo}_developer_EPEL"
-  olcne18         = "${local.baserepo}_olcne18"
+  olcne19         = "${local.baserepo}_olcne19"
   developer_olcne = "${local.baserepo}_developer_olcne"
   arch_amd        = "amd64"
   arch_arm        = "aarch64"
@@ -45,9 +45,9 @@ data "cloudinit_config" "operator" {
           gpgcheck = true
           enabled  = true
         }
-        "${local.olcne18}" = {
+        "${local.olcne19}" = {
           name     = "Oracle Linux Cloud Native Environment 1.8 ($basearch)"
-          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/olcne18/$basearch/"
+          baseurl  = "https://yum$ociregion.$ocidomain/repo/OracleLinux/OL${var.operator_image_os_version}/olcne19/$basearch/"
           gpgkey   = "file:///etc/pki/rpm-gpg/RPM-GPG-KEY-oracle"
           gpgcheck = true
           enabled  = true
