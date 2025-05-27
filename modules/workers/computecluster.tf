@@ -1,9 +1,58 @@
-resource "oci_core_instance" "workers" {
-  for_each             = local.enabled_instances
-  availability_domain  = element(each.value.availability_domains, 1)
+# Copyright (c) 2022, 2025 Oracle Corporation and/or its affiliates.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+# Create the shared compute clusters defined in workers_compute_clusters
+
+resource "oci_core_compute_cluster" "shared" {
+  # Create an OCI Compute Cluster resource for each enabled entry of the worker_pools map with that mode.
+  for_each       = var.compute_clusters
+  compartment_id = lookup(each.value, "compartment_id", var.compartment_id)
+  display_name   = each.key
+  defined_tags = merge(
+    var.defined_tags,
+    lookup(each.value, "defined_tags", {})
+  )
+  freeform_tags = merge(
+    var.freeform_tags,
+    lookup(each.value, "freeform_tags", {})
+  )
+
+  availability_domain = lookup(var.ad_numbers_to_names, lookup(each.value, "placement_ad", 1))
+
+  lifecycle {
+    ignore_changes = [
+      display_name, defined_tags, freeform_tags,
+    ]
+  }
+}
+
+# Dynamic resource block for Compute Cluster groups defined in worker_pools
+resource "oci_core_compute_cluster" "workers" {
+  # Create an OCI Compute Cluster resource for each enabled entry of the worker_pools map with that mode.
+  for_each            = { for k, v in local.enabled_compute_clusters : k => v if length(lookup(v, "instance_ids", [])) > 0 && lookup(v, "compute_cluster", null) == null }
+  compartment_id      = each.value.compartment_id
+  display_name        = each.key
+  defined_tags        = each.value.defined_tags
+  freeform_tags       = each.value.freeform_tags
+  availability_domain = lookup(each.value, "placement_ad", null) != null ? lookup(var.ad_numbers_to_names, lookup(each.value, "placement_ad")) : element(each.value.availability_domains, 0)
+
+  lifecycle {
+    ignore_changes = [
+      display_name, defined_tags, freeform_tags,
+    ]
+  }
+}
+
+resource "oci_core_instance" "compute_cluster_workers" {
+  for_each = local.compute_cluster_instance_map
+
+  availability_domain  = (lookup(oci_core_compute_cluster.shared, lookup(each.value, "compute_cluster", ""), null) != null ?
+    oci_core_compute_cluster.shared[lookup(each.value, "compute_cluster", "")].availability_domain :
+    lookup(each.value, "placement_ad", null) != null ? lookup(var.ad_numbers_to_names, lookup(each.value, "placement_ad")) : element(each.value.availability_domains, 0)
+  )
   fault_domain         = try(each.value.placement_fds[0], null)
   compartment_id       = each.value.compartment_id
-  display_name         = each.key
+  display_name         = format("%s-%s", element(split("###", each.key), 0), element(split("###", each.key), 1))
   preserve_boot_volume = false
   shape                = each.value.shape
 
@@ -11,17 +60,13 @@ resource "oci_core_instance" "workers" {
   freeform_tags           = each.value.freeform_tags
   extended_metadata       = each.value.extended_metadata
   capacity_reservation_id = each.value.capacity_reservation_id
-
-  dynamic "shape_config" {
-    for_each = length(regexall("Flex", each.value.shape)) > 0 ? [1] : []
-    content {
-      baseline_ocpu_utilization = lookup(each.value, "burst", "BASELINE_1_1")
-      ocpus                     = each.value.ocpus
-      memory_in_gbs = ( # If > 64GB memory/core, correct input to exactly 64GB memory/core
-        (each.value.memory / each.value.ocpus) > 64 ? each.value.ocpus * 64 : each.value.memory
-      )
-    }
-  }
+  compute_cluster_id = (lookup(oci_core_compute_cluster.shared, lookup(each.value, "compute_cluster", ""), null) != null ?
+    oci_core_compute_cluster.shared[lookup(each.value, "compute_cluster", "")].id :
+    (lookup(oci_core_compute_cluster.workers, element(split("###", each.key), 0), null) != null ?
+      oci_core_compute_cluster.workers[element(split("###", each.key), 0)].id :
+      lookup(each.value, "compute_cluster", "")
+    )
+  )
 
   dynamic "platform_config" {
     for_each = each.value.platform_config != null ? [1] : []
@@ -51,7 +96,13 @@ resource "oci_core_instance" "workers" {
     is_management_disabled   = each.value.agent_config.is_management_disabled
     is_monitoring_disabled   = each.value.agent_config.is_monitoring_disabled
     dynamic "plugins_config" {
-      for_each = each.value.agent_config.plugins_config
+      for_each = merge(
+        {
+          "Compute HPC RDMA Authentication" : "ENABLED",
+          "Compute HPC RDMA Auto-Configuration" : "ENABLED"
+        },
+        each.value.agent_config.plugins_config
+      )
       content {
         name          = plugins_config.key
         desired_state = plugins_config.value
@@ -82,7 +133,7 @@ resource "oci_core_instance" "workers" {
       oke-initial-node-labels  = join(",", [for k, v in each.value.node_labels : format("%v=%v", k, v)])
       secondary_vnics          = jsonencode(lookup(each.value, "secondary_vnics", {}))
       ssh_authorized_keys      = var.ssh_public_key
-      user_data                = lookup(lookup(data.cloudinit_config.workers, lookup(each.value, "key", ""), {}), "rendered", "")
+      user_data                = lookup(lookup(data.cloudinit_config.workers, element(split("###", each.key), 0), {}), "rendered", "")
     },
 
     # Add labels required for NPN CNI.
@@ -113,7 +164,7 @@ resource "oci_core_instance" "workers" {
       condition     = coalesce(each.value.image_id, "none") != "none"
       error_message = <<-EOT
       Missing image_id; check provided value if image_type is 'custom', or image_os/image_os_version if image_type is 'oke' or 'platform'.
-        pool: ${each.key}
+        pool: ${element(split("###", each.key), 0)}
         image_type: ${coalesce(each.value.image_type, "none")}
         image_id: ${coalesce(each.value.image_id, "none")}
       EOT

@@ -22,6 +22,7 @@
       - [Instance](./guide/workers_mode_instance.md)
       - [Instance Pool](./guide/workers_mode_instancepool.md)
       - [Cluster Network](./guide/workers_mode_clusternetwork.md)
+      - [Compute Clusters](./guide/workers_mode_computecluster.md)
     - [Network](./guide/workers_network.md)
     - [Image](./guide/workers_image.md)
     - [Cloud-Init](./guide/workers_cloudinit.md)

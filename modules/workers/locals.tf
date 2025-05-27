@@ -234,6 +234,16 @@ locals {
     for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "cluster-network"
   }
 
+  # Enabled worker_pool map entries for compute clusters
+  enabled_compute_clusters = {
+    for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "compute-cluster"
+  }
+
+  # Prepare a map workers node enabled for compute_clusters { "pool_id###worker_id" => pool_values }
+  compute_cluster_instance_ids_map = { for k, v in local.enabled_compute_clusters : k => toset(lookup(v, "instance_ids", [])) }
+  compute_cluster_instance_ids     = toset(concat(flatten([for k, v in local.compute_cluster_instance_ids_map : [for id in v : format("%s###%s", k, id)]])))
+  compute_cluster_instance_map     = { for id in local.compute_cluster_instance_ids : id => lookup(local.enabled_compute_clusters, element(split("###", id), 0), {}) }
+
   # Sanitized worker_pools output; some conditionally-used defaults would be misleading
   worker_pools_final = {
     for pool_name, pool in local.enabled_worker_pools : pool_name => { for a, b in pool : a => b

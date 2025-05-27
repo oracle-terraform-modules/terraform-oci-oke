@@ -56,6 +56,16 @@ variable "worker_pool_size" {
 }
 
 #
+# Workers: Compute clusters
+#
+
+variable "worker_compute_clusters" {
+  default     = {}
+  description = "Whether to create compute clusters shared by nodes across multiple worker pools enabled for 'compute-cluster'."
+  type        = map(any)
+}
+
+#
 # Workers: network
 #
 
