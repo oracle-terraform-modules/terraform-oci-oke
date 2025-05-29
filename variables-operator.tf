@@ -83,6 +83,12 @@ variable "operator_install_istioctl" {
   type        = bool
 }
 
+variable "operator_install_k8sgpt" {
+  default     = false
+  description = "Whether to install k8sgpt on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
 variable "operator_install_k9s" {
   default     = false
   description = "Whether to install k9s on the created operator host. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
