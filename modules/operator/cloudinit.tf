@@ -137,6 +137,25 @@ data "cloudinit_config" "operator" {
     }
   }
 
+  # k8sgpt installation
+  dynamic "part" {
+    for_each = var.install_k8sgpt ? [1] : []
+    content {
+      content_type = "text/cloud-config"
+      content = jsonencode({
+        runcmd = [
+          "CLI_ARCH='${local.arch_amd}'",
+          "if [ \"$(uname -m)\" = ${local.arch_arm} ]; then CLI_ARCH='arm64'; fi",
+          "if [ -f /etc/os-release ]; then os_id=$(grep '^ID=' /etc/os-release | awk -F= '{print $2}' | tr -d '\"'); fi",
+          "if [ \"$os_id\" == \"ubuntu\" ]; then curl -LO https://github.com/k8sgpt-ai/k8sgpt/releases/latest/download/k8sgpt_$CLI_ARCH.deb; dpkg -i k8sgpt_$CLI_ARCH.deb; rm k8sgpt_$CLI_ARCH.deb; fi",
+          "if [ \"$os_id\" == \"ol\" ]; then while fuser /var/lib/rpm/.rpm.lock >/dev/null 2>&1; do sleep 5; done; rpm -ivh https://github.com/k8sgpt-ai/k8sgpt/releases/latest/download/k8sgpt_$CLI_ARCH.rpm; fi"
+        ]
+      })
+      filename   = "20-k8sgpt.yml"
+      merge_type = local.default_cloud_init_merge_type
+    }
+  }
+
   # kubectx/kubens installation
   dynamic "part" {
     for_each = var.install_kubectx ? [1] : []
