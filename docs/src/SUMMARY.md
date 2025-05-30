@@ -49,7 +49,7 @@
     - [By submodule](./inputs_submodule.md)
   - [Outputs](./outputs.md)
   - [Resources](./resources.md)
-  - [OCI Load Balancer Annotations]()
+  - [OCI Load Balancer Annotations](./guide/load-balancer-annotations.md)
   - [Releases](./guide/releases.md)
 - [Development](./codingconventions.md)
   - [Coding conventions](./codingconventions.md)
