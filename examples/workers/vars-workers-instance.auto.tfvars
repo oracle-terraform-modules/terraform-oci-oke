@@ -20,4 +20,21 @@ worker_pools = {
     size        = 1,
     burst       = "BASELINE_1_8", # Valid values BASELINE_1_8,BASELINE_1_2
   },
+  oke-vm-instance-taint = {
+    description = "Self-managed Instance With taint",
+    mode        = "instance",
+    size        = 1,
+    taints = [
+      "project=workload-taint:NoSchedule"
+    ]
+  },
+  oke-vm-instance-multi-taint = {
+    description = "Self-managed Instance With multiple taint",
+    mode        = "instance",
+    size        = 1,
+    taints = [
+      "project=workload:NoSchedule",
+      "oke.oraclecloud.com/pool.name=oke-vm-instance-multi-taint:NoSchedule"
+    ]
+  },
 }

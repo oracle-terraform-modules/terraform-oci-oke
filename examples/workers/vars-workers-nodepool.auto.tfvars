@@ -38,4 +38,25 @@ worker_pools = {
     size        = 1,
     create      = false,
   },
+  oke-vm-standard-ol7-taint = {
+    description = "OKE-managed Node Pool with OKE Oracle Linux 7 image with taints",
+    size        = 1,
+    os          = "Oracle Linux",
+    os_version  = "7",
+    create      = true,
+    taints = [
+      "project=workload-taint:NoSchedule"
+    ]
+  },
+  oke-vm-standard-ol8-multiple-taints = {
+    description = "OKE-managed Node Pool with OKE Oracle Linux 8 image with multiple taints",
+    size        = 1,
+    os          = "Oracle Linux",
+    os_version  = "8",
+    create      = true,
+    taints = [
+      "project=workload-multi-taint:NoSchedule",
+      "oke.oraclecloud.com/pool.name=oke-vm-standard-ol8-multiple-taints:NoSchedule"
+    ]
+  },
 }

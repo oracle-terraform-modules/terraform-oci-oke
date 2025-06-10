@@ -33,4 +33,17 @@ worker_pools = {
     size                 = 1,
     disable_block_volume = true,
   },
+  oke-vm-instance-pool-taint = {
+    description = "Self-managed Instance Pool with taint",
+    mode        = "instance-pool",
+    size        = 1,
+    node_labels = {
+      "keya" = "valuea",
+      "keyb" = "valueb"
+    },
+    taints = [
+      "keya=valuea:NoSchedule",
+      "keyb=valueb:NoSchedule"
+    ]
+  },
 }
