@@ -76,9 +76,16 @@ function run_oke_init() { # Initialize OKE worker node
       cluster_ca=$(get_imds_metadata | jq -rcM '.cluster_ca_cert')
     fi
 
-    bash /etc/oke/oke-install.sh \
-      --apiserver-endpoint "${apiserver_host}" \
-      --kubelet-ca-cert "${cluster_ca}"
+    if [ -s "/etc/oke/kubelet_extra_args" ]; then
+      bash /etc/oke/oke-install.sh \
+        --apiserver-endpoint "${apiserver_host}" \
+        --kubelet-ca-cert "${cluster_ca}" \
+        --kubelet-extra-args "$(cat /etc/oke/kubelet_extra_args)"
+    else
+      bash /etc/oke/oke-install.sh \
+        --apiserver-endpoint "${apiserver_host}" \
+        --kubelet-ca-cert "${cluster_ca}"
+    fi
     return
   fi
    
@@ -91,7 +98,11 @@ function run_oke_init() { # Initialize OKE worker node
     for url in "http://169.254.169.254/" "http://[fd00:c1::a9fe:a9fe]/"; do
       echo "Attempting to fetch OKE init script from ${base_url}${oke_init_relative_path}"
       if curl -sSf -H 'Authorization: Bearer Oracle' -L0 "${url}${oke_init_relative_path}" | base64 --decode > "${script_path}"; then
-        bash "${script_path}"
+        if [ -s "/etc/oke/kubelet_extra_args" ]; then
+          bash "${script_path}" --kubelet-extra-args "$(cat /etc/oke/kubelet_extra_args)"
+        else
+          bash "${script_path}"
+        fi
         exit 0
       fi
     done
