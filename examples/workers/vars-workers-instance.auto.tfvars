@@ -20,4 +20,25 @@ worker_pools = {
     size        = 1,
     burst       = "BASELINE_1_8", # Valid values BASELINE_1_8,BASELINE_1_2
   },
+  oke-vm-instance-taints = {
+    description = "Self-managed Instance With taints",
+    mode        = "instance",
+    size        = 1,
+    taints      = {
+      env = {
+        value = "dev"
+        effect = "NoSchedule"
+      },
+      "oke.oraclecloud.com/pool.name" = {
+        value = "oke-vm-instance-multi-taint"
+        effect = "NoSchedule"
+      }
+    }
+  },
+  oke-vm-instance-custom-hostname = {
+    description        = "Self-managed Instance With custom hostname",
+    mode               = "instance",
+    size               = 1,
+    kubelet_extra_args = ["--hostname-override=oke-0"]
+  }
 }

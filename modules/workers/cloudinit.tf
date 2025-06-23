@@ -76,6 +76,7 @@ data "cloudinit_config" "workers" {
   # Write extra OKE configuration to filesystem
   dynamic "part" {
     for_each = each.value.disable_default_cloud_init ? [] : [1]
+    iterator = part
     content {
       content_type = "text/cloud-config"
       content = jsonencode({
@@ -89,6 +90,10 @@ data "cloudinit_config" "workers" {
             encoding = "base64"
             path     = "/etc/kubernetes/ca.crt"
           },
+          {
+            content  = "${each.value.kubelet_args}"
+            path     = "/etc/oke/kubelet_extra_args"
+          }
         ]
       })
       filename   = "50-oke-config.yml"
@@ -117,7 +122,11 @@ data "cloudinit_config" "workers" {
           apt = [format("oci-oke-node-all-%s", lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "kubernetes_minor_version", ""))]
         }]
         runcmd = [
-          "oke bootstrap"
+            join(" ", flatten([
+              ["oke bootstrap"],
+              length(each.value.taints) > 0 ? [for taint_key, taint_map in each.value.taints: format("--taint '{ \"key\": \"%s\", \"value\": \"%s\", \"effect\": \"%s\" }'", taint_key, lookup(taint_map, "value"), lookup(taint_map, "effect"))] : [], 
+              length(each.value.kubelet_extra_args) > 0 ? [format("--kubelet-extra-args '%s'", join(" ", each.value.kubelet_extra_args))] : []
+            ]))
         ]
       })
       filename   = "50-oke-ubuntu.yml"
