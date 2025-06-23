@@ -39,6 +39,7 @@ locals {
     ignore_initial_pool_size     = false
     image_id                     = var.image_id
     image_type                   = var.image_type
+    kubelet_extra_args           = []
     kubernetes_version           = var.kubernetes_version
     max_pods_per_node            = min(max(var.max_pods_per_node, 1), 110)
     memory                       = local.memory
@@ -61,7 +62,7 @@ locals {
     shape                        = local.shape
     size                         = var.worker_pool_size
     subnet_id                    = var.worker_subnet_id
-    taints                       = [] # empty pool-specific default
+    taints                       = {} # empty pool-specific default
     volume_kms_key_id            = var.volume_kms_key_id
   }
 
@@ -151,6 +152,12 @@ locals {
         ),
         var.freeform_tags,
         lookup(pool, "freeform_tags", {})
+      )
+      # Generate kubelet_args (from worker pools kubelet_extra_args and taints attributes) for OKE images
+      kubelet_args = join(" ", flatten([
+        pool.kubelet_extra_args, 
+        length(pool.taints) > 0 ? [format("--register-with-taints=%s", join(",", [for taint_key, taint_value in pool.taints : lookup(taint_value, "value", null) != null ? "${taint_key}=${taint_value["value"]}:${taint_value["effect"]}" : "${taint_key}:${taint_value["effect"]}"]))] : []
+        ])
       )
 
       # Combine global and pool-specific NSGs
@@ -292,13 +299,13 @@ locals {
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
   
   # Map of nodepools using Ubuntu images.
+  non_virtual_worker_pools = { for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" }
   ubuntu_worker_pools = {
-    for k, v in local.enabled_worker_pools : k => {
+    for k, v in local.non_virtual_worker_pools : k => {
       kubernetes_major_version = substr(lookup(v, "kubernetes_version", ""), 1, 4)
       kubernetes_minor_version = substr(lookup(v, "kubernetes_version", ""), 1, -1)
       ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
     }
-    if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
-      contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+    if contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
   }
 }

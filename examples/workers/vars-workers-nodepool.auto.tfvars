@@ -38,4 +38,29 @@ worker_pools = {
     size        = 1,
     create      = false,
   },
+
+  oke-vm-standard-ol8 = {
+    description = "OKE-managed Node Pool with OKE Oracle Linux 8 image",
+    size        = 1,
+    os          = "Oracle Linux",
+    os_version  = "8",
+  },
+  
+  oke-vm-standard-ol8-taints = {
+    description = "OKE-managed Node Pool with OKE Oracle Linux 8 image with taints",
+    size        = 1,
+    os          = "Oracle Linux",
+    os_version  = "8",
+    create      = true,
+    taints      = {
+      env = {
+        value = "dev"
+        effect = "NoSchedule"
+      },
+      "oke.oraclecloud.com/pool.name" = {
+        value = "oke-vm-instance-multi-taint"
+        effect = "NoSchedule"
+      }
+    }
+  },
 }
