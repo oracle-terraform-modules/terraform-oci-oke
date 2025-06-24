@@ -23,26 +23,14 @@ data "helm_template" "gatekeeper" {
     for path in var.gatekeeper_helm_values_files : file(path)
   ] : null
 
-  # TODO Remove after merge: https://github.com/open-policy-agent/gatekeeper/pull/2593
-  set {
-    name  = "postInstall.labelNamespace.enabled"
-    value = "false"
-  }
-
-  # TODO Remove after merge: https://github.com/open-policy-agent/gatekeeper/pull/2593
-  set {
-    name  = "postInstall.probeWebhook.enabled"
-    value = "false"
-  }
-
-  dynamic "set" {
-    for_each = var.gatekeeper_helm_values
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      value = helm_value.value
-    }
-  }
+  set = concat(
+    [ for k, v in var.gatekeeper_helm_values:
+      {
+        name  = k,
+        value = v
+      }
+    ]
+  )
 
   lifecycle {
     precondition {

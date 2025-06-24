@@ -102,7 +102,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options, options["kubernetes_network_config"]]
+    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options, options[0].kubernetes_network_config]
 
     precondition {
       condition     = var.service_lb_subnet_id != null

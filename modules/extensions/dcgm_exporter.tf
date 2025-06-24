@@ -47,14 +47,14 @@ data "helm_template" "dcgm_exporter" {
     for path in var.dcgm_exporter_helm_values_files : file(path)
   ] : null
 
-  dynamic "set" {
-    for_each = var.dcgm_exporter_helm_values
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      value = helm_value.value
-    }
-  }
+  set = concat(
+    [ for k, v in var.dcgm_exporter_helm_values:
+      {
+        name  = k,
+        value = v
+      }
+    ]
+  )
 
   lifecycle {
     precondition {
