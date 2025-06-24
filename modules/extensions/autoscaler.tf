@@ -57,46 +57,38 @@ data "helm_template" "cluster_autoscaler" {
     for path in var.cluster_autoscaler_helm_values_files : file(path)
   ] : null
 
-  set {
-    name  = "nodeSelector.oke\\.oraclecloud\\.com/cluster_autoscaler"
-    value = "allowed"
-  }
-
-  dynamic "set" {
-    for_each = merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_helm_values)
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      value = helm_value.value
-    }
-  }
-
-  dynamic "set" {
-    for_each = local.worker_pools_autoscaling
-    iterator = pool
-    content {
-      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].name"
-      value = lookup(pool.value, "id")
-    }
-  }
-
-  dynamic "set" {
-    for_each = local.worker_pools_autoscaling
-    iterator = pool
-    content {
-      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].minSize"
-      value = lookup(pool.value, "min_size", lookup(pool.value, "size"))
-    }
-  }
-
-  dynamic "set" {
-    for_each = local.worker_pools_autoscaling
-    iterator = pool
-    content {
-      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].maxSize"
-      value = lookup(pool.value, "max_size", lookup(pool.value, "size"))
-    }
-  }
+  set = concat(
+    [
+      {
+        name  = "nodeSelector.oke\\.oraclecloud\\.com/cluster_autoscaler"
+        value = "allowed"
+      }
+    ],
+    [ for k, v in merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_helm_values) : 
+      { 
+        name  = k, 
+        value = v 
+      } 
+    ],
+    [ for k, v in local.worker_pools_autoscaling : 
+      { 
+        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].name", 
+        value = lookup(v, "id")
+      } 
+    ],
+    [ for k, v in local.worker_pools_autoscaling : 
+      { 
+        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].minSize", 
+        value = lookup(v, "min_size", lookup(v, "size"))
+      }
+    ],
+    [ for k, v in local.worker_pools_autoscaling : 
+      { 
+        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].maxSize", 
+        value = lookup(v, "max_size", lookup(v, "size"))
+      }
+    ],
+  )
 
   lifecycle {
     precondition {

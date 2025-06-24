@@ -23,14 +23,14 @@ data "helm_template" "metrics_server" {
     for path in var.metrics_server_helm_values_files : file(path)
   ] : null
 
-  dynamic "set" {
-    for_each = var.metrics_server_helm_values
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      value = helm_value.value
-    }
-  }
+  set = concat(
+    [ for k, v in var.metrics_server_helm_values:
+      {
+        name  = k,
+        value = v
+      }
+    ]
+  )
 
   lifecycle {
     precondition {
