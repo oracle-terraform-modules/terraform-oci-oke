@@ -12,7 +12,7 @@ terraform {
 
     helm = {
       source  = "hashicorp/helm"
-      version = ">= 2.9.0"
+      version = ">= 3.0.1"
     }
 
     null = {
@@ -23,7 +23,7 @@ terraform {
     oci = {
       configuration_aliases = [oci.home]
       source                = "oracle/oci"
-      version               = ">= 6.37.0"
+      version               = ">= 7.6.0"
     }
 
     random = {
