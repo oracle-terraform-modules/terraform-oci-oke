@@ -32,19 +32,20 @@ data "helm_template" "prometheus" {
     [for path in var.prometheus_helm_values_files : file(path)],
   )
 
-  set {
-    name  = "podSecurityPolicy.enabled"
-    value = "false"
-  }
-
-  dynamic "set" {
-    for_each = var.prometheus_helm_values
-    iterator = helm_value
-    content {
-      name  = helm_value.key
-      value = helm_value.value
-    }
-  }
+  set = concat(
+    [
+      {
+        name  = "podSecurityPolicy.enabled"
+        value = "false"
+      },
+    ],
+    [ for k, v in var.prometheus_helm_values:
+      {
+        name  = k,
+        value = v
+      }
+    ]
+  )
 
   lifecycle {
     precondition {
