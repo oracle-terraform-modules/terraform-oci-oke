@@ -107,6 +107,7 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
     is_node_cycling_enabled = each.value.node_cycling_enabled
     maximum_surge           = each.value.node_cycling_max_surge
     maximum_unavailable     = each.value.node_cycling_max_unavailable
+    cycle_modes             = each.value.node_cycling_mode
   }
 
   node_source_details {
