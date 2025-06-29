@@ -26,7 +26,7 @@ locals {
   )
 
   // Whether the operator is enabled, i.e. created in this TF state or existing provided by ID
-  operator_enabled = anytrue([
+  operator_enabled = alltrue([
     (local.cluster_enabled || coalesce(var.cluster_id, "none") != "none"),
     (var.create_operator || coalesce(var.operator_private_ip, "none") != "none"),
   ])
