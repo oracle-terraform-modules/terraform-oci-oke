@@ -106,3 +106,10 @@ variable "gatekeeper_helm_values_files" { type = list(string) }
 # Service Account
 variable "create_service_account" { type = bool }
 variable "service_accounts" { type = map(any) }
+
+# Argocd
+variable "argocd_install" { type = bool }
+variable "argocd_namespace" { type = string }
+variable "argocd_helm_version" { type = string }
+variable "argocd_helm_values" { type = map(string) }
+variable "argocd_helm_values_files" { type = list(string) }
