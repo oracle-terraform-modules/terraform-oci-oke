@@ -72,4 +72,13 @@ resource "null_resource" "argocd" {
   provisioner "remote-exec" {
     inline = ["kubectl apply --force-conflicts=true --server-side -f ${local.argocd_manifest_path}"]
   }
+
+  provisioner "remote-exec" {
+    inline = [for c in compact([
+      (contains(["kube-system", "default"], var.argocd_namespace) ? null
+      : format(local.kubectl_create_missing_ns, var.argocd_namespace)),
+      format(local.kubectl_apply_server_file, local.argocd_manifest_path),
+      ]) : format(local.output_log, c, "argocd")
+    ]
+  }
 }
