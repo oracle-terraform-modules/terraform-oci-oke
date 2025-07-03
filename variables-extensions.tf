@@ -387,3 +387,35 @@ variable "service_accounts" {
   description = "Map of service accounts and associated parameters."
   type        = map(any)
 }
+
+# Argocd
+
+variable "argocd_install" {
+  default     = false
+  description = "Whether to deploy the Argocd Helm chart. See https://github.com/argoproj/argo-cd. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  type        = bool
+}
+
+variable "argocd_namespace" {
+  default     = "argocd"
+  description = "Kubernetes namespace for deployed resources."
+  type        = string
+}
+
+variable "argocd_helm_version" {
+  default     = "8.1.2"
+  description = "Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`."
+  type        = string
+}
+
+variable "argocd_helm_values" {
+  default     = {}
+  description = "Map of individual Helm chart values. See <a href=https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template>data.helm_template</a>."
+  type        = map(string)
+}
+
+variable "argocd_helm_values_files" {
+  default     = []
+  description = "Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`."
+  type        = list(string)
+}
