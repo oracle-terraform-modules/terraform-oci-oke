@@ -140,7 +140,7 @@ locals {
       # Standard tags as freeform if defined tags are disabled
       # User-provided freeform tags are merged and take precedence
       freeform_tags = merge(
-        var.use_defined_tags ? {} : merge(
+        var.use_defined_tags ? merge(
           {
             "state_id"           = var.state_id,
             "role"               = "worker",
@@ -148,7 +148,7 @@ locals {
             "cluster_autoscaler" = pool.allow_autoscaler ? "allowed" : "disabled",
           },
           pool.autoscale ? { "cluster_autoscaler" = "managed" } : {},
-        ),
+        ) : {},
         var.freeform_tags,
         lookup(pool, "freeform_tags", {})
       )
