@@ -122,4 +122,11 @@ module "extensions" {
   # Service Account
   create_service_account = var.create_service_account
   service_accounts       = var.service_accounts
+
+  # Argocd
+  argocd_install           = var.argocd_install
+  argocd_namespace         = var.argocd_namespace
+  argocd_helm_version      = var.argocd_helm_version
+  argocd_helm_values       = var.argocd_helm_values
+  argocd_helm_values_files = var.argocd_helm_values_files
 }
