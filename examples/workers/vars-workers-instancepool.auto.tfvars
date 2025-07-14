@@ -33,4 +33,23 @@ worker_pools = {
     size                 = 1,
     disable_block_volume = true,
   },
+  oke-vm-instance-pool-taints = {
+    description = "Self-managed Instance Pool with taints",
+    mode        = "instance-pool",
+    size        = 1,
+    node_labels = {
+      "keya" = "valuea",
+      "keyb" = "valueb"
+    },
+    taints = {
+      env = {
+        value = "dev"
+        effect = "NoSchedule"
+      },
+      "oke.oraclecloud.com/pool.name" = {
+        value = "oke-vm-instance-multi-taint"
+        effect = "NoSchedule"
+      }
+    }
+  },
 }
