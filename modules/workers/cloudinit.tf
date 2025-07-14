@@ -184,7 +184,7 @@ data "cloudinit_config" "workers" {
     precondition {
       condition = lookup(local.ubuntu_worker_pools, each.key, null) == null || (
         lookup(local.ubuntu_worker_pools, each.key, null) != null &&
-          contains(["22.04", "24.04"], lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", ""))
+          contains(local.ubuntu_supported_versions, lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", ""))
       )
       error_message = <<-EOT
       Supported Ubuntu versions are "22.04" and "24.04".

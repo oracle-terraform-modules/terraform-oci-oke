@@ -292,6 +292,9 @@ locals {
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
   
   # Map of nodepools using Ubuntu images.
+
+  ubuntu_supported_versions = ["22.04", "24.04", "22.04 Minimal", "24.04 Minimal"]
+
   ubuntu_worker_pools = {
     for k, v in local.enabled_worker_pools : k => {
       kubernetes_major_version = substr(lookup(v, "kubernetes_version", ""), 1, 4)
