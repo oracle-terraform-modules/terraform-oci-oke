@@ -107,7 +107,7 @@ data "cloudinit_config" "workers" {
           sources = {
             oke-node = {
               source =  format("deb [trusted=yes] https://odx-oke.objectstorage.us-sanjose-1.oci.customer-oci.com/n/odx-oke/b/okn-repositories/o/prod/ubuntu-%s/kubernetes-%s stable main",
-              strcontains(lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", "22.04"), "22.04") ? "jammy" : "noble",
+              length(regexall( "22\\.04", lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", "22.04"))) > 0 ? "jammy" : "noble",
               lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "kubernetes_major_version", ""))
             }
           }
