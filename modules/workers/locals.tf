@@ -293,7 +293,12 @@ locals {
   
   # Map of nodepools using Ubuntu images.
 
-  ubuntu_supported_versions = ["22.04", "24.04", "22.04 Minimal", "24.04 Minimal"]
+  ubuntu_supported_versions = {
+    "22.04" = "jammy"
+    "24.04" = "noble"
+    "22.04 Minimal" = "jammy"
+    "24.04 Minimal" = "nobble"
+  }
 
   ubuntu_worker_pools = {
     for k, v in local.enabled_worker_pools : k => {
