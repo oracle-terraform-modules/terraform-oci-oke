@@ -219,8 +219,22 @@ data "cloudinit_config" "operator" {
       content_type = "text/cloud-config"
       content = jsonencode({
         runcmd = [
-          "curl -LO https://github.com/derailed/k9s/releases/download/v0.40.5/k9s_Linux_amd64.tar.gz",
+          "curl -LO https://github.com/derailed/k9s/releases/latest/download/k9s_Linux_amd64.tar.gz",
           "tar -xvzf k9s_Linux_amd64.tar.gz && mv ./k9s /usr/bin/k9s",
+          "echo 'export K9S_FEATURE_GATE_NODE_SHELL=true' | tee -a /home/${var.user}/.bashrc",
+          "mkdir -p /home/${var.user}/.config/k9s",
+          <<-EOT
+            cat << 'EOF' | tee /home/${var.user}/.config/k9s/views.yaml
+            views:
+              v1/nodes:
+                columns:
+                  - NAME
+                  - HOSTNAME:.metadata.labels.hostname
+                  - SHAPE:.metadata.labels.node\.kubernetes\.io/instance-type
+                  - SERIAL:.metadata.labels.oci\.oraclecloud\.com/host\.serial_number
+                  - ROLE:|H
+            EOF
+          EOT
         ]
       })
       filename   = "20-k9s.yml"
