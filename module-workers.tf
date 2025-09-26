@@ -47,35 +47,36 @@ module "workers" {
   worker_pools     = var.worker_pools
 
   # Workers
-  assign_dns                 = var.assign_dns
-  assign_public_ip           = var.worker_is_public
-  block_volume_type          = var.worker_block_volume_type
-  capacity_reservation_id    = var.worker_capacity_reservation_id
-  cloud_init                 = var.worker_cloud_init
-  disable_default_cloud_init = var.worker_disable_default_cloud_init
-  cni_type                   = var.cni_type
-  image_id                   = var.worker_image_id
-  image_ids                  = local.image_ids
-  image_os                   = var.worker_image_os
-  image_os_version           = var.worker_image_os_version
-  image_type                 = var.worker_image_type
-  indexed_images             = local.indexed_images
-  kubeproxy_mode             = var.kubeproxy_mode
-  max_pods_per_node          = var.max_pods_per_node
-  node_labels                = alltrue([var.cluster_type == "basic", var.cilium_install == true]) ? merge(var.worker_node_labels, { "oci.oraclecloud.com/custom-k8s-networking" = true }) : var.worker_node_labels
-  node_metadata              = var.worker_node_metadata
-  agent_config               = var.agent_config
-  platform_config            = var.platform_config
-  pod_nsg_ids                = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [try(module.network.pod_nsg_id, null)] : [])
-  pod_subnet_id              = try(module.network.pod_subnet_id, "") # safe destroy; validated in submodule
-  pv_transit_encryption      = var.worker_pv_transit_encryption
-  shape                      = var.worker_shape
-  ssh_public_key             = local.ssh_public_key
-  timezone                   = var.timezone
-  volume_kms_key_id          = var.worker_volume_kms_key_id
-  worker_nsg_ids             = concat(var.worker_nsg_ids, [try(module.network.worker_nsg_id, null)])
-  worker_subnet_id           = try(module.network.worker_subnet_id, "") # safe destroy; validated in submodule
-  preemptible_config         = var.worker_preemptible_config
+  assign_dns                     = var.assign_dns
+  assign_public_ip               = var.worker_is_public
+  block_volume_type              = var.worker_block_volume_type
+  capacity_reservation_id        = var.worker_capacity_reservation_id
+  cloud_init                     = var.worker_cloud_init
+  disable_default_cloud_init     = var.worker_disable_default_cloud_init
+  cni_type                       = var.cni_type
+  image_id                       = var.worker_image_id
+  image_ids                      = local.image_ids
+  image_os                       = var.worker_image_os
+  image_os_version               = var.worker_image_os_version
+  image_type                     = var.worker_image_type
+  indexed_images                 = local.indexed_images
+  kubeproxy_mode                 = var.kubeproxy_mode
+  legacy_imds_endpoints_disabled = var.worker_legacy_imds_endpoints_disabled
+  max_pods_per_node              = var.max_pods_per_node
+  node_labels                    = alltrue([var.cluster_type == "basic", var.cilium_install == true]) ? merge(var.worker_node_labels, { "oci.oraclecloud.com/custom-k8s-networking" = true }) : var.worker_node_labels
+  node_metadata                  = var.worker_node_metadata
+  agent_config                   = var.agent_config
+  platform_config                = var.platform_config
+  pod_nsg_ids                    = concat(var.pod_nsg_ids, var.cni_type == "npn" ? [try(module.network.pod_nsg_id, null)] : [])
+  pod_subnet_id                  = try(module.network.pod_subnet_id, "") # safe destroy; validated in submodule
+  pv_transit_encryption          = var.worker_pv_transit_encryption
+  shape                          = var.worker_shape
+  ssh_public_key                 = local.ssh_public_key
+  timezone                       = var.timezone
+  volume_kms_key_id              = var.worker_volume_kms_key_id
+  worker_nsg_ids                 = concat(var.worker_nsg_ids, [try(module.network.worker_nsg_id, null)])
+  worker_subnet_id               = try(module.network.worker_subnet_id, "") # safe destroy; validated in submodule
+  preemptible_config             = var.worker_preemptible_config
 
   # Tagging
   tag_namespace    = var.tag_namespace

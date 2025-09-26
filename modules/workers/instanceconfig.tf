@@ -38,7 +38,7 @@ resource "oci_core_instance_configuration" "workers" {
       capacity_reservation_id = each.value.capacity_reservation_id
 
       instance_options {
-        are_legacy_imds_endpoints_disabled = false
+        are_legacy_imds_endpoints_disabled = each.value.legacy_imds_endpoints_disabled
       }
 
       create_vnic_details {

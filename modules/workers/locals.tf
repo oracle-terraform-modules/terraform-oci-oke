@@ -21,48 +21,49 @@ locals {
       is_monitoring_disabled   = false
       plugins_config           = {}
     }
-    allow_autoscaler             = false
-    assign_public_ip             = var.assign_public_ip
-    autoscale                    = false
-    block_volume_type            = var.block_volume_type
-    boot_volume_size             = local.boot_volume_size
-    boot_volume_vpus_per_gb      = local.boot_volume_vpus_per_gb
-    capacity_reservation_id      = var.capacity_reservation_id
-    cloud_init                   = [] # empty pool-specific default
-    compartment_id               = var.compartment_id
-    create                       = true
-    disable_default_cloud_init   = var.disable_default_cloud_init
-    drain                        = false
-    eviction_grace_duration      = 300
-    force_node_delete            = true
-    extended_metadata            = {} # empty pool-specific default
-    ignore_initial_pool_size     = false
-    image_id                     = var.image_id
-    image_type                   = var.image_type
-    kubernetes_version           = var.kubernetes_version
-    max_pods_per_node            = min(max(var.max_pods_per_node, 1), 110)
-    memory                       = local.memory
-    mode                         = var.worker_pool_mode
-    node_cycling_enabled         = false
-    node_cycling_max_surge       = 1
-    node_cycling_max_unavailable = 0
-    node_cycling_mode            = ["instance"]
-    node_labels                  = var.node_labels
-    nsg_ids                      = [] # empty pool-specific default
-    ocpus                        = local.ocpus
-    os                           = var.image_os
-    os_version                   = var.image_os_version
-    placement_ads                = var.ad_numbers
-    platform_config              = var.platform_config
-    pod_nsg_ids                  = var.pod_nsg_ids
-    pod_subnet_id                = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
-    preemptible_config           = var.preemptible_config
-    pv_transit_encryption        = var.pv_transit_encryption
-    shape                        = local.shape
-    size                         = var.worker_pool_size
-    subnet_id                    = var.worker_subnet_id
-    taints                       = [] # empty pool-specific default
-    volume_kms_key_id            = var.volume_kms_key_id
+    allow_autoscaler               = false
+    legacy_imds_endpoints_disabled = var.legacy_imds_endpoints_disabled
+    assign_public_ip               = var.assign_public_ip
+    autoscale                      = false
+    block_volume_type              = var.block_volume_type
+    boot_volume_size               = local.boot_volume_size
+    boot_volume_vpus_per_gb        = local.boot_volume_vpus_per_gb
+    capacity_reservation_id        = var.capacity_reservation_id
+    cloud_init                     = [] # empty pool-specific default
+    compartment_id                 = var.compartment_id
+    create                         = true
+    disable_default_cloud_init     = var.disable_default_cloud_init
+    drain                          = false
+    eviction_grace_duration        = 300
+    force_node_delete              = true
+    extended_metadata              = {} # empty pool-specific default
+    ignore_initial_pool_size       = false
+    image_id                       = var.image_id
+    image_type                     = var.image_type
+    kubernetes_version             = var.kubernetes_version
+    max_pods_per_node              = min(max(var.max_pods_per_node, 1), 110)
+    memory                         = local.memory
+    mode                           = var.worker_pool_mode
+    node_cycling_enabled           = false
+    node_cycling_max_surge         = 1
+    node_cycling_max_unavailable   = 0
+    node_cycling_mode              = ["instance"]
+    node_labels                    = var.node_labels
+    nsg_ids                        = [] # empty pool-specific default
+    ocpus                          = local.ocpus
+    os                             = var.image_os
+    os_version                     = var.image_os_version
+    placement_ads                  = var.ad_numbers
+    platform_config                = var.platform_config
+    pod_nsg_ids                    = var.pod_nsg_ids
+    pod_subnet_id                  = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+    preemptible_config             = var.preemptible_config
+    pv_transit_encryption          = var.pv_transit_encryption
+    shape                          = local.shape
+    size                           = var.worker_pool_size
+    subnet_id                      = var.worker_subnet_id
+    taints                         = [] # empty pool-specific default
+    volume_kms_key_id              = var.volume_kms_key_id
   }
 
   # Merge desired pool configuration onto default values
@@ -172,11 +173,11 @@ locals {
       )
 
       # Override Node-cycling mode
-      node_cycling_mode = pool.node_cycling_mode != null ? [ for entry in pool.node_cycling_mode: lookup(local.supported_node_cycling_mode, lower(entry)) ] : null
-      
+      node_cycling_mode = pool.node_cycling_mode != null ? [for entry in pool.node_cycling_mode : lookup(local.supported_node_cycling_mode, lower(entry))] : null
+
     }) if tobool(pool.create)
   }
-  
+
   supported_node_cycling_mode = {
     instance    = "INSTANCE_REPLACE"
     boot_volume = "BOOT_VOLUME_REPLACE"
@@ -290,12 +291,12 @@ locals {
 
   # Yields {<pool name> = {<instance id> = <instance ip>}} for modes: 'node-pool', 'instance'
   worker_pool_ips = merge(local.worker_instance_ips, local.worker_nodepool_ips)
-  
+
   # Map of nodepools using Ubuntu images.
 
   ubuntu_supported_versions = {
-    "22.04" = "jammy"
-    "24.04" = "noble"
+    "22.04"         = "jammy"
+    "24.04"         = "noble"
     "22.04 Minimal" = "jammy"
     "24.04 Minimal" = "nobble"
   }
@@ -307,6 +308,6 @@ locals {
       ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
     }
     if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
-      contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+    contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
   }
 }
