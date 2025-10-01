@@ -15,8 +15,9 @@ bastion_upgrade             = false          # true/*false
 bastion_user                = "opc"
 
 bastion_shape = {
-  shape            = "VM.Standard.E4.Flex",
-  ocpus            = 1,
-  memory           = 4,
-  boot_volume_size = 50
+  shape                     = "VM.Standard.E4.Flex",
+  ocpus                     = 1,
+  memory                    = 4,
+  boot_volume_size          = 50
+  baseline_ocpu_utilization = "100" # accepted values: 100/50/12.5. Supported only with burstable shapes. 
 }

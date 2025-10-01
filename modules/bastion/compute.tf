@@ -6,6 +6,13 @@ locals {
   memory           = tonumber(lookup(var.shape, "memory", 4))
   ocpus            = max(1, tonumber(lookup(var.shape, "ocpus", 1)))
   shape            = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
+
+  baseline_ocpu_utilization_map = {
+    "12.5" = "BASELINE_1_8"
+    "50"   = "BASELINE_1_2"
+    "100"  = "BASELINE_1_1"
+  }
+  baseline_ocpu_utilization = lookup(local.baseline_ocpu_utilization_map, lookup(var.shape, "baseline_ocpu_utilization", "100"))
 }
 
 output "id" {
@@ -51,8 +58,9 @@ resource "oci_core_instance" "bastion" {
   dynamic "shape_config" {
     for_each = length(regexall("Flex", local.shape)) > 0 ? [1] : []
     content {
-      ocpus         = local.ocpus
-      memory_in_gbs = (local.memory / local.ocpus) > 64 ? (local.ocpus * 4) : local.memory
+      baseline_ocpu_utilization = local.baseline_ocpu_utilization
+      ocpus                     = local.ocpus
+      memory_in_gbs             = (local.memory / local.ocpus) > 64 ? (local.ocpus * 4) : local.memory
     }
   }
 
