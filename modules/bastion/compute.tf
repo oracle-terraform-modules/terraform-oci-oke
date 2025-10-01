@@ -60,6 +60,7 @@ resource "oci_core_instance" "bastion" {
     boot_volume_size_in_gbs = local.boot_volume_size
     source_id               = var.image_id
     source_type             = "image"
+    kms_key_id              = var.volume_kms_key_id
   }
 
   lifecycle {

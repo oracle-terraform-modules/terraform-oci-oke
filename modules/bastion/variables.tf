@@ -23,6 +23,7 @@ variable "subnet_id" { type = string }
 variable "timezone" { type = string }
 variable "upgrade" { type = bool }
 variable "user" { type = string }
+variable "volume_kms_key_id" { type = string }
 
 # Tags
 variable "defined_tags" { type = map(string) }

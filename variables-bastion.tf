@@ -93,3 +93,9 @@ variable "bastion_await_cloudinit" {
   description = "Whether to block until successful connection to bastion and completion of cloud-init."
   type        = bool
 }
+
+variable "bastion_volume_kms_key_id" {
+  default     = null
+  description = "The OCID of the OCI KMS key to assign as the master encryption key for the bastion host boot volume."
+  type        = string
+}
