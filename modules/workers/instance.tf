@@ -69,7 +69,7 @@ resource "oci_core_instance" "workers" {
   }
 
   instance_options {
-    are_legacy_imds_endpoints_disabled = false
+    are_legacy_imds_endpoints_disabled = each.value.legacy_imds_endpoints_disabled
   }
 
   metadata = merge(

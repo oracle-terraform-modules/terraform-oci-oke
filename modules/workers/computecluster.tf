@@ -46,7 +46,7 @@ resource "oci_core_compute_cluster" "workers" {
 resource "oci_core_instance" "compute_cluster_workers" {
   for_each = local.compute_cluster_instance_map
 
-  availability_domain  = (lookup(oci_core_compute_cluster.shared, lookup(each.value, "compute_cluster", ""), null) != null ?
+  availability_domain = (lookup(oci_core_compute_cluster.shared, lookup(each.value, "compute_cluster", ""), null) != null ?
     oci_core_compute_cluster.shared[lookup(each.value, "compute_cluster", "")].availability_domain :
     lookup(each.value, "placement_ad", null) != null ? lookup(var.ad_numbers_to_names, lookup(each.value, "placement_ad")) : element(each.value.availability_domains, 0)
   )
@@ -120,7 +120,7 @@ resource "oci_core_instance" "compute_cluster_workers" {
   }
 
   instance_options {
-    are_legacy_imds_endpoints_disabled = false
+    are_legacy_imds_endpoints_disabled = each.value.legacy_imds_endpoints_disabled
   }
 
   metadata = merge(

@@ -291,6 +291,12 @@ variable "max_pods_per_node" {
   }
 }
 
+variable "legacy_imds_endpoints_disabled" {
+  default     = false
+  description = "Whether to disable requests to the IMDSv1 endpoint and only allow requests to the IMDSv2 endpoint.  See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengconfiguringimds.htm>Instance Metadata</a> for more information."
+  type        = bool
+}
+
 variable "platform_config" {
   default     = null
   description = "Default platform_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/PlatformConfig>PlatformConfig</a> for more information."

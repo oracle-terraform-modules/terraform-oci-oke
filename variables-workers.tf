@@ -206,6 +206,12 @@ variable "worker_pv_transit_encryption" {
   type        = bool
 }
 
+variable "worker_legacy_imds_endpoints_disabled" {
+  default     = false
+  description = "Whether to disable requests to the IMDSv1 endpoint and only allow requests to the IMDSv2 endpoint.  See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengconfiguringimds.htm>Instance Metadata</a> for more information."
+  type        = bool
+}
+
 variable "max_pods_per_node" {
   default     = 31
   description = "The default maximum number of pods to deploy per node when unspecified on a pool. Absolute maximum is 110. Ignored when when cni_type != 'npn'."
