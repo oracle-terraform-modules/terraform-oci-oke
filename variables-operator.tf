@@ -115,12 +115,13 @@ variable "operator_install_stern" {
 
 variable "operator_shape" {
   default = {
-    shape            = "VM.Standard.E4.Flex",
-    ocpus            = 1,
-    memory           = 4,
-    boot_volume_size = 50
+    shape                     = "VM.Standard.E4.Flex",
+    ocpus                     = 1,
+    memory                    = 4,
+    boot_volume_size          = 50,
+    baseline_ocpu_utilization = 100
   }
-  description = "Shape of the created operator instance."
+  description = "Shape of the created operator instance. Baseline OCPU utilization can be used to provision <a href=https://docs.oracle.com/en-us/iaas/Content/Compute/References/burstable-instances.htm>burstable shapes.</a>"
   type        = map(any)
 }
 
