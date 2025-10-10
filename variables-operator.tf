@@ -127,7 +127,7 @@ variable "operator_shape" {
 
 variable "operator_volume_kms_key_id" {
   default     = null
-  description = "The OCID of the OCI KMS key to assign as the master encryption key for the boot volume."
+  description = "The OCID of the OCI KMS key to assign as the master encryption key for the operator host boot volume."
   type        = string
 }
 

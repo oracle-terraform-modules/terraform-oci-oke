@@ -60,6 +60,7 @@ module "bastion" {
   timezone                 = var.timezone
   upgrade                  = var.bastion_upgrade
   user                     = var.bastion_user
+  volume_kms_key_id        = var.bastion_volume_kms_key_id
 
   # Standard tags as defined if enabled for use, or freeform
   # User-provided tags are merged last and take precedence
