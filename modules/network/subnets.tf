@@ -16,7 +16,7 @@ locals {
           : (lookup(v, "cidr", null) != null ? "cidr"
             : (lookup(v, "id", null) != null ? "id"
       : "invalid"))))
-    }) if try(v.create, "auto") != "never"
+    }) if lookup(v, "create", "auto") != "never"
   }
 
   # Handle subnets configured with provided CIDRs
@@ -94,7 +94,7 @@ locals {
   # Map of configured subnets to specified/generated dns_label when enabled
   # If `assign_dns = true`, use dns_label for subnet if specified or first 2 characters of subnet key
   subnet_dns_labels = { for k, v in var.subnets :
-    k => coalesce(lookup(v, "dns_label", null), substr(k, 0, 2))
+    k => lookup(v, "dns_label", substr(k, 0, 2))
     if var.assign_dns
   }
 
@@ -103,7 +103,7 @@ locals {
   # - Subnet is configured with newbits and/or netnum/cidr
   # - Not configured with create == 'never'
   # - Not configured with an existing 'id'
-  subnets_to_create = try(merge(
+  subnets_to_create = merge(
     { for k, v in local.subnet_info : k =>
       # Override `create = true` if configured with "always"
       merge(v, lookup(try(lookup(var.subnets, k), { create = "never" }), "create", "auto") == "always" ? { "create" = true } : {})
@@ -116,7 +116,7 @@ locals {
         ]),
       ])
     }
-  ), {})
+  )
 
   subnet_output = { for k, v in var.subnets :
     k => lookup(v, "id", null) != null ? v.id : lookup(lookup(oci_core_subnet.oke, k, {}), "id", null)
