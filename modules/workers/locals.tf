@@ -308,6 +308,6 @@ locals {
       ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
     }
     if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
-    contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+    contains(coalescelist(split(" ", lookup(data.oci_core_image.workers, "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
   }
 }
