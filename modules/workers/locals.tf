@@ -298,7 +298,7 @@ locals {
     "22.04"         = "jammy"
     "24.04"         = "noble"
     "22.04 Minimal" = "jammy"
-    "24.04 Minimal" = "nobble"
+    "24.04 Minimal" = "noble"
   }
 
   ubuntu_worker_pools = {
