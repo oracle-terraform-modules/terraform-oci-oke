@@ -298,16 +298,16 @@ locals {
     "22.04"         = "jammy"
     "24.04"         = "noble"
     "22.04 Minimal" = "jammy"
-    "24.04 Minimal" = "nobble"
+    "24.04 Minimal" = "noble"
   }
 
   ubuntu_worker_pools = {
     for k, v in local.enabled_worker_pools : k => {
       kubernetes_major_version = substr(lookup(v, "kubernetes_version", ""), 1, 4)
       kubernetes_minor_version = substr(lookup(v, "kubernetes_version", ""), 1, -1)
-      ubuntu_release           = lookup(data.oci_core_image.workers[k], "operating_system_version", null) != null ? lookup(data.oci_core_image.workers[k], "operating_system_version") : lookup(v, "os_version", null)
+      ubuntu_release           = lookup(lookup(data.oci_core_image.workers, k, {}), "operating_system_version", null) != null ? lookup(lookup(data.oci_core_image.workers, k, {}), "operating_system_version") : lookup(v, "os_version", null)
     }
     if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
-    contains(coalescelist(split(" ", lookup(data.oci_core_image.workers[k], "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+    contains(coalescelist(split(" ", lookup(lookup(data.oci_core_image.workers, k, {}), "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
   }
 }

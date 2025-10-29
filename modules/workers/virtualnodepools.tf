@@ -80,16 +80,8 @@ resource "oci_containerengine_virtual_node_pool" "workers" {
     }
 
     precondition {
-      condition     = contains(["Pod.Standard.E3.Flex", "Pod.Standard.E4.Flex"], each.value.shape)
-      error_message = "Virtual Node Pools must be 'Pod.Standard.E3.Flex' or 'Pod.Standard.E4.Flex'."
-    }
-
-    precondition {
-      condition = length(local.enabled_modes) == 1
-      error_message = format(
-        "Mixed mode cluster is not allowed: %#v. Virtual and provisioned node pools cannot be created in the same cluster.",
-        local.enabled_modes
-      )
+      condition     = contains(["Pod.Standard.E3.Flex", "Pod.Standard.E4.Flex", "Pod.Standard.A1.Flex"], each.value.shape)
+      error_message = "Virtual Node Pools must be 'Pod.Standard.E3.Flex', 'Pod.Standard.E4.Flex' or 'Pod.Standard.A1.Flex'."
     }
   }
 }
