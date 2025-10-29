@@ -297,6 +297,12 @@ variable "legacy_imds_endpoints_disabled" {
   type        = bool
 }
 
+variable "allow_short_container_image_names" {
+  default     = false
+  description = "Whether to allow short container image names for K8s version >= 1.34.0. See <a href=https://github.com/cri-o/cri-o/pull/9401>CRI-O pull request</a> for more information."
+  type        = bool
+}
+
 variable "platform_config" {
   default     = null
   description = "Default platform_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/PlatformConfig>PlatformConfig</a> for more information."
@@ -316,7 +322,7 @@ variable "platform_config" {
 }
 
 variable "agent_config" {
-  description = "Default agent_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/InstanceAgentConfig for more information."
+  description = "Default agent_config for self-managed worker pools created with mode: 'instance', 'instance-pool', or 'cluster-network'. See <a href=https://docs.oracle.com/en-us/iaas/api/#/en/iaas/20160918/datatypes/InstanceAgentConfig>InstanceConfig</a> for more information."
   type = object({
     are_all_plugins_disabled = bool,
     is_management_disabled   = bool,
