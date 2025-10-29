@@ -251,3 +251,9 @@ variable "agent_config" {
     plugins_config           = map(string),
   })
 }
+
+variable "allow_short_container_image_names" {
+  default     = false
+  description = "Whether to allow short container image names for K8s version >= 1.34.0. See <a href=https://github.com/cri-o/cri-o/pull/9401>CRI-O pull request</a> for more information."
+  type        = bool
+}
