@@ -80,8 +80,8 @@ resource "oci_containerengine_virtual_node_pool" "workers" {
     }
 
     precondition {
-      condition     = contains(["Pod.Standard.E3.Flex", "Pod.Standard.E4.Flex"], each.value.shape)
-      error_message = "Virtual Node Pools must be 'Pod.Standard.E3.Flex' or 'Pod.Standard.E4.Flex'."
+      condition     = contains(["Pod.Standard.E3.Flex", "Pod.Standard.E4.Flex", "Pod.Standard.A1.Flex"], each.value.shape)
+      error_message = "Virtual Node Pools must be 'Pod.Standard.E3.Flex', 'Pod.Standard.E4.Flex' or 'Pod.Standard.A1.Flex'."
     }
   }
 }
