@@ -57,10 +57,10 @@ locals {
     },
     {
       "Allow TCP egress from bastion to OCI services" : {
-        protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
       },
       "Allow TCP ingress to bastion from OCI services" : {
-        protocol = local.tcp_protocol, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
       },
     },
     local.operator_nsg_enabled ? {
