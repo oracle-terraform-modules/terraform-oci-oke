@@ -48,10 +48,10 @@ locals {
   operator_stateless_rules = merge(
     {
       "Allow TCP egress from operator to OCI services" : {
-        protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
       },
       "Allow TCP ingress to operator from OCI services" : {
-        protocol = local.tcp_protocol, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
       },
 
       "Allow TCP egress from operator to Kubernetes API server" : {

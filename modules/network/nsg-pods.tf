@@ -79,10 +79,10 @@ locals {
   pod_stateless_rules = merge(
     {
       "Allow TCP egress from pods to OCI Services" : {
-        protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
       },
       "Allow TCP egress to pods from OCI Services" : {
-        protocol = local.tcp_protocol, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
       },
 
       "Allow ALL egress from pods to other pods" = {
