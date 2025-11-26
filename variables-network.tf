@@ -325,7 +325,7 @@ variable "enable_waf" {
 }
 
 variable "use_stateless_rules" {
-  description = "Create NSGs with stateless rules instead of the default stateful rules."
+  description = "(experimental) Create NSGs with stateless rules instead of the default stateful rules."
   type        = bool
   default     = false
 }
