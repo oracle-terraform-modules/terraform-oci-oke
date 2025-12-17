@@ -63,6 +63,12 @@ variable "enable_ipv6" {
   type        = bool
 }
 
+variable "oke_ip_families" {
+  default     = []
+  type        = list(string)
+  description = "Override the ip_families attribute for the OKE cluster."
+}
+
 variable "pods_cidr" {
   default     = "10.244.0.0/16"
   description = "The CIDR range used for IP addresses by the pods. A /16 CIDR is generally sufficient. This CIDR should not overlap with any subnet range in the VCN (it can also be outside the VCN CIDR range). Ignored when cni_type = 'npn'."

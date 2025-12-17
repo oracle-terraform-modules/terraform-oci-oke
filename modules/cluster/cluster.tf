@@ -95,7 +95,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     service_lb_subnet_ids = compact([var.service_lb_subnet_id])
-    ip_families           = var.enable_ipv6 ? ["IPv4", "IPv6"] : ["IPv4"]
+    ip_families           = var.ip_families
   }
 
   timeouts {

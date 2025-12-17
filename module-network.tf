@@ -14,7 +14,7 @@ locals {
   vcn_lookup             = coalesce(one(data.oci_core_vcn.oke[*].cidr_blocks), [])
   vcn_lookup_cidr_blocks = flatten(local.vcn_lookup)
   vcn_cidrs              = var.create_vcn ? var.vcn_cidrs : local.vcn_lookup_cidr_blocks
-  vcn_ipv6_cidr          = var.create_vcn ? one(try(coalescelist(module.vcn[0].vcn_all_attributes["ipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["byoipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["ipv6private_cidr_blocks"]), [])) : one(try(coalescelist(data.oci_core_vcn.oke[0].ipv6cidr_blocks, data.oci_core_vcn.oke[0].byoipv6cidr_blocks, data.oci_core_vcn.oke[0].ipv6private_cidr_blocks), []))
+  vcn_ipv6_cidrs         = var.create_vcn ? concat(module.vcn[0].vcn_all_attributes["ipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["byoipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["ipv6private_cidr_blocks"]) : concat(data.oci_core_vcn.oke[0].ipv6cidr_blocks, data.oci_core_vcn.oke[0].byoipv6cidr_blocks, data.oci_core_vcn.oke[0].ipv6private_cidr_blocks)
   # Created route table if enabled, else var.ig_route_table_id
   ig_route_table_id = var.create_vcn ? try(one(module.vcn[*].ig_route_id), var.ig_route_table_id) : var.ig_route_table_id
 
@@ -154,7 +154,7 @@ module "network" {
   subnets                      = var.subnets
   use_stateless_rules          = var.use_stateless_rules
   vcn_cidrs                    = local.vcn_cidrs
-  vcn_ipv6_cidr                = local.vcn_ipv6_cidr
+  vcn_ipv6_cidrs               = local.vcn_ipv6_cidrs
   vcn_id                       = local.vcn_id
   worker_is_public             = var.worker_is_public
 }
