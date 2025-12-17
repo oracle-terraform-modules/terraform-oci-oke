@@ -48,10 +48,7 @@ locals {
   operator_stateless_rules = merge(
     {
       "Allow TCP egress from operator to OCI services" : {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
-      },
-      "Allow TCP ingress to operator from OCI services" : {
-        protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service
       },
 
       "Allow TCP egress from operator to Kubernetes API server" : {
@@ -62,11 +59,8 @@ locals {
       },
 
       "Allow ALL egress from operator to all" : {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr, stateless = true
-      },
-      "Allow ALL ingress to operator from all" : {
-        protocol = local.all_protocols, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr, stateless = true
-      },
+        protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr
+      }
     },
 
     local.bastion_nsg_enabled ? merge(
@@ -80,12 +74,8 @@ locals {
           protocol = local.icmp_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
         }
         "Allow ingress to operator SSH from bastion" : {
-          protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg, stateless = true
+          protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg
         },
-        "Allow egress from operator SSH to bastion " : {
-          protocol = local.tcp_protocol, source_port_min = local.ssh_port, source_port_max = local.ssh_port, destination = local.bastion_nsg_id, destination_type = local.rule_type_nsg, stateless = true
-        }
-
     }) : {},
   )
 }
