@@ -96,11 +96,11 @@ locals {
         protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
       },
 
-      "Allow TCP ingress to OKE control plane from worker nodes" : {
-        protocol = local.tcp_protocol, port = local.all_ports, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      "Allow ingress to OKE control plane from worker nodes" : {
+        protocol = local.all_protocols, port = local.all_ports, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
       },
-      "Allow TCP egress from OKE control plane to Kubelet on worker nodes" : {
-        protocol = local.tcp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      "Allow egress from OKE control plane to worker nodes" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
       },
 
       "Allow TCP ingress for Kubernetes control plane inter-communication" : {
@@ -108,13 +108,6 @@ locals {
       },
       "Allow TCP egress for Kubernetes control plane inter-communication" : {
         protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg, stateless = true
-      },
-
-      "Allow ICMP egress for path discovery to worker nodes" : {
-        protocol = local.icmp_protocol, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
-      },
-      "Allow ICMP ingress for path discovery from worker nodes" : {
-        protocol = local.icmp_protocol, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
       },
     },
     var.enable_ipv6 ? {
@@ -135,29 +128,21 @@ locals {
     } : {},
     local.pod_nsg_enabled ? {
       "Allow TCP ingress to OKE control plane from pods" : {
-        protocol = local.tcp_protocol, port = local.all_ports, source = local.pod_nsg_id, source_type = local.rule_type_nsg, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, source = local.pod_nsg_id, source_type = local.rule_type_nsg, stateless = true
       }
       "Allow TCP egress from OKE control plane to pods" : {
-        protocol = local.tcp_protocol, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg, stateless = true
       }
     } : {},
     (var.allow_bastion_cluster_access && local.bastion_nsg_enabled) ? {
       "Allow TCP ingress to kube-apiserver from bastion host" = {
-        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg, stateless = true
-      },
-      "Allow TCP egress from kube-apiserver to bastion host" = {
-        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, destination = local.bastion_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg
       },
     } : {},
 
     { for allowed_cidr in var.control_plane_allowed_cidrs :
       "Allow TCP ingress to kube-apiserver from ${allowed_cidr}" => {
-        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr, stateless = true
-      }
-    },
-    { for allowed_cidr in var.control_plane_allowed_cidrs :
-      "Allow TCP egress from kube-apiserver to ${allowed_cidr}" => {
-        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, destination = allowed_cidr, destination_type = local.rule_type_cidr, stateless = true
+        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
       }
     },
     var.allow_rules_cp

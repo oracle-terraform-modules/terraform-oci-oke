@@ -47,45 +47,28 @@ locals {
   bastion_stateless_rules = merge(
     { for cidr in var.bastion_allowed_cidrs :
       "Allow SSH ingress to bastion from ${cidr}" => {
-        protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, source = cidr, source_type = local.rule_type_cidr, stateless = true
-      }
-    },
-    { for cidr in var.bastion_allowed_cidrs :
-      "Allow SSH egress from bastion to ${cidr}" => {
-        protocol = local.tcp_protocol, source_port_min = local.ssh_port, source_port_max = local.ssh_port, destination = cidr, destination_type = local.rule_type_cidr, stateless = true
+        protocol = local.tcp_protocol, port = local.ssh_port, source = cidr, source_type = local.rule_type_cidr,
       }
     },
     {
       "Allow TCP egress from bastion to OCI services" : {
-        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
-      },
-      "Allow TCP ingress to bastion from OCI services" : {
-        protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
+        protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
       },
     },
     local.operator_nsg_enabled ? {
       "Allow SSH egress from bastion to operator" = {
-        protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg, stateless = true
-      },
-      "Allow ingress to bastion from operator SSH" = {
-        protocol = local.tcp_protocol, source_port_min = local.ssh_port, source_port_max = local.ssh_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg, stateless = true
+        protocol = local.tcp_protocol, port = local.ssh_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
     var.allow_worker_ssh_access && local.worker_nsg_enabled ? {
       "Allow SSH egress from bastion to workers" = {
-        protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
-      },
-      "Allow ingress to bastion from workers SSH" = {
-        protocol = local.tcp_protocol, source_port_min = local.ssh_port, source_port_max= local.ssh_port , source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+        protocol = local.tcp_protocol, port = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
     (var.allow_bastion_cluster_access && local.control_plane_nsg_enabled) ? {
       "Allow TCP egress from bastion to cluster endpoint" = {
-        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
-      "Allow TCP ingress to bastion from cluster endpoint" = {
-        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, source = local.control_plane_nsg_id, source_type = local.rule_type_nsg, stateless = true
-      }
     } : {},
   )
 }

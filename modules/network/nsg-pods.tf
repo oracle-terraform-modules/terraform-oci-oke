@@ -124,20 +124,20 @@ locals {
     } : {},
 
     var.allow_pod_internet_access ?
-    merge(
-      var.enable_ipv6 ? {
-        "Allow ALL IPv6 egress from pods to internet (not using stateless rules because of security concern with IPv6 GUA and routing over IGW)" = {
-          protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere_ipv6, destination_type = local.rule_type_cidr,
-        }
-      } : {},
-      {
-        "Allow ALL egress from pods to anywhere" = {
-          protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr, stateless = true
-        }
-        "Allow ALL ingress to pods from anywhere" = {
-          protocol = local.all_protocols, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr, stateless = true
-        }
-    }) : {},
+      merge(
+        var.enable_ipv6 ? {
+          "Allow ALL IPv6 egress from pods to internet (not using stateless rules because of security concern with IPv6 GUA and routing over IGW)" = {
+            protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere_ipv6, destination_type = local.rule_type_cidr,
+          }
+        } : {},
+        {
+          "Allow ALL egress from pods to anywhere" = {
+            protocol = local.all_protocols, port = local.all_ports, destination = local.anywhere, destination_type = local.rule_type_cidr, stateless = true
+          }
+          "Allow ALL ingress to pods from anywhere" = {
+            protocol = local.all_protocols, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr, stateless = true
+          }
+      }) : {},
     var.allow_rules_pods
   )
 }

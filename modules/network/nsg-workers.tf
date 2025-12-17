@@ -250,11 +250,8 @@ locals {
 
     local.bastion_nsg_enabled && var.allow_worker_ssh_access ? {
       "Allow ingress to workers SSH from bastion" : {
-        protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg, stateless = true
+        protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg
       },
-      "Allow egress from workers SSH to bastion" : {
-        protocol = local.tcp_protocol, source_port_min = local.ssh_port, source_port_max = local.ssh_port, destination = local.bastion_nsg_id, destination_type = local.rule_type_nsg, stateless = true
-      }
     } : {},
 
     local.fss_nsg_enabled ? {
