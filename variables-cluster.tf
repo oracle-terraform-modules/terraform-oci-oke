@@ -60,7 +60,7 @@ variable "enable_ipv6" {
 variable "oke_ip_families" {
   default     = []
   type        = list(string)
-  description = "Override the ip_families attribute for the OKE cluster."
+  description = "Override the ip_families attribute for the OKE cluster. Supported values: ['IPv4'] or ['IPV4', 'IPv6']"
 }
 
 variable "pods_cidr" {
