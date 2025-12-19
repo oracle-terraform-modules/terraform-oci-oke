@@ -60,7 +60,7 @@ module "cluster" {
   vcn_id                            = local.vcn_id
   cni_type                          = var.cni_type
   control_plane_is_public           = var.control_plane_is_public
-  enable_ipv6                       = var.enable_ipv6
+  ip_families                       = length(var.oke_ip_families) > 0 ? var.oke_ip_families :  var.enable_ipv6 ? ["IPv4", "IPv6"] : ["IPv4"] 
   assign_public_ip_to_control_plane = var.assign_public_ip_to_control_plane
   control_plane_nsg_ids             = compact(flatten([var.control_plane_nsg_ids, try(module.network.control_plane_nsg_id, null)]))
   control_plane_subnet_id           = try(module.network.control_plane_subnet_id, "") # safe destroy; validated in submodule

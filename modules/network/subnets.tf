@@ -68,7 +68,7 @@ locals {
   # Generate IPv6 CIDRs
   subnets_ipv6_cidr = var.enable_ipv6 == true ? {
     for k, v in local.subnets_with_ipv6_cidr_defaults : k => merge(v, {
-      "ipv6_cidr" = length(regexall("^\\d+,[ ]?\\d+$", lookup(v, "ipv6_cidr"))) > 0 ? cidrsubnet(var.vcn_ipv6_cidr, tonumber(split(",", lookup(v, "ipv6_cidr"))[0]), tonumber(trim(split(",", lookup(v, "ipv6_cidr"))[1], " "))) : lookup(v, "ipv6_cidr")
+      "ipv6_cidr" = length(regexall("^\\d+,[ ]?\\d+$", lookup(v, "ipv6_cidr"))) > 0 ? cidrsubnet(var.vcn_ipv6_cidrs[0], tonumber(split(",", lookup(v, "ipv6_cidr"))[0]), tonumber(trim(split(",", lookup(v, "ipv6_cidr"))[1], " "))) : lookup(v, "ipv6_cidr")
     }) if try(v.create, "auto") != "never"
   } : { for k, v in var.subnets : k => merge(v, { "ipv6_cidr" : null }) if try(v.create, "auto") != "never" }
 
