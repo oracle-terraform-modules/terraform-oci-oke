@@ -298,7 +298,7 @@ locals {
     "22.04"         = "jammy"
     "24.04"         = "noble"
     "22.04 Minimal" = "jammy"
-    "22.04 Minimal aarch64" = "noble"
+    "22.04 Minimal aarch64" = "jammy"
     "24.04 Minimal" = "noble"
     "24.04 Minimal aarch64" = "noble"
   }
