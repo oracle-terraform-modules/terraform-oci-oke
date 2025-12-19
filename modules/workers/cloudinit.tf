@@ -123,7 +123,7 @@ data "cloudinit_config" "workers" {
     for_each = !each.value.disable_default_cloud_init && lookup(local.ubuntu_worker_pools, each.key, null) != null ? [1] : []
     content {
       content_type = "text/x-shellscript"
-      content      = templatefile(
+      content = templatefile(
         "${path.module}/cloudinit-ubuntu.sh.tftpl",
         {
           version_codename  = lookup(local.ubuntu_supported_versions, lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", lookup(each.value, "os_version")), "unsupported_ubuntu_version"),
@@ -131,8 +131,8 @@ data "cloudinit_config" "workers" {
           oke_minor_version = lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "kubernetes_minor_version", "")
         }
       )
-      filename     = "50-oke-ubuntu.sh"
-      merge_type   = local.default_cloud_init_merge_type
+      filename   = "50-oke-ubuntu.sh"
+      merge_type = local.default_cloud_init_merge_type
     }
   }
 
@@ -195,7 +195,7 @@ data "cloudinit_config" "workers" {
     precondition {
       condition = lookup(local.ubuntu_worker_pools, each.key, null) == null || (
         lookup(local.ubuntu_worker_pools, each.key, null) != null &&
-          contains(keys(local.ubuntu_supported_versions), lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", ""))
+        contains(keys(local.ubuntu_supported_versions), lookup(lookup(local.ubuntu_worker_pools, each.key, {}), "ubuntu_release", ""))
       )
       error_message = <<-EOT
       Supported Ubuntu versions are "22.04" and "24.04".
