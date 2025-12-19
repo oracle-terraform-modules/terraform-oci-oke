@@ -295,10 +295,12 @@ locals {
   # Map of nodepools using Ubuntu images.
 
   ubuntu_supported_versions = {
-    "22.04"         = "jammy"
-    "24.04"         = "noble"
-    "22.04 Minimal" = "jammy"
-    "24.04 Minimal" = "noble"
+    "22.04"                 = "jammy"
+    "24.04"                 = "noble"
+    "22.04 Minimal"         = "jammy"
+    "22.04 Minimal aarch64" = "jammy"
+    "24.04 Minimal"         = "noble"
+    "24.04 Minimal aarch64" = "noble"
   }
 
   ubuntu_worker_pools = {
