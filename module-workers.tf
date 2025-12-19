@@ -78,6 +78,7 @@ module "workers" {
   worker_nsg_ids                 = concat(var.worker_nsg_ids, [try(module.network.worker_nsg_id, null)])
   worker_subnet_id               = try(module.network.worker_subnet_id, "") # safe destroy; validated in submodule
   preemptible_config             = var.worker_preemptible_config
+  enable_ipv6                    = var.enable_ipv6
 
   # Tagging
   tag_namespace    = var.tag_namespace
