@@ -71,7 +71,7 @@ variable "worker_compute_clusters" {
 
 variable "worker_is_public" {
   default     = false
-  description = "Whether to provision workers with public IPs allocated by default when unspecified on a pool."
+  description = "Whether to provision workers with public IPs allocated by default when unspecified on a pool. It should be true when creating dual-stack clusters."
   type        = bool
 }
 

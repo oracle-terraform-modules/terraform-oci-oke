@@ -24,6 +24,7 @@ locals {
     allow_autoscaler               = false
     legacy_imds_endpoints_disabled = var.legacy_imds_endpoints_disabled
     assign_public_ip               = var.assign_public_ip
+    assign_ipv6ip                  = var.enable_ipv6 ? true : false
     autoscale                      = false
     block_volume_type              = var.block_volume_type
     boot_volume_size               = local.boot_volume_size

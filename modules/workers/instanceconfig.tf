@@ -43,6 +43,7 @@ resource "oci_core_instance_configuration" "workers" {
 
       create_vnic_details {
         assign_private_dns_record = var.assign_dns
+        assign_ipv6ip             = each.value.assign_ipv6ip
         assign_public_ip          = each.value.assign_public_ip
         nsg_ids                   = each.value.nsg_ids
         subnet_id                 = each.value.subnet_id
@@ -64,12 +65,17 @@ resource "oci_core_instance_configuration" "workers" {
         },
 
         # Add labels required for NPN CNI.
-        var.cni_type == "npn" ? {
-          oke-native-pod-networking = true
-          oke-max-pods              = var.max_pods_per_node
-          pod-subnets               = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
-          pod-nsgids                = join(",", each.value.pod_nsg_ids)
-        } : {},
+        var.cni_type == "npn" ? merge(
+          {
+            oke-native-pod-networking = true
+            oke-max-pods              = var.max_pods_per_node
+            pod-subnets               = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+            pod-nsgids                = join(",", each.value.pod_nsg_ids)
+          },
+          var.enable_ipv6 ? 
+          { 
+            ip-families               = "IPv4,IPv6" 
+          }: {} ) : {},
 
         # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
         coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns },
@@ -154,6 +160,7 @@ resource "oci_core_instance_configuration" "workers" {
 
         create_vnic_details {
           assign_private_dns_record = lookup(vnic.value, "assign_private_dns_record", null)
+          assign_ipv6ip             = lookup(vnic.value, "assign_ipv6ip", null)
           assign_public_ip          = lookup(vnic.value, "assign_public_ip", null)
           display_name              = vnic.key
           defined_tags              = lookup(vnic.value, "defined_tags", null)
