@@ -70,7 +70,11 @@ module "cluster" {
     ? try(module.network.pub_lb_subnet_id, "") # safe destroy; validated in submodule
     : try(module.network.int_lb_subnet_id, "")
   )
-
+  backend_nsg_ids                   = compact(flatten([
+    var.backend_nsg_ids,
+    try(module.network.worker_nsg_id, null),
+    var.cni_type == "npn" ? try(module.network.pod_nsg_id, null) : null
+  ]))
 
   # Cluster
   cluster_kms_key_id = var.cluster_kms_key_id

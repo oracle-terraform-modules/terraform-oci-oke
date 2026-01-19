@@ -41,6 +41,12 @@ variable "control_plane_nsg_ids" {
   type        = set(string)
 }
 
+variable "backend_nsg_ids" {
+  default     = []
+  description = "An additional list of network security groups (NSG) ids for the LB backends. Used when the service rule management mode is set to NSG via annotations."
+  type        = set(string)
+}
+
 variable "cni_type" {
   default     = "flannel"
   description = "The CNI for the cluster: 'flannel' or 'npn'. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Concepts/contengpodnetworking.htm>Pod Networking</a>."

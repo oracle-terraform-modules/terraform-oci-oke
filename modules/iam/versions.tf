@@ -10,7 +10,7 @@ terraform {
     oci = {
       configuration_aliases = [oci.home]
       source                = "oracle/oci"
-      version               = ">= 7.6.0"
+      version               = ">= 7.30.0"
     }
   }
 }
