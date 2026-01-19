@@ -14,7 +14,9 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   control_plane_nsg_id = one(compact([try(var.nsgs.cp.id, null), one(oci_core_network_security_group.cp[*].id)]))
-  control_plane_rules = local.control_plane_nsg_enabled ? merge(
+  control_plane_rules = local.control_plane_nsg_enabled ? ( var.use_stateless_rules ? local.control_plane_stateless_rules: local.control_plane_stateful_rules ) : {}
+  
+  control_plane_stateful_rules= merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
@@ -83,7 +85,68 @@ locals {
       }
     },
     var.allow_rules_cp
-  ) : {}
+  )
+
+  control_plane_stateless_rules= merge(
+    {
+      "Allow TCP egress from OKE control plane to OCI services" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
+      },
+      "Allow TCP ingress to OKE control plane from OCI services" : {
+        protocol = local.all_protocols, port = local.all_ports, source = local.osn, source_type = local.rule_type_service, stateless = true
+      },
+
+      "Allow ingress to OKE control plane from worker nodes" : {
+        protocol = local.all_protocols, port = local.all_ports, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      },
+      "Allow egress from OKE control plane to worker nodes" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      },
+
+      "Allow TCP ingress for Kubernetes control plane inter-communication" : {
+        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = local.control_plane_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      },
+      "Allow TCP egress for Kubernetes control plane inter-communication" : {
+        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      },
+    },
+    var.enable_ipv6 ? {
+      "Allow ICMPv6 egress for path discovery to worker nodes" : {
+        protocol = local.icmpv6_protocol, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+      },
+      "Allow ICMPv6 ingress for path discovery from worker nodes" : {
+        protocol = local.icmpv6_protocol, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
+      },
+    } : {},
+    local.operator_nsg_enabled ? {
+      "Allow TCP ingress to kube-apiserver from operator instance" : {
+        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      },
+      "Allow TCP egress from kube-apiserver to operator instance" : {
+        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      },
+    } : {},
+    local.pod_nsg_enabled ? {
+      "Allow TCP ingress to OKE control plane from pods" : {
+        protocol = local.all_protocols, port = local.all_ports, source = local.pod_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      }
+      "Allow TCP egress from OKE control plane to pods" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      }
+    } : {},
+    (var.allow_bastion_cluster_access && local.bastion_nsg_enabled) ? {
+      "Allow TCP ingress to kube-apiserver from bastion host" = {
+        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg
+      },
+    } : {},
+
+    { for allowed_cidr in var.control_plane_allowed_cidrs :
+      "Allow TCP ingress to kube-apiserver from ${allowed_cidr}" => {
+        protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
+      }
+    },
+    var.allow_rules_cp
+  )
 }
 
 resource "oci_core_network_security_group" "cp" {

@@ -99,3 +99,7 @@ nat_gateway_route_rules = [
   #     description       = "Terraformed - User added Routing Rule: To drg provided to this module. drg_id, if available, is automatically retrieved with keyword drg"
   #   },
 ]
+
+# Experimental 
+use_stateless_rules = true # Use stateless rules for security lists and network security groups instead of the default stateful rules. 
+# Note that the egress rule to 0.0.0.0/0 from pods and workers will be statefull independent of this setting because of security concerns.

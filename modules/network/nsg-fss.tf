@@ -14,7 +14,9 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   fss_nsg_id = one(compact([try(var.nsgs.fss.id, null), one(oci_core_network_security_group.fss[*].id)]))
-  fss_rules = local.fss_nsg_enabled ? {
+  fss_rules = local.fss_nsg_enabled ? ( var.use_stateless_rules ? local.fss_stateless_rules: local.fss_stateful_rules ) : {}
+  
+  fss_stateful_rules = {
     # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
     # Ingress
     "Allow UDP ingress for NFS portmapper from workers" : {
@@ -40,7 +42,39 @@ locals {
     "Allow TCP egress for NFS to the workers" : {
       protocol = local.tcp_protocol, source_port_min = local.fss_nfs_port_min, source_port_max = local.fss_nfs_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
     },
-  } : {}
+  }
+
+  fss_stateless_rules = {
+    # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
+    # Ingress
+    "Allow UDP ingress for NFS portmapper from workers" : {
+      protocol = local.udp_protocol, destination_port_min = local.fss_nfs_portmapper_port, destination_port_max = local.fss_nfs_portmapper_port, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+    },
+    "Allow UDP egress for NFS portmapper to workers" : {
+      protocol = local.udp_protocol, source_port_min = local.fss_nfs_portmapper_port, source_port_max = local.fss_nfs_portmapper_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+    },
+
+    "Allow TCP ingress for NFS portmapper from workers" : {
+      protocol = local.tcp_protocol, destination_port_min = local.fss_nfs_portmapper_port, destination_port_max = local.fss_nfs_portmapper_port, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+    },
+    "Allow TCP egress for NFS portmapper to workers" : {
+      protocol = local.tcp_protocol, source_port_min = local.fss_nfs_portmapper_port, source_port_max = local.fss_nfs_portmapper_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+    },
+
+    "Allow UDP ingress for NFS from workers" : {
+      protocol = local.udp_protocol, destination_port_min = local.fss_nfs_port_min, destination_port_max = local.fss_nfs_port_min, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+    },
+    "Allow UDP egress for NFS to workers" : {
+      protocol = local.udp_protocol, source_port_min = local.fss_nfs_port_min, source_port_max = local.fss_nfs_port_min, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+    },
+
+    "Allow TCP ingress for NFS from workers" : {
+      protocol = local.tcp_protocol, destination_port_min = local.fss_nfs_port_min, destination_port_max = local.fss_nfs_port_max, source = local.worker_nsg_id, source_type = local.rule_type_nsg, stateless = true
+    },
+    "Allow TCP egress for NFS to workers" : {
+      protocol = local.tcp_protocol, source_port_min = local.fss_nfs_port_min, source_port_max = local.fss_nfs_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+    },
+  }
 }
 
 resource "oci_core_network_security_group" "fss" {

@@ -14,7 +14,9 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   bastion_nsg_id = one(compact([try(var.nsgs.bastion.id, null), one(oci_core_network_security_group.bastion[*].id)]))
-  bastion_rules = local.bastion_nsg_enabled ? merge(
+  bastion_rules = local.bastion_nsg_enabled ? ( var.use_stateless_rules ? local.bastion_stateless_rules: local.bastion_stateful_rules ) : {}
+
+  bastion_stateful_rules = merge(
     { for cidr in var.bastion_allowed_cidrs :
       "Allow SSH ingress to bastion from ${cidr}" => {
         protocol = local.tcp_protocol, port = local.ssh_port, source = cidr, source_type = local.rule_type_cidr,
@@ -40,7 +42,35 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
-  ) : {}
+  )
+
+  bastion_stateless_rules = merge(
+    { for cidr in var.bastion_allowed_cidrs :
+      "Allow SSH ingress to bastion from ${cidr}" => {
+        protocol = local.tcp_protocol, port = local.ssh_port, source = cidr, source_type = local.rule_type_cidr,
+      }
+    },
+    {
+      "Allow TCP egress from bastion to OCI services" : {
+        protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
+      },
+    },
+    local.operator_nsg_enabled ? {
+      "Allow SSH egress from bastion to operator" = {
+        protocol = local.tcp_protocol, port = local.ssh_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
+    var.allow_worker_ssh_access && local.worker_nsg_enabled ? {
+      "Allow SSH egress from bastion to workers" = {
+        protocol = local.tcp_protocol, port = local.ssh_port, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
+    (var.allow_bastion_cluster_access && local.control_plane_nsg_enabled) ? {
+      "Allow TCP egress from bastion to cluster endpoint" = {
+        protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
+  )
 }
 
 resource "oci_core_network_security_group" "bastion" {

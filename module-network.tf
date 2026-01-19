@@ -152,6 +152,7 @@ module "network" {
   nat_gateway_id               = local.nat_gateway_id
   nat_route_table_id           = local.nat_route_table_id
   subnets                      = var.subnets
+  use_stateless_rules          = var.use_stateless_rules
   vcn_cidrs                    = local.vcn_cidrs
   vcn_ipv6_cidrs               = local.vcn_ipv6_cidrs
   vcn_id                       = local.vcn_id

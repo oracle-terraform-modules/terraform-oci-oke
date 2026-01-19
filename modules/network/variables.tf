@@ -66,3 +66,5 @@ variable "nsgs" {
     id     = optional(string)
   }))
 }
+
+variable "use_stateless_rules" { type    = bool }
