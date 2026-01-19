@@ -89,8 +89,9 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
     }
 
     service_lb_config {
-      defined_tags  = var.service_lb_defined_tags
-      freeform_tags = var.service_lb_freeform_tags
+      backend_nsg_ids = var.backend_nsg_ids
+      defined_tags    = var.service_lb_defined_tags
+      freeform_tags   = var.service_lb_freeform_tags
     }
 
     service_lb_subnet_ids = compact([var.service_lb_subnet_id])
@@ -102,12 +103,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags, freeform_tags, cluster_pod_network_options, options[0].kubernetes_network_config]
-
-    precondition {
-      condition     = var.service_lb_subnet_id != null
-      error_message = "Missing service load balancer subnet."
-    }
+    ignore_changes = [defined_tags]
 
     precondition {
       condition     = !var.use_signed_images || length(var.image_signing_keys) > 0

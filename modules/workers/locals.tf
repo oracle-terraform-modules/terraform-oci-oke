@@ -36,6 +36,7 @@ locals {
     disable_default_cloud_init     = var.disable_default_cloud_init
     drain                          = false
     eviction_grace_duration        = 300
+    force_node_action              = true
     force_node_delete              = true
     extended_metadata              = {} # empty pool-specific default
     ignore_initial_pool_size       = false

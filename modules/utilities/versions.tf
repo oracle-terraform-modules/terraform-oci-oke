@@ -12,7 +12,7 @@ terraform {
 
     oci = {
       source  = "oracle/oci"
-      version = ">= 7.6.0"
+      version = ">= 7.30.0"
     }
   }
 }

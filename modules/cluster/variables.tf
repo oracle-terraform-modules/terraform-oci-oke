@@ -24,6 +24,7 @@ variable "tag_namespace" { type = string }
 variable "use_defined_tags" { type = string }
 variable "use_signed_images" { type = bool }
 variable "vcn_id" { type = string }
+variable "backend_nsg_ids" { type = set(string) }
 
 # Tagging
 variable "cluster_defined_tags" { type = map(string) }
