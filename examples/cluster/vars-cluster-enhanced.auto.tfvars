@@ -14,3 +14,4 @@ pods_cidr                         = "10.244.0.0/16"
 services_cidr                     = "10.96.0.0/16"
 use_signed_images                 = false // true/*false
 enable_ipv6                       = false //true/*false
+backend_nsg_ids                   = ["ocid1.networksecuritygroup..."] // the workers and pods NSGs are always added.
