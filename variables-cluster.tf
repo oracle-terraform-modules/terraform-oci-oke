@@ -43,7 +43,7 @@ variable "control_plane_nsg_ids" {
 
 variable "backend_nsg_ids" {
   default     = []
-  description = "An additional list of network security groups (NSG) ids for the LB backends. Used when the service rule management mode is set to NSG via annotations."
+  description = "An additional list of network security groups (NSG) ids for the LB backends. Used when the service rule management mode is set to NSG via annotations. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengconfiguringloadbalancersnetworkloadbalancers-subtopic.htm#contengcreatingloadbalancer_topic-Specifying_Load_Balancer_Security_Rule_Management_Options>Security Rule Management Options for Load Balancers and Network Load Balancers</a> for more information."
   type        = set(string)
 }
 
