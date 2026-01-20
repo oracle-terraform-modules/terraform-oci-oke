@@ -64,6 +64,7 @@ module "iam_cluster_prerequisites" {
   create_iam_kms_policy        = local.create_iam_kms_policy
   create_iam_operator_policy   = false
   create_iam_worker_policy     = false
+  create_iam_cluster_policy    = false
   policy_name                  = local.prerequisites_policy_name
 
   create_iam_tag_namespace = var.create_iam_tag_namespace
@@ -100,6 +101,7 @@ module "iam" {
   create_iam_kms_policy        = false
   create_iam_operator_policy   = local.create_iam_operator_policy
   create_iam_worker_policy     = local.create_iam_worker_policy
+  create_iam_cluster_policy    = true
   policy_name                  = local.default_policy_name
 
   create_iam_tag_namespace = var.create_iam_tag_namespace

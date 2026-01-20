@@ -20,6 +20,7 @@ variable "use_defined_tags" { type = bool }
 # Policy
 variable "autoscaler_compartments" { type = list(string) }
 variable "create_iam_resources" { type = bool }
+variable "create_iam_cluster_policy" { type = bool }
 variable "create_iam_autoscaler_policy" { type = bool }
 variable "create_iam_kms_policy" { type = bool }
 variable "create_iam_operator_policy" { type = bool }
