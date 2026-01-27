@@ -207,6 +207,12 @@ variable "cluster_autoscaler_helm_values_files" {
   type        = list(string)
 }
 
+variable "cluster_autoscaler_remote_exec" {
+  default     = true
+  description = "Whether to execute deploy the cluster autoscaler remotely via the operator server. If false, the cluster autoscaler helm chart will be installed on the same machine you are running Terraform from."
+  type        = bool
+}
+
 # Prometheus
 
 variable "prometheus_install" {

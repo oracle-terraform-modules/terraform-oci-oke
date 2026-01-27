@@ -9,11 +9,20 @@ locals {
   worker_pools_autoscaling = { for k, v in var.worker_pools : k => v if tobool(lookup(v, "autoscale", false)) }
 
   # Whether to enable cluster autoscaler deployment based on configuration, active nodes, and autoscaling pools
-  cluster_autoscaler_enabled = alltrue([
+  remote_cluster_autoscaler_enabled = alltrue([
     var.cluster_autoscaler_install,
     var.expected_node_count > 0,
     var.expected_autoscale_worker_pools > 0,
+    var.cluster_autoscaler_remote_exec
   ])
+
+  local_cluster_autoscaler_enabled = alltrue([
+    var.cluster_autoscaler_install,
+    var.expected_node_count > 0,
+    var.expected_autoscale_worker_pools > 0,
+    var.cluster_autoscaler_remote_exec == false
+  ])
+
 
   # Templated Helm manifest values
   cluster_autoscaler_manifest      = sensitive(one(data.helm_template.cluster_autoscaler[*].manifest))
@@ -41,7 +50,7 @@ locals {
 }
 
 data "helm_template" "cluster_autoscaler" {
-  count        = local.cluster_autoscaler_enabled ? 1 : 0
+  count        = local.remote_cluster_autoscaler_enabled ? 1 : 0
   chart        = "cluster-autoscaler"
   repository   = "https://kubernetes.github.io/autoscaler"
   version      = var.cluster_autoscaler_helm_version
@@ -101,7 +110,7 @@ data "helm_template" "cluster_autoscaler" {
 }
 
 resource "null_resource" "cluster_autoscaler" {
-  count = local.cluster_autoscaler_enabled ? 1 : 0
+  count = local.remote_cluster_autoscaler_enabled ? 1 : 0
 
   triggers = {
     manifest_md5 = try(md5(local.cluster_autoscaler_manifest), null)
@@ -131,5 +140,79 @@ resource "null_resource" "cluster_autoscaler" {
     inline = [
       "kubectl apply -f ${local.cluster_autoscaler_manifest_path}"
       ]
+  }
+}
+
+resource "helm_release" "local_cluster_autoscaler" {
+  count        = local.local_cluster_autoscaler_enabled ? 1 : 0
+  chart        = "cluster-autoscaler"
+  repository   = "https://kubernetes.github.io/autoscaler"
+  version      = var.cluster_autoscaler_helm_version
+
+  name             = "cluster-autoscaler"
+  namespace        = var.cluster_autoscaler_namespace
+  create_namespace = true
+
+  values = length(var.cluster_autoscaler_helm_values_files) > 0 ? [
+    for path in var.cluster_autoscaler_helm_values_files : file(path)
+  ] : null
+
+  set {
+    name  = "nodeSelector.oke\\.oraclecloud\\.com/cluster_autoscaler"
+    value = "allowed"
+  }
+
+  dynamic "set" {
+    for_each = local.cluster_autoscaler_defaults
+    iterator = helm_value
+    content {
+      name  = helm_value.key
+      value = helm_value.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = var.cluster_autoscaler_helm_values
+    iterator = helm_value
+    content {
+      name  = helm_value.key
+      value = helm_value.value
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.worker_pools_autoscaling
+    iterator = pool
+    content {
+      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].name"
+      value = lookup(pool.value, "id")
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.worker_pools_autoscaling
+    iterator = pool
+    content {
+      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].minSize"
+      value = lookup(pool.value, "min_size", lookup(pool.value, "size"))
+    }
+  }
+
+  dynamic "set" {
+    for_each = local.worker_pools_autoscaling
+    iterator = pool
+    content {
+      name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), pool.key)}].maxSize"
+      value = lookup(pool.value, "max_size", lookup(pool.value, "size"))
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition = alltrue([for path in var.cluster_autoscaler_helm_values_files : fileexists(path)])
+      error_message = format("Missing Helm values files in configuration: %s",
+        jsonencode([for path in var.cluster_autoscaler_helm_values_files : path if !fileexists(path)])
+      )
+    }
   }
 }
