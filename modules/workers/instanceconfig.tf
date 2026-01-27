@@ -68,8 +68,8 @@ resource "oci_core_instance_configuration" "workers" {
         var.cni_type == "npn" ? merge(
           {
             oke-native-pod-networking = true
-            oke-max-pods              = var.max_pods_per_node
-            pod-subnets               = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+            oke-max-pods              = each.value.max_pods_per_node
+            pod-subnets               = each.value.pod_subnet_id
             pod-nsgids                = join(",", each.value.pod_nsg_ids)
           },
           var.enable_ipv6 ? 
