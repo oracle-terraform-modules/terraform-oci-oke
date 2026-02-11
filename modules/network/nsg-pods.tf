@@ -48,8 +48,26 @@ locals {
       }
       "Allow ICMP ingress to pods for path discovery" = {
         protocol = local.icmp_protocol, port = local.all_ports, source = local.anywhere, source_type = local.rule_type_cidr,
-      }
+      },
     },
+
+    local.int_lb_nsg_enabled ? {
+      "Allow ALL egress from pods to internal_lb" = {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.int_lb_nsg_id, destination_type = local.rule_type_nsg,
+      }
+      "Allow ALL ingress from internal_lb to pods" = {
+        protocol = local.all_protocols, port = local.all_ports, source = local.int_lb_nsg_id, source_type = local.rule_type_nsg,
+      }
+    } : {},
+
+    local.pub_lb_nsg_enabled ? {
+      "Allow ALL egress from pods to pub_lb" = {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pub_lb_nsg_id, destination_type = local.rule_type_nsg,
+      }
+      "Allow ALL ingress from pub_lb to pods" = {
+        protocol = local.all_protocols, port = local.all_ports, source = local.pub_lb_nsg_id, source_type = local.rule_type_nsg,
+      }
+    }: {},
 
     var.enable_ipv6 ? {
       "Allow ICMPv6 ingress to pods for path discovery" : {
@@ -114,6 +132,24 @@ locals {
       }
     },
 
+    local.int_lb_nsg_enabled ? {
+      "Allow ALL egress from pods to internal_lb" = {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.int_lb_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      }
+      "Allow ALL egress from pods to internal_lb" = {
+        protocol = local.all_protocols, port = local.all_ports, source = local.int_lb_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      }
+    } : {},
+
+    local.pub_lb_nsg_enabled ? {
+      "Allow ALL egress from pods to pub_lb" = {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pub_lb_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      }
+      "Allow ALL egress from pods to pub_lb" = {
+        protocol = local.all_protocols, port = local.all_ports, source = local.pub_lb_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      }
+    }: {},
+    
     var.enable_ipv6 ? {
       "Allow ICMPv6 ingress to pods for path discovery" : {
         protocol = local.icmpv6_protocol, port = local.all_ports, source = local.anywhere_ipv6, source_type = local.rule_type_cidr,
