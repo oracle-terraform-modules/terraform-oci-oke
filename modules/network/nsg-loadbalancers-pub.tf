@@ -31,6 +31,13 @@ locals {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     },
+
+    local.pod_nsg_enabled ? {
+      "Allow all egress from public load balancers to pods" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg,
+      },
+    } : {},
+
     var.enable_ipv6 ? {
       "Allow ICMPv6 egress from public load balancers to worker nodes for path discovery" : {
         protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
@@ -67,6 +74,16 @@ locals {
         protocol = local.icmp_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     },
+
+    local.pod_nsg_enabled ? {
+      "Allow all egress from public load balancers to pods" : {
+        protocol = local.all_protocols, port = local.all_ports, destination = local.pod_nsg_id, destination_type = local.rule_type_nsg, stateless = true
+      },
+      "Allow all ingress from pods to public load balancers" : {
+        protocol = local.all_protocols, port = local.all_ports, source = local.pod_nsg_id, source_type = local.rule_type_nsg, stateless = true
+      },
+    } : {},
+
     var.enable_ipv6 ? {
       "Allow ICMPv6 egress from public load balancers to worker nodes for path discovery" : {
         protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,

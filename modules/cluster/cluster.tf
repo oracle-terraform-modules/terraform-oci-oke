@@ -103,7 +103,7 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   }
 
   lifecycle {
-    ignore_changes = [defined_tags]
+    ignore_changes = [defined_tags, options["kubernetes_network_config"]]
 
     precondition {
       condition     = !var.use_signed_images || length(var.image_signing_keys) > 0
