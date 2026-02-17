@@ -123,7 +123,7 @@ locals {
         protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg, stateless = true
       },
       "Allow TCP egress from kube-apiserver to operator instance" : {
-        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, source = local.operator_nsg_id, source_type = local.rule_type_nsg, stateless = true
+        protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, destination = local.operator_nsg_id, destination_type = local.rule_type_nsg, stateless = true
       },
     } : {},
     local.pod_nsg_enabled ? {

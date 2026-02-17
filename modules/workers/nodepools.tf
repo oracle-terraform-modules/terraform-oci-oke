@@ -247,6 +247,7 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
       format("PT%dS", each.value.eviction_grace_duration)
     )
     is_force_delete_after_grace_duration = tobool(each.value.force_node_delete)
+    is_force_action_after_grace_duration = tobool(each.value.force_node_action)
   }
 
   dynamic "node_shape_config" {
