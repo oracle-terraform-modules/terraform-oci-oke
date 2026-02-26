@@ -20,3 +20,6 @@ generated/**
 
 # Generated documentation
 docs/book
+
+.idea*
+.oca*

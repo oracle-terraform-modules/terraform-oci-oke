@@ -34,6 +34,10 @@ variable "nsg_ids" { type = list(string) }
 variable "operator_image_os_version" { type = string }
 variable "pv_transit_encryption" { type = bool }
 variable "shape" { type = map(any) }
+variable "legacy_imds_endpoints_disabled" {
+  type    = bool
+  default = true
+}
 variable "ssh_private_key" {
   type      = string
   sensitive = true

@@ -50,6 +50,10 @@ resource "oci_core_instance" "bastion" {
     subnet_id        = var.subnet_id
   }
 
+  instance_options {
+    are_legacy_imds_endpoints_disabled = var.legacy_imds_endpoints_disabled
+  }
+
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
     user_data           = data.cloudinit_config.bastion.rendered
