@@ -14,6 +14,10 @@ variable "image_id" { type = string }
 variable "is_public" { type = bool }
 variable "nsg_ids" { type = list(string) }
 variable "shape" { type = map(any) }
+variable "legacy_imds_endpoints_disabled" {
+  type    = bool
+  default = true
+}
 variable "ssh_private_key" {
   type      = string
   sensitive = true

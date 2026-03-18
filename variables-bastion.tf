@@ -100,3 +100,9 @@ variable "bastion_volume_kms_key_id" {
   description = "The OCID of the OCI KMS key to assign as the master encryption key for the bastion host boot volume."
   type        = string
 }
+
+variable "bastion_legacy_imds_endpoints_disabled" {
+  default     = true
+  description = "Whether to disable requests to the IMDSv1 endpoint and only allow requests to the IMDSv2 endpoint for the bastion instance."
+  type        = bool
+}
