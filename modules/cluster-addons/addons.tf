@@ -38,6 +38,10 @@ resource "oci_containerengine_addon" "primary_addon" {
   override_existing = lookup(each.value, "override_existing", false)
   version           = lookup(each.value, "version", null)
 
+  timeouts {
+    create = "30m"
+  }
+
   lifecycle {
 
     precondition {
@@ -70,6 +74,10 @@ resource "oci_containerengine_addon" "secondary_addon" {
   override_existing = lookup(each.value, "override_existing", false)
   version           = lookup(each.value, "version", null)
 
+  timeouts {
+    create = "30m"
+  }
+  
   lifecycle {
 
     precondition {
