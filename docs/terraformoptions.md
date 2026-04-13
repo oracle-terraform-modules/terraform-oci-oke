@@ -3,7 +3,7 @@
 Configuration Terraform Options:
 
 1. [General](#general)
-2. [Identity & Access Management](#identity--access-management)
+2. [Identity and Access Management](#identity-and-access-management)
 3. [Network](#network)
 4. [Cluster](#cluster)
 5. [Cluster Add-ons](#cluster-add-ons)
@@ -41,7 +41,7 @@ Configuration Terraform Options:
 | `ssh_public_key` | SSH public key contents, optionally base64-encoded. | string | `null` |
 | `ssh_public_key_path` | Path to SSH public key. | string | `null` |
 
-## Identity & Access Management
+## Identity and Access Management
 
 | Parameter | Description | Values | Default |
 | --- | --- | --- | --- |
