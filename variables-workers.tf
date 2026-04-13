@@ -43,9 +43,10 @@ variable "worker_pool_mode" {
       "virtual-node-pool",
       "instance",
       "instance-pool",
-      "cluster-network"
+      "cluster-network",
+      "compute-cluster"
     ], var.worker_pool_mode)
-    error_message = "Accepted values are node-pool, virtual-node-pool, instance, instance-pool, or cluster-network."
+    error_message = "Accepted values are node-pool, virtual-node-pool, instance, instance-pool, cluster-network, or compute-cluster."
   }
 }
 

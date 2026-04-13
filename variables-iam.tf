@@ -156,7 +156,7 @@ variable "create_iam_autoscaler_policy" {
 
 variable "create_iam_kms_policy" {
   default     = "auto"
-  description = "Whether to create an IAM dynamic group and policy rules for cluster autoscaler. Depends on configuration of associated components when set to 'auto'. Ignored when 'create_iam_resources' is false."
+  description = "Whether to create an IAM dynamic group and policy rules for KMS encryption. Depends on configuration of associated components when set to 'auto'. Ignored when 'create_iam_resources' is false."
   type        = string
   validation {
     condition     = contains(["never", "auto", "always"], var.create_iam_kms_policy)

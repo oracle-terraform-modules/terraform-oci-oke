@@ -1,7 +1,0 @@
-sections:
-  show: ["outputs"]
-
-content: |-
-  {{- range .Module.Outputs }}
-    * **`{{ .Name }}`**&nbsp;&nbsp; {{ .Description -}}
-  {{- end }}
