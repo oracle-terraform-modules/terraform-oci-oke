@@ -4,4 +4,4 @@ This sub-module supports different modes of OKE worker node management with adva
 
 ## Usage
 
-Refer to the [Workers](https://oracle-terraform-modules.github.io/terraform-oci-oke/guide/workers.html) section of the user guide.
+Refer to the [Workers section](../../docs/terraformoptions.md#workers) of the module documentation.

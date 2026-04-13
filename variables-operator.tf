@@ -9,7 +9,7 @@ variable "create_operator" {
 
 variable "operator_availability_domain" {
   default     = null
-  description = "The availability domain for FSS placement. Defaults to first available."
+  description = "The availability domain for operator placement. Defaults to first available."
   type        = string
 }
 

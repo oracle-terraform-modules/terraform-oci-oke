@@ -121,7 +121,7 @@ variable "sriov_cni_plugin_version" {
 
 variable "rdma_cni_plugin_install" {
   default     = false
-  description = "Whether to deploy the SR-IOV CNI Plugin. See <a href=https://github.com/openshift/sriov-cni</a>. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  description = "Whether to deploy the RDMA CNI Plugin. See <a href=https://github.com/Mellanox/rdma-cni>Mellanox/rdma-cni</a>. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
@@ -133,7 +133,7 @@ variable "rdma_cni_plugin_namespace" {
 
 variable "rdma_cni_plugin_daemonset_url" {
   default     = null
-  description = "The URL path to the manifest. Leave unset for tags of <a href=https://github.com/openshift/sriov-cni</a> using rdma_cni_plugin_version."
+  description = "The URL path to the manifest. Leave unset for tags of <a href=https://github.com/Mellanox/rdma-cni>Mellanox/rdma-cni</a> using rdma_cni_plugin_version."
   type        = string
 }
 
@@ -313,7 +313,7 @@ variable "mpi_operator_version" {
 
 variable "whereabouts_install" {
   default     = false
-  description = "Whether to deploy the MPI Operator. See <a href=https://github.com/k8snetworkplumbingwg/whereabouts>k8snetworkplumbingwg/whereabouts</a>. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
+  description = "Whether to deploy Whereabouts IPAM. See <a href=https://github.com/k8snetworkplumbingwg/whereabouts>k8snetworkplumbingwg/whereabouts</a>. NOTE: Provided only as a convenience and not supported by or sourced from Oracle - use at your own risk."
   type        = bool
 }
 
@@ -371,7 +371,7 @@ variable "gatekeeper_helm_values_files" {
 
 variable "create_service_account" {
   default     = false
-  description = "Wether to create a service account or not."
+  description = "Whether to create a service account or not."
   type        = bool
 }
 
