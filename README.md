@@ -6,8 +6,8 @@
 [canonical_license]: https://oss.oracle.com/licenses/upl/
 
 [oci]: https://cloud.oracle.com/cloud-infrastructure
-[oci_documentation]: https://docs.cloud.oracle.com/iaas/Content/home.htm
-[oke]: https://docs.cloud.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+[oci_documentation]: https://docs.oracle.com/iaas/Content/services.htm
+[oke]: https://docs.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
 
 [docs]: https://github.com/oracle-terraform-modules/terraform-oci-oke/tree/main/docs
 [prerequisites]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/prerequisites.md
@@ -16,9 +16,11 @@
 [terraform_options]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/terraformoptions.md
 [examples]: https://github.com/oracle-terraform-modules/terraform-oci-oke/tree/main/examples
 [repo]: https://github.com/oracle-terraform-modules/terraform-oci-oke
-[releases]: https://github.com/oracle-terraform-modules/terraform-oci-oke/releases[terraform]: https://www.terraform.io
-[terraform_oci]: https://www.terraform.io/docs/providers/oci/index.html
-[terraform_oci_examples]: https://github.com/terraform-providers/terraform-provider-oci/tree/master/examples
+[releases]: https://github.com/oracle-terraform-modules/terraform-oci-oke/releases
+[terraform]: https://www.terraform.io
+[terraform_oci]: https://registry.terraform.io/providers/oracle/oci/latest
+[terraform_oci_examples]: https://github.com/oracle/terraform-provider-oci/tree/master/examples
+[terraform_guides_examples]: https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples
 
 [terraform_oci_bastion]: https://github.com/oracle-terraform-modules/terraform-oci-bastion
 [terraform_oci_operator]: https://github.com/oracle-terraform-modules/terraform-oci-operator
@@ -89,9 +91,7 @@ The module can deploy the following Kubernetes extensions:
 
 ## [Documentation][docs]
 
-### [Pre-requisites][prerequisites]
-
-### Instructions
+- [Prerequisites][prerequisites]
 - [Quickstart][quickstart]
 - [Diagrams][diagrams]
 - [Terraform Options][terraform_options]
@@ -106,7 +106,7 @@ The module can deploy the following Kubernetes extensions:
 
 ## Acknowledgement
 
-Code derived and adapted from [Terraform OCI Examples][terraform_oci_examples] and Hashicorp's [Terraform 0.12 examples](https://github.com/hashicorp/terraform-guides/tree/master/infrastructure-as-code/terraform-0.12-examples).
+Code derived and adapted from [Terraform OCI Examples][terraform_oci_examples] and HashiCorp's [Terraform 0.12 examples][terraform_guides_examples].
 
 ## Contributing
 
