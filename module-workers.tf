@@ -42,6 +42,11 @@ module "workers" {
   # Compute clusters
   compute_clusters = var.worker_compute_clusters
 
+  # GPU memory cluster scale config defaults
+  gmc_scale_is_upsize_enabled   = var.worker_gmc_scale_is_upsize_enabled
+  gmc_scale_is_downsize_enabled = var.worker_gmc_scale_is_downsize_enabled
+  gmc_scale_target_size         = var.worker_gmc_scale_target_size
+
   # Worker pools
   worker_pool_mode = var.worker_pool_mode
   worker_pool_size = var.worker_pool_size
@@ -109,4 +114,14 @@ output "worker_pool_ids" {
 output "worker_pool_ips" {
   description = "Created worker instance private IPs by pool for available modes ('node-pool', 'instance')."
   value       = local.worker_count_expected > 0 ? try(one(module.workers[*].worker_pool_ips), null) : null
+}
+
+output "worker_gpu_memory_clusters" {
+  description = "Created GPU Memory Clusters keyed by '<pool_name>###<gpu_memory_fabric_id>'."
+  value       = var.output_detail && local.worker_count_expected > 0 ? try(one(module.workers[*].worker_gpu_memory_clusters), null) : null
+}
+
+output "worker_gpu_memory_cluster_ids" {
+  description = "OCIDs of created GPU Memory Clusters keyed by '<pool_name>###<gpu_memory_fabric_id>'."
+  value       = local.worker_count_expected > 0 ? try(one(module.workers[*].worker_gpu_memory_cluster_ids), null) : null
 }
