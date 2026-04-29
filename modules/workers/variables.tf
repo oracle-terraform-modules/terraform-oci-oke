@@ -122,14 +122,34 @@ variable "worker_pool_mode" {
   description = "Default management mode for workers when unspecified on a pool. Only 'node-pool' is currently supported."
   type        = string
   validation {
-    condition     = contains(["node-pool", "instance", "instance-pool", "cluster-network"], var.worker_pool_mode)
-    error_message = "Accepted values are node-pool, instance-pool, or cluster-network"
+    condition     = contains(["node-pool", "instance", "instance-pool", "cluster-network", "gpu-memory-cluster"], var.worker_pool_mode)
+    error_message = "Accepted values are node-pool, instance-pool, cluster-network, or gpu-memory-cluster"
   }
 }
 
 variable "worker_pool_size" {
   default     = 0
   description = "Default size for worker pools when unspecified on a pool."
+  type        = number
+}
+
+# GPU memory cluster scale config defaults
+
+variable "gmc_scale_is_upsize_enabled" {
+  default     = true
+  description = "Default gpu_memory_cluster_scale_config.is_upsize_enabled when unspecified on a 'gpu-memory-cluster' pool."
+  type        = bool
+}
+
+variable "gmc_scale_is_downsize_enabled" {
+  default     = true
+  description = "Default gpu_memory_cluster_scale_config.is_downsize_enabled when unspecified on a 'gpu-memory-cluster' pool."
+  type        = bool
+}
+
+variable "gmc_scale_target_size" {
+  default     = 18
+  description = "Default gpu_memory_cluster_scale_config.target_size when unspecified on a 'gpu-memory-cluster' pool."
   type        = number
 }
 
