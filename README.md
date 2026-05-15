@@ -88,6 +88,7 @@ The module can deploy the following Kubernetes extensions:
 | Gatekeeper | Helm | OPA policy enforcement |
 | MPI Operator | Manifest | MPI/NCCL distributed training jobs |
 | ArgoCD | Helm | GitOps continuous delivery |
+| Karpenter | Helm | Automatic node provisioning |
 
 ## [Documentation][docs]
 

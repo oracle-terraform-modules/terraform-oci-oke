@@ -5,3 +5,13 @@ create_iam_autoscaler_policy = "auto" // never/*auto/always
 create_iam_kms_policy        = "auto" // never/*auto/always
 create_iam_operator_policy   = "auto" // never/*auto/always
 create_iam_worker_policy     = "auto" // never/*auto/always
+create_iam_karpenter_policy  = "auto" // never/*auto/always
+
+karpenter_optional_policies = {
+  capacity_reservation     = false
+  compute_clusters         = false
+  cluster_placement_groups = false
+  defined_tags             = false
+}
+
+karpenter_worker_compartments = []

@@ -25,6 +25,7 @@ Configuration Terraform Options:
    - [MPI Operator](#mpi-operator)
    - [ArgoCD](#argocd)
    - [Service Accounts](#service-accounts)
+   - [Karpenter](#karpenter)
 10. [Utilities](#utilities)
 11. [Tagging](#tagging)
 12. [Validation Rules](#validation-rules)
@@ -65,6 +66,9 @@ Configuration Terraform Options:
 | `create_iam_kms_policy` | Create IAM policy for KMS encryption. | `"never"` / `"auto"` / `"always"` | `"auto"` |
 | `create_iam_operator_policy` | Create IAM policy for operator instance principal. | `"never"` / `"auto"` / `"always"` | `"auto"` |
 | `create_iam_worker_policy` | Create IAM policy for worker nodes. | `"never"` / `"auto"` / `"always"` | `"auto"` |
+| `create_iam_karpenter_policy` | Create IAM dynamic group and policy rules for Karpenter management. Ignored when `create_iam_resources` is `false`. | `"never"` / `"auto"` / `"always"` | `"auto"` |
+| `karpenter_optional_policies` | Create optional IAM policies for Karpenter management. Ignored when `create_iam_resources` is `false`. | object({ capacity_reservation, compute_clusters, cluster_placement_groups, defined_tags }) | `{}` |
+| `karpenter_worker_compartments` | Compartments where Karpenter creates worker nodes. Ignored when `create_iam_resources` is `false`. | list(string) | `[]` |
 | `create_iam_tag_namespace` | Create IAM tag namespace and tags. | `true` / `false` | `false` |
 | `create_iam_defined_tags` | Create IAM defined tags in the tag namespace. | `true` / `false` | `false` |
 | `use_defined_tags` | Apply defined tags to created resources. | `true` / `false` | `false` |
@@ -691,6 +695,15 @@ service_accounts = {
   }
 }
 ```
+
+### Karpenter
+| Parameter | Description | Values | Default |
+| --- | --- | --- | --- |
+| `karpenter_install` | Whether to install Karpenter. | `true` / `false` | `false` |
+| `karpenter_namespace` | Kubernetes namespace. | string | `kube-system` |
+| `karpenter_version` | Karpenter version. | string | `v1.1.0` |
+| `karpenter_helm_values` | Helm values. | map(string) | `{}` |
+| `karpenter_helm_values_files` | List of Helm values files. | list(string) | `[]` |
 
 ## Utilities
 

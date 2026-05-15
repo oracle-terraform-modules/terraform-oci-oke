@@ -7,6 +7,7 @@ locals {
     local.worker_policy_statements,
     local.operator_policy_statements,
     local.autoscaler_policy_statements,
+    local.karpenter_policy_statements
   ])))
 
   has_policy_statements = var.create_iam_resources && anytrue([
@@ -14,6 +15,7 @@ locals {
     var.create_iam_kms_policy,
     var.create_iam_operator_policy,
     var.create_iam_worker_policy,
+    var.create_iam_karpenter_policy
   ])
 }
 

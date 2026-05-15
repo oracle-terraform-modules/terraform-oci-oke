@@ -23,6 +23,8 @@ module "extensions" {
   expected_node_count      = local.worker_count_expected
   worker_pools             = one(module.workers[*].worker_pools)
   cluster_private_endpoint = local.cluster_private_endpoint
+  cluster_compartment_id   = local.compartment_id
+  vcn_compartment_id       = coalesce(var.network_compartment_id, local.compartment_id)
 
   # Bastion/operator connection
   ssh_private_key = sensitive(local.ssh_private_key)
@@ -129,4 +131,11 @@ module "extensions" {
   argocd_helm_version      = var.argocd_helm_version
   argocd_helm_values       = var.argocd_helm_values
   argocd_helm_values_files = var.argocd_helm_values_files
+
+  # Karpenter
+  karpenter_install           = var.karpenter_install
+  karpenter_namespace         = var.karpenter_namespace
+  karpenter_version           = var.karpenter_version
+  karpenter_helm_values       = var.karpenter_helm_values
+  karpenter_helm_values_files = var.karpenter_helm_values_files
 }

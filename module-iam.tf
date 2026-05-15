@@ -48,6 +48,12 @@ locals {
       coalesce(var.cluster_kms_key_id, "none") != "none",
     ])
   ])
+
+  create_iam_karpenter_policy = anytrue([
+    var.create_iam_karpenter_policy == "always",
+    var.create_iam_karpenter_policy == "auto" && var.create_cluster && var.karpenter_install
+  ])
+
   default_policy_name       = format("oke-cluster-%v", local.state_id)
   prerequisites_policy_name = format("oke-cluster-prerequisites-%v", local.state_id)
 }
@@ -65,6 +71,7 @@ module "iam_cluster_prerequisites" {
   create_iam_operator_policy   = false
   create_iam_worker_policy     = false
   create_iam_cluster_policy    = false
+  create_iam_karpenter_policy  = false
   policy_name                  = local.prerequisites_policy_name
 
   create_iam_tag_namespace = var.create_iam_tag_namespace
@@ -84,6 +91,10 @@ module "iam_cluster_prerequisites" {
   enable_ipv6            = false
   network_compartment_id = var.network_compartment_id
 
+  karpenter_namespace           = var.karpenter_namespace
+  karpenter_worker_compartments = var.karpenter_worker_compartments
+  karpenter_optional_policies   = var.karpenter_optional_policies
+
   providers = {
     oci.home = oci.home
   }
@@ -102,6 +113,7 @@ module "iam" {
   create_iam_operator_policy   = local.create_iam_operator_policy
   create_iam_worker_policy     = local.create_iam_worker_policy
   create_iam_cluster_policy    = true
+  create_iam_karpenter_policy  = local.create_iam_karpenter_policy
   policy_name                  = local.default_policy_name
 
   create_iam_tag_namespace = var.create_iam_tag_namespace
@@ -120,6 +132,10 @@ module "iam" {
 
   enable_ipv6            = var.enable_ipv6
   network_compartment_id = var.network_compartment_id
+
+  karpenter_namespace           = var.karpenter_namespace
+  karpenter_worker_compartments = var.karpenter_worker_compartments
+  karpenter_optional_policies   = var.karpenter_optional_policies
 
   providers = {
     oci.home = oci.home
