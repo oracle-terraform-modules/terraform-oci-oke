@@ -441,7 +441,7 @@ variable "karpenter_version" {
 
 variable "karpenter_helm_values" {
   default     = {}
-  description = "Map of individual Helm chart values. See <a href=https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template>data.helm_template</a>."
+  description = "Map of individual Helm chart values. See <a href=https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template>data.helm_template</a> and https://github.com/oracle/karpenter-provider-oci/blob/main/chart/values.yaml."
   type        = map(string)
 }
 
