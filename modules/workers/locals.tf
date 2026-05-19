@@ -39,6 +39,12 @@ locals {
     force_node_action              = true
     force_node_delete              = true
     extended_metadata              = {} # empty pool-specific default
+    gpu_memory_cluster_scale_config = {
+      is_upsize_enabled   = var.gmc_scale_is_upsize_enabled
+      is_downsize_enabled = var.gmc_scale_is_downsize_enabled
+      target_size         = var.gmc_scale_target_size
+    }
+    gpu_memory_fabric_ids          = [] # empty pool-specific default; required for mode = "gpu-memory-cluster"
     ignore_initial_pool_size       = false
     image_id                       = var.image_id
     image_type                     = var.image_type
@@ -217,7 +223,7 @@ locals {
   # Enabled worker_pool map entries for instance pools
   enabled_instance_configs = {
     for k, v in local.enabled_worker_pools : k => v
-    if contains(["cluster-network", "instance-pool"], lookup(v, "mode", ""))
+    if contains(["cluster-network", "instance-pool", "gpu-memory-cluster"], lookup(v, "mode", ""))
   }
 
   # Enabled worker_pool map entries for instance pools
@@ -241,6 +247,22 @@ locals {
   enabled_compute_clusters = {
     for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "compute-cluster"
   }
+
+  # Enabled worker_pool map entries for GPU memory clusters
+  enabled_gmc_pools = {
+    for k, v in local.enabled_worker_pools : k => v if lookup(v, "mode", "") == "gpu-memory-cluster"
+  }
+
+  # Map keyed by "<pool_name>###<gmf_id>" of merged pool config + pool_name + gpu_memory_fabric_id, used to drive the GMC resource for_each.
+  # Keying off OCID (not list index) keeps adds/removes stable.
+  enabled_gmc_fabric_map = { for entry in flatten([
+    for k, v in local.enabled_gmc_pools : [
+      for gmf_id in lookup(v, "gpu_memory_fabric_ids", []) : merge(v, {
+        pool_name            = k
+        gpu_memory_fabric_id = gmf_id
+      })
+    ]
+  ]) : format("%s###%s", entry.pool_name, entry.gpu_memory_fabric_id) => entry }
 
   # Prepare a map workers node enabled for compute_clusters { "pool_id###worker_id" => pool_values }
   compute_cluster_instance_ids_map = { for k, v in local.enabled_compute_clusters : k => toset(lookup(v, "instance_ids", [])) }

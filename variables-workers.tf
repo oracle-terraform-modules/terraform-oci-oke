@@ -44,9 +44,10 @@ variable "worker_pool_mode" {
       "instance",
       "instance-pool",
       "cluster-network",
-      "compute-cluster"
+      "compute-cluster",
+      "gpu-memory-cluster"
     ], var.worker_pool_mode)
-    error_message = "Accepted values are node-pool, virtual-node-pool, instance, instance-pool, cluster-network, or compute-cluster."
+    error_message = "Accepted values are node-pool, virtual-node-pool, instance, instance-pool, cluster-network, compute-cluster, or gpu-memory-cluster."
   }
 }
 
@@ -64,6 +65,28 @@ variable "worker_compute_clusters" {
   default     = {}
   description = "Whether to create compute clusters shared by nodes across multiple worker pools enabled for 'compute-cluster'."
   type        = map(any)
+}
+
+#
+# Workers: GPU memory clusters
+#
+
+variable "worker_gmc_scale_is_upsize_enabled" {
+  default     = true
+  description = "Default for gpu_memory_cluster_scale_config.is_upsize_enabled when unspecified on a 'gpu-memory-cluster' pool. When true, the OCI control plane may grow the GPU Memory Cluster toward target_size."
+  type        = bool
+}
+
+variable "worker_gmc_scale_is_downsize_enabled" {
+  default     = true
+  description = "Default for gpu_memory_cluster_scale_config.is_downsize_enabled when unspecified on a 'gpu-memory-cluster' pool. When true, the OCI control plane may shrink the GPU Memory Cluster toward target_size."
+  type        = bool
+}
+
+variable "worker_gmc_scale_target_size" {
+  default     = 18
+  description = "Default for gpu_memory_cluster_scale_config.target_size when unspecified on a 'gpu-memory-cluster' pool. The desired GPU Memory Cluster size that the OCI control plane converges toward."
+  type        = number
 }
 
 #

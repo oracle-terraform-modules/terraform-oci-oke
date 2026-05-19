@@ -8,6 +8,8 @@ variable "worker_pools" { type = any }
 variable "kubernetes_version" { type = string }
 variable "expected_node_count" { type = number }
 variable "cluster_private_endpoint" { type = string }
+variable "cluster_compartment_id" { type = string }
+variable "vcn_compartment_id" { type = string }
 
 # Connection
 variable "bastion_host" { type = string }
@@ -113,3 +115,10 @@ variable "argocd_namespace" { type = string }
 variable "argocd_helm_version" { type = string }
 variable "argocd_helm_values" { type = map(string) }
 variable "argocd_helm_values_files" { type = list(string) }
+
+# Karpenter
+variable "karpenter_install" { type = bool }
+variable "karpenter_namespace" { type = string }
+variable "karpenter_version" { type = string }
+variable "karpenter_helm_values" { type = map(string) }
+variable "karpenter_helm_values_files" { type = list(string) }

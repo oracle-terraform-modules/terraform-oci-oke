@@ -184,6 +184,33 @@ variable "create_iam_worker_policy" {
   }
 }
 
+variable "create_iam_karpenter_policy" {
+  default     = "auto"
+  description = "Whether to create an IAM dynamic group and policy rules for Karpenter management. Ignored when 'create_iam_resources' is false."
+  type        = string
+  validation {
+    condition     = contains(["never", "auto", "always"], var.create_iam_karpenter_policy)
+    error_message = "Accepted values are never, auto, or always"
+  }
+}
+
+variable "karpenter_optional_policies" {
+  default     = {}
+  description = "Whether to create the optional IAM policies for Karpenter management. Depends on configuration of associated component when set to 'auto'. Ignored when 'create_iam_resources' is false."
+  type        = object({
+    capacity_reservation     = optional(bool, false)
+    compute_clusters         = optional(bool, false)
+    cluster_placement_groups = optional(bool, false)
+    defined_tags             = optional(bool, false)
+  })
+}
+
+variable "karpenter_worker_compartments" {
+  default     = []
+  description = "Compartments where karpenter will create worker nodes. Ignored when 'create_iam_resources' is false."
+  type        = list(string)
+}
+
 # Tagging
 
 variable "create_iam_tag_namespace" {

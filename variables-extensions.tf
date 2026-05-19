@@ -419,3 +419,34 @@ variable "argocd_helm_values_files" {
   description = "Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`."
   type        = list(string)
 }
+
+# Karpenter
+variable "karpenter_install" {
+  default     = false
+  description = "Whether to deploy the karpenter Helm chart. See https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/conteng-kpo.htm"
+  type        = bool
+}
+
+variable "karpenter_namespace" {
+  default     = "kube-system"
+  description = "Kubernetes namespace for deployed resources."
+  type        = string
+}
+
+variable "karpenter_version" {
+  default     = "v1.1.0"
+  description = "Version of the Helm chart to install. List available releases using `helm search repo [keyword] --versions`."
+  type        = string
+}
+
+variable "karpenter_helm_values" {
+  default     = {}
+  description = "Map of individual Helm chart values. See <a href=https://registry.terraform.io/providers/hashicorp/helm/latest/docs/data-sources/template>data.helm_template</a> and https://github.com/oracle/karpenter-provider-oci/blob/main/chart/values.yaml."
+  type        = map(string)
+}
+
+variable "karpenter_helm_values_files" {
+  default     = []
+  description = "Paths to a local YAML files with Helm chart values (as with `helm install -f` which supports multiple). Generate with defaults using `helm show values [CHART] [flags]`."
+  type        = list(string)
+}

@@ -18,6 +18,7 @@ Example configurations for deploying Kubernetes extensions:
 | `vars-extensions-sriov-cni.auto.tfvars` | SR-IOV CNI | SR-IOV network connections |
 | `vars-extensions-sriov-device.auto.tfvars` | SR-IOV Device Plugin | SR-IOV network device advertisement |
 | `vars-extensions-whereabouts.auto.tfvars` | Whereabouts | IP address management for Multus |
+| `vars-extensions-karpenter.auto.tfvars` | Karpenter | Automatic node provisioning |
 
 ## Usage
 

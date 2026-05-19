@@ -35,3 +35,13 @@ output "worker_pool_autoscale_expected" {
   description = "# of worker pools expected with autoscale enabled from created worker pools"
   value       = local.expected_autoscale_worker_pools
 }
+
+output "worker_gpu_memory_clusters" {
+  description = "Created GPU Memory Clusters keyed by '<pool_name>###<gpu_memory_fabric_id>'."
+  value       = oci_core_compute_gpu_memory_cluster.workers
+}
+
+output "worker_gpu_memory_cluster_ids" {
+  description = "OCIDs of created GPU Memory Clusters keyed by '<pool_name>###<gpu_memory_fabric_id>'."
+  value       = { for k, v in oci_core_compute_gpu_memory_cluster.workers : k => v.id }
+}
