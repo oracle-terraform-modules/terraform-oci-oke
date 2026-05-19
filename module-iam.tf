@@ -81,8 +81,8 @@ module "iam_cluster_prerequisites" {
   autoscaler_compartments = []
   worker_compartments     = []
 
-  enable_ipv6            = false
-  network_compartment_id = var.network_compartment_id
+  enable_dual_stack_defaults = false
+  network_compartment_id     = var.network_compartment_id
 
   providers = {
     oci.home = oci.home
@@ -118,8 +118,8 @@ module "iam" {
   autoscaler_compartments = local.autoscaler_compartments
   worker_compartments     = local.worker_compartments
 
-  enable_ipv6            = var.enable_ipv6
-  network_compartment_id = var.network_compartment_id
+  enable_dual_stack_defaults = local.enable_dual_stack_defaults || local.oke_uses_ipv6
+  network_compartment_id     = var.network_compartment_id
 
   providers = {
     oci.home = oci.home

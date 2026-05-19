@@ -24,7 +24,7 @@ data "helm_template" "argocd" {
   ] : null
 
   set = concat(
-    [ for k, v in var.argocd_helm_values:
+    [for k, v in var.argocd_helm_values :
       {
         name  = k,
         value = v

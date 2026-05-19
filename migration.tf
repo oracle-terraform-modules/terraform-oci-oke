@@ -36,6 +36,13 @@ moved {
   to   = module.network.oci_core_subnet.oke["fss"]
 }
 
+# Route Tables
+
+moved {
+  from = module.network.oci_core_route_table.igw_ngw_mixed_route_id[0]
+  to   = module.vcn[0].oci_core_route_table.nat_ipv4_igw_ipv6[0]
+}
+
 # Cluster
 
 moved {

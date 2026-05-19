@@ -18,8 +18,9 @@ locals {
     { for k, v in local.pods_rules : k => merge(v, { "nsg_id" = local.pod_nsg_id }) },
     { for k, v in local.operator_rules : k => merge(v, { "nsg_id" = local.operator_nsg_id }) },
     { for k, v in local.fss_rules : k => merge(v, { "nsg_id" = local.fss_nsg_id }) },
+    local.custom_nsgs_rules
     ) : x => merge(y, {
-      description               = x
+      description               = replace(x, "/.+?###/", "")
       stateless                 = lookup(y, "stateless", false)
       network_security_group_id = lookup(y, "nsg_id")
       direction                 = contains(keys(y), "source") ? "INGRESS" : "EGRESS"
@@ -52,6 +53,7 @@ locals {
     local.pod_nsg_enabled ? { "pods" = local.pod_nsg_id } : {},
     local.operator_nsg_enabled ? { "operator" = local.operator_nsg_id } : {},
     local.fss_nsg_enabled ? { "fss" = local.fss_nsg_id } : {},
+    local.custom_nsgs_ids
   ) : x => y }
 }
 
@@ -181,6 +183,11 @@ resource "oci_core_network_security_group_security_rule" "oke" {
     precondition {
       condition     = each.value.direction == "EGRESS" || coalesce(each.value.source, "none") != "none"
       error_message = "Ingress rule must have a source: '${each.key}'"
+    }
+
+    precondition {
+      condition     = each.value.description != ""
+      error_message = "Description should not be empty: '${each.key}'"
     }
 
     precondition {

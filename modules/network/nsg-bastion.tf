@@ -14,7 +14,7 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   bastion_nsg_id = one(compact([try(var.nsgs.bastion.id, null), one(oci_core_network_security_group.bastion[*].id)]))
-  bastion_rules = local.bastion_nsg_enabled ? ( var.use_stateless_rules ? local.bastion_stateless_rules: local.bastion_stateful_rules ) : {}
+  bastion_rules  = local.bastion_nsg_enabled ? (var.use_stateless_rules ? local.bastion_stateless_rules : local.bastion_stateful_rules) : {}
 
   bastion_stateful_rules = merge(
     { for cidr in var.bastion_allowed_cidrs :
@@ -42,6 +42,7 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
+    try(var.nsgs.bastion.rules, {})
   )
 
   bastion_stateless_rules = merge(
@@ -70,6 +71,7 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
+    try(var.nsgs.bastion.rules, {})
   )
 }
 

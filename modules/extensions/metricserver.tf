@@ -24,7 +24,7 @@ data "helm_template" "metrics_server" {
   ] : null
 
   set = concat(
-    [ for k, v in var.metrics_server_helm_values:
+    [for k, v in var.metrics_server_helm_values :
       {
         name  = k,
         value = v

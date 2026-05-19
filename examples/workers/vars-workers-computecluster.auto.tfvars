@@ -19,14 +19,14 @@ worker_pools = {
   },
 
   compute-cluster-group-1 = {
-    shape                    = "BM.HPC2.36",
-    boot_volume_size         = 100,
-    image_id                 = "ocid1.image.oc1..."
-    image_type               = "custom"
-    mode                     = "compute-cluster"
-    compute_cluster          = "shared"
-    instance_ids             = ["1", "2", "3"] # List of instance IDs in the compute cluster. Each instance ID corresponds to a separate node in the cluster.
-    placement_ad             = "1"
+    shape            = "BM.HPC2.36",
+    boot_volume_size = 100,
+    image_id         = "ocid1.image.oc1..."
+    image_type       = "custom"
+    mode             = "compute-cluster"
+    compute_cluster  = "shared"
+    instance_ids     = ["1", "2", "3"] # List of instance IDs in the compute cluster. Each instance ID corresponds to a separate node in the cluster.
+    placement_ad     = "1"
     cloud_init = [
       {
         content = <<-EOT
@@ -44,14 +44,14 @@ worker_pools = {
   }
 
   compute-cluster-group-2 = {
-    shape                    = "BM.HPC2.36",
-    boot_volume_size         = 100,
-    image_id                 = "ocid1.image.oc1..."
-    image_type               = "custom"
-    mode                     = "compute-cluster"
-    compute_cluster          = "shared"
-    instance_ids             = ["a", "b", "c"] # List of instance IDs in the compute cluster. Each instance ID corresponds to a separate node in the cluster.
-    placement_ad             = "1"
+    shape            = "BM.HPC2.36",
+    boot_volume_size = 100,
+    image_id         = "ocid1.image.oc1..."
+    image_type       = "custom"
+    mode             = "compute-cluster"
+    compute_cluster  = "shared"
+    instance_ids     = ["a", "b", "c"] # List of instance IDs in the compute cluster. Each instance ID corresponds to a separate node in the cluster.
+    placement_ad     = "1"
     cloud_init = [
       {
         content = <<-EOT
@@ -68,14 +68,14 @@ worker_pools = {
     },
   }
 
-compute-cluster-group-3 = {
-    shape                    = "BM.HPC2.36",
-    boot_volume_size         = 100,
-    image_id                 = "ocid1.image.oc1..."
-    image_type               = "custom"
-    mode                     = "compute-cluster"
-    instance_ids             = ["001", "002", "003"] # List of instance IDs in the compute cluster. Each instance ID corresponds to a separate node in the cluster.
-    placement_ad             = "1"
+  compute-cluster-group-3 = {
+    shape            = "BM.HPC2.36",
+    boot_volume_size = 100,
+    image_id         = "ocid1.image.oc1..."
+    image_type       = "custom"
+    mode             = "compute-cluster"
+    instance_ids     = ["001", "002", "003"] # List of instance IDs in the compute cluster. Each instance ID corresponds to a separate node in the cluster.
+    placement_ad     = "1"
     cloud_init = [
       {
         content = <<-EOT

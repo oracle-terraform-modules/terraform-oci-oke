@@ -72,10 +72,11 @@ resource "oci_core_instance_configuration" "workers" {
             pod-subnets               = each.value.pod_subnet_id
             pod-nsgids                = join(",", each.value.pod_nsg_ids)
           },
-          var.enable_ipv6 ? 
-          { 
-            ip-families               = "IPv4,IPv6" 
-          }: {} ) : {},
+          contains(var.oke_ip_families, "IPv6") ?
+          {
+            ip-families = join(",", var.oke_ip_families)
+        } : {}) :
+        {},
 
         # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
         coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns },
@@ -125,7 +126,7 @@ resource "oci_core_instance_configuration" "workers" {
         boot_volume_size_in_gbs = each.value.boot_volume_size
         boot_volume_vpus_per_gb = each.value.boot_volume_vpus_per_gb
         image_id                = each.value.image_id
-        source_type             = "image"
+        source_type             = "IMAGE"
       }
 
       is_pv_encryption_in_transit_enabled = each.value.pv_transit_encryption

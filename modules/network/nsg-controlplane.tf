@@ -14,9 +14,9 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   control_plane_nsg_id = one(compact([try(var.nsgs.cp.id, null), one(oci_core_network_security_group.cp[*].id)]))
-  control_plane_rules = local.control_plane_nsg_enabled ? ( var.use_stateless_rules ? local.control_plane_stateless_rules: local.control_plane_stateful_rules ) : {}
-  
-  control_plane_stateful_rules= merge(
+  control_plane_rules  = local.control_plane_nsg_enabled ? (var.use_stateless_rules ? local.control_plane_stateless_rules : local.control_plane_stateful_rules) : {}
+
+  control_plane_stateful_rules = merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {
         protocol = local.tcp_protocol, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service,
@@ -49,7 +49,7 @@ locals {
         protocol = local.icmp_protocol, source = local.worker_nsg_id, source_type = local.rule_type_nsg,
       },
     },
-    var.enable_ipv6 ? {
+    local.ipv6_network_enabled ? {
       "Allow ICMPv6 egress for path discovery to worker nodes" : {
         protocol = local.icmpv6_protocol, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
@@ -84,10 +84,11 @@ locals {
         protocol = local.tcp_protocol, port = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
       }
     },
-    var.allow_rules_cp
+    var.allow_rules_cp,
+    try(var.nsgs.cp.rules, {})
   )
 
-  control_plane_stateless_rules= merge(
+  control_plane_stateless_rules = merge(
     {
       "Allow TCP egress from OKE control plane to OCI services" : {
         protocol = local.all_protocols, port = local.all_ports, destination = local.osn, destination_type = local.rule_type_service, stateless = true
@@ -110,7 +111,7 @@ locals {
         protocol = local.tcp_protocol, source_port_min = local.apiserver_port, source_port_max = local.apiserver_port, destination = local.control_plane_nsg_id, destination_type = local.rule_type_nsg, stateless = true
       },
     },
-    var.enable_ipv6 ? {
+    local.ipv6_network_enabled ? {
       "Allow ICMPv6 egress for path discovery to worker nodes" : {
         protocol = local.icmpv6_protocol, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
@@ -145,7 +146,8 @@ locals {
         protocol = local.tcp_protocol, destination_port_min = local.apiserver_port, destination_port_max = local.apiserver_port, source = allowed_cidr, source_type = local.rule_type_cidr
       }
     },
-    var.allow_rules_cp
+    var.allow_rules_cp,
+    try(var.nsgs.cp.rules, {})
   )
 }
 

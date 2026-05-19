@@ -34,7 +34,7 @@ variable "create_internet_gateway" { type = bool }
 variable "create_nat_gateway" { type = bool }
 variable "create_operator" { type = bool }
 variable "drg_attachments" { type = any }
-variable "enable_ipv6" { type = bool }
+variable "enable_dual_stack_defaults" { type = bool }
 variable "enable_waf" { type = bool }
 variable "ig_route_table_id" { type = string }
 variable "igw_ngw_mixed_route_id" { type = string }
@@ -57,6 +57,9 @@ variable "subnets" {
     display_name = optional(string)
     dns_label    = optional(string)
     ipv6_cidr    = optional(string)
+    ipv4_cidrs   = optional(list(string))
+    ipv6_cidrs   = optional(list(string))
+    is_public    = optional(bool, false)
   }))
 }
 
@@ -64,7 +67,8 @@ variable "nsgs" {
   type = map(object({
     create = optional(string)
     id     = optional(string)
+    rules  = optional(map(map(string)))
   }))
 }
 
-variable "use_stateless_rules" { type    = bool }
+variable "use_stateless_rules" { type = bool }

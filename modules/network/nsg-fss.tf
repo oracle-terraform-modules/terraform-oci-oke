@@ -14,9 +14,9 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   fss_nsg_id = one(compact([try(var.nsgs.fss.id, null), one(oci_core_network_security_group.fss[*].id)]))
-  fss_rules = local.fss_nsg_enabled ? ( var.use_stateless_rules ? local.fss_stateless_rules: local.fss_stateful_rules ) : {}
-  
-  fss_stateful_rules = {
+  fss_rules  = local.fss_nsg_enabled ? (var.use_stateless_rules ? local.fss_stateless_rules : local.fss_stateful_rules) : {}
+
+  fss_stateful_rules = merge({
     # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
     # Ingress
     "Allow UDP ingress for NFS portmapper from workers" : {
@@ -42,9 +42,11 @@ locals {
     "Allow TCP egress for NFS to the workers" : {
       protocol = local.tcp_protocol, source_port_min = local.fss_nfs_port_min, source_port_max = local.fss_nfs_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
     },
-  }
+    },
+    try(var.nsgs.fss.rules, {})
+  )
 
-  fss_stateless_rules = {
+  fss_stateless_rules = merge({
     # See https://docs.oracle.com/en-us/iaas/Content/File/Tasks/securitylistsfilestorage.htm
     # Ingress
     "Allow UDP ingress for NFS portmapper from workers" : {
@@ -74,7 +76,9 @@ locals {
     "Allow TCP egress for NFS to workers" : {
       protocol = local.tcp_protocol, source_port_min = local.fss_nfs_port_min, source_port_max = local.fss_nfs_port_max, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg, stateless = true
     },
-  }
+    },
+    try(var.nsgs.fss.rules, {})
+  )
 }
 
 resource "oci_core_network_security_group" "fss" {

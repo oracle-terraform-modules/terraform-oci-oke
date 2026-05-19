@@ -24,7 +24,7 @@ data "helm_template" "gatekeeper" {
   ] : null
 
   set = concat(
-    [ for k, v in var.gatekeeper_helm_values:
+    [for k, v in var.gatekeeper_helm_values :
       {
         name  = k,
         value = v

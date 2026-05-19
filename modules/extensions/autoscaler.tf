@@ -64,27 +64,27 @@ data "helm_template" "cluster_autoscaler" {
         value = "allowed"
       }
     ],
-    [ for k, v in merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_helm_values) : 
-      { 
-        name  = k, 
-        value = v 
-      } 
+    [for k, v in merge(local.cluster_autoscaler_defaults, var.cluster_autoscaler_helm_values) :
+      {
+        name  = k,
+        value = v
+      }
     ],
-    [ for k, v in local.worker_pools_autoscaling : 
-      { 
-        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].name", 
+    [for k, v in local.worker_pools_autoscaling :
+      {
+        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].name",
         value = lookup(v, "id")
-      } 
+      }
     ],
-    [ for k, v in local.worker_pools_autoscaling : 
-      { 
-        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].minSize", 
+    [for k, v in local.worker_pools_autoscaling :
+      {
+        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].minSize",
         value = lookup(v, "min_size", lookup(v, "size"))
       }
     ],
-    [ for k, v in local.worker_pools_autoscaling : 
-      { 
-        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].maxSize", 
+    [for k, v in local.worker_pools_autoscaling :
+      {
+        name  = "autoscalingGroups[${index(keys(local.worker_pools_autoscaling), k)}].maxSize",
         value = lookup(v, "max_size", lookup(v, "size"))
       }
     ],
@@ -130,6 +130,6 @@ resource "null_resource" "cluster_autoscaler" {
   provisioner "remote-exec" {
     inline = [
       "kubectl apply -f ${local.cluster_autoscaler_manifest_path}"
-      ]
+    ]
   }
 }

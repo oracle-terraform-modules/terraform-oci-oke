@@ -59,7 +59,13 @@ variable "cni_type" {
 
 variable "enable_ipv6" {
   default     = false
-  description = "Whether to create a dual-stack (IPv4/IPv6) cluster."
+  description = "Deprecated compatibility alias for enable_dual_stack_defaults."
+  type        = bool
+}
+
+variable "enable_dual_stack_defaults" {
+  default     = false
+  description = "Whether to apply default settings for a dual-stack (IPv4/IPv6) cluster and network."
   type        = bool
 }
 

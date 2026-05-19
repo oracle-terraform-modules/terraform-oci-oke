@@ -77,7 +77,7 @@ resource "oci_containerengine_addon" "secondary_addon" {
   timeouts {
     create = "30m"
   }
-  
+
   lifecycle {
 
     precondition {

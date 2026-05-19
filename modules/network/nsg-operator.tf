@@ -14,8 +14,8 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   operator_nsg_id = one(compact([try(var.nsgs.operator.id, null), one(oci_core_network_security_group.operator[*].id)]))
-  operator_rules = local.operator_nsg_enabled ? ( var.use_stateless_rules ? local.operator_stateless_rules: local.operator_stateful_rules ) : {}
-  
+  operator_rules  = local.operator_nsg_enabled ? (var.use_stateless_rules ? local.operator_stateless_rules : local.operator_stateful_rules) : {}
+
   operator_stateful_rules = merge(
     {
       "Allow TCP egress from operator to OCI services" : {
@@ -30,7 +30,7 @@ locals {
     },
 
     local.bastion_nsg_enabled ? merge(
-      var.enable_ipv6 ? {
+      local.ipv6_network_enabled ? {
         "Allow ICMPv6 ingress to operator from bastion for path discovery" : {
           protocol = local.icmpv6_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
         }
@@ -43,6 +43,7 @@ locals {
           protocol = local.tcp_protocol, port = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
         }
     }) : {},
+    try(var.nsgs.operator.rules, {})
   )
 
   operator_stateless_rules = merge(
@@ -64,7 +65,7 @@ locals {
     },
 
     local.bastion_nsg_enabled ? merge(
-      var.enable_ipv6 ? {
+      local.ipv6_network_enabled ? {
         "Allow ICMPv6 ingress to operator from bastion for path discovery" : {
           protocol = local.icmpv6_protocol, source = local.bastion_nsg_id, source_type = local.rule_type_nsg,
         }
@@ -77,6 +78,7 @@ locals {
           protocol = local.tcp_protocol, destination_port_min = local.ssh_port, destination_port_max = local.ssh_port, source = local.bastion_nsg_id, source_type = local.rule_type_nsg
         },
     }) : {},
+    try(var.nsgs.operator.rules, {})
   )
 }
 

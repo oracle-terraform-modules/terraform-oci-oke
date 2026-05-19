@@ -61,6 +61,15 @@ variable "vcn_ipv6_ula_cidrs" {
   type        = list(string)
 }
 
+variable "vcn_byoipv6cidr_details" {
+  default     = []
+  description = "List of BYOIPv6 CIDR blocks to be used for the VCN."
+  type = list(object({
+    byoipv6range_id = string
+    ipv6cidr_block  = string
+  }))
+}
+
 variable "internet_gateway_id" {
   default     = null
   description = "Optional ID of existing Internet gateway in VCN."
@@ -159,13 +168,13 @@ variable "nat_gateway_public_ip_id" {
 
 variable "subnets" {
   default = {
-    bastion  = { newbits = 13, ipv6_cidr = "8, 0" }
-    operator = { newbits = 13, ipv6_cidr = "8, 1" }
-    cp       = { newbits = 13, ipv6_cidr = "8, 2" }
-    int_lb   = { newbits = 11, ipv6_cidr = "8, 3" }
-    pub_lb   = { newbits = 11, ipv6_cidr = "8, 4" }
-    workers  = { newbits = 4, ipv6_cidr = "8, 5" }
-    pods     = { newbits = 2, ipv6_cidr = "8, 6" }
+    bastion  = { newbits = 13 }
+    operator = { newbits = 13 }
+    cp       = { newbits = 13 }
+    int_lb   = { newbits = 11 }
+    pub_lb   = { newbits = 11 }
+    workers  = { newbits = 4 }
+    pods     = { newbits = 2 }
   }
   description = "Configuration for standard subnets. The 'create' parameter of each entry defaults to 'auto', creating subnets when other enabled components are expected to utilize them, and may be configured with 'never' or 'always' to force disabled/enabled."
   type = map(object({
@@ -177,6 +186,9 @@ variable "subnets" {
     display_name = optional(string)
     dns_label    = optional(string)
     ipv6_cidr    = optional(string)
+    ipv4_cidrs   = optional(list(string))
+    ipv6_cidrs   = optional(list(string))
+    is_public    = optional(bool, false)
   }))
   validation {
     condition = alltrue([
@@ -186,10 +198,10 @@ variable "subnets" {
   }
   validation {
     condition = alltrue([
-      for v in flatten([for k, v in var.subnets : keys(v)]) : contains(["create", "id", "cidr", "netnum", "newbits", "display_name", "dns_label", "ipv6_cidr"], v)
+      for v in flatten([for k, v in var.subnets : keys(v)]) : contains(["create", "id", "cidr", "netnum", "newbits", "display_name", "dns_label", "ipv6_cidr", "ipv4_cidrs", "ipv6_cidrs", "is_public"], v)
     ])
     error_message = format("Invalid subnet configuration keys: %s", jsonencode(distinct([
-      for v in flatten([for k, v in var.subnets : keys(v)]) : v if !contains(["create", "id", "cidr", "netnum", "newbits", "display_name", "dns_label", "ipv6_cidr"], v)
+      for v in flatten([for k, v in var.subnets : keys(v)]) : v if !contains(["create", "id", "cidr", "netnum", "newbits", "display_name", "dns_label", "ipv6_cidr", "ipv4_cidrs", "ipv6_cidrs", "is_public"], v)
     ])))
   }
 }
@@ -208,6 +220,7 @@ variable "nsgs" {
   type = map(object({
     create = optional(string)
     id     = optional(string)
+    rules  = optional(map(map(string)))
   }))
   validation {
     condition = alltrue([
@@ -217,21 +230,21 @@ variable "nsgs" {
   }
   validation {
     condition = alltrue([
-      for v in flatten([for k, v in var.nsgs : keys(v)]) : contains(["create", "id"], v)
+      for v in flatten([for k, v in var.nsgs : keys(v)]) : contains(["create", "id", "rules"], v)
     ])
     error_message = format("Invalid NSG configuration keys: %s", jsonencode(distinct([
-      for v in flatten([for k, v in var.nsgs : keys(v)]) : v if !contains(["create", "id"], v)
+      for v in flatten([for k, v in var.nsgs : keys(v)]) : v if !contains(["create", "id", "rules"], v)
     ])))
   }
-  validation {
-    condition = alltrue([
-      for k, v in var.nsgs :
-      contains(["bastion", "operator", "cp", "int_lb", "pub_lb", "workers", "pods", "fss"], k)
-    ])
-    error_message = format("Invalid NSG keys: %s", jsonencode([for k, v in var.nsgs : k
-      if !contains(["bastion", "operator", "cp", "int_lb", "pub_lb", "workers", "pods", "fss"], k)
-    ]))
-  }
+  # validation {
+  #   condition = alltrue([
+  #     for k, v in var.nsgs :
+  #     contains(["bastion", "operator", "cp", "int_lb", "pub_lb", "workers", "pods", "fss"], k)
+  #   ])
+  #   error_message = format("Invalid NSG keys: %s", jsonencode([for k, v in var.nsgs : k
+  #     if !contains(["bastion", "operator", "cp", "int_lb", "pub_lb", "workers", "pods", "fss"], k)
+  #   ]))
+  # }
 }
 
 variable "vcn_cidrs" {

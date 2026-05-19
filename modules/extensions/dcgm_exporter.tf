@@ -48,7 +48,7 @@ data "helm_template" "dcgm_exporter" {
   ] : null
 
   set = concat(
-    [ for k, v in var.dcgm_exporter_helm_values:
+    [for k, v in var.dcgm_exporter_helm_values :
       {
         name  = k,
         value = v

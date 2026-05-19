@@ -44,12 +44,30 @@ locals {
 
   internet_gateway_id = var.create_vcn ? try(one(module.vcn[*].internet_gateway_id), var.internet_gateway_id) : var.internet_gateway_id
   nat_gateway_id      = var.create_vcn ? try(one(module.vcn[*].nat_gateway_id), var.nat_gateway_id) : var.nat_gateway_id
+
+  ipv6_subnet_cidrs_configured = anytrue([
+    for k, v in var.subnets : lookup(v, "ipv6_cidr", null) != null || length(coalesce(lookup(v, "ipv6_cidrs", null), [])) > 0
+  ])
+  vcn_ipv6_enabled    = local.enable_dual_stack_defaults || local.ipv6_subnet_cidrs_configured || length(var.vcn_ipv6_ula_cidrs) > 0 || length(var.vcn_byoipv6cidr_details) > 0
+  vcn_enable_ipv6_gua = local.vcn_ipv6_enabled && var.vcn_enable_ipv6_gua
+
+  vcn_has_public_ipv6 = local.vcn_ipv6_enabled && anytrue([
+    local.vcn_enable_ipv6_gua,
+    length(var.vcn_byoipv6cidr_details) > 0,
+  ])
+
+  vcn_creates_mixed_route_table = var.create_vcn && local.create_internet_gateway && local.create_nat_gateway && local.vcn_has_public_ipv6
+
+  # Created route table if enabled, else var.igw_ngw_mixed_route_id
+  igw_ngw_mixed_route_id = local.vcn_creates_mixed_route_table ? try(one(module.vcn[*].nat_ipv4_igw_ipv6_route_id), var.igw_ngw_mixed_route_id) : var.igw_ngw_mixed_route_id
 }
 
 module "vcn" {
-  count          = var.create_vcn ? 1 : 0
-  source         = "oracle-terraform-modules/vcn/oci"
-  version        = "3.6.0"
+  count = var.create_vcn ? 1 : 0
+
+  source = "git::https://github.com/oracle-terraform-modules/terraform-oci-vcn.git//?ref=fa4c046a27abf417ced2d6e75142c9c5a16ba90a"
+  # version        = "3.6.0"
+
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 
   # Standard tags as defined if enabled for use, or freeform
@@ -66,6 +84,7 @@ module "vcn" {
     },
     local.network_freeform_tags,
   )
+  tenancy_id = local.tenancy_id
 
   attached_drg_id = var.drg_id != null ? var.drg_id : (tobool(var.create_drg) ? module.drg[0].drg_id : null)
 
@@ -80,10 +99,13 @@ module "vcn" {
   nat_gateway_public_ip_id     = var.nat_gateway_public_ip_id
   nat_gateway_route_rules      = var.nat_gateway_route_rules
 
-  enable_ipv6   = var.enable_ipv6
-  vcn_cidrs     = local.vcn_cidrs
-  vcn_dns_label = var.assign_dns ? coalesce(var.vcn_dns_label, local.state_id) : null
-  vcn_name      = coalesce(var.vcn_name, "oke-${local.state_id}")
+  enable_ipv6                          = local.vcn_ipv6_enabled
+  vcn_is_oracle_gua_allocation_enabled = local.vcn_enable_ipv6_gua
+  vcn_ipv6private_cidr_blocks          = var.vcn_ipv6_ula_cidrs
+  vcn_byoipv6cidr_details              = var.vcn_byoipv6cidr_details
+  vcn_cidrs                            = local.vcn_cidrs
+  vcn_dns_label                        = var.assign_dns ? coalesce(var.vcn_dns_label, local.state_id) : null
+  vcn_name                             = coalesce(var.vcn_name, "oke-${local.state_id}")
 }
 
 module "drg" {
@@ -96,7 +118,7 @@ module "drg" {
   drg_id           = one([var.drg_id]) # existing DRG ID or null
   drg_display_name = coalesce(var.drg_display_name, "oke-${local.state_id}")
   drg_vcn_attachments = tobool(var.create_drg) || var.drg_id != null ? { for k, v in module.vcn : k => {
-    # gets the vcn_id values dynamically from the vcn module 
+    # gets the vcn_id values dynamically from the vcn module
     vcn_id : v.vcn_id
     vcn_transit_routing_rt_id : null
     drg_route_table_id : null
@@ -140,13 +162,13 @@ module "network" {
   create_bastion               = var.create_bastion
   create_internet_gateway      = local.create_internet_gateway
   create_nat_gateway           = local.create_nat_gateway
-  enable_ipv6                  = var.enable_ipv6
+  enable_dual_stack_defaults   = local.enable_dual_stack_defaults
   nsgs                         = var.nsgs
   create_operator              = local.operator_enabled
   drg_attachments              = var.drg_attachments
   enable_waf                   = var.enable_waf
   ig_route_table_id            = local.ig_route_table_id
-  igw_ngw_mixed_route_id       = var.igw_ngw_mixed_route_id
+  igw_ngw_mixed_route_id       = local.igw_ngw_mixed_route_id
   internet_gateway_id          = local.internet_gateway_id
   load_balancers               = var.load_balancers
   nat_gateway_id               = local.nat_gateway_id
@@ -271,4 +293,14 @@ output "drg_id" {
 output "lpg_all_attributes" {
   description = "all attributes of created lpg"
   value       = try(one(module.vcn[*].lpg_all_attributes), null)
+}
+
+output "subnet_ids" {
+  description = "Subnet IDs"
+  value       = try(module.network.subnet_ids, null)
+}
+
+output "custom_nsg_ids" {
+  description = "Custom NSG IDs"
+  value       = try(module.network.custom_nsgs_ids, null)
 }

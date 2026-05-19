@@ -14,8 +14,8 @@ locals {
   ])
   # Return provided NSG when configured with an existing ID or created resource ID
   pub_lb_nsg_id = one(compact([try(var.nsgs.pub_lb.id, null), one(oci_core_network_security_group.pub_lb[*].id)]))
-  pub_lb_rules = local.pub_lb_nsg_enabled ? ( var.use_stateless_rules ? local.pub_lb_stateless_rules: local.pub_lb_stateful_rules ) : {}
-  
+  pub_lb_rules  = local.pub_lb_nsg_enabled ? (var.use_stateless_rules ? local.pub_lb_stateless_rules : local.pub_lb_stateful_rules) : {}
+
   pub_lb_stateful_rules = merge(
     {
       "Allow TCP egress from public load balancers to workers nodes for NodePort traffic" : {
@@ -38,13 +38,14 @@ locals {
       },
     } : {},
 
-    var.enable_ipv6 ? {
+    local.ipv6_network_enabled ? {
       "Allow ICMPv6 egress from public load balancers to worker nodes for path discovery" : {
         protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
     var.enable_waf ? local.waf_rules : {},
     var.allow_rules_public_lb,
+    try(var.nsgs.pub_lb.rules, {})
   )
 
   pub_lb_stateless_rules = merge(
@@ -84,13 +85,14 @@ locals {
       },
     } : {},
 
-    var.enable_ipv6 ? {
+    local.ipv6_network_enabled ? {
       "Allow ICMPv6 egress from public load balancers to worker nodes for path discovery" : {
         protocol = local.icmpv6_protocol, port = local.all_ports, destination = local.worker_nsg_id, destination_type = local.rule_type_nsg,
       },
     } : {},
     var.enable_waf ? local.waf_rules : {},
     var.allow_rules_public_lb,
+    try(var.nsgs.pub_lb.rules, {})
   )
 }
 

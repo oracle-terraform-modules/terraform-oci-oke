@@ -31,7 +31,7 @@ data "helm_template" "prometheus" {
     [local.prometheus_helm_values_yaml],
     [for path in var.prometheus_helm_values_files : file(path)],
   )
-  
+
   set = concat(
     [
       {
@@ -39,7 +39,7 @@ data "helm_template" "prometheus" {
         value = "false"
       },
     ],
-    [ for k, v in var.prometheus_helm_values:
+    [for k, v in var.prometheus_helm_values :
       {
         name  = k,
         value = v

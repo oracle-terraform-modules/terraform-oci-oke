@@ -156,7 +156,7 @@ resource "oci_core_instance" "compute_cluster_workers" {
     boot_volume_size_in_gbs = each.value.boot_volume_size
     boot_volume_vpus_per_gb = each.value.boot_volume_vpus_per_gb
     source_id               = each.value.image_id
-    source_type             = "image"
+    source_type             = "IMAGE"
   }
 
   lifecycle {

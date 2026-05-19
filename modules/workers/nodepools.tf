@@ -114,7 +114,7 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
   node_source_details {
     boot_volume_size_in_gbs = each.value.boot_volume_size
     image_id                = each.value.image_id
-    source_type             = "image"
+    source_type             = "IMAGE"
   }
 
   lifecycle { # prevent resources changes for changed fields
@@ -270,7 +270,7 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
   node_source_details {
     boot_volume_size_in_gbs = each.value.boot_volume_size
     image_id                = each.value.image_id
-    source_type             = "image"
+    source_type             = "IMAGE"
   }
 
   lifecycle { # prevent resources changes for changed fields
