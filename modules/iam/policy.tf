@@ -42,6 +42,7 @@ resource "oci_identity_policy" "networking_policies" {
   statements     = compact([
     var.enable_ipv6 ? format("Allow any-user to use ipv6s in compartment id %v where all { request.principal.type = 'cluster' }", coalesce(var.network_compartment_id, var.compartment_id)) : null,
     format("Allow any-user to manage network-security-groups in compartment id %v where request.principal.type = 'cluster'", coalesce(var.network_compartment_id, var.compartment_id)),
+    var.create_iam_karpenter_policy && var.network_compartment_id != null ? format("Allow any-user to manage virtual-network-family in compartment id %v where all { request.principal.type='workload', request.principal.cluster_id = '%v', request.principal.namespace = '%v', request.principal.service_account = 'karpenter' }", coalesce(var.network_compartment_id, var.compartment_id), var.cluster_id, var.karpenter_namespace) : null
   ])
   defined_tags   = local.defined_tags
   freeform_tags  = local.freeform_tags

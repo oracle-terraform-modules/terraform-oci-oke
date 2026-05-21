@@ -92,7 +92,6 @@ module "iam_cluster_prerequisites" {
   network_compartment_id = var.network_compartment_id
 
   karpenter_namespace           = var.karpenter_namespace
-  karpenter_worker_compartments = var.karpenter_worker_compartments
   karpenter_optional_policies   = var.karpenter_optional_policies
 
   providers = {
@@ -134,7 +133,6 @@ module "iam" {
   network_compartment_id = var.network_compartment_id
 
   karpenter_namespace           = var.karpenter_namespace
-  karpenter_worker_compartments = var.karpenter_worker_compartments
   karpenter_optional_policies   = var.karpenter_optional_policies
 
   providers = {

@@ -13,5 +13,3 @@ karpenter_optional_policies = {
   cluster_placement_groups = false
   defined_tags             = false
 }
-
-karpenter_worker_compartments = []

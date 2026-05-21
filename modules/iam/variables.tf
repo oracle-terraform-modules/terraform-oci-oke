@@ -35,5 +35,4 @@ variable "worker_volume_kms_key_id" { type = string }
 
 # Karpenter
 variable "karpenter_namespace" { type = string }
-variable "karpenter_worker_compartments" { type = list(string) }
 variable "karpenter_optional_policies" { type = map(string) }
