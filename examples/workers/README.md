@@ -18,11 +18,13 @@ Example configurations for various worker pool modes and features:
 | `vars-workers-cloudinit-global.auto.tfvars` | Global cloud-init for all pools |
 | `vars-workers-cloudinit-pool.auto.tfvars` | Pool-specific cloud-init |
 | `vars-workers-drain.auto.tfvars` | Worker pool draining |
-| `vars-workers-network-nsgs.auto.tfvars` | Custom NSG configuration |
-| `vars-workers-network-subnets.auto.tfvars` | Custom subnet configuration |
-| `vars-workers-network-vnics.auto.tfvars` | Secondary VNIC configuration |
+| `vars-workers-network-nsgs.auto.tfvars` | Worker pools using custom NSG configuration |
+| `vars-workers-network-subnets.auto.tfvars` | Worker pools using custom subnet configuration |
+| `vars-workers-network-vnics.auto.tfvars` | Self-managed worker secondary VNIC configuration |
 | `vars-workers-node-cycling.auto.tfvars` | Node cycling for updates |
 
 ## Usage
 
 Copy the desired `.auto.tfvars` file(s) to your root module and adjust the values as needed.
+
+Managed node pools can use `gva_secondary_vnics` when `cni_type = "npn"`. By default, GVA secondary VNICs resolve `subnet_key = "pods"` through the module-created pod subnet; set `subnet_id` to use an explicit subnet OCID.

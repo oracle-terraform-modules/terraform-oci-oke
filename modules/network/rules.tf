@@ -232,5 +232,5 @@ output "network_security_rules" {
 }
 
 output "nsg_ids" {
-  value = length(local.all_nsg_ids) > 0 ? local.all_nsg_ids : null
+  value = length(local.all_nsg_ids) > 0 ? local.all_nsg_ids : {}
 }

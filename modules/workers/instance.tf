@@ -94,10 +94,11 @@ resource "oci_core_instance" "workers" {
         pod-subnets               = each.value.pod_subnet_id
         pod-nsgids                = join(",", each.value.pod_nsg_ids)
       },
-      contains(var.oke_ip_families, "IPv6") ?
+      local.oke_uses_ipv6 ?
       {
         ip-families = join(",", var.oke_ip_families)
-    } : {}) :
+      } : {}
+    ) :
     {},
 
     # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
@@ -112,7 +113,7 @@ resource "oci_core_instance" "workers" {
     boot_volume_size_in_gbs = each.value.boot_volume_size
     boot_volume_vpus_per_gb = each.value.boot_volume_vpus_per_gb
     source_id               = each.value.image_id
-    source_type             = "IMAGE"
+    source_type             = "image"
   }
 
   lifecycle {
@@ -124,6 +125,11 @@ resource "oci_core_instance" "workers" {
         image_type: ${coalesce(each.value.image_type, "none")}
         image_id: ${coalesce(each.value.image_id, "none")}
       EOT
+    }
+
+    precondition {
+      condition     = length(lookup(each.value, "gva_secondary_vnics", {})) == 0
+      error_message = "gva_secondary_vnics is only supported for pools with mode = 'node-pool'."
     }
 
     ignore_changes = [

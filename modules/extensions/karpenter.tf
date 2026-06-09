@@ -33,7 +33,7 @@ data "helm_template" "karpenter" {
   ] : null
 
   set = concat(
-    [ for k, v in merge(local.karpenter_defaults.defaults, var.karpenter_helm_values):
+    [for k, v in merge(local.karpenter_defaults.defaults, var.karpenter_helm_values) :
       {
         name  = k,
         value = v

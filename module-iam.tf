@@ -91,8 +91,8 @@ module "iam_cluster_prerequisites" {
   enable_dual_stack_defaults = false
   network_compartment_id     = var.network_compartment_id
 
-  karpenter_namespace           = var.karpenter_namespace
-  karpenter_optional_policies   = var.karpenter_optional_policies
+  karpenter_namespace         = var.karpenter_namespace
+  karpenter_optional_policies = var.karpenter_optional_policies
 
   providers = {
     oci.home = oci.home
@@ -132,8 +132,8 @@ module "iam" {
   enable_dual_stack_defaults = local.enable_dual_stack_defaults || local.oke_uses_ipv6
   network_compartment_id     = var.network_compartment_id
 
-  karpenter_namespace           = var.karpenter_namespace
-  karpenter_optional_policies   = var.karpenter_optional_policies
+  karpenter_namespace         = var.karpenter_namespace
+  karpenter_optional_policies = var.karpenter_optional_policies
 
   providers = {
     oci.home = oci.home

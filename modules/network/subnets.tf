@@ -13,10 +13,12 @@ locals {
     for k, v in var.subnets : k => merge(v, {
       "type" = (lookup(v, "netnum", null) == null && lookup(v, "newbits", null) != null ? "newbits"
         : (lookup(v, "netnum", null) != null && lookup(v, "newbits", null) != null ? "netnum"
-          : (lookup(v, "cidr", null) != null ? "cidr"
-            : (lookup(v, "id", null) != null ? "id"
-              : (lookup(v, "netnum", null) != null ? "invalid"
-      : "none")))))
+          : (length(lookup(v, "ipv4_cidrs", [])) > 0 ? "ipv4_cidrs"
+            : (lookup(v, "cidr", null) != null ? "cidr"
+              : (lookup(v, "id", null) != null ? "id"
+                : (lookup(v, "ipv6_cidr", null) != null ? "ipv6_cidr"
+                  : (length(lookup(v, "ipv6_cidrs", [])) > 0 ? "ipv6_cidrs"
+      : "invalid")))))))
     }) if lookup(v, "create", "auto") != "never"
   }
 
@@ -43,9 +45,16 @@ locals {
   }
 
   # Handle subnets configured with IPv4 CIDR lists.
-  subnet_ipv4cidr_blocks_all = {
-    for k, v in local.subnet_cidrs_new : k => v.ipv4_cidrs
-    if length(coalesce(lookup(v, "ipv4_cidrs", null), [])) > 0
+  # Each element can be either a literal CIDR block or a "newbits, netnum" offset string
+  # (like "8, 0") that gets resolved via cidrsubnet based on the VCN CIDR.
+  subnet_cidrs_ipv4_cidr_blocks_all = {
+    for k, v in local.subnet_cidrs_new : k => [
+      for cidr in lookup(v, "ipv4_cidrs", []) :
+      length(regexall("^\\d+,[ ]?\\d+$", cidr)) > 0 ?
+      cidrsubnet(local.vcn_cidr, tonumber(split(",", cidr)[0]), tonumber(trim(split(",", cidr)[1], " "))) :
+      cidr
+    ]
+    if v.type == "ipv4_cidrs"
   }
 
   // Combine provided and calculated subnet CIDRs
@@ -74,7 +83,15 @@ locals {
 
   ipv6_subnet_cidr_offsets_requested = anytrue([
     for k, v in local.subnets_with_ipv6_cidr_defaults :
-    length(regexall("^\\d+,[ ]?\\d+$", coalesce(lookup(v, "ipv6_cidr", null), "none"))) > 0
+    anytrue(concat(
+      [
+        length(regexall("^\\d+,[ ]?\\d+$", coalesce(lookup(v, "ipv6_cidr", null), "none"))) > 0
+      ],
+      [
+        for cidr in coalesce(lookup(v, "ipv6_cidrs", null), []) :
+        length(regexall("^\\d+,[ ]?\\d+$", cidr)) > 0
+      ]
+    ))
     if try(v.create, "auto") != "never"
   ])
 
@@ -86,16 +103,23 @@ locals {
   }
 
   # Handle subnets configured with IPv6 CIDR lists.
+  # Each element can be either a literal IPv6 CIDR block or a "newbits, netnum" offset string
+  # (like "8, 0") that gets resolved via cidrsubnet based on the VCN IPv6 CIDR.
   subnet_ipv6cidr_blocks_all = {
-    for k, v in local.subnet_cidrs_new : k => v.ipv6_cidrs
-    if length(coalesce(lookup(v, "ipv6_cidrs", null), [])) > 0
+    for k, v in local.subnet_cidrs_new : k => [
+      for cidr in v.ipv6_cidrs :
+      length(regexall("^\\d+,[ ]?\\d+$", cidr)) > 0 && length(var.vcn_ipv6_cidrs) > 0 ?
+      cidrsubnet(var.vcn_ipv6_cidrs[0], tonumber(split(",", cidr)[0]), tonumber(trim(split(",", cidr)[1], " "))) :
+      cidr
+    ]
+    if try(v.create, "auto") != "never" && length(v.ipv6_cidrs) > 0
   }
 
   ipv6_network_enabled = length(local.subnets_ipv6_cidr) > 0 || length(local.subnet_ipv6cidr_blocks_all) > 0
 
   subnet_address_input_keys = distinct(concat(
     keys(local.subnet_cidrs_all),
-    keys(local.subnet_ipv4cidr_blocks_all),
+    keys(local.subnet_cidrs_ipv4_cidr_blocks_all),
     keys(local.subnets_ipv6_cidr),
     keys(local.subnet_ipv6cidr_blocks_all),
   ))
@@ -270,7 +294,7 @@ resource "oci_core_subnet" "oke" {
   defined_tags               = var.defined_tags
   freeform_tags              = var.freeform_tags
   ipv6cidr_block             = lookup(lookup(local.subnets_ipv6_cidr, each.key, {}), "ipv6_cidr", null)
-  ipv4cidr_blocks            = lookup(local.subnet_ipv4cidr_blocks_all, each.key, null)
+  ipv4cidr_blocks            = lookup(local.subnet_cidrs_ipv4_cidr_blocks_all, each.key, null)
   ipv6cidr_blocks            = lookup(local.subnet_ipv6cidr_blocks_all, each.key, null)
 
   lifecycle {
@@ -354,10 +378,5 @@ output "fss_subnet_cidr" {
 }
 
 output "subnet_ids" {
-  value = {
-    for k, v in local.subnet_output : k => {
-      id   = v
-      cidr = lookup(local.subnet_cidrs_all, k, null)
-    }
-  }
+  value = local.subnet_output
 }

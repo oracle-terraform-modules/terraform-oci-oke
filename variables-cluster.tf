@@ -72,7 +72,22 @@ variable "enable_dual_stack_defaults" {
 variable "oke_ip_families" {
   default     = []
   type        = list(string)
-  description = "Override the ip_families attribute for the OKE cluster. Supported values: ['IPv4'] or ['IPV4', 'IPv6']"
+  description = "Override the ip_families attribute for the OKE cluster. Supported values: ['IPv4'] or ['IPv4', 'IPv6'] or ['IPv6']"
+
+  validation {
+    condition = length(var.oke_ip_families) == 0 || (
+      length(var.oke_ip_families) <= 2 &&
+      alltrue([
+        for family in var.oke_ip_families : contains(["IPv4", "IPv6"], family)
+      ])
+    )
+    error_message = "Accepted values are 'IPv4', 'IPv6', or a combination of both. Example: ['IPv4'] or ['IPv4', 'IPv6'] or ['IPv6']."
+  }
+
+  validation {
+    condition     = length(var.oke_ip_families) == length(distinct(var.oke_ip_families))
+    error_message = "Duplicate values are not allowed in oke_ip_families."
+  }
 }
 
 variable "pods_cidr" {

@@ -7,12 +7,13 @@ locals {
   memory                  = lookup(var.shape, "memory", 4)
   ocpus                   = max(1, lookup(var.shape, "ocpus", 1))
   shape                   = lookup(var.shape, "shape", "VM.Standard.E4.Flex")
-
   # Used for default values of required input for virtual node pools
   fault_domains_all = formatlist("FD-%v", [1, 2, 3])
   fault_domains_available = {
     for ad, fd in data.oci_identity_fault_domains.all : ad => fd
   }
+
+  oke_uses_ipv6 = contains([for family in var.oke_ip_families : upper(family)], "IPV6")
 
   worker_pool_defaults = {
     agent_config = {
@@ -24,7 +25,7 @@ locals {
     allow_autoscaler               = false
     legacy_imds_endpoints_disabled = var.legacy_imds_endpoints_disabled
     assign_public_ip               = var.assign_public_ip
-    assign_ipv6ip                  = contains(var.oke_ip_families, "IPv6")
+    assign_ipv6ip                  = local.oke_uses_ipv6
     autoscale                      = false
     block_volume_type              = var.block_volume_type
     boot_volume_size               = local.boot_volume_size
@@ -44,34 +45,36 @@ locals {
       is_downsize_enabled = var.gmc_scale_is_downsize_enabled
       target_size         = var.gmc_scale_target_size
     }
-    gpu_memory_fabric_ids          = [] # empty pool-specific default; required for mode = "gpu-memory-cluster"
-    ignore_initial_pool_size       = false
-    image_id                       = var.image_id
-    image_type                     = var.image_type
-    kubernetes_version             = var.kubernetes_version
-    max_pods_per_node              = min(max(var.max_pods_per_node, 1), 110)
-    memory                         = local.memory
-    mode                           = var.worker_pool_mode
-    node_cycling_enabled           = false
-    node_cycling_max_surge         = 1
-    node_cycling_max_unavailable   = 0
-    node_cycling_mode              = ["instance"]
-    node_labels                    = var.node_labels
-    nsg_ids                        = [] # empty pool-specific default
-    ocpus                          = local.ocpus
-    os                             = var.image_os
-    os_version                     = var.image_os_version
-    placement_ads                  = var.ad_numbers
-    platform_config                = var.platform_config
-    pod_nsg_ids                    = var.pod_nsg_ids
-    pod_subnet_id                  = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
-    preemptible_config             = var.preemptible_config
-    pv_transit_encryption          = var.pv_transit_encryption
-    shape                          = local.shape
-    size                           = var.worker_pool_size
-    subnet_id                      = var.worker_subnet_id
-    taints                         = [] # empty pool-specific default
-    volume_kms_key_id              = var.volume_kms_key_id
+    gpu_memory_fabric_ids        = [] # empty pool-specific default; required for mode = "gpu-memory-cluster"
+    ignore_initial_pool_size     = false
+    image_id                     = var.image_id
+    image_type                   = var.image_type
+    kubernetes_version           = var.kubernetes_version
+    max_pods_per_node            = min(max(var.max_pods_per_node, 1), 110)
+    memory                       = local.memory
+    mode                         = var.worker_pool_mode
+    network_launch_type          = null
+    node_cycling_enabled         = false
+    node_cycling_max_surge       = 1
+    node_cycling_max_unavailable = 0
+    node_cycling_mode            = ["instance"]
+    node_labels                  = var.node_labels
+    nsg_ids                      = [] # empty pool-specific default
+    ocpus                        = local.ocpus
+    os                           = var.image_os
+    os_version                   = var.image_os_version
+    placement_ads                = var.ad_numbers
+    platform_config              = var.platform_config
+    pod_nsg_ids                  = var.pod_nsg_ids
+    pod_subnet_id                = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
+    preemptible_config           = var.preemptible_config
+    pv_transit_encryption        = var.pv_transit_encryption
+    gva_secondary_vnics          = {}
+    shape                        = local.shape
+    size                         = var.worker_pool_size
+    subnet_id                    = var.worker_subnet_id
+    taints                       = [] # empty pool-specific default
+    volume_kms_key_id            = var.volume_kms_key_id
   }
 
   # Merge desired pool configuration onto default values
@@ -183,6 +186,20 @@ locals {
       # Override Node-cycling mode
       node_cycling_mode = pool.node_cycling_mode != null ? [for entry in pool.node_cycling_mode : lookup(local.supported_node_cycling_mode, lower(entry))] : null
 
+      gva_secondary_vnics = {
+        for vnic_key, vnic_value in pool.gva_secondary_vnics : vnic_key => merge(
+          local.gva_secondary_vnics_defaults,
+          vnic_value,
+          {
+            display_name = lookup(vnic_value, "display_name", vnic_key)
+            subnet_id    = try(coalesce(lookup(vnic_value, "subnet_id", null), lookup(var.subnet_ids, lookup(vnic_value, "subnet_key", local.gva_secondary_vnics_defaults.subnet_key), null)), null)
+            nsg_ids = compact([
+              for nsg_id in lookup(merge(local.gva_secondary_vnics_defaults, vnic_value), "nsg_ids", []) :
+              length(regexall("ocid\\d+\\.networksecuritygroup", nsg_id)) > 0 ? nsg_id : lookup(var.nsg_ids, nsg_id, null)
+            ])
+          }
+        )
+      }
     }) if tobool(pool.create)
   }
 
@@ -335,5 +352,19 @@ locals {
     }
     if lookup(v, "mode", var.worker_pool_mode) != "virtual-node-pool" &&
     contains(coalescelist(split(" ", lookup(lookup(data.oci_core_image.workers, k, {}), "operating_system", "")), [lookup(v, "os", "")]), "Ubuntu")
+  }
+
+  gva_secondary_vnics_defaults = {
+    nic_index              = 0
+    application_resources  = null
+    ip_count               = 16
+    nsg_ids                = toset(compact(var.pod_nsg_ids))
+    ipv6_cidrs             = []
+    ipv6_addresses         = []
+    skip_source_dest_check = true
+    assign_public_ip       = false
+    assign_ipv6ip          = local.oke_uses_ipv6
+    subnet_key             = "pods"
+    subnet_id              = ""
   }
 }

@@ -108,6 +108,14 @@ variable "oke_ip_families" {
 
 variable "pod_subnet_id" { type = string }
 variable "worker_subnet_id" { type = string }
+variable "subnet_ids" {
+  type    = map(string)
+  default = {}
+}
+variable "nsg_ids" {
+  type    = map(string)
+  default = {}
+}
 
 # Worker pools
 

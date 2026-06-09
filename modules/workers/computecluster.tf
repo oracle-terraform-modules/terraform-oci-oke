@@ -112,6 +112,7 @@ resource "oci_core_instance" "compute_cluster_workers" {
 
   create_vnic_details {
     assign_private_dns_record = var.assign_dns
+    assign_ipv6ip             = each.value.assign_ipv6ip
     assign_public_ip          = each.value.assign_public_ip
     nsg_ids                   = each.value.nsg_ids
     subnet_id                 = each.value.subnet_id
@@ -137,12 +138,19 @@ resource "oci_core_instance" "compute_cluster_workers" {
     },
 
     # Add labels required for NPN CNI.
-    var.cni_type == "npn" ? {
-      oke-native-pod-networking = true
-      oke-max-pods              = each.value.max_pods_per_node
-      pod-subnets               = each.value.pod_subnet_id
-      pod-nsgids                = join(",", each.value.pod_nsg_ids)
-    } : {},
+    var.cni_type == "npn" ? merge(
+      {
+        oke-native-pod-networking = true
+        oke-max-pods              = each.value.max_pods_per_node
+        pod-subnets               = each.value.pod_subnet_id
+        pod-nsgids                = join(",", each.value.pod_nsg_ids)
+      },
+      local.oke_uses_ipv6 ?
+      {
+        ip-families = join(",", var.oke_ip_families)
+      } : {}
+    ) :
+    {},
 
     # Only provide cluster DNS service address if set explicitly; determined automatically in practice.
     coalesce(var.cluster_dns, "none") == "none" ? {} : { kubedns_svc_ip = var.cluster_dns },
@@ -156,7 +164,7 @@ resource "oci_core_instance" "compute_cluster_workers" {
     boot_volume_size_in_gbs = each.value.boot_volume_size
     boot_volume_vpus_per_gb = each.value.boot_volume_vpus_per_gb
     source_id               = each.value.image_id
-    source_type             = "IMAGE"
+    source_type             = "image"
   }
 
   lifecycle {
@@ -168,6 +176,11 @@ resource "oci_core_instance" "compute_cluster_workers" {
         image_type: ${coalesce(each.value.image_type, "none")}
         image_id: ${coalesce(each.value.image_id, "none")}
       EOT
+    }
+
+    precondition {
+      condition     = length(lookup(each.value, "gva_secondary_vnics", {})) == 0
+      error_message = "gva_secondary_vnics is only supported for pools with mode = 'node-pool'."
     }
 
     ignore_changes = [

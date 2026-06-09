@@ -8,7 +8,7 @@ data "oci_core_vcn" "oke" {
 
 locals {
   # Created VCN if enabled, else var.vcn_id
-  vcn_id = var.create_vcn ? try(one(module.vcn[*].vcn_id), var.vcn_id) : var.vcn_id
+  vcn_id = var.create_vcn ? module.vcn[0].vcn_id : var.vcn_id
 
   # Configured VCN CIDRs if creating, else from provided vcn_id
   vcn_lookup             = coalesce(one(data.oci_core_vcn.oke[*].cidr_blocks), [])
@@ -16,10 +16,10 @@ locals {
   vcn_cidrs              = var.create_vcn ? var.vcn_cidrs : local.vcn_lookup_cidr_blocks
   vcn_ipv6_cidrs         = var.create_vcn ? concat(module.vcn[0].vcn_all_attributes["ipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["byoipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["ipv6private_cidr_blocks"]) : concat(data.oci_core_vcn.oke[0].ipv6cidr_blocks, data.oci_core_vcn.oke[0].byoipv6cidr_blocks, data.oci_core_vcn.oke[0].ipv6private_cidr_blocks)
   # Created route table if enabled, else var.ig_route_table_id
-  ig_route_table_id = var.create_vcn ? try(one(module.vcn[*].ig_route_id), var.ig_route_table_id) : var.ig_route_table_id
+  ig_route_table_id = var.create_vcn ? module.vcn[0].ig_route_id : var.ig_route_table_id
 
   # Created route table if enabled, else var.nat_route_table_id
-  nat_route_table_id = var.create_vcn ? try(one(module.vcn[*].nat_route_id), var.ig_route_table_id) : var.nat_route_table_id
+  nat_route_table_id = var.create_vcn ? module.vcn[0].nat_route_id : var.nat_route_table_id
 
   create_internet_gateway = alltrue([
     var.vcn_create_internet_gateway != "never",    # always disable
@@ -42,8 +42,8 @@ locals {
     ])
   ])
 
-  internet_gateway_id = var.create_vcn ? try(one(module.vcn[*].internet_gateway_id), var.internet_gateway_id) : var.internet_gateway_id
-  nat_gateway_id      = var.create_vcn ? try(one(module.vcn[*].nat_gateway_id), var.nat_gateway_id) : var.nat_gateway_id
+  internet_gateway_id = var.create_vcn ? module.vcn[0].internet_gateway_id : var.internet_gateway_id
+  nat_gateway_id      = var.create_vcn ? module.vcn[0].nat_gateway_id : var.nat_gateway_id
 
   ipv6_subnet_cidrs_configured = anytrue([
     for k, v in var.subnets : lookup(v, "ipv6_cidr", null) != null || length(coalesce(lookup(v, "ipv6_cidrs", null), [])) > 0
@@ -59,7 +59,7 @@ locals {
   vcn_creates_mixed_route_table = var.create_vcn && local.create_internet_gateway && local.create_nat_gateway && local.vcn_has_public_ipv6
 
   # Created route table if enabled, else var.igw_ngw_mixed_route_id
-  igw_ngw_mixed_route_id = local.vcn_creates_mixed_route_table ? try(one(module.vcn[*].nat_ipv4_igw_ipv6_route_id), var.igw_ngw_mixed_route_id) : var.igw_ngw_mixed_route_id
+  igw_ngw_mixed_route_id = local.vcn_creates_mixed_route_table ? coalesce(one(module.vcn[*].nat_ipv4_igw_ipv6_route_id), var.igw_ngw_mixed_route_id) : var.igw_ngw_mixed_route_id
 }
 
 module "vcn" {

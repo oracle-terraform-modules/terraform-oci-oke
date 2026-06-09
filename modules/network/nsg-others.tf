@@ -12,9 +12,10 @@ locals {
   }
 
   custom_nsgs_ids = { for k, v in local.custom_nsgs : k => coalesce(
+    lookup(lookup(oci_core_network_security_group.custom_nsgs, k, {}), "id", null),
     lookup(v, "id", null),
-    lookup(lookup(oci_core_network_security_group.custom_nsgs, k, {}), "id", null)
-  ) if lookup(v, "create", "auto") != "never" }
+    "n/a"
+  ) }
 
   custom_nsgs_rules = merge([
     for nsg_name, nsg in local.custom_nsgs : {

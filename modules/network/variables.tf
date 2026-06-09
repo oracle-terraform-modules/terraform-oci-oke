@@ -57,8 +57,8 @@ variable "subnets" {
     display_name = optional(string)
     dns_label    = optional(string)
     ipv6_cidr    = optional(string)
-    ipv4_cidrs   = optional(list(string))
-    ipv6_cidrs   = optional(list(string))
+    ipv4_cidrs   = optional(list(string), [])
+    ipv6_cidrs   = optional(list(string), [])
     is_public    = optional(bool, false)
   }))
 }

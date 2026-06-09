@@ -7,10 +7,10 @@ Example configurations for VCN networking:
 | `vars-network.auto.tfvars` | Full network configuration with subnets, NSGs, and gateways |
 | `vars-network-subnets-create.auto.tfvars` | Automatic subnet creation with defaults |
 | `vars-network-subnets-create-cidr.auto.tfvars` | Subnet creation with explicit CIDRs |
-| `vars-network-subnets-create-cidr-ipv4-and-ipv6.tfvars` | Dual-stack (IPv4/IPv6) subnet creation |
-| `vars-network-subnets-create-force.auto.tfvars` | Force subnet creation regardless of component settings |
+| `vars-network-subnets-create-cidr-ipv4-and-ipv6.tfvars` | Dual-stack (IPv4/IPv6) subnet creation, including multiple CIDR block inputs |
+| `vars-network-subnets-create-force.auto.tfvars` | Force standard or custom subnet creation regardless of component settings |
 | `vars-network-subnets-existing.auto.tfvars` | Using existing subnets |
-| `vars-network-nsgs-create.auto.tfvars` | Creating network security groups |
+| `vars-network-nsgs-create.auto.tfvars` | Creating standard and custom network security groups with inline rules |
 | `vars-network-nsgs-existing.auto.tfvars` | Using existing NSGs |
 | `vars-network-drg-create.auto.tfvars.example` | Creating a Dynamic Routing Gateway (example) |
 

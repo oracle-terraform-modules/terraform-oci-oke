@@ -2,8 +2,8 @@
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
 locals {
-  karpenter_group_name          = format("oke-karpenter-%v", var.state_id)
-  karpenter_group_rules         = format("ANY {instance.compartment.id = '%v'}", var.compartment_id)
+  karpenter_group_name  = format("oke-karpenter-%v", var.state_id)
+  karpenter_group_rules = format("ANY {instance.compartment.id = '%v'}", var.compartment_id)
 
   karpenter_cluster_join_statement = format(
     "Allow dynamic-group %v to {CLUSTER_JOIN} in compartment id %v",
@@ -31,7 +31,7 @@ locals {
 
   karpenter_policy_statements = concat(
     [local.karpenter_cluster_join_statement],
-    local.karpenter_workload_identity_policy_statements)
+  local.karpenter_workload_identity_policy_statements)
 }
 
 resource "oci_identity_dynamic_group" "karpenter" {

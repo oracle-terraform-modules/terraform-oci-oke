@@ -191,7 +191,7 @@ subnets = {
 }
 ```
 
-`ipv6_cidr` accepts either an explicit IPv6 CIDR or an offset in `"newbits, netnum"` form. Offset values require at least one VCN IPv6 CIDR block from Oracle GUA, ULA, or BYOIPv6 configuration.
+`ipv4_cidrs` and `ipv6_cidrs` assign multiple CIDR blocks to a subnet. Elements in `ipv4_cidrs`, `ipv6_cidr`, and `ipv6_cidrs` can be explicit CIDRs or offsets in `"newbits, netnum"` form. IPv6 offset values require at least one VCN IPv6 CIDR block from Oracle GUA, private ULA, or BYOIPv6 configuration.
 
 ### Network Security Groups
 
@@ -199,7 +199,7 @@ See [Network layout](./diagrams.md#network-layout) for how the NSG-backed subnet
 
 | Parameter | Description | Values | Default |
 | --- | --- | --- | --- |
-| `nsgs` | Configuration for standard and custom NSGs. Standard keys are `bastion`, `operator`, `cp`, `int_lb`, `pub_lb`, `workers`, `pods`, and optional `fss`; additional keys create custom NSGs. Each entry supports `create`, `id`, and `rules`. | map(object) | Module-defined defaults for standard NSGs |
+| `nsgs` | Configuration for standard and custom NSGs. Standard keys are `bastion`, `operator`, `cp`, `int_lb`, `pub_lb`, `workers`, `pods`, and optional `fss`; additional keys create custom NSGs. Each entry supports `create`, `id`, and inline `rules`. | map(object) | Module-defined defaults for standard NSGs |
 | `allow_node_port_access` | Allow NodePort access to load balancers. | `true` / `false` | `false` |
 | `allow_worker_internet_access` | Allow worker nodes outbound internet access. | `true` / `false` | `true` |
 | `allow_pod_internet_access` | Allow pod outbound internet access. | `true` / `false` | `true` |
@@ -245,6 +245,8 @@ nsgs = {
   }
 }
 ```
+
+Custom NSG keys can be referenced by other NSG rules and worker networking settings by name. Existing NSGs can be supplied with `id`; otherwise custom keys are created when `create` is `auto` or `always`.
 
 ## Cluster
 
@@ -415,6 +417,8 @@ Each entry in the `worker_pools` map supports the following attributes:
 | `assign_public_ip` | Assign a public IP to nodes. | `true` / `false` |
 | `cloud_init` | Pool-specific cloud-init MIME parts. | list(map(string)) |
 | `secondary_vnics` | Secondary VNIC configurations. | map(any) |
+| `network_launch_type` | Network launch type for managed node pools when required by the selected networking feature. | string |
+| `gva_secondary_vnics` | GVA secondary VNIC configuration for managed node pools. Requires `mode = "node-pool"` and `cni_type = "npn"`. Defaults to the pod subnet through `subnet_key = "pods"`. | map(any) |
 | `autoscale` | Enable cluster autoscaler for this pool. | `true` / `false` |
 | `min_size` | Minimum pool size for autoscaling. | number |
 | `max_size` | Maximum pool size for autoscaling. | number |
@@ -465,6 +469,32 @@ worker_pools = {
   }
 }
 ```
+
+Managed node pool with GVA secondary VNICs:
+
+```hcl
+cni_type = "npn"
+
+worker_pools = {
+  gva-node-pool = {
+    mode                = "node-pool"
+    size                = 2
+    shape               = "VM.Standard..."
+    network_launch_type = "..."
+
+    gva_secondary_vnics = {
+      pods = {
+        # Defaults to subnet_key = "pods"; set subnet_id to use an explicit subnet OCID.
+        ip_count               = 16
+        skip_source_dest_check = true
+        nsg_ids                = ["pods"]
+      }
+    }
+  }
+}
+```
+
+`gva_secondary_vnics` is valid only for managed node pools with `cni_type = "npn"`. When `subnet_id` is omitted, the module resolves `subnet_key`, which defaults to `pods`, through the module subnet map. `nsg_ids` accepts NSG OCIDs or names from the module NSG map.
 
 Cluster network (HPC/GPU) example:
 
@@ -795,6 +825,8 @@ service_accounts = {
 - `oidc_token_auth_enabled = true` requires `cluster_type = "enhanced"`.
 - `worker_pool_mode = "node-pool"` is the only mode that supports OKE-managed node pools.
 - `worker_pool_mode = "cluster-network"` or `"instance-pool"` or `"instance"` are self-managed modes.
+- `gva_secondary_vnics` is supported only for managed node pools with `cni_type = "npn"`.
+- Each `gva_secondary_vnics` entry must resolve to a non-empty subnet OCID, either from explicit `subnet_id` or from `subnet_key`.
 - Subnet `id` is exclusive with CIDR inputs (`cidr`, `netnum`/`newbits`, `ipv4_cidrs`, `ipv6_cidr`, or `ipv6_cidrs`).
 - Each subnet can use only one IPv4 CIDR source: `cidr`, `netnum`/`newbits`, or `ipv4_cidrs`.
 - Each subnet can use only one IPv6 CIDR source: `ipv6_cidr` or `ipv6_cidrs`.
@@ -840,7 +872,7 @@ service_accounts = {
 | `pub_lb_subnet_cidr` | Public load balancer subnet CIDR. |
 | `fss_subnet_id` | FSS subnet OCID. |
 | `fss_subnet_cidr` | FSS subnet CIDR. |
-| `subnet_ids` | Map of created or supplied subnet IDs and their primary IPv4 CIDR values, keyed by subnet name. |
+| `subnet_ids` | Map of created or supplied subnet OCIDs keyed by subnet name. |
 | `bastion_nsg_id` | Bastion NSG OCID. |
 | `operator_nsg_id` | Operator NSG OCID. |
 | `control_plane_nsg_id` | Control plane NSG OCID. |

@@ -6,6 +6,10 @@ locals {
   enable_dual_stack_defaults = var.enable_dual_stack_defaults || var.enable_ipv6
   oke_ip_families            = length(var.oke_ip_families) > 0 ? var.oke_ip_families : local.enable_dual_stack_defaults ? ["IPv4", "IPv6"] : ["IPv4"]
   oke_uses_ipv6              = contains([for family in local.oke_ip_families : upper(family)], "IPV6")
+  # compacted_oke_families     = compact([for family in local.oke_ip_families : upper(family)])
+  # single_stack_ipv6          = length(local.compacted_oke_families) == 1 && local.oke_uses_ipv6 ? true : false
+  # single_stack_ipv4          = length(local.compacted_oke_families) == 1 && ! local.oke_uses_ipv6 ? true : false
+  # dual_stack                 = length(local.compacted_oke_families) == 2 ? true : false
 }
 
 resource "random_string" "state_id" {
