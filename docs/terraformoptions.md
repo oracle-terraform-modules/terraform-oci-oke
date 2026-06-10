@@ -418,7 +418,7 @@ Each entry in the `worker_pools` map supports the following attributes:
 | `cloud_init` | Pool-specific cloud-init MIME parts. | list(map(string)) |
 | `secondary_vnics` | Secondary VNIC configurations. | map(any) |
 | `network_launch_type` | Network launch type for managed node pools when required by the selected networking feature. | string |
-| `gva_secondary_vnics` | GVA secondary VNIC configuration for managed node pools. Requires `mode = "node-pool"` and `cni_type = "npn"`. Defaults to the pod subnet through `subnet_key = "pods"`. | map(any) |
+| `gva_secondary_vnics` | GVA secondary VNIC configuration for supported worker pools. Requires `cni_type = "npn"` and is not supported for `mode = "virtual-node-pool"`. Defaults to the pod subnet through `subnet_key = "pods"`. | map(any) |
 | `autoscale` | Enable cluster autoscaler for this pool. | `true` / `false` |
 | `min_size` | Minimum pool size for autoscaling. | number |
 | `max_size` | Maximum pool size for autoscaling. | number |
@@ -470,7 +470,7 @@ worker_pools = {
 }
 ```
 
-Managed node pool with GVA secondary VNICs:
+Worker pool with GVA secondary VNICs:
 
 ```hcl
 cni_type = "npn"
@@ -494,7 +494,7 @@ worker_pools = {
 }
 ```
 
-`gva_secondary_vnics` is valid only for managed node pools with `cni_type = "npn"`. When `subnet_id` is omitted, the module resolves `subnet_key`, which defaults to `pods`, through the module subnet map. `nsg_ids` accepts NSG OCIDs or names from the module NSG map.
+`gva_secondary_vnics` is valid for managed node pools and self-managed worker pools with `cni_type = "npn"`, except virtual node pools. Supported self-managed modes include `instance`, `instance-pool`, `cluster-network`, `gpu-memory-cluster`, and `compute-cluster`. When `subnet_id` is omitted, the module resolves `subnet_key`, which defaults to `pods`, through the module subnet map. `nsg_ids` accepts NSG OCIDs or names from the module NSG map.
 
 Cluster network (HPC/GPU) example:
 
@@ -825,7 +825,7 @@ service_accounts = {
 - `oidc_token_auth_enabled = true` requires `cluster_type = "enhanced"`.
 - `worker_pool_mode = "node-pool"` is the only mode that supports OKE-managed node pools.
 - `worker_pool_mode = "cluster-network"` or `"instance-pool"` or `"instance"` are self-managed modes.
-- `gva_secondary_vnics` is supported only for managed node pools with `cni_type = "npn"`.
+- `gva_secondary_vnics` requires `cni_type = "npn"` and is not supported for virtual node pools.
 - Each `gva_secondary_vnics` entry must resolve to a non-empty subnet OCID, either from explicit `subnet_id` or from `subnet_key`.
 - Subnet `id` is exclusive with CIDR inputs (`cidr`, `netnum`/`newbits`, `ipv4_cidrs`, `ipv6_cidr`, or `ipv6_cidrs`).
 - Each subnet can use only one IPv4 CIDR source: `cidr`, `netnum`/`newbits`, or `ipv4_cidrs`.

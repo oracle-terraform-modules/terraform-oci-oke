@@ -27,4 +27,4 @@ Example configurations for various worker pool modes and features:
 
 Copy the desired `.auto.tfvars` file(s) to your root module and adjust the values as needed.
 
-Managed node pools can use `gva_secondary_vnics` when `cni_type = "npn"`. By default, GVA secondary VNICs resolve `subnet_key = "pods"` through the module-created pod subnet; set `subnet_id` to use an explicit subnet OCID.
+Managed node pools and self-managed worker pools can use `gva_secondary_vnics` when `cni_type = "npn"`, except virtual node pools. By default, GVA secondary VNICs resolve `subnet_key = "pods"` through the module-created pod subnet; set `subnet_id` to use an explicit subnet OCID.

@@ -65,6 +65,11 @@ resource "oci_containerengine_virtual_node_pool" "workers" {
     ]
 
     precondition {
+      condition     = length(lookup(each.value, "gva_secondary_vnics", {})) == 0
+      error_message = "gva_secondary_vnics is not supported for pools with mode = 'virtual-node-pool'."
+    }
+
+    precondition {
       condition     = var.cni_type == "npn"
       error_message = "Virtual Node Pools require a cluster with `cni_type = npn`."
     }
