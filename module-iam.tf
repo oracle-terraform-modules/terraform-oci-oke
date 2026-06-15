@@ -65,6 +65,7 @@ module "iam_cluster_prerequisites" {
   state_id                     = local.state_id
   tenancy_id                   = local.tenancy_id
   cluster_id                   = var.cluster_id
+  cni_type                     = var.cni_type
   create_iam_resources         = var.create_iam_resources
   create_iam_autoscaler_policy = false
   create_iam_kms_policy        = local.create_iam_kms_policy
@@ -106,6 +107,7 @@ module "iam" {
   state_id                     = local.state_id
   tenancy_id                   = local.tenancy_id
   cluster_id                   = local.cluster_id
+  cni_type                     = var.cni_type
   create_iam_resources         = var.create_iam_resources
   create_iam_autoscaler_policy = local.create_iam_autoscaler_policy
   create_iam_kms_policy        = false

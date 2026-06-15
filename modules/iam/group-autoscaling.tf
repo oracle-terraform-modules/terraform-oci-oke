@@ -14,22 +14,36 @@ locals {
     # "tag.${var.tag_namespace}.state_id.value='${var.state_id}'", # TODO optional use w/ config
   ])) : local.autoscaler_compartment_rule
 
-  autoscaler_templates = [
+  autoscaler_nodepool_policy_templates = [
     "Allow dynamic-group %v to manage cluster-node-pools in compartment id %v",
-    "Allow dynamic-group %v to manage compute-management-family in compartment id %v",
     "Allow dynamic-group %v to manage instance-family in compartment id %v",
-    "Allow dynamic-group %v to manage volume-family in compartment id %v",
+  ]
+
+  autoscaler_shared_network_policy_templates = [
     "Allow dynamic-group %v to use subnets in compartment id %v",
-    "Allow dynamic-group %v to read virtual-network-family in compartment id %v",
     "Allow dynamic-group %v to use vnics in compartment id %v",
     "Allow dynamic-group %v to inspect compartments in compartment id %v",
   ]
 
-  autoscaler_policy_statements = var.create_iam_autoscaler_policy ? tolist([
-    for statement in local.autoscaler_templates : formatlist(statement,
-      local.autoscaler_group_name, local.worker_compartments,
+  autoscaler_vcn_read_policy_template = "Allow dynamic-group %v to read virtual-network-family in compartment id %v"
+
+  autoscaler_policy_templates = concat(
+    local.autoscaler_nodepool_policy_templates,
+    local.autoscaler_shared_network_policy_templates,
+    var.network_compartment_id == null ? [local.autoscaler_vcn_read_policy_template] : [],
+  )
+
+  autoscaler_policy_statements = var.create_iam_autoscaler_policy ? flatten([
+    for statement in local.autoscaler_policy_templates : formatlist(
+      statement, local.autoscaler_group_name, local.worker_compartments,
     )
   ]) : []
+
+  autoscaler_network_policy_statements = var.create_iam_autoscaler_policy && var.network_compartment_id != null ? [
+    for statement in concat(
+      local.autoscaler_shared_network_policy_templates, [local.autoscaler_vcn_read_policy_template],
+    ) : format(statement, local.autoscaler_group_name, var.network_compartment_id)
+  ] : []
 }
 
 resource "oci_identity_dynamic_group" "autoscaling" {
