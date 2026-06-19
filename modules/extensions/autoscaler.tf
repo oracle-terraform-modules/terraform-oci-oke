@@ -19,7 +19,7 @@ locals {
   cluster_autoscaler_manifest      = sensitive(one(data.helm_template.cluster_autoscaler[*].manifest))
   cluster_autoscaler_manifest_path = join("/", [local.yaml_manifest_path, "cluster_autoscaler.yaml"])
   cluster_autoscaler_defaults = {
-    "cloudProvider"                              = "oci-oke",
+    "cloudProvider"                              = "oci",
     "extraArgs.logtostderr"                      = "true",
     "extraArgs.v"                                = "4",
     "extraArgs.stderrthreshold"                  = "info",
@@ -36,7 +36,7 @@ locals {
     "extraEnv.OKE_USE_INSTANCE_PRINCIPAL"        = "true",
     "extraEnv.OCI_SDK_APPEND_USER_AGENT"         = "oci-oke-cluster-autoscaler",
     "image.repository"                           = "iad.ocir.io/oracle/oci-cluster-autoscaler",
-    "image.tag"                                  = "1.26.2-7",
+    "image.tag"                                  = "1.34.2-252",
   }
 }
 

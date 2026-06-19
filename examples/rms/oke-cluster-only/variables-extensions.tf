@@ -29,7 +29,7 @@ variable "metrics_server_helm_values_files" {
 
 variable "cluster_autoscaler_install" { default = false }
 variable "cluster_autoscaler_namespace" { default = "kube-system" }
-variable "cluster_autoscaler_helm_version" { default = "9.24.0" }
+variable "cluster_autoscaler_helm_version" { default = "9.53.0" }
 variable "cluster_autoscaler_helm_values" {
   default = {}
   type    = map(string)
