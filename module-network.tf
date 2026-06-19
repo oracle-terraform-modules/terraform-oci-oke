@@ -14,7 +14,7 @@ locals {
   vcn_lookup             = coalesce(one(data.oci_core_vcn.oke[*].cidr_blocks), [])
   vcn_lookup_cidr_blocks = flatten(local.vcn_lookup)
   vcn_cidrs              = var.create_vcn ? var.vcn_cidrs : local.vcn_lookup_cidr_blocks
-  vcn_ipv6_cidrs         = var.create_vcn ? concat(module.vcn[0].vcn_all_attributes["ipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["byoipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["ipv6private_cidr_blocks"]) : concat(data.oci_core_vcn.oke[0].ipv6cidr_blocks, data.oci_core_vcn.oke[0].byoipv6cidr_blocks, data.oci_core_vcn.oke[0].ipv6private_cidr_blocks)
+  vcn_ipv6_cidrs         = var.create_vcn ? concat(module.vcn[0].vcn_all_attributes["ipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["byoipv6cidr_blocks"], module.vcn[0].vcn_all_attributes["ipv6private_cidr_blocks"]) : concat(try(data.oci_core_vcn.oke[0].ipv6cidr_blocks, []), try(data.oci_core_vcn.oke[0].byoipv6cidr_blocks, []), try(data.oci_core_vcn.oke[0].ipv6private_cidr_blocks, []))
   # Created route table if enabled, else var.ig_route_table_id
   ig_route_table_id = var.create_vcn ? try(one(module.vcn[*].ig_route_id), var.ig_route_table_id) : var.ig_route_table_id
 
