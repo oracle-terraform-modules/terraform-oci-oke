@@ -35,9 +35,20 @@ locals {
     formatlist(statement, local.worker_compartments, var.worker_volume_kms_key_id)
   ])) : []
 
+  nodepool_cc_hg_launch_templates = tolist([
+    "Allow any-user to {COMPUTE_CLUSTER_LAUNCH_INSTANCE} in compartment id %v where request.principal.type = 'nodepool'",
+    "Allow any-user to {HOST_GROUP_LAUNCH_INSTANCE} in compartment id %v where request.principal.type = 'nodepool'",
+  ])
+
+  nodepool_cc_hg_launch_statements = flatten(tolist([
+    for statement in local.nodepool_cc_hg_launch_templates :
+    formatlist(statement, local.worker_compartments)
+  ]))
+
   worker_policy_statements = var.create_iam_worker_policy ? tolist(concat(
     local.cluster_join_statements,
     local.worker_kms_volume_statements,
+    local.nodepool_cc_hg_launch_statements
   )) : []
 }
 

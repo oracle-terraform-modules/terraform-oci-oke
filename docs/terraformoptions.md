@@ -427,6 +427,9 @@ Each entry in the `worker_pools` map supports the following attributes:
 | `drain` | Mark pool for draining (disables scheduling, drains through operator). | `true` / `false` |
 | `placement_ads` | List of AD numbers for placement. | list(number) |
 | `compute_cluster` | Name of a shared compute cluster (compute-cluster mode). | string |
+| `compute_cluster_id` | Existing compute cluster OCID to attach a managed node pool to. Takes precedence over `use_compute_cluster`. | OCID string |
+| `use_compute_cluster` | Create a dedicated compute cluster for this managed node pool. Ignored when `compute_cluster_id` is set. | `true` / `false` |
+| `host_group_id` | Host group OCID constraining managed node pool placement to a dedicated host group. | OCID string |
 | `instance_ids` | Instance IDs in compute cluster. | list(string) |
 | `platform_config` | Platform configuration (shielded instances). | object |
 | `agent_config` | Management agent configuration. | object |
@@ -515,6 +518,24 @@ worker_pools = {
   }
 }
 ```
+
+Managed node pool in a compute cluster (HPC/GPU):
+
+```hcl
+worker_pools = {
+  oke-bm-gpu-rdma-np = {
+    mode                = "node-pool"
+    size                = 2
+    shape               = "BM.GPU.B4.8"
+    placement_ads       = [1]
+    use_compute_cluster = true
+  }
+}
+```
+
+Set `use_compute_cluster = true` for the module to create a dedicated compute cluster and place the managed node pool in it, or set `compute_cluster_id` to attach the pool to an existing compute cluster. `compute_cluster_id` takes precedence when both are set. Use `host_group_id` to constrain placement to a dedicated host group.
+
+A managed node pool with `use_compute_cluster = true` or an explicit `compute_cluster_id` is a deployment model that supports RDMA workloads. It is an alternative to `mode = "cluster-network"` for GPU/HPC workloads, using OKE-managed node pools instead of self-managed instances.
 
 ## Bastion
 

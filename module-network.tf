@@ -65,8 +65,8 @@ locals {
 module "vcn" {
   count = var.create_vcn ? 1 : 0
 
-  source = "git::https://github.com/oracle-terraform-modules/terraform-oci-vcn.git//?ref=fa4c046a27abf417ced2d6e75142c9c5a16ba90a"
-  # version        = "3.6.0"
+  source  = "oracle-terraform-modules/vcn/oci"
+  version = "4.0.0"
 
   compartment_id = coalesce(var.network_compartment_id, local.compartment_id)
 

@@ -33,6 +33,7 @@ locals {
     capacity_reservation_id        = var.capacity_reservation_id
     cloud_init                     = [] # empty pool-specific default
     compartment_id                 = var.compartment_id
+    compute_cluster_id             = ""
     create                         = true
     disable_default_cloud_init     = var.disable_default_cloud_init
     drain                          = false
@@ -46,6 +47,8 @@ locals {
       target_size         = var.gmc_scale_target_size
     }
     gpu_memory_fabric_ids        = [] # empty pool-specific default; required for mode = "gpu-memory-cluster"
+    gva_secondary_vnics          = {}
+    host_group_id                = ""
     ignore_initial_pool_size     = false
     image_id                     = var.image_id
     image_type                   = var.image_type
@@ -69,11 +72,11 @@ locals {
     pod_subnet_id                = coalesce(var.pod_subnet_id, var.worker_subnet_id, "none")
     preemptible_config           = var.preemptible_config
     pv_transit_encryption        = var.pv_transit_encryption
-    gva_secondary_vnics          = {}
     shape                        = local.shape
     size                         = var.worker_pool_size
     subnet_id                    = var.worker_subnet_id
     taints                       = [] # empty pool-specific default
+    use_compute_cluster          = false
     volume_kms_key_id            = var.volume_kms_key_id
   }
 

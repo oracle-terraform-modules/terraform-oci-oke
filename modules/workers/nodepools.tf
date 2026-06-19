@@ -23,6 +23,7 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
     nsg_ids                             = each.value.nsg_ids
     defined_tags                        = each.value.defined_tags
     freeform_tags                       = each.value.freeform_tags
+    compute_cluster_id                  = each.value.compute_cluster_id == "" ? lookup(lookup(oci_core_compute_cluster.nodepool_compute_cluster, each.key, {}), "id", "") : each.value.compute_cluster_id
 
     dynamic "placement_configs" {
       for_each = each.value.availability_domains
@@ -31,6 +32,7 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
       content {
         availability_domain     = ad.value
         capacity_reservation_id = each.value.capacity_reservation_id
+        host_group_id           = each.value.host_group_id
         subnet_id               = each.value.subnet_id
 
         # Value(s) specified on pool, or null to select automatically
@@ -242,6 +244,7 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
     nsg_ids                             = each.value.nsg_ids
     defined_tags                        = each.value.defined_tags
     freeform_tags                       = each.value.freeform_tags
+    compute_cluster_id                  = each.value.compute_cluster_id == "" ? lookup(lookup(oci_core_compute_cluster.nodepool_compute_cluster, each.key, {}), "id", "") : each.value.compute_cluster_id
 
     dynamic "placement_configs" {
       for_each = each.value.availability_domains
@@ -250,6 +253,7 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
       content {
         availability_domain     = ad.value
         capacity_reservation_id = each.value.capacity_reservation_id
+        host_group_id           = each.value.host_group_id
         subnet_id               = each.value.subnet_id
 
         # Value(s) specified on pool, or null to select automatically
@@ -437,5 +441,28 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
       key   = initial_node_labels.key
       value = initial_node_labels.value
     }
+  }
+}
+
+
+resource "oci_core_compute_cluster" "nodepool_compute_cluster" {
+  for_each = { for key, value in local.enabled_node_pools : key => value
+    if alltrue([
+      lookup(value, "use_compute_cluster", false),
+      lookup(value, "compute_cluster_id", "") == ""
+    ])
+  }
+
+  availability_domain = element(each.value.availability_domains, 1)
+  compartment_id      = var.compartment_id
+
+  display_name  = format("%s-%s", each.key, var.state_id)
+  freeform_tags = each.value.freeform_tags
+  defined_tags  = each.value.defined_tags
+
+  lifecycle { # prevent resources changes for changed fields
+    ignore_changes = [
+      defined_tags, freeform_tags
+    ]
   }
 }
