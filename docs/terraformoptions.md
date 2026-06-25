@@ -611,13 +611,15 @@ The operator instance provides an environment within the VCN from which the OKE 
 | `operator_private_ip` | IP address of an existing operator. Ignored when `create_operator = true`. | string | `null` |
 | `operator_await_cloudinit` | Block Terraform until cloud-init completes on the operator. | `true` / `false` | `true` |
 | `operator_legacy_imds_endpoints_disabled` | Disable IMDSv1 endpoint on the operator. | `true` / `false` | `true` |
+| `operator_allow_image_drift` | When true, newer platform images will not force operator replacement. | `true` / `false` | `false` |
 
 Example with cloud-init:
 
 ```hcl
-create_operator     = true
-operator_upgrade    = false
-operator_user       = "opc"
+create_operator            = true
+operator_upgrade           = false
+operator_user              = "opc"
+operator_allow_image_drift = true
 
 operator_cloud_init = [
   {

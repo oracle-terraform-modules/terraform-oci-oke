@@ -56,3 +56,4 @@ variable "operator_tags" {
   default = {}
   type    = map(any)
 }
+variable "operator_allow_image_drift" { default = false }

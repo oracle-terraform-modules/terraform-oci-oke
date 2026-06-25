@@ -76,6 +76,7 @@ variableGroups:
       - operator_install_k9s
       - operator_install_kubectx
       - operator_tags
+      - operator_allow_image_drift
 
   - title: "Cluster"
     variables:
@@ -595,6 +596,13 @@ variables:
     description: Tag values for created resources.
     dependsOn:
       compartmentId: ${compartment_ocid}
+    visible: ${create_operator}
+  operator_allow_image_drift:
+    title: Allow the operator instance image to drift
+    description: Allow the operator instance image to drift from the latest resolved image without forcing replacement.
+    type: boolean
+    default: false
+    required: true
     visible: ${create_operator}
 
   # Cluster

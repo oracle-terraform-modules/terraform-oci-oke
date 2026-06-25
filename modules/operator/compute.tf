@@ -105,12 +105,14 @@ resource "oci_core_instance" "operator" {
 }
 
 resource "null_resource" "operator_changed" {
-  triggers = {
-    cloud_init      = jsonencode(var.cloud_init)
-    image_id        = var.image_id
-    install_helm    = var.install_helm
-    install_k9s     = var.install_k9s
-    install_kubectx = var.install_kubectx
-    ssh_public_key  = var.ssh_public_key
-  }
+  triggers = merge(
+    {
+      cloud_init      = jsonencode(var.cloud_init)
+      install_helm    = var.install_helm
+      install_k9s     = var.install_k9s
+      install_kubectx = var.install_kubectx
+      ssh_public_key  = var.ssh_public_key
+    },
+    var.allow_image_drift ? {} : { image_id = var.image_id }
+  )
 }

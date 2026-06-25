@@ -160,3 +160,9 @@ variable "operator_legacy_imds_endpoints_disabled" {
   description = "Whether to disable requests to the IMDSv1 endpoint and only allow requests to the IMDSv2 endpoint for the operator instance."
   type        = bool
 }
+
+variable "operator_allow_image_drift" {
+  default     = false
+  description = "Allow the operator instance image to drift from the latest resolved image without forcing replacement."
+  type        = bool
+}

@@ -61,6 +61,7 @@ module "oke" {
   operator_upgrade               = var.operator_upgrade
   operator_user                  = var.operator_user
   operator_volume_kms_key_id     = var.operator_volume_kms_key_id
+  operator_allow_image_drift     = var.operator_allow_image_drift
 
   # SSH
   ssh_public_key  = local.ssh_public_key

@@ -107,7 +107,7 @@ worker_pools = {
 - Workers: `worker_shape`, `worker_image_type`, `worker_image_os`, `worker_image_os_version`
 - Network: `vcn_cidrs`, `subnets`, `nsgs`, `load_balancers`
 - Bastion: `create_bastion`, `bastion_shape`, `bastion_allowed_cidrs`
-- Operator: `create_operator`, `operator_shape`, `operator_upgrade`
+- Operator: `create_operator`, `operator_shape`, `operator_upgrade`, `operator_allow_image_drift`
 
 7. Run Terraform:
 

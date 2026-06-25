@@ -83,6 +83,7 @@ module "operator" {
   upgrade                        = var.operator_upgrade
   user                           = var.operator_user
   volume_kms_key_id              = var.operator_volume_kms_key_id
+  allow_image_drift              = var.operator_allow_image_drift
 
 
   # Standard tags as defined if enabled for use, or freeform
