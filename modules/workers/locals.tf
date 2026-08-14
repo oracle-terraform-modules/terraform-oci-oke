@@ -358,7 +358,7 @@ locals {
   }
 
   gva_secondary_vnics_defaults = {
-    nic_index              = 0
+    nic_index              = null
     application_resources  = null
     ip_count               = 16
     nsg_ids                = toset(compact(var.pod_nsg_ids))
