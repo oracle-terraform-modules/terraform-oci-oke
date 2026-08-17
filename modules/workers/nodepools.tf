@@ -171,6 +171,7 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
       # kubernetes_version, # e.g. if changed as part of an upgrade
       name, defined_tags, freeform_tags,
       node_config_details[0].placement_configs, # dynamic placement configs
+      secondary_vnics[0].create_vnic_details[0].defined_tags,
       # node_source_details[0],                   # dynamic image lookup
     ]
 
@@ -392,7 +393,10 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
       # kubernetes_version, # e.g. if changed as part of an upgrade
       name, defined_tags, freeform_tags,
       node_config_details[0].placement_configs, # dynamic placement configs
-      node_config_details[0].size               # size
+      # OCI re-stamps Oracle-Tags.* and OracleInternalReserved.* on secondary VNICs; ignore
+      # only the defined_tags on the VNIC so GVA config (ip_count, subnet, nsg) still applies.
+      secondary_vnics[0].create_vnic_details[0].defined_tags,
+      node_config_details[0].size # size
     ]
 
     precondition {
