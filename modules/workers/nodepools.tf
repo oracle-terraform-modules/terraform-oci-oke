@@ -92,8 +92,9 @@ resource "oci_containerengine_node_pool" "tfscaled_workers" {
 
   node_eviction_node_pool_settings {
     eviction_grace_duration = (floor(tonumber(each.value.eviction_grace_duration) / 60) > 0 ?
-      (each.value.eviction_grace_duration > 3600 ?
-        format("PT%dM", 60) :
+      # Match OCI's canonical one-hour duration to avoid perpetual plan drift.
+      (each.value.eviction_grace_duration >= 3600 ?
+        "PT1H" :
         (each.value.eviction_grace_duration % 60 == 0 ?
           format("PT%dM", floor(each.value.eviction_grace_duration / 60)) :
           format("PT%dM%dS", floor(each.value.eviction_grace_duration / 60), each.value.eviction_grace_duration % 60)
@@ -314,8 +315,9 @@ resource "oci_containerengine_node_pool" "autoscaled_workers" {
 
   node_eviction_node_pool_settings {
     eviction_grace_duration = (floor(tonumber(each.value.eviction_grace_duration) / 60) > 0 ?
-      (each.value.eviction_grace_duration > 3600 ?
-        format("PT%dM", 60) :
+      # Match OCI's canonical one-hour duration to avoid perpetual plan drift.
+      (each.value.eviction_grace_duration >= 3600 ?
+        "PT1H" :
         (each.value.eviction_grace_duration % 60 == 0 ?
           format("PT%dM", floor(each.value.eviction_grace_duration / 60)) :
           format("PT%dM%dS", floor(each.value.eviction_grace_duration / 60), each.value.eviction_grace_duration % 60)
