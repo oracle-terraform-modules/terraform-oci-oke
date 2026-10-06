@@ -77,8 +77,9 @@ locals {
   }
 
   # Add default ipv6 cidrs to var.subnets if missing
+  # Skip subnets with ipv6_cidrs, because CreateSubnet rejects ipv6CidrBlock together with ipv6CidrBlocks.
   subnets_with_ipv6_cidr_defaults = { for k, v in var.subnets :
-    k => merge(v, var.enable_dual_stack_defaults && lookup(v, "ipv6_cidr", null) == null ? lookup(local.default_ipv6_cidrs, k, { "ipv6_cidr" : null }) : {})
+    k => merge(v, var.enable_dual_stack_defaults && lookup(v, "ipv6_cidr", null) == null && length(coalesce(lookup(v, "ipv6_cidrs", null), [])) == 0 ? lookup(local.default_ipv6_cidrs, k, { "ipv6_cidr" : null }) : {})
   }
 
   ipv6_subnet_cidr_offsets_requested = anytrue([
