@@ -8,9 +8,14 @@ locals {
   # an existing cluster. Fallback value is unused.
   vcn_cidr = length(var.vcn_cidrs) > 0 ? element(var.vcn_cidrs, 0) : "0.0.0.0/16"
 
+  # Exclude disabled subnets before inspecting IDs, which may be unknown until apply.
+  subnet_creation_candidates = {
+    for k, v in var.subnets : k => v if lookup(v, "create", "auto") != "never"
+  }
+
   # Filter configured subnets eligible for resource creation
   subnet_cidrs_new = {
-    for k, v in var.subnets : k => merge(v, {
+    for k, v in local.subnet_creation_candidates : k => merge(v, {
       "type" = (lookup(v, "netnum", null) == null && lookup(v, "newbits", null) != null ? "newbits"
         : (lookup(v, "netnum", null) != null && lookup(v, "newbits", null) != null ? "netnum"
           : (length(lookup(v, "ipv4_cidrs", [])) > 0 ? "ipv4_cidrs"
@@ -19,7 +24,7 @@ locals {
                 : (lookup(v, "ipv6_cidr", null) != null ? "ipv6_cidr"
                   : (length(lookup(v, "ipv6_cidrs", [])) > 0 ? "ipv6_cidrs"
       : "invalid")))))))
-    }) if lookup(v, "create", "auto") != "never"
+    })
   }
 
   # Handle subnets configured with provided CIDRs
@@ -157,10 +162,9 @@ locals {
   # - Not configured with create == 'never'
   # - Not configured with an existing 'id'
   subnets_to_create = merge(
-    { for k, v in var.subnets : k => merge(v, { "is_public" = lookup(v, "is_public", false) })
+    { for k, v in local.subnet_creation_candidates : k => merge(v, { "is_public" = lookup(v, "is_public", false) })
       if alltrue([
-        lookup(v, "id", null) == null,          # doesn't have an OCID
-        lookup(v, "create", "auto") != "never", # not disabled
+        lookup(v, "id", null) == null, # doesn't have an OCID
         contains(local.subnet_address_input_keys, k),
         !contains(keys(local.subnet_info), k)
       ])
