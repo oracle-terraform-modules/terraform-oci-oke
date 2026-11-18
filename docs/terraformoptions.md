@@ -865,7 +865,7 @@ service_accounts = {
 | `cluster_id` | OKE cluster OCID. |
 | `cluster_endpoints` | Cluster endpoints (public and private). |
 | `cluster_oidc_discovery_endpoint` | OIDC discovery endpoint URL. |
-| `cluster_kubeconfig` | Kubernetes kubeconfig YAML (requires `output_detail = true`). |
+| `cluster_kubeconfig` | Kubernetes kubeconfig as a decoded object; export it with `terraform output -json` (requires `output_detail = true`). |
 | `cluster_ca_cert` | Base64-encoded cluster CA certificate. |
 | `apiserver_private_host` | Private API server hostname. |
 | `bastion_id` | Bastion instance OCID. |

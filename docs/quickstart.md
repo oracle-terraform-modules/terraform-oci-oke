@@ -154,11 +154,11 @@ kubectl get nodes
 1. Retrieve the kubeconfig:
 
 ```bash
-terraform output -raw cluster_kubeconfig > ~/.kube/config-oke
+terraform output -json cluster_kubeconfig > ~/.kube/config-oke
 export KUBECONFIG=~/.kube/config-oke
 ```
 
-`cluster_kubeconfig` is only populated when `output_detail = true`.
+`cluster_kubeconfig` is only populated when `output_detail = true`. It is a decoded object rather than a string, so `-raw` cannot print it; `kubectl` reads the JSON form directly.
 
 2. Verify connectivity:
 
