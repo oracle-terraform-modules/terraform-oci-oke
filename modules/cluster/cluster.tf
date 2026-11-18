@@ -11,8 +11,12 @@ resource "oci_containerengine_cluster" "k8s_cluster" {
   freeform_tags      = var.cluster_freeform_tags
   vcn_id             = var.vcn_id
 
-  cluster_pod_network_options {
-    cni_type = var.cni_type == "flannel" ? "FLANNEL_OVERLAY" : "OCI_VCN_IP_NATIVE"
+  dynamic "cluster_pod_network_options" {
+    for_each = !var.legacy_cluster_pod_network_options ? [1] : []
+
+    content {
+      cni_type = var.cni_type == "flannel" ? "FLANNEL_OVERLAY" : "OCI_VCN_IP_NATIVE"
+    }
   }
 
   endpoint_config {

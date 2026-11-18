@@ -163,3 +163,9 @@ variable "oidc_token_authentication_config" {
   description = "The properties that configure OIDC token authentication in kube-apiserver. See <a href=https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengOpenIDConnect-Authentication.htm>OIDC Token Authentication configuration documentation</a>."
   type        = any
 }
+
+variable "legacy_cluster_pod_network_options" {
+  default     = false
+  description = "Skip cluster_pod_network_options attribute for legacy clusters. See <a href=https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/1084>Issue #1084 for more information.</a>."
+  type        = bool
+}
