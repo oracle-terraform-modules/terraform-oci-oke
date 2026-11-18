@@ -3,7 +3,7 @@
 
 locals {
   pub_lb_nsg_config = try(var.nsgs.pub_lb, { create = "never" })
-  pub_lb_nsg_create = coalesce(lookup(local.pub_lb_nsg_config, "create", null), "auto")
+  pub_lb_nsg_create = coalesce(try(var.nsgs.pub_lb.create, "never"), "auto")
   pub_lb_nsg_enabled = anytrue([
     local.pub_lb_nsg_create == "always",
     alltrue([

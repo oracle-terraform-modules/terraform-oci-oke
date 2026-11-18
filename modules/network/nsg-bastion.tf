@@ -3,7 +3,7 @@
 
 locals {
   bastion_nsg_config = try(var.nsgs.bastion, { create = "never" })
-  bastion_nsg_create = coalesce(lookup(local.bastion_nsg_config, "create", null), "auto")
+  bastion_nsg_create = coalesce(try(var.nsgs.bastion.create, "never"), "auto")
   bastion_nsg_enabled = anytrue([
     local.bastion_nsg_create == "always",
     alltrue([

@@ -3,7 +3,7 @@
 
 locals {
   pod_nsg_config = try(var.nsgs.pods, { create = "never" })
-  pod_nsg_create = coalesce(lookup(local.pod_nsg_config, "create", null), "auto")
+  pod_nsg_create = coalesce(try(var.nsgs.pods.create, "never"), "auto")
   pod_nsg_enabled = anytrue([
     local.pod_nsg_create == "always",
     alltrue([

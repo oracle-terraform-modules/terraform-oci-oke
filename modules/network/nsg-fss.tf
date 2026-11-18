@@ -3,7 +3,7 @@
 
 locals {
   fss_nsg_config = try(var.nsgs.fss, { create = "never" })
-  fss_nsg_create = coalesce(lookup(local.fss_nsg_config, "create", null), "auto")
+  fss_nsg_create = coalesce(try(var.nsgs.fss.create, "never"), "auto")
   fss_nsg_enabled = anytrue([
     local.fss_nsg_create == "always",
     alltrue([

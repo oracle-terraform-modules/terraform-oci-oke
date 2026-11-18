@@ -3,7 +3,7 @@
 
 locals {
   operator_nsg_config = try(var.nsgs.operator, { create = "never" })
-  operator_nsg_create = coalesce(lookup(local.operator_nsg_config, "create", null), "auto")
+  operator_nsg_create = coalesce(try(var.nsgs.operator.create, "never"), "auto")
   operator_nsg_enabled = anytrue([
     local.operator_nsg_create == "always",
     alltrue([
