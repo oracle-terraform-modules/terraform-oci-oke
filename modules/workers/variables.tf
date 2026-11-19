@@ -204,8 +204,8 @@ variable "kubeproxy_mode" {
   type        = string
 
   validation {
-    condition     = contains(["iptables", "ipvs"], var.kubeproxy_mode)
-    error_message = "Accepted values are iptables or ipvs."
+    condition     = contains(["iptables", "ipvs", "nftables"], var.kubeproxy_mode)
+    error_message = "Accepted values are iptables, ipvs, or nftables."
   }
 }
 
