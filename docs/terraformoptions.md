@@ -369,7 +369,7 @@ These parameters set defaults for all worker pools. Individual pools can overrid
 | `worker_is_public` | Provision workers with public IPs. | `true` / `false` | `false` |
 | `worker_nsg_ids` | Additional NSG IDs for all worker nodes. | list(string) | `[]` |
 | `pod_nsg_ids` | Additional NSG IDs for pods (NPN CNI). | list(string) | `[]` |
-| `kubeproxy_mode` | Kube-proxy mode. | `"iptables"` / `"ipvs"` | `"iptables"` |
+| `kubeproxy_mode` | Kube-proxy mode. | `"iptables"` / `"ipvs"` / `"nftables"` | `"iptables"` |
 | `worker_block_volume_type` | Block volume attachment type for self-managed workers. | `"paravirtualized"` / `"iscsi"` | `"paravirtualized"` |
 | `worker_node_labels` | Default Kubernetes node labels. | map(string) | `{}` |
 | `worker_node_metadata` | Additional worker node metadata. | map(string) | `{}` |
